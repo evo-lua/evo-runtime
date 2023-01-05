@@ -4,3 +4,6 @@
 [submodule "Dependencies/libuv/libuv"]
 	path = Dependencies/libuv/libuv
 	url = https://github.com/libuv/libuv
+[submodule "Dependencies/madler/zlib"]
+	path = Dependencies/madler/zlib
+	url = https://github.com/madler/zlib
