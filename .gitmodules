@@ -10,3 +10,6 @@
 [submodule "Dependencies/PCRE2Project/pcre2"]
 	path = Dependencies/PCRE2Project/pcre2
 	url = https://github.com/PCRE2Project/pcre2
+[submodule "Dependencies/openssl/openssl"]
+	path = Dependencies/openssl/openssl
+	url = https://github.com/openssl/openssl
