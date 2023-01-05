@@ -39,3 +39,8 @@ luac.out
 *.x86_64
 *.hex
 
+# Build artifacts
+ninjabuild-*/
+.ninja_deps
+.ninja_log
+build.ninja
