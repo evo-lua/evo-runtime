@@ -1,3 +1,6 @@
 [submodule "Dependencies/LuaJIT/LuaJIT"]
 	path = Dependencies/LuaJIT/LuaJIT
 	url = https://github.com/LuaJIT/LuaJIT
+[submodule "Dependencies/libuv/libuv"]
+	path = Dependencies/libuv/libuv
+	url = https://github.com/libuv/libuv
