@@ -7,3 +7,6 @@
 [submodule "Dependencies/madler/zlib"]
 	path = Dependencies/madler/zlib
 	url = https://github.com/madler/zlib
+[submodule "Dependencies/PCRE2Project/pcre2"]
+	path = Dependencies/PCRE2Project/pcre2
+	url = https://github.com/PCRE2Project/pcre2
