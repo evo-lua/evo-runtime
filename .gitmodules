@@ -16,3 +16,6 @@
 [submodule "Dependencies/evo-lua/lpeg-compat-52"]
 	path = Dependencies/evo-lua/lpeg-compat-52
 	url = https://github.com/evo-lua/lpeg-compat-52
+[submodule "Dependencies/richgel999/miniz"]
+	path = Dependencies/richgel999/miniz
+	url = https://github.com/richgel999/miniz
