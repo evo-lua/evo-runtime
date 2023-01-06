@@ -19,3 +19,6 @@
 [submodule "Dependencies/richgel999/miniz"]
 	path = Dependencies/richgel999/miniz
 	url = https://github.com/richgel999/miniz
+[submodule "Dependencies/facebookresearch/CParser"]
+	path = Dependencies/facebookresearch/CParser
+	url = https://github.com/facebookresearch/CParser
