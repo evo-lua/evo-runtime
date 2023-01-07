@@ -212,52 +212,53 @@ function C_BuildTools.StringifyChangelogContents(changelogEntry)
 	return markdownFile
 end
 
+-- This is NOT obsolete, but needs to be added to the C++ version of the runtime still
 function C_BuildTools.GenerateChangeLog(from, to)
-	local currentVersionTag = C_BuildTools.DiscoverGitVersionTag()
-	local previousVersionTag = C_BuildTools.DiscoverPreviousGitVersionTag()
+	-- local currentVersionTag = C_BuildTools.DiscoverGitVersionTag()
+	-- local previousVersionTag = C_BuildTools.DiscoverPreviousGitVersionTag()
 
-	previousVersionTag = from or previousVersionTag
-	currentVersionTag = to or currentVersionTag
+	-- previousVersionTag = from or previousVersionTag
+	-- currentVersionTag = to or currentVersionTag
 
-	DEBUG("Generating changelog for release " .. transform.green(currentVersionTag))
-	DEBUG(
-		"Including changes from " .. transform.green(previousVersionTag) .. " to " .. transform.green(currentVersionTag)
-	)
+	-- DEBUG("Generating changelog for release " .. transform.green(currentVersionTag))
+	-- DEBUG(
+	-- 	"Including changes from " .. transform.green(previousVersionTag) .. " to " .. transform.green(currentVersionTag)
+	-- )
 
-	local changes = C_BuildTools.GetChangelogEntry(previousVersionTag, currentVersionTag)
-	local markdownChanges = C_BuildTools.StringifyChangelogContents(changes)
+	-- local changes = C_BuildTools.GetChangelogEntry(previousVersionTag, currentVersionTag)
+	-- local markdownChanges = C_BuildTools.StringifyChangelogContents(changes)
 
-	DEBUG("Changelog summary:")
+	-- DEBUG("Changelog summary:")
 
-	local numPullRequests = #changes.pullRequests
-	if numPullRequests == 0 then
-		numPullRequests = "NO"
-	end
-	local numFeatures = #changes.newFeatures
-	if numFeatures == 0 then
-		numFeatures = "NO"
-	end
-	local numImprovements = #changes.improvements
-	if numImprovements == 0 then
-		numImprovements = "NO"
-	end
-	local numBreakingChanges = #changes.breakingChanges
-	if numBreakingChanges == 0 then
-		numBreakingChanges = "NO"
-	end
-	local numContributors = #changes.contributors
-	if numContributors == 0 then
-		numContributors = "NO"
-	end
+	-- local numPullRequests = #changes.pullRequests
+	-- if numPullRequests == 0 then
+	-- 	numPullRequests = "NO"
+	-- end
+	-- local numFeatures = #changes.newFeatures
+	-- if numFeatures == 0 then
+	-- 	numFeatures = "NO"
+	-- end
+	-- local numImprovements = #changes.improvements
+	-- if numImprovements == 0 then
+	-- 	numImprovements = "NO"
+	-- end
+	-- local numBreakingChanges = #changes.breakingChanges
+	-- if numBreakingChanges == 0 then
+	-- 	numBreakingChanges = "NO"
+	-- end
+	-- local numContributors = #changes.contributors
+	-- if numContributors == 0 then
+	-- 	numContributors = "NO"
+	-- end
 
-	DEBUG(format("* %s new feature%s", numFeatures, numFeatures == 1 and "" or "s"))
-	DEBUG(format("* %s improvement%s", numImprovements, numImprovements == 1 and "" or "s"))
-	DEBUG(format("* %s breaking change%s", numBreakingChanges, numBreakingChanges == 1 and "" or "s"))
-	DEBUG(format("* %s pull request%s", numPullRequests, numPullRequests == 1 and "" or "s"))
-	DEBUG(format("* %s external contributor%s", numContributors, numContributors == 1 and "" or "s"))
-	DEBUG("Saving changelog as " .. transform.green(C_BuildTools.CHANGELOG_FILE_PATH))
+	-- DEBUG(format("* %s new feature%s", numFeatures, numFeatures == 1 and "" or "s"))
+	-- DEBUG(format("* %s improvement%s", numImprovements, numImprovements == 1 and "" or "s"))
+	-- DEBUG(format("* %s breaking change%s", numBreakingChanges, numBreakingChanges == 1 and "" or "s"))
+	-- DEBUG(format("* %s pull request%s", numPullRequests, numPullRequests == 1 and "" or "s"))
+	-- DEBUG(format("* %s external contributor%s", numContributors, numContributors == 1 and "" or "s"))
+	-- DEBUG("Saving changelog as " .. transform.green(C_BuildTools.CHANGELOG_FILE_PATH))
 
-	C_FileSystem.WriteFile(C_BuildTools.CHANGELOG_FILE_PATH, markdownChanges)
+	-- C_FileSystem.WriteFile(C_BuildTools.CHANGELOG_FILE_PATH, markdownChanges)
 end
 
 return C_BuildTools
