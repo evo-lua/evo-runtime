@@ -69,7 +69,11 @@ function EvoBuildTarget:SetCompilerToolchain(toolchainInfo)
 			depfile = "$out.d",
 		}
 	)
-	ninjaFile:AddRule("link", "$CPP_LINKER $in -o $out $libs $LINKER_FLAGS", { description = "Linking target $out ..." })
+	ninjaFile:AddRule(
+		"link",
+		"$CPP_LINKER $in -o $out $libs $LINKER_FLAGS",
+		{ description = "Linking target $out ..." }
+	)
 
 	self.toolchain = toolchainInfo
 end
