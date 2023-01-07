@@ -31,3 +31,6 @@
 [submodule "Dependencies/ocornut/imgui"]
 	path = Dependencies/ocornut/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "Dependencies/glfw/glfw"]
+	path = Dependencies/glfw/glfw
+	url = https://github.com/glfw/glfw
