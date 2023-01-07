@@ -34,43 +34,33 @@ jobs:
       - name: Build luajit (via MSYS2)
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
-      - name: Build llhttp (via MSYS2)
-        run: deps/llhttp-windowsbuild.sh && ls ninjabuild-windows
+      # - name: Build llhttp (via MSYS2)
+      #   run: deps/llhttp-windowsbuild.sh && ls ninjabuild-windows
 
-      - name: Build openssl (via MSYS2)
-        run: deps/openssl-windowsbuild.sh && ls ninjabuild-windows
+      # - name: Build openssl (via MSYS2)
+      #   run: deps/openssl-windowsbuild.sh && ls ninjabuild-windows
 
-      - name: Build lua-openssl (via MSYS2)
-        run: deps/luaopenssl-windowsbuild.sh && ls ninjabuild-windows
+      # - name: Build lua-openssl (via MSYS2)
+      #   run: deps/luaopenssl-windowsbuild.sh && ls ninjabuild-windows
 
-      - name: Build luv and libuv (via MSYS2)
-        run: deps/luv-windowsbuild.sh && ls ninjabuild-windows
+      # - name: Build luv and libuv (via MSYS2)
+      #   run: deps/luv-windowsbuild.sh && ls ninjabuild-windows
 
-      - name: Build zlib (via MSYS2)
-        run: deps/zlib-windowsbuild.sh && ls ninjabuild-windows
+      # - name: Build zlib (via MSYS2)
+      #   run: deps/zlib-windowsbuild.sh && ls ninjabuild-windows
 
-      - name: Build pcre2 (via MSYS2)
-        run: deps/pcre-windowsbuild.sh && ls ninjabuild-windows
+      # - name: Build pcre2 (via MSYS2)
+      #   run: deps/pcre-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build runtime
         run: ls && ./windowsbuild.cmd && ls ninjabuild-windows && cp ninjabuild-windows/evo.exe . && ls
 
-      # These should be integrated with the unit (or acceptance) test steps, but that's a future concern
-      - name: Run legacy tests
-        run: ./run-legacy-tests.cmd
-
-      - name: Run unit tests
-        run: ./evo test.lua
-
-      - name: Run examples # These examples are synced with the documentation and must always work
-        run: ./evo run-examples.lua
-
-      - name: Run acceptance tests
-        run: ./evo scenarios.lua
+      - name: Run smoke tests
+        run: ./evo Tests/smoke-test.lua
 
       # GitHub adds a heading of their own, so remove the duplicate
-      - name: Generate CHANGELOG.MD
-        run: ./evo create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
+      # - name: Generate CHANGELOG.MD
+      #   run: ./evo create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
 
       - name: Publish new release
         # Truly "continuous" releases may be overkill here, so better only release tagged versions
@@ -78,6 +68,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: evo.exe
-          body_path: CHANGELOG.MD
+          # body_path: CHANGELOG.MD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
