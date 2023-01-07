@@ -25,7 +25,7 @@ local EvoBuildTarget = {
 	},
 	includeDirectories = {
 		NinjaBuildTools.DEFAULT_BUILD_DIRECTORY_NAME, -- For auto-generated headers (e.g., PCRE2)
-		"Dependencies/LuaJIT/LuaJIT/src",
+		"deps/LuaJIT/LuaJIT/src",
 	},
 	staticLibraries = {
 		"libluajit.a",

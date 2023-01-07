@@ -1,6 +1,6 @@
 echo Building target luajit
 
-LUAJIT_DIR=Dependencies/LuaJIT/LuaJIT
+LUAJIT_DIR=deps/LuaJIT/LuaJIT
 LUAJIT_SOURCE_DIR=$LUAJIT_DIR/src
 BUILD_DIR=ninjabuild-unix
 

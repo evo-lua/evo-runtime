@@ -15,7 +15,7 @@ The supported platforms are current versions of Windows, Linux, and Mac OS X.
 In this repository, you'll find the following important directories:
 
 * ``BuildTools/``: Basic tooling to generate Ninja build configurations for the runtime
-* ``Dependencies/``: Third-party libraries and MSYS/Unix-compatible build scripts
+* ``deps/``: Third-party libraries and MSYS/Unix-compatible build scripts
 * ``Runtime/``: Native glue and bootstrapping code for the Lua environment
 * ``Tests/``: All kinds of automated tests and executable specs live here
 

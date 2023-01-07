@@ -1,6 +1,6 @@
 echo "Building target llhttp"
 
-SRC_DIR=Dependencies/nodejs/llhttp
+SRC_DIR=deps/nodejs/llhttp
 BUILD_DIR=$SRC_DIR/cmakebuild-unix
 OUT_DIR=ninjabuild-unix
 

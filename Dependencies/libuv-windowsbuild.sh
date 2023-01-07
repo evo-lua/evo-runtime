@@ -1,6 +1,6 @@
 echo "Building target libuv"
 
-SRC_DIR=Dependencies/libuv/libuv
+SRC_DIR=deps/libuv/libuv
 BUILD_DIR=$SRC_DIR/cmakebuild-windows
 OUT_DIR=ninjabuild-windows
 

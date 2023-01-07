@@ -1,7 +1,7 @@
 echo "Building target pcre2"
 
 OUT_DIR=ninjabuild-unix
-SRC_DIR=Dependencies/PCRE2Project/pcre2
+SRC_DIR=deps/PCRE2Project/pcre2
 BUILD_DIR=$SRC_DIR/cmakebuild-unix
 
 cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=OFF -DPCRE2_SUPPORT_JIT=ON -DCMAKE_C_COMPILER=gcc
