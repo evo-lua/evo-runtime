@@ -155,6 +155,8 @@ function C_BuildTools.FetchNotableChanges(versionTag)
 	return notableChanges[versionTag] or {}
 end
 
+local format = _G.format or string.format -- Can be removed after the format alias has been re-introduced
+
 -- This is screaming to get out and become its own class, but for the time being it shall remain imprisoned...
 local function markdownFile_AddCategory(markdownFile, category)
 	if #category.entries == 0 then
