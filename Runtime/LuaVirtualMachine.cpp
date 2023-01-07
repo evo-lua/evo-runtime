@@ -40,7 +40,7 @@ LuaVirtualMachine::~LuaVirtualMachine() {
 
 bool LuaVirtualMachine::DoFile(std::string filePath) {
 	int status = luaL_dofile(m_luaState, filePath.c_str());
-	if (status != LUA_OK) {
+	if(status != LUA_OK) {
 		std::cerr << "Error executing script: " << lua_tostring(m_luaState, -1) << std::endl;
 		return false;
 	}
@@ -59,7 +59,7 @@ bool LuaVirtualMachine::CompileChunk(std::string chunk, std::string chunkName) {
 
 	int success = luaL_loadbuffer(m_luaState, entry_point, strlen(entry_point), chunkName.c_str());
 	if(success != LUA_OK) {
-		std::cerr << "Failed to compile chunk: " <<lua_tostring(m_luaState, -1) << std::endl;
+		std::cerr << "Failed to compile chunk: " << lua_tostring(m_luaState, -1) << std::endl;
 		return false;
 	}
 
@@ -68,7 +68,7 @@ bool LuaVirtualMachine::CompileChunk(std::string chunk, std::string chunkName) {
 }
 
 bool LuaVirtualMachine::RunCompiledChunk() {
-	if (lua_pcall(m_luaState, 0, m_numExpectedArgsFromLuaMain, m_onLuaErrorIndex)) {
+	if(lua_pcall(m_luaState, 0, m_numExpectedArgsFromLuaMain, m_onLuaErrorIndex)) {
 		fprintf(stderr, "%s\n", lua_tostring(m_luaState, -1));
 		std::cout << "[C] Error in lua_pcall at " << FROM_HERE << std::endl;
 		return false;
@@ -82,7 +82,7 @@ bool LuaVirtualMachine::SetGlobalArgs(int argc, char* argv[]) {
 	lua_createtable(m_luaState, argc, 0);
 	m_relativeStackOffset++;
 
-	for (int index = 1; index < argc + 1; index++) {
+	for(int index = 1; index < argc + 1; index++) {
 		// Skip the interpreter name because that's what PUC and LuaJIT do
 		lua_pushstring(m_luaState, argv[index]);
 		lua_rawseti(m_luaState, -2, index - 1);

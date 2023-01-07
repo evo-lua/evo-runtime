@@ -1,36 +1,36 @@
-[submodule "Dependencies/LuaJIT/LuaJIT"]
-	path = Dependencies/LuaJIT/LuaJIT
+[submodule "deps/LuaJIT/LuaJIT"]
+	path = deps/LuaJIT/LuaJIT
 	url = https://github.com/LuaJIT/LuaJIT
-[submodule "Dependencies/libuv/libuv"]
-	path = Dependencies/libuv/libuv
+[submodule "deps/libuv/libuv"]
+	path = deps/libuv/libuv
 	url = https://github.com/libuv/libuv
-[submodule "Dependencies/madler/zlib"]
-	path = Dependencies/madler/zlib
+[submodule "deps/madler/zlib"]
+	path = deps/madler/zlib
 	url = https://github.com/madler/zlib
-[submodule "Dependencies/PCRE2Project/pcre2"]
-	path = Dependencies/PCRE2Project/pcre2
+[submodule "deps/PCRE2Project/pcre2"]
+	path = deps/PCRE2Project/pcre2
 	url = https://github.com/PCRE2Project/pcre2
-[submodule "Dependencies/openssl/openssl"]
-	path = Dependencies/openssl/openssl
+[submodule "deps/openssl/openssl"]
+	path = deps/openssl/openssl
 	url = https://github.com/openssl/openssl
-[submodule "Dependencies/evo-lua/lpeg-compat-52"]
-	path = Dependencies/evo-lua/lpeg-compat-52
+[submodule "deps/evo-lua/lpeg-compat-52"]
+	path = deps/evo-lua/lpeg-compat-52
 	url = https://github.com/evo-lua/lpeg-compat-52
-[submodule "Dependencies/richgel999/miniz"]
-	path = Dependencies/richgel999/miniz
+[submodule "deps/richgel999/miniz"]
+	path = deps/richgel999/miniz
 	url = https://github.com/richgel999/miniz
-[submodule "Dependencies/facebookresearch/CParser"]
-	path = Dependencies/facebookresearch/CParser
+[submodule "deps/facebookresearch/CParser"]
+	path = deps/facebookresearch/CParser
 	url = https://github.com/facebookresearch/CParser
-[submodule "Dependencies/PortAudio/portaudio"]
-	path = Dependencies/PortAudio/portaudio
+[submodule "deps/PortAudio/portaudio"]
+	path = deps/PortAudio/portaudio
 	url = https://github.com/PortAudio/portaudio.git
-[submodule "Dependencies/mikke89/RmlUi"]
-	path = Dependencies/mikke89/RmlUi
+[submodule "deps/mikke89/RmlUi"]
+	path = deps/mikke89/RmlUi
 	url = https://github.com/mikke89/RmlUi
-[submodule "Dependencies/ocornut/imgui"]
-	path = Dependencies/ocornut/imgui
+[submodule "deps/ocornut/imgui"]
+	path = deps/ocornut/imgui
 	url = https://github.com/ocornut/imgui
-[submodule "Dependencies/glfw/glfw"]
-	path = Dependencies/glfw/glfw
+[submodule "deps/glfw/glfw"]
+	path = deps/glfw/glfw
 	url = https://github.com/glfw/glfw

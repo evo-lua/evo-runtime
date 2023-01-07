@@ -1,0 +1,34 @@
+name: Autoformat
+
+on:
+  pull_request:
+    paths-ignore:
+      - "README.MD"
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "README.MD"
+
+jobs:
+  check-format:
+    name: Enforce consistent formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Set up StyLua
+        uses: JohnnyMorganz/stylua-action@v1.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --check . --verbose
+          version: v0.15.1
+
+      - name: Run autoformat
+        run: ./autoformat.sh
+
+      - name: Check for inconsistent formatting
+        run: git --no-pager diff --exit-code -b . #The -b is for inconsistent newlines, which we ignore (for now)

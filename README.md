@@ -15,8 +15,13 @@ The supported platforms are current versions of Windows, Linux, and Mac OS X.
 In this repository, you'll find the following important directories:
 
 * ``BuildTools/``: Basic tooling to generate Ninja build configurations for the runtime
-* ``Dependencies/``: Third-party libraries and MSYS/Unix-compatible build scripts
+* ``deps/``: Third-party libraries and MSYS/Unix-compatible build scripts
 * ``Runtime/``: Native glue and bootstrapping code for the Lua environment
 * ``Tests/``: All kinds of automated tests and executable specs live here
 
-There's also config files for GitHub actions and other tooling - a necessary evil.
+After building, you'll additionally find a temporary directory containing all build artifacs here:
+
+* ``ninjabuild-windows`` (Windows)
+* ``ninjabuild-unix`` (Linux or Mac OS)
+
+There's also config files for GitHub actions and other tooling in the project root - a necessary evil.
