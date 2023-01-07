@@ -25,3 +25,6 @@
 [submodule "Dependencies/PortAudio/portaudio"]
 	path = Dependencies/PortAudio/portaudio
 	url = https://github.com/PortAudio/portaudio.git
+[submodule "Dependencies/mikke89/RmlUi"]
+	path = Dependencies/mikke89/RmlUi
+	url = https://github.com/mikke89/RmlUi
