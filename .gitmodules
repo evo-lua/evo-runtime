@@ -28,3 +28,6 @@
 [submodule "Dependencies/mikke89/RmlUi"]
 	path = Dependencies/mikke89/RmlUi
 	url = https://github.com/mikke89/RmlUi
+[submodule "Dependencies/ocornut/imgui"]
+	path = Dependencies/ocornut/imgui
+	url = https://github.com/ocornut/imgui
