@@ -1,0 +1,89 @@
+name: Build and Release (Unix/OSX)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  create:
+    # Any branch or tag
+
+jobs:
+  build:
+    name: Build for Linux and Mac
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Check out Git repository (${{ matrix.os }})
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
+
+      - name: Install Ninja (via Homebrew)
+        run: brew install ninja
+        if: matrix.os == 'macOS-latest'
+
+      - name: Install Ninja (via APT)
+        run: sudo apt-get install ninja-build
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: Build luajit (${{ matrix.os }})
+        run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build llhttp (${{ matrix.os }})
+        run: deps/llhttp-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build openssl (${{ matrix.os }})
+        run: deps/openssl-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build lua-openssl (${{ matrix.os }})
+        run: deps/luaopenssl-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build luv and libuv (${{ matrix.os }})
+        run: deps/luv-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build zlib (${{ matrix.os }})
+        run: deps/zlib-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build pcre2 (${{ matrix.os }})
+        run: deps/pcre-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build runtime (${{ matrix.os }})
+        run: ls && ./unixbuild.sh && ls ninjabuild-unix && cp ninjabuild-unix/evo . && ls
+
+      # These should be integrated with the unit (or acceptance) test steps, but that's a future concern
+      - name: Run legacy tests (${{ matrix.os }})
+        run: ./run-legacy-tests.sh
+
+      - name: Run unit tests (${{ matrix.os }})
+        run: ./evo test.lua
+
+      # These examples are synced with the documentation and must always work
+      - name: Run examples (${{ matrix.os }})
+        run: ./evo run-examples.lua
+
+      - name: Run acceptance tests (${{ matrix.os }})
+        run: ./evo scenarios.lua
+
+      - name: Prepare artifacts (${{ matrix.os }})
+        run: cp evo evo-${{ matrix.os }}-amd64
+
+      # GitHub adds a heading of their own, so remove the duplicate
+      - name: Generate CHANGELOG.MD
+        run: ./evo create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
+
+      - name: Publish new release
+        # Truly "continuous" releases may be overkill here, so better only release tagged versions
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: evo-${{ matrix.os }}-amd64
+          body_path: CHANGELOG.MD
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
