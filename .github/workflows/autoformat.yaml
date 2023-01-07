@@ -28,8 +28,7 @@ jobs:
           version: v0.15.1
 
       - name: Run autoformat
-        # Git doesn't like to save the executable bit, apparently... and this is easier than fixing it up manually
-        run: chmod +x autoformat.sh && ./autoformat.sh
+        run: ./autoformat.sh
 
       - name: Check for inconsistent formatting
         run: git --no-pager diff --exit-code -b . #The -b is for inconsistent newlines, which we ignore (for now)
