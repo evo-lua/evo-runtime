@@ -3,7 +3,7 @@ NUM_PARALLEL_JOBS=$(nproc)
 echo "Building target openssl with $NUM_PARALLEL_JOBS jobs"
 
 BUILD_DIR=ninjabuild-unix
-OPENSSL_DIR=deps/openssl
+OPENSSL_DIR=Dependencies/openssl/openssl
 
 cd $OPENSSL_DIR
 

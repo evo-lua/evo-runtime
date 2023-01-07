@@ -8,7 +8,7 @@ NUM_PARALLEL_JOBS=$NUMBER_OF_PROCESSORS
 echo "Building target openssl with $NUM_PARALLEL_JOBS jobs"
 
 BUILD_DIR=ninjabuild-windows
-OPENSSL_DIR=deps/openssl
+OPENSSL_DIR=Dependencies/openssl/openssl
 
 cd $OPENSSL_DIR
 

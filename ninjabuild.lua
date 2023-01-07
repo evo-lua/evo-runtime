@@ -135,6 +135,7 @@ function EvoBuildTarget:GetDefines(cppSourceFilePath)
 	return defines
 end
 
+-- DEPRECATED: Obsoleted since lrexlib is no longer required?
 function EvoBuildTarget:DiscoverLrexlibVersion()
 	-- This is somewhat sketchy as it relies on many assumptions, but since lrexlib isn't really maintained that's probably OK-ish...
 	-- The version is hardcoded in their Makefile and then propagated to the luarocks configuration
