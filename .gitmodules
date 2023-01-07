@@ -22,3 +22,6 @@
 [submodule "Dependencies/facebookresearch/CParser"]
 	path = Dependencies/facebookresearch/CParser
 	url = https://github.com/facebookresearch/CParser
+[submodule "Dependencies/PortAudio/portaudio"]
+	path = Dependencies/PortAudio/portaudio
+	url = https://github.com/PortAudio/portaudio.git
