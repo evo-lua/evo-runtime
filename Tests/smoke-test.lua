@@ -1,4 +1,6 @@
 -- If there's an issue with the native bootstrapping code that initializes the Lua environment, all bets are off
+local transform = require("transform")
+
 print()
 print("Running basic smoke tests ...")
 print()
@@ -8,6 +10,11 @@ local assertions = {
 		actual = arg[0],
 		expected = "Tests/smoke-test.lua",
 		description = "The global arg table should contain the script name at index 0",
+	},
+	{
+		actual = type(transform),
+		expected = "table",
+		description = "The transform library should be preloaded",
 	},
 }
 
