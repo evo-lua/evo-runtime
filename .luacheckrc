@@ -9,4 +9,8 @@ ignore = {
 	"212", -- unused argument 'self'; not a problem and commonly used for colon notation
 	"213", -- unused loop variable (kept for readability's sake)
 }
-globals = {}
+globals = {
+	-- Builtin BDD-style test runner
+	"describe",
+	"it",
+}
