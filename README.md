@@ -19,7 +19,7 @@ In this repository, you'll find the following important directories:
 * ``Runtime/``: Native glue and bootstrapping code for the Lua environment
 * ``Tests/``: All kinds of automated tests and executable specs live here
 
-After building, you'll additionally find a temporary directory containing all build artifacs here:
+After building, you'll additionally find a temporary directory containing all build artifacts here:
 
 * ``ninjabuild-windows`` (Windows)
 * ``ninjabuild-unix`` (Linux or Mac OS)
