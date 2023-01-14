@@ -10,7 +10,22 @@ ignore = {
 	"213", -- unused loop variable (kept for readability's sake)
 }
 globals = {
-	-- Builtin BDD-style test runner
+	-- assertions library
+	"assertTrue",
+	"assertFalse",
+	"assertNil",
+	"assertThrows",
+	"assertDoesNotThrow",
+	"assertFailure",
+	"assertCallsFunction",
+	"assertEqualStrings",
+	"assertEqualNumbers",
+	"assertEqualTables",
+	"assertEqualBooleans",
+	"assertEqualPointers",
+	"assertEqualBytes",
+	"assertEquals",
+
 	"describe",
 	"it",
 }

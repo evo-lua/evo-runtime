@@ -1,15 +1,20 @@
--- If there's an issue with the native bootstrapping code that initializes the Lua environment, all bets are off
+local assertions = require("assertions")
 local transform = require("transform")
 
 print()
 print("Running basic smoke tests ...")
 print()
 
-local assertions = {
+local testCases = {
 	{
 		actual = arg[0],
 		expected = "Tests/smoke-test.lua",
 		description = "The global arg table should contain the script name at index 0",
+	},
+	{
+		actual = type(assertions),
+		expected = "table",
+		description = "The assertions library should be preloaded",
 	},
 	{
 		actual = type(transform),
@@ -18,10 +23,13 @@ local assertions = {
 	},
 }
 
-for _, assertionInfo in ipairs(assertions) do
+for _, assertionInfo in ipairs(testCases) do
 	assert(assertionInfo.actual == assertionInfo.expected, assertionInfo.description)
 	print("OK", assertionInfo.description)
 end
+
+-- Since there's no import library available at this stage, let's just assume this script always runs from the project root
+dofile("Tests/SmokeTests/test-assertions-library.lua")
 
 print()
 print("Good news, everyone! There's at least a chance that the runtime isn't completely broken - time to celebrate:")
