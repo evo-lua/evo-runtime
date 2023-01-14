@@ -17,6 +17,7 @@ local EvoBuildTarget = {
 	-- Note that ninja doesn't care about path separators and the mingw toolchain supports forward slashes; no \ required
 	luaSources = {
 		"Runtime/evo.lua",
+		"Runtime/Libraries/assertions.lua",
 		"Runtime/Libraries/transform.lua",
 	},
 	cppSources = {
