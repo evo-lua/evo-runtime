@@ -1,0 +1,10 @@
+dofile("Tests/SmokeTests/validation-library/test-validate-string.lua")
+dofile("Tests/SmokeTests/validation-library/test-validate-number.lua")
+dofile("Tests/SmokeTests/validation-library/test-validate-boolean.lua")
+dofile("Tests/SmokeTests/validation-library/test-validate-table.lua")
+dofile("Tests/SmokeTests/validation-library/test-validate-function.lua")
+dofile("Tests/SmokeTests/validation-library/test-validate-thread.lua")
+dofile("Tests/SmokeTests/validation-library/test-validate-userdata.lua")
+dofile("Tests/SmokeTests/validation-library/test-validate-struct.lua")
+
+print("OK", "The validation library should be functional")
