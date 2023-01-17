@@ -48,6 +48,7 @@ end
 
 -- Since there's no import library available at this stage, let's just assume this script always runs from the project root
 dofile("Tests/SmokeTests/test-assertions-library.lua")
+dofile("Tests/SmokeTests/test-inspect-library.lua")
 dofile("Tests/SmokeTests/test-validation-library.lua")
 
 print()
