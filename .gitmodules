@@ -34,3 +34,6 @@
 [submodule "deps/luvit/luv"]
 	path = deps/luvit/luv
 	url = https://github.com/luvit/luv
+[submodule "deps/kikito/inspect.lua"]
+	path = deps/kikito/inspect.lua
+	url = https://github.com/kikito/inspect.lua.git
