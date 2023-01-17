@@ -11,7 +11,7 @@ local function testEqualNumbersCase()
 	local success, errorMessage = pcall(assertEqualNumbers, num1, num3)
 	assert(success == false, "assertEqualNumbers(num1, num3) should raise an error")
 	assert(
-		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1 but got 2$"),
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected 2 but got 1$"),
 		"assertEqualNumbers(num1, num3) should raise an error with the correct message"
 	)
 end
@@ -20,7 +20,7 @@ local function testDifferentNumbersCase()
 	local success, errorMessage = pcall(assertEqualNumbers, num1, num4)
 	assert(success == false, "assertEqualNumbers(num1, num4) should raise an error")
 	assert(
-		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1 but got 0$"),
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected 0 but got 1$"),
 		"assertEqualNumbers(num1, num4) should raise an error with the correct message"
 	)
 end
@@ -38,7 +38,7 @@ local function testAlmostEqualNumbersCase()
 	local success, errorMessage = pcall(assertEqualNumbers, num1, num2 + 0.1)
 	assert(success == false, "assertEqualNumbers(num1, num2 + 0.1) should raise an error")
 	assert(
-		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1 but got 1.1$"),
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1.1 but got 1$"),
 		"assertEqualNumbers(num1, num2 + 0.1) should raise an error with the correct message"
 	)
 end

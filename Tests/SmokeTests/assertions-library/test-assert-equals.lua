@@ -35,7 +35,7 @@ local function testDistinctStringsCase()
 	local status, errorMessage = pcall(assertEquals, "hello", "world")
 	assert(status == false, "assertEquals should throw an error when the values don't match")
 	assert(
-		string.match(errorMessage, "ASSERTION FAILURE: Expected hello but got world") ~= nil,
+		string.match(errorMessage, "ASSERTION FAILURE: Expected world but got hello") ~= nil,
 		"assertEquals should throw an error message with the proper format"
 	)
 end
