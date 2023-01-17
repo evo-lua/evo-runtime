@@ -1,6 +1,6 @@
 echo "Building target luv"
 
-SRC_DIR=deps/luv
+SRC_DIR=deps/luvit/luv
 BUILD_DIR=$SRC_DIR/cmakebuild-unix
 OUT_DIR=ninjabuild-unix
 

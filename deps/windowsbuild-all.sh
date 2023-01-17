@@ -1,8 +1,7 @@
-Dependencies/luajit-windowsbuild.sh
-Dependencies/libuv-windowsbuild.sh
-# Dependencies/llhttp-windowsbuild.sh
-# Dependencies/openssl-windowsbuild.sh
-# Dependencies/luaopenssl-windowsbuild.sh
-# Dependencies/luv-windowsbuild.sh
-# Dependencies/zlib-windowsbuild.sh
-# Dependencies/pcre-windowsbuild.sh
+deps/luajit-windowsbuild.sh
+# deps/llhttp-windowsbuild.sh
+# deps/openssl-windowsbuild.sh
+# deps/luaopenssl-windowsbuild.sh
+deps/luv-windowsbuild.sh
+# deps/zlib-windowsbuild.sh
+# deps/pcre-windowsbuild.sh
