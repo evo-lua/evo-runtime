@@ -38,6 +38,19 @@ LuaVirtualMachine::~LuaVirtualMachine() {
 	lua_close(m_luaState);
 }
 
+bool LuaVirtualMachine::PreloadPackage(std::string packageName, luaopen_function packageLoader) {
+	lua_getglobal(m_luaState, "package");
+	lua_getfield(m_luaState, -1, "loaded");
+
+	lua_pushcfunction(m_luaState, packageLoader);
+	lua_call(m_luaState, 0, 1);
+	lua_setfield(m_luaState, -2, packageName.c_str());
+
+	lua_remove(m_luaState, -1);
+
+	return true;
+}
+
 bool LuaVirtualMachine::DoFile(std::string filePath) {
 	int status = luaL_dofile(m_luaState, filePath.c_str());
 	if(status != LUA_OK) {
