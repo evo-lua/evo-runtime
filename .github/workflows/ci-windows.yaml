@@ -43,8 +43,8 @@ jobs:
       # - name: Build lua-openssl (via MSYS2)
       #   run: deps/luaopenssl-windowsbuild.sh && ls ninjabuild-windows
 
-      # - name: Build luv and libuv (via MSYS2)
-      #   run: deps/luv-windowsbuild.sh && ls ninjabuild-windows
+      - name: Build luv and libuv (via MSYS2)
+        run: deps/luv-windowsbuild.sh && ls ninjabuild-windows
 
       # - name: Build zlib (via MSYS2)
       #   run: deps/zlib-windowsbuild.sh && ls ninjabuild-windows

@@ -45,8 +45,8 @@ jobs:
       # - name: Build lua-openssl (${{ matrix.os }})
       #   run: deps/luaopenssl-unixbuild.sh && ls ninjabuild-unix
 
-      # - name: Build luv and libuv (${{ matrix.os }})
-      #   run: deps/luv-unixbuild.sh && ls ninjabuild-unix
+      - name: Build luv and libuv (${{ matrix.os }})
+        run: deps/luv-unixbuild.sh && ls ninjabuild-unix
 
       # - name: Build zlib (${{ matrix.os }})
       #   run: deps/zlib-unixbuild.sh && ls ninjabuild-unix
