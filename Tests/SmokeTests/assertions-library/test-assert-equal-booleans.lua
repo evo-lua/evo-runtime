@@ -20,8 +20,8 @@ local function testTrueFalseCase()
 	local success, errorMessage = pcall(assertEqualBooleans, true, false)
 	assert(not success, "assertEqualBooleans(true, false) should return nil")
 	assert(
-		errorMessage == "ASSERTION FAILURE: Expected true but got false",
-		"assertEqualBooleans(true, false) should throw"
+		errorMessage == "ASSERTION FAILURE: Expected false but got true",
+		"assertEqualBooleans(true, false) should throw with the expected error message"
 	)
 end
 
@@ -29,8 +29,8 @@ local function testFalseTrueCase()
 	local success, errorMessage = pcall(assertEqualBooleans, false, true)
 	assert(not success, "assertEqualBooleans(false, true) should return nil")
 	assert(
-		errorMessage == "ASSERTION FAILURE: Expected false but got true",
-		"assertEqualBooleans(false, true) should throw"
+		errorMessage == "ASSERTION FAILURE: Expected true but got false",
+		"assertEqualBooleans(false, true) should throw with the expected error message"
 	)
 end
 

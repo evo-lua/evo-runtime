@@ -27,7 +27,7 @@ local function testClonedStructsCase()
 	assert(
 		string.match(
 			errorMessage,
-			"^ASSERTION FAILURE: Expected " .. tostring(point1) .. " but got " .. tostring(point2)
+			"^ASSERTION FAILURE: Expected " .. tostring(point2) .. " but got " .. tostring(point1)
 		),
 		errorMessage
 	)
@@ -42,7 +42,7 @@ local function testNonEqualPointersCase()
 	assert(
 		string.match(
 			errorMessage,
-			"^ASSERTION FAILURE: Expected " .. tostring(point1) .. " but got " .. tostring(point3)
+			"^ASSERTION FAILURE: Expected " .. tostring(point3) .. " but got " .. tostring(point1)
 		),
 		errorMessage
 	)

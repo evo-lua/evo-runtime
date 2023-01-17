@@ -37,7 +37,7 @@ local function testNonEqualPointersCase()
 	assert(
 		string.match(
 			errorMessage,
-			"^ASSERTION FAILURE: Expected " .. tostring(point1) .. " but got " .. tostring(point3)
+			"^ASSERTION FAILURE: Expected " .. tostring(point3) .. " but got " .. tostring(point1)
 		),
 		errorMessage
 	)
