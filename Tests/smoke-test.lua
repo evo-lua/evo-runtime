@@ -1,4 +1,5 @@
 local assertions = require("assertions")
+local inspect = require("inspect")
 local transform = require("transform")
 local uv = require("uv")
 local validation = require("validation")
@@ -17,6 +18,11 @@ local testCases = {
 		actual = type(assertions),
 		expected = "table",
 		description = "The assertions library should be preloaded",
+	},
+	{
+		actual = type(inspect),
+		expected = "table",
+		description = "The inspect library should be preloaded",
 	},
 	{
 		actual = type(transform),
