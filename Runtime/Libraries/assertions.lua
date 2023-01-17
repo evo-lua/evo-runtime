@@ -104,7 +104,7 @@ end
 
 local function assertEqualLuastring(firstValue, secondValue)
 	if firstValue ~= secondValue then
-		error("ASSERTION FAILURE: Expected " .. firstValue .. " but got " .. secondValue)
+		error("ASSERTION FAILURE: Expected " .. secondValue .. " but got " .. firstValue)
 	end
 	return true
 end
@@ -113,7 +113,7 @@ local function assertEqualBuffer(firstValue, secondValue)
 	local firstString = ffi_string(firstValue)
 	local secondString = ffi_string(secondValue)
 	if firstString ~= secondString then
-		error("ASSERTION FAILURE: Expected " .. firstString .. " but got " .. secondString)
+		error("ASSERTION FAILURE: Expected " .. secondString .. " but got " .. firstString)
 	end
 	return true
 end
@@ -139,7 +139,7 @@ function assertions.assertEqualNumbers(firstValue, secondValue)
 	if type(firstValue) ~= "number" or type(secondValue) ~= "number" then
 		error("ASSERTION FAILURE: Expected numbers but got " .. type(firstValue) .. " and " .. type(secondValue), 0)
 	elseif firstValue ~= secondValue then
-		error("ASSERTION FAILURE: Expected " .. tostring(firstValue) .. " but got " .. tostring(secondValue), 0)
+		error("ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue), 0)
 	end
 	return true
 end
@@ -157,12 +157,12 @@ function assertions.assertEqualTables(firstValue, secondValue)
 		table.sort(secondValueKeys)
 
 		if #firstValueKeys ~= #secondValueKeys then
-			error("ASSERTION FAILURE: Expected " .. tostring(firstValue) .. " but got " .. tostring(secondValue), 0)
+			error("ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue), 0)
 		else
 			for i = 1, #firstValueKeys do
 				if firstValueKeys[i] ~= secondValueKeys[i] then
 					error(
-						"ASSERTION FAILURE: Expected " .. tostring(firstValue) .. " but got " .. tostring(secondValue),
+						"ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue),
 						0
 					)
 				end
@@ -178,7 +178,7 @@ function assertions.assertEqualBooleans(firstValue, secondValue)
 	end
 
 	if firstValue ~= secondValue then
-		error("ASSERTION FAILURE: Expected " .. tostring(firstValue) .. " but got " .. tostring(secondValue), 0)
+		error("ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue), 0)
 	end
 
 	return true
@@ -189,7 +189,7 @@ function assertions.assertEqualPointers(firstValue, secondValue)
 		if firstValue == secondValue then
 			return true
 		else
-			error("ASSERTION FAILURE: Expected " .. tostring(firstValue) .. " but got " .. tostring(secondValue), 0)
+			error("ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue), 0)
 		end
 	else
 		error(
@@ -216,9 +216,9 @@ function assertions.assertEqualBytes(firstValue, secondValue)
 	if ffi_string(firstValue, firstLength) ~= ffi_string(secondValue, secondLength) then
 		error(
 			"ASSERTION FAILURE: Expected "
-				.. tostring(firstValue, firstLength)
+				.. tostring(secondValue, secondLength)
 				.. " but got "
-				.. tostring(secondValue, secondLength),
+				.. tostring(firstValue, firstLength),
 			0
 		)
 	end
@@ -268,10 +268,10 @@ function assertions.assertEquals(firstValue, secondValue)
 
 	local errorMessage = format(
 		"ASSERTION FAILURE: Expected %s (a %s value) but got %s (a %s value)",
-		firstValue,
-		firstType,
 		secondValue,
-		secondType
+		secondType,
+		firstValue,
+		firstType
 	)
 	error(errorMessage, 0)
 end
