@@ -1,9 +1,6 @@
 [submodule "deps/LuaJIT/LuaJIT"]
 	path = deps/LuaJIT/LuaJIT
 	url = https://github.com/LuaJIT/LuaJIT
-[submodule "deps/libuv/libuv"]
-	path = deps/libuv/libuv
-	url = https://github.com/libuv/libuv
 [submodule "deps/madler/zlib"]
 	path = deps/madler/zlib
 	url = https://github.com/madler/zlib
@@ -34,3 +31,6 @@
 [submodule "deps/glfw/glfw"]
 	path = deps/glfw/glfw
 	url = https://github.com/glfw/glfw
+[submodule "deps/luvit/luv"]
+	path = deps/luvit/luv
+	url = https://github.com/luvit/luv

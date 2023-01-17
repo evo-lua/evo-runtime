@@ -3,11 +3,15 @@
 #include <iostream>
 #include <lua.hpp>
 
+// As per convention, any C function that creates a table with the library APIs and pushes it to the stack
+typedef int (*luaopen_function)(lua_State* L);
+
 class LuaVirtualMachine {
 	public:
 		LuaVirtualMachine();
 		~LuaVirtualMachine();
 
+		bool PreloadPackage(std::string packageName, luaopen_function packageLoader);
 		bool DoFile(std::string filePath);
 		bool DoString(std::string chunk, std::string chunkName);
 		bool CompileChunk(std::string chunk, std::string chunkName);

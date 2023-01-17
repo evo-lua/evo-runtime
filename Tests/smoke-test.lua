@@ -1,5 +1,6 @@
 local assertions = require("assertions")
 local transform = require("transform")
+local uv = require("uv")
 local validation = require("validation")
 
 print()
@@ -21,6 +22,11 @@ local testCases = {
 		actual = type(transform),
 		expected = "table",
 		description = "The transform library should be preloaded",
+	},
+	{
+		actual = type(uv),
+		expected = "table",
+		description = "The uv library should be preloaded",
 	},
 	{
 		actual = type(validation),

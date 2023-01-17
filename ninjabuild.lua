@@ -29,9 +29,13 @@ local EvoBuildTarget = {
 	includeDirectories = {
 		NinjaBuildTools.DEFAULT_BUILD_DIRECTORY_NAME, -- For auto-generated headers (e.g., PCRE2)
 		"deps/LuaJIT/LuaJIT/src",
+		"deps/luvit/luv/src",
+		"deps/luvit/luv/deps/libuv/include",
 	},
 	staticLibraries = {
 		"libluajit.a",
+		"libluv.a",
+		"libuv_a.a",
 	},
 	sharedLibraries = (
 		isWindows and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32"
