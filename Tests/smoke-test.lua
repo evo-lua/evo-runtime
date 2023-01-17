@@ -1,5 +1,6 @@
 local assertions = require("assertions")
 local transform = require("transform")
+local validation = require("validation")
 
 print()
 print("Running basic smoke tests ...")
@@ -21,6 +22,11 @@ local testCases = {
 		expected = "table",
 		description = "The transform library should be preloaded",
 	},
+	{
+		actual = type(validation),
+		expected = "table",
+		description = "The validation library should be preloaded",
+	},
 }
 
 for _, assertionInfo in ipairs(testCases) do
@@ -30,6 +36,7 @@ end
 
 -- Since there's no import library available at this stage, let's just assume this script always runs from the project root
 dofile("Tests/SmokeTests/test-assertions-library.lua")
+dofile("Tests/SmokeTests/test-validation-library.lua")
 
 print()
 print("Good news, everyone! There's at least a chance that the runtime isn't completely broken - time to celebrate:")
