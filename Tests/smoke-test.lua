@@ -1,4 +1,5 @@
 local assertions = require("assertions")
+local diffMatchPatch = require("diff_match_patch")
 local inspect = require("inspect")
 local transform = require("transform")
 local uv = require("uv")
@@ -18,6 +19,11 @@ local testCases = {
 		actual = type(assertions),
 		expected = "table",
 		description = "The assertions library should be preloaded",
+	},
+	{
+		actual = type(diffMatchPatch),
+		expected = "table",
+		description = "The diff-match-patch library should be preloaded",
 	},
 	{
 		actual = type(inspect),
