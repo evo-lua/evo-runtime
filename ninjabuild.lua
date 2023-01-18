@@ -19,6 +19,7 @@ local EvoBuildTarget = {
 		"deps/kikito/inspect.lua/inspect.lua",
 		"Runtime/evo.lua",
 		"Runtime/Extensions/debugx.lua",
+		"Runtime/Extensions/stringx.lua",
 		"Runtime/Libraries/assertions.lua",
 		"Runtime/Libraries/transform.lua",
 		"Runtime/Libraries/validation.lua",

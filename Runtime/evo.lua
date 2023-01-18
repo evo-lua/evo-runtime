@@ -11,6 +11,7 @@ end
 
 function evo.loadNonstandardExtensions()
 	require("debugx")
+	require("stringx")
 end
 
 return evo
