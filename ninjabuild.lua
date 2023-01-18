@@ -16,6 +16,7 @@ local EvoBuildTarget = {
 	-- Can't easily discover sources or resolve paths with only Lua APIs. Listing them explicitly is probably safer anyway
 	-- Note that ninja doesn't care about path separators and the mingw toolchain supports forward slashes; no \ required
 	luaSources = {
+		"deps/google/diff-match-patch/lua/diff_match_patch.lua",
 		"deps/kikito/inspect.lua/inspect.lua",
 		"Runtime/evo.lua",
 		"Runtime/Extensions/debugx.lua",
