@@ -226,6 +226,21 @@ function assertions.assertEqualBytes(firstValue, secondValue)
 	return true
 end
 
+function assertions.assertEqualFunctions(firstValue, secondValue)
+	if type(firstValue) ~= "function" or type(secondValue) ~= "function" then
+		error(
+			"ASSERTION FAILURE: Expected two function values, got " .. type(firstValue) .. " and " .. type(secondValue),
+			0
+		)
+	end
+
+	if firstValue ~= secondValue then
+		error("ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue), 0)
+	end
+
+	return true
+end
+
 function assertions.assertEquals(firstValue, secondValue)
 	local firstType = type(firstValue)
 	local secondType = type(secondValue)
@@ -237,6 +252,7 @@ function assertions.assertEquals(firstValue, secondValue)
 	local areBothValuesTables = (firstType == "table" and secondType == "table")
 	local areBothValuesNil = (firstType == "nil" and secondType == "nil")
 	local areBothValuesStructs = (firstType == "cdata" and secondType == "cdata")
+	local areBothValuesFunctions = (firstType == "function" and secondType == "function")
 
 	if areBothValuesNil then
 		return true
@@ -264,6 +280,10 @@ function assertions.assertEquals(firstValue, secondValue)
 
 	if areBothValuesStructs then
 		return assertions.assertEqualPointers(firstValue, secondValue)
+	end
+
+	if areBothValuesFunctions then
+		return assertions.assertEqualFunctions(firstValue, secondValue)
 	end
 
 	local errorMessage = format(
