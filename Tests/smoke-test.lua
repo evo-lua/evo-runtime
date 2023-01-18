@@ -52,6 +52,7 @@ dofile("Tests/SmokeTests/test-inspect-library.lua")
 dofile("Tests/SmokeTests/test-validation-library.lua")
 
 dofile("Tests/SmokeTests/test-debug-extensions.lua")
+dofile("Tests/SmokeTests/test-string-extensions.lua")
 
 print()
 print("Good news, everyone! There's at least a chance that the runtime isn't completely broken - time to celebrate:")

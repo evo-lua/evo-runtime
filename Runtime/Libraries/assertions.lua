@@ -144,6 +144,18 @@ function assertions.assertEqualNumbers(firstValue, secondValue)
 	return true
 end
 
+local diff = string.diff
+local dump = debug.dump
+
+local diffOptions = {
+	silent = true,
+	separator = "\t",
+}
+
+local function computeDiffString(firstValue, secondValue)
+	return diff(dump(firstValue, diffOptions), dump(secondValue, diffOptions))
+end
+
 function assertions.assertEqualTables(firstValue, secondValue)
 	if type(firstValue) == "table" then
 		local firstValueKeys, secondValueKeys = {}, {}
@@ -157,12 +169,25 @@ function assertions.assertEqualTables(firstValue, secondValue)
 		table.sort(secondValueKeys)
 
 		if #firstValueKeys ~= #secondValueKeys then
-			error("ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue), 0)
+			error(
+				"ASSERTION FAILURE: Expected "
+					.. tostring(secondValue)
+					.. " but got "
+					.. tostring(firstValue)
+					.. "\n"
+					.. computeDiffString(firstValue, secondValue),
+				0
+			)
 		else
 			for i = 1, #firstValueKeys do
 				if firstValueKeys[i] ~= secondValueKeys[i] then
 					error(
-						"ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue),
+						"ASSERTION FAILURE: Expected "
+							.. tostring(secondValue)
+							.. " but got "
+							.. tostring(firstValue)
+							.. "\n"
+							.. computeDiffString(firstValue, secondValue),
 						0
 					)
 				end
