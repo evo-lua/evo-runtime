@@ -11,6 +11,7 @@ dofile("Tests/SmokeTests/assertions-library/test-assert-equal-strings.lua")
 dofile("Tests/SmokeTests/assertions-library/test-assert-equal-tables.lua")
 dofile("Tests/SmokeTests/assertions-library/test-assert-equal-pointers.lua")
 dofile("Tests/SmokeTests/assertions-library/test-assert-equal-bytes.lua")
+dofile("Tests/SmokeTests/assertions-library/test-assert-equal-functions.lua")
 
 local function testEqualNumbersCase()
 	local status = pcall(assertEquals, 1, 1)
@@ -107,6 +108,10 @@ local function testDistinctStructsCase()
 	)
 end
 
+local function testBuiltinFunctionsCase()
+	assertEquals(print, print)
+end
+
 local function testAssertEquals()
 	testEqualNumbersCase()
 	testDistinctNumbersCase()
@@ -126,6 +131,8 @@ local function testAssertEquals()
 	testDistinctStringBuffersCase()
 
 	testDistinctStructsCase()
+
+	testBuiltinFunctionsCase()
 end
 
 testAssertEquals()
