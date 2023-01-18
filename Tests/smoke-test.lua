@@ -57,6 +57,8 @@ dofile("Tests/SmokeTests/test-assertions-library.lua")
 dofile("Tests/SmokeTests/test-inspect-library.lua")
 dofile("Tests/SmokeTests/test-validation-library.lua")
 
+dofile("Tests/SmokeTests/test-global-aliases.lua")
+
 dofile("Tests/SmokeTests/test-debug-extensions.lua")
 
 print()
