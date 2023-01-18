@@ -37,3 +37,6 @@
 [submodule "deps/kikito/inspect.lua"]
 	path = deps/kikito/inspect.lua
 	url = https://github.com/kikito/inspect.lua.git
+[submodule "deps/google/diff-match-patch"]
+	path = deps/google/diff-match-patch
+	url = https://github.com/google/diff-match-patch
