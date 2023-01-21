@@ -1,4 +1,5 @@
 local assertions = require("assertions")
+local bdd = require("bdd")
 local inspect = require("inspect")
 local transform = require("transform")
 local uv = require("uv")
@@ -18,6 +19,11 @@ local testCases = {
 		actual = type(assertions),
 		expected = "table",
 		description = "The assertions library should be preloaded",
+	},
+	{
+		actual = type(bdd),
+		expected = "table",
+		description = "The bdd library should be preloaded",
 	},
 	{
 		actual = type(inspect),
@@ -48,6 +54,7 @@ end
 
 -- Since there's no import library available at this stage, let's just assume this script always runs from the project root
 dofile("Tests/SmokeTests/test-assertions-library.lua")
+dofile("Tests/SmokeTests/test-bdd-library.lua")
 dofile("Tests/SmokeTests/test-inspect-library.lua")
 dofile("Tests/SmokeTests/test-validation-library.lua")
 

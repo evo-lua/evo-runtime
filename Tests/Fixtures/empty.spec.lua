@@ -1,0 +1,1 @@
+-- Deliberate left empty; any test that doesn't raise an error is technically "passing"
