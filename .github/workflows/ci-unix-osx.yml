@@ -1,4 +1,4 @@
-name: Build and Release (Unix/OSX)
+name: Build and Release (Unix/Mac)
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build for Linux and Mac
+    name: Build for Linux/Mac OS
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
