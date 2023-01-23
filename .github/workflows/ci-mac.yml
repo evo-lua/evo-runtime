@@ -4,14 +4,20 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - main
+    paths-ignore:
+      - '**.md'
   create:
     # Any branch or tag
 
 jobs:
   build:
+    if: github.event.pull_request.draft == false
     name: Build for Mac OS
     runs-on: macos-latest
 
