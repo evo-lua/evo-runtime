@@ -21,6 +21,21 @@ Automated testing covers all platforms equally:
 
 Development happens on Windows 10 and Ubuntu. Mac OS support is given on a "best effort" basis.
 
+## Compatibility
+
+Evo is **fully compatible** with:
+
+* PUC Lua 5.1
+* LuaJIT (latest)
+
+It is **generally incompatible** with:
+
+* PUC Lua 5.2, 5.3, or 5.4 (though some 5.2 and 5.3 APIs are supported)
+* Any LuaJIT fork that strays too far from upstream (it's dangerous out there!)
+* Embedded Lua(u) environments, like those found in games (ROBLOX, WOW, ...)
+
+I have *no plans* to support Lua engines other than LuaJIT at this time.
+
 ## Repository Layout
 
 In this repository, you'll find the following important directories:
