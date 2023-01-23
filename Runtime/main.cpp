@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
 	LuaVirtualMachine* luaVM = new LuaVirtualMachine();
 
 	luaVM->SetGlobalArgs(argc, argv);
+	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
 	luaVM->PreloadPackage("uv", luaopen_luv);
