@@ -10,6 +10,14 @@ This is an early prototype, focusing more on native code compared to the previou
 
 The supported platforms are current versions of Windows, Linux, and Mac OS X.
 
+Automated testing covers all platforms equally:
+
+![https://github.com/evo-lua/evo-runtime/actions/workflows/ci-windows.yml/badge.svg](https://github.com/evo-lua/evo-runtime/actions/workflows/ci-windows.yml/badge.svg)
+![https://github.com/evo-lua/evo-runtime/actions/workflows/ci-linux.yml/badge.svg](https://github.com/evo-lua/evo-runtime/actions/workflows/ci-linux.yml/badge.svg)
+![https://github.com/evo-lua/evo-runtime/actions/workflows/ci-mac.yml/badge.svg](https://github.com/evo-lua/evo-runtime/actions/workflows/ci-mac.yml/badge.svg)
+
+Development happens on Windows 10 and Ubuntu. Mac OS support is given on a "best effort" basis.
+
 ## Repository Layout
 
 In this repository, you'll find the following important directories:
