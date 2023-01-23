@@ -6,8 +6,10 @@ In this repository, work continues to build on the earlier prototypes, which are
 
 ## Status
 
-This is an early prototype, focusing more on native code compared to the previous iterations. Features generally work to the extent that they're tested, which is [as comprehensively as seems practical](https://blog.izs.me/2022/11/technical-debt-is-a-choice/).
-Consider this a successor to [evo-luvi](https://github.com/evo-lua/evo-luvi), which it will eventually replace (when this new version reaches feature parity).
+This is an early prototype, focusing more on native code compared to the previous iterations.
+
+Features generally work to the extent that they're tested, which is [as comprehensively as seems practical](https://blog.izs.me/2022/11/technical-debt-is-a-choice/).
+
 
 ## System Requirements
 
