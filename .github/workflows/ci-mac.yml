@@ -37,6 +37,9 @@ jobs:
       - name: Run smoke tests
         run: ./evo Tests/smoke-test.lua
 
+      - name: Run unit tests
+        run: ./evo Tests/unit-test.lua
+
       - name: Prepare artifacts
         run: cp evo evo-macos-x64
 
