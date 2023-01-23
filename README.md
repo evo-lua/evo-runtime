@@ -36,3 +36,11 @@ After building, you'll additionally find a temporary directory containing all bu
 * ``ninjabuild-unix`` (Linux or Mac OS)
 
 There's also config files for GitHub actions and other tooling in the project root - a necessary evil.
+
+## More Documentation
+
+The documentation website (work in progress) can be found here:
+
+* [https://evo-lua.github.io/](https://evo-lua.github.io/)
+
+If something's outdated, wrong, or missing, please [open an issue](https://github.com/evo-lua/evo-lua.github.io)!
