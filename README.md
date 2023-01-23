@@ -1,10 +1,13 @@
 # evo-runtime
 
-``evo`` is an experimental Lua runtime built on LuaJIT and libuv (inspired by [luvi](https://github.com/luvit/luvi)).
+``evo`` is an experimental Lua runtime built on LuaJIT and libuv (inspired by [luvit](https://github.com/luvit/luvit)).
+
+In this repository, work continues to build on the earlier prototypes, which are [evo-luvi](https://github.com/evo-lua/evo-luvi) and [evo-legacy](https://github.com/evo-lua/evo-legacy).
 
 ## Status
 
-This is an early prototype, focusing more on native code compared to the previous iterations. Features generally work to the extent that they're tested, which is [as comprehensively as seems practical to balance technical debt and iteration speed](https://blog.izs.me/2022/11/technical-debt-is-a-choice/).
+This is an early prototype, focusing more on native code compared to the previous iterations. Features generally work to the extent that they're tested, which is [as comprehensively as seems practical](https://blog.izs.me/2022/11/technical-debt-is-a-choice/).
+Consider this a successor to [evo-luvi](https://github.com/evo-lua/evo-luvi), which it will eventually replace (when this new version reaches feature parity).
 
 ## System Requirements
 
