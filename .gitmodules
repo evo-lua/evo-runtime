@@ -37,3 +37,6 @@
 [submodule "deps/kikito/inspect.lua"]
 	path = deps/kikito/inspect.lua
 	url = https://github.com/kikito/inspect.lua.git
+[submodule "deps/webview/webview"]
+	path = deps/webview/webview
+	url = https://github.com/webview/webview
