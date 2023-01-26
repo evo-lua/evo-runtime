@@ -133,7 +133,7 @@ function bdd.executeSpecFile(specFile)
 		end
 	end
 
-	if bdd.isMinimalReportingMode() and not success then
+	if not success and (bdd.isMinimalReportingMode() or bdd.isDetailedReportingMode()) then
 		-- Relying on just the exit code may be a bit too minimal, so let's fail loudly here
 		error(errorMessage, 0)
 	end
