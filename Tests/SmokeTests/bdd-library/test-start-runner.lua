@@ -247,6 +247,23 @@ end
 local function testDetailedFailingTestCase()
 	bdd.setDetailedReportMode()
 
+	local function runFailingTest()
+		startTestRunner({ "Tests/Fixtures/failing.spec.lua" })
+	end
+
+	assertThrows(runFailingTest, "meep")
+
+	local errorDetails = bdd.getErrorDetails()
+	assertEquals(#errorDetails, 1)
+
+	assertEquals(errorDetails[1].specFile, "Tests/Fixtures/failing.spec.lua")
+	assertEquals(errorDetails[1].message, "meep")
+	assertEquals(type(errorDetails[1].stackTrace), "string")
+end
+
+local function testDetailedFailingSectionsCase()
+	bdd.setDetailedReportMode()
+
 	local numFailingTests = startTestRunner({ "Tests/Fixtures/failing-sections.spec.lua" })
 	assertEquals(numFailingTests, 3)
 	local icon = brightRed("✗")
@@ -288,6 +305,7 @@ local function testStartTestRunner()
 	testMinimalEmptyTestCase()
 	testMinimalPassingTestCase()
 	testMinimalFailingTestCase()
+	testDetailedFailingSectionsCase()
 	testBasicEmptyTestCase()
 	testBasicEmptyTestCases()
 	testBasicPassingTestCase()
