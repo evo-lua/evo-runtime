@@ -4,6 +4,7 @@ extern "C" {
 
 #include "evo.hpp"
 #include "macros.hpp"
+#include "webview_ffi.hpp"
 
 #include "LuaVirtualMachine.hpp"
 
@@ -15,6 +16,9 @@ int main(int argc, char* argv[]) {
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
 	luaVM->PreloadPackage("uv", luaopen_luv);
+
+	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
+	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable());
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
