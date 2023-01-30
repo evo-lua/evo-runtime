@@ -31,6 +31,10 @@ LuaVirtualMachine::LuaVirtualMachine() {
 	lua_pushcfunction(m_luaState, onLuaError);
 	m_onLuaErrorIndex = lua_gettop(m_luaState);
 
+	// This global table simply exports the static APIs embedded within the runtime for the FFI to call into
+	lua_newtable(m_luaState);
+	lua_setglobal(m_luaState, "STATIC_FFI_EXPORTS");
+
 	this->CheckStack();
 }
 
@@ -105,6 +109,12 @@ bool LuaVirtualMachine::SetGlobalArgs(int argc, char* argv[]) {
 	m_relativeStackOffset--;
 
 	return true; // Can this even fail? If so, the smoke tests should catch it anyway...
+}
+
+void LuaVirtualMachine::BindStaticLibraryExports(std::string fieldName, void* staticExportsTable) {
+	lua_getglobal(m_luaState, "STATIC_FFI_EXPORTS");
+	lua_pushlightuserdata(m_luaState, staticExportsTable);
+	lua_setfield(m_luaState, -2, fieldName.c_str());
 }
 
 bool LuaVirtualMachine::CheckStack() {
