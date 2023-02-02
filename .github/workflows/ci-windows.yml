@@ -37,6 +37,9 @@ jobs:
         with:
           install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake
 
+      - name: Download Webview2 SDK
+        run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
+
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
