@@ -1,3 +1,4 @@
+deps/fetch-mswebview2.sh
 deps/luajit-windowsbuild.sh
 # deps/llhttp-windowsbuild.sh
 # deps/openssl-windowsbuild.sh
