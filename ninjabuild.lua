@@ -2,6 +2,8 @@
 -- That means you can only use standard LuaJIT functionality here, or the few dedicated modules designed to be portable
 local ffi = require("ffi")
 local isWindows = (ffi.os == "Windows")
+local isMacOS = (ffi.os == "OSX")
+local isUnix = not (isWindows or isMacOS)
 
 local NinjaBuildTools = require("BuildTools.NinjaBuildTools")
 local NinjaFile = require("BuildTools.NinjaFile")
@@ -18,6 +20,7 @@ local EvoBuildTarget = {
 	luaSources = {
 		"deps/kikito/inspect.lua/inspect.lua",
 		"Runtime/evo.lua",
+		"Runtime/Bindings/webview.lua",
 		"Runtime/Extensions/debugx.lua",
 		"Runtime/Extensions/stringx.lua",
 		"Runtime/Libraries/assertions.lua",
@@ -28,13 +31,16 @@ local EvoBuildTarget = {
 	cppSources = {
 		"Runtime/main.cpp",
 		"Runtime/evo.cpp",
+		"Runtime/Bindings/webview_ffi.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
 	},
 	includeDirectories = {
 		NinjaBuildTools.DEFAULT_BUILD_DIRECTORY_NAME, -- For auto-generated headers (e.g., PCRE2)
+		"Runtime/Bindings",
 		"deps/LuaJIT/LuaJIT/src",
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
+		"deps/webview/webview",
 	},
 	staticLibraries = {
 		"libluajit.a",
@@ -42,10 +48,29 @@ local EvoBuildTarget = {
 		"libuv_a.a",
 	},
 	sharedLibraries = (
-		isWindows and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32"
+		isWindows
+			and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32 -l SHELL32 -l OLE32 -l VERSION -l shlwapi"
 		or "-lm -ldl -pthread"
+			.. (
+				isMacOS and " -framework WebKit"
+				or isUnix and " -lwebkit2gtk-4.0 -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lsoup-2.4 -lgmodule-2.0 -pthread -lglib-2.0 -lgio-2.0 -ljavascriptcoregtk-4.0 -lgobject-2.0 -lglib-2.0"
+				or ""
+			)
 	),
 }
+
+-- This is another ugly hack required due to webview's lack of a build system:
+-- On Linux, we need a lot of extra libraries, which could be anywhere
+-- The good news is that pkg-config should help discover them more or less reliably
+if isUnix then
+	local webviewIncludeFlags = NinjaBuildTools.DiscoverIncludeDirectories("gtk+-3.0 webkit2gtk-4.0")
+	for k, includeDir in ipairs(webviewIncludeFlags) do
+		table.insert(EvoBuildTarget.includeDirectories, includeDir)
+	end
+
+	local webviewLibFlags = NinjaBuildTools.DiscoverSharedLibraries("gtk+-3.0 webkit2gtk-4.0")
+	EvoBuildTarget.sharedLibraries = EvoBuildTarget.sharedLibraries .. " " .. webviewLibFlags
+end
 
 function EvoBuildTarget:GenerateNinjaFile()
 	self.ninjaFile = NinjaFile()

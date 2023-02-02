@@ -11,7 +11,7 @@ local C_BuildTools = {
 	GCC_COMPILATION_SETTINGS = {
 		displayName = "GNU Compiler Collection",
 		CPP_COMPILER = "g++",
-		COMPILER_FLAGS = "-O2 -DNDEBUG -g -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing",
+		COMPILER_FLAGS = "-O2 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing",
 		CPP_LINKER = "g++",
 		-- Must export the entry point of bytecode objects so that LuaJIT can load them via require()
 		LINKER_FLAGS = isWindows and "-Wl,--export-all-symbols" or "-rdynamic",
@@ -48,6 +48,30 @@ function C_BuildTools.GetOutputFromShellCommand(shellCommand)
 	file:close()
 
 	return output
+end
+
+local function explode(inputString, delimiter)
+	delimiter = delimiter or "%s"
+
+	local tokens = {}
+	for token in string.gmatch(inputString, "([^" .. delimiter .. "]+)") do
+		table.insert(tokens, token)
+	end
+	return tokens
+end
+
+function C_BuildTools.DiscoverSharedLibraries(packageNames)
+	local pkgConfigCommand = "pkg-config --libs-only-l " .. packageNames
+	local output = C_BuildTools.GetOutputFromShellCommand(pkgConfigCommand)
+
+	return output
+end
+
+function C_BuildTools.DiscoverIncludeDirectories(packageNames)
+	local pkgConfigCommand = "pkg-config --cflags-only-I " .. packageNames .. ' | tr " " "\n" | sed \'s/^-I//\''
+	local output = C_BuildTools.GetOutputFromShellCommand(pkgConfigCommand)
+
+	return explode(output, "\n")
 end
 
 function C_BuildTools.DiscoverPreviousGitVersionTag()
