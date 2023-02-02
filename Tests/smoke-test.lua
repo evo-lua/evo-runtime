@@ -45,6 +45,11 @@ local testCases = {
 		expected = "table",
 		description = "The validation library should be preloaded",
 	},
+	{
+		actual = type(_G.STATIC_FFI_EXPORTS),
+		expected = "table",
+		description = "The static FFI bindings should be available",
+	},
 }
 
 for _, assertionInfo in ipairs(testCases) do
