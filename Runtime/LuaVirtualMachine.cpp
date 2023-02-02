@@ -21,6 +21,8 @@ int onLuaError(lua_State* m_luaState) {
 }
 
 LuaVirtualMachine::LuaVirtualMachine() {
+	m_relativeStackOffset = 0;
+
 	// Standard Lua module convention: Return a single table with the module's exports
 	m_numExpectedArgsFromLuaMain = 1;
 
