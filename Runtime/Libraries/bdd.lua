@@ -302,8 +302,4 @@ function bdd.getSectionsReportString()
 	return reportString
 end
 
--- Should probably remove this after global aliases are set up by the runtime
-_G.describe = bdd.describe
-_G.it = bdd.it
-
 return bdd
