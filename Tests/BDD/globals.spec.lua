@@ -1,3 +1,4 @@
+local evo = require("evo")
 local bdd = require("bdd")
 
 local globalAliases = {
@@ -6,6 +7,7 @@ local globalAliases = {
 	["dump"] = debug.dump,
 	["format"] = string.format,
 	["it"] = bdd.it,
+	["printf"] = evo.printf,
 }
 
 describe("globals", function()
