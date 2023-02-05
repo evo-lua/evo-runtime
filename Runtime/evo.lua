@@ -1,3 +1,4 @@
+local bdd = require("bdd")
 local ffi = require("ffi")
 
 local evo = {}
@@ -5,6 +6,7 @@ local evo = {}
 function evo.run()
 	evo.loadNonstandardExtensions()
 	evo.initializeStaticLibraryExports()
+	evo.registerGlobalAliases()
 
 	print("Hello from evo.lua!")
 
@@ -31,6 +33,14 @@ function evo.initializeStaticLibraryExports()
 		local ffiExportsTable = ffi.cast(expectedStructName, staticWrapperObject)
 		ffiBindings.bindings = ffiExportsTable
 	end
+end
+
+function evo.registerGlobalAliases()
+	_G.buffer = require("string.buffer")
+	_G.describe = bdd.describe
+	_G.dump = debug.dump
+	_G.format = string.format
+	_G.it = bdd.it
 end
 
 return evo

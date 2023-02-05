@@ -6,6 +6,7 @@ local format = string.format
 
 -- All paths are relative to the project root, since that's where the CI run will start
 local specFiles = {
+	"Tests/BDD/globals.spec.lua",
 	"Tests/BDD/uv-library.spec.lua",
 	"Tests/BDD/webview-library.spec.lua",
 }
