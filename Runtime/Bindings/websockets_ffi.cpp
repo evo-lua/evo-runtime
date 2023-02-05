@@ -75,6 +75,10 @@ private:
 			std::unique_lock<std::mutex> lock(ws->send_queue_mutex);
 			if(ws->send_queue.empty()) {
 				break;
+			default:
+				// Ignored, for now
+				std::cout << "Ignored callback with reason " << reason << std::endl;
+				break;
 			}
 			auto message = ws->send_queue.front();
 			ws->send_queue.pop();
