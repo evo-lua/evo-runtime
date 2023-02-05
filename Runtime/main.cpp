@@ -5,6 +5,7 @@ extern "C" {
 
 #include "evo.hpp"
 #include "macros.hpp"
+#include "uws_ffi.hpp"
 #include "webview_ffi.hpp"
 
 #include "LuaVirtualMachine.hpp"
@@ -34,6 +35,8 @@ int main(int argc, char* argv[]) {
 		PrintRuntimeError("Failed to require evo.lua", "Could not load embedded bytecode object", "Please report this problem on GitHub", FROM_HERE);
 		return EXIT_FAILURE;
 	}
+
+	uws_test();
 
 	return EXIT_SUCCESS;
 }
