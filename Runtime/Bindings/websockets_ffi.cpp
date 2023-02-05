@@ -83,6 +83,7 @@ private:
 			auto message = ws->send_queue.front();
 			ws->send_queue.pop();
 			auto buf = lws_write(wsi, reinterpret_cast<unsigned char*>(&message[0]), message.size(), LWS_WRITE_BINARY);
+			std::cout << "Echoing message: " << buf << std::endl;
 			break;
 		}
 	}
