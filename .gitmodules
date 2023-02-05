@@ -40,3 +40,6 @@
 [submodule "deps/webview/webview"]
 	path = deps/webview/webview
 	url = https://github.com/webview/webview
+[submodule "deps/uNetworking/uWebSockets"]
+	path = deps/uNetworking/uWebSockets
+	url = https://github.com/uNetworking/uWebSockets.git
