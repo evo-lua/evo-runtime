@@ -4,7 +4,7 @@ UWS_DIR=deps/uNetworking/uWebSockets
 UWS_SOURCE_DIR=$UWS_DIR/src
 BUILD_DIR=ninjabuild-windows
 
-cd $UWS_DIR
+cd $UWS_DIR/capi
 
 # make clean
 # TBD: WITH_OPENSSL? WITH_QUIC? WITH_LIBUV=1 ? also DISABLE these: LIBUS_NO_SSL  UWS_NO_ZLIB - and use the libuv/zlib we built
