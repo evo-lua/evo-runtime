@@ -114,17 +114,18 @@ extern const lws_ss_info_t ssi_myss_srv_t;
 static struct lws_context* cx;
 int test_result = 0, multipart;
 
-static int
-smd_cb(void* opaque, lws_smd_class_t c, lws_usec_t ts, void* buf, size_t len) {
-	if(!(c & LWSSMDCL_SYSTEM_STATE) || lws_json_simple_strcmp(buf, len, "\"state\":", "OPERATIONAL") || !lws_ss_create(cx, 0, &ssi_myss_srv_t, NULL, NULL, NULL, NULL))
-		return 0;
+// static int
+// smd_cb(void* opaque, lws_smd_class_t c, lws_usec_t ts, void* buf, size_t len) {
+// 	if(!(c & LWSSMDCL_SYSTEM_STATE) || lws_json_simple_strcmp(buf, len, "\"state\":", "OPERATIONAL") || !lws_ss_create(cx, 0, &ssi_myss_srv_t, NULL, NULL, NULL, NULL))
+// 		return 0;
 
-	lwsl_err("%s: failed to create secure stream\n", __func__);
-	lws_default_loop_exit(cx);
+// 	lwsl_err("%s: failed to create secure stream\n", __func__);
+// 	lws_default_loop_exit(cx);
 
-	return -1;
-}
+// 	return -1;
+// }
 
+// TBD not needed if handled from inside the runtime
 static void
 sigint_handler(int sig) {
 	lws_default_loop_exit(cx);
@@ -139,8 +140,8 @@ int lws_test(int argc, const char** argv) {
 
 	lwsl_user("LWS Secure Streams Server\n");
 
-	info.early_smd_cb = smd_cb;
-	info.early_smd_class_filter = LWSSMDCL_SYSTEM_STATE;
+	// info.early_smd_cb = smd_cb;
+	// info.early_smd_class_filter = LWSSMDCL_SYSTEM_STATE;
 
 	cx = lws_create_context(&info);
 	if(!cx) {
