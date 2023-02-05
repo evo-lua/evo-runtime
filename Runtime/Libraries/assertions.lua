@@ -65,7 +65,7 @@ function assertions.assertDoesNotThrow(codeUnderTest)
 	return true
 end
 
-function assertions.assertFailure(codeUnderTest, message)
+function assertions.assertFailure(codeUnderTest, errorMessage)
 	local success, status, value = pcall(codeUnderTest)
 	if not success then
 		error("ASSERTION FAILURE: Expected a failure but got an error", 0)
@@ -75,30 +75,31 @@ function assertions.assertFailure(codeUnderTest, message)
 		error(format("ASSERTION FAILURE: Expected a failure but got success with value %s", tostring(value)), 0)
 	end
 
-	if message and value ~= message then
+	if errorMessage and value ~= errorMessage then
 		error(
-			format("ASSERTION FAILURE: Expected failure message '%s' but got '%s'", tostring(message), tostring(value)),
+			format(
+				"ASSERTION FAILURE: Expected failure message '%s' but got '%s'",
+				tostring(errorMessage),
+				tostring(value)
+			),
 			0
 		)
 	end
 end
 
-function assertions.assertCallsFunction(fn, expectedCalledFn)
+function assertions.assertCallsFunction(codeUnderTest, targetFunction)
 	local calledFn = nil
 	local function hook(event)
 		local calledFunction = debug_getinfo(2, "f").func
-		if calledFunction == expectedCalledFn then
+		if calledFunction == targetFunction then
 			calledFn = calledFunction
 		end
 	end
 	debug_sethook(hook, "c")
-	fn()
+	codeUnderTest()
 	debug_sethook()
-	if calledFn ~= expectedCalledFn then
-		error(
-			"ASSERTION FAILURE: Expected function " .. tostring(expectedCalledFn) .. " to be called but it was not",
-			0
-		)
+	if calledFn ~= targetFunction then
+		error("ASSERTION FAILURE: Expected function " .. tostring(targetFunction) .. " to be called but it was not", 0)
 	end
 end
 
