@@ -12,7 +12,8 @@ rm -rf $BUILD_DIR
 # Disable examples, no need to build them here
 # TBD: WITH_OPENSSL, libuv, zlib/miniz? uses system openssl by default, should use deps/openssl one...
 # LWS_WITH_SYS_SMD only works on Android?
-cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_SHARED_LIBS=OFF -DLWS_WITH_MINIMAL_EXAMPLES=OFF -DLWS_WITH_SYS_SMD=OFF -DCMAKE_C_COMPILER=gcc
+# TODO Re-enable openssl after it is added to the runtime
+cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_SHARED_LIBS=OFF -DLWS_WITH_MINIMAL_EXAMPLES=OFF -DLWS_WITH_SYS_SMD=OFF -DWITH_OPENSSL=OFF -DCMAKE_C_COMPILER=gcc
 cmake --build $BUILD_DIR --clean-first
 
 cp $BUILD_DIR/lib/libwebsockets_static.a $OUT_DIR
