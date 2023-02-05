@@ -13,35 +13,41 @@ struct PerSocketData {
 };
 
 void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_listen_config_t config, void* user_data) {
+	std::cout << "listen_handler" << std::endl;
 	if(listen_socket) {
 		printf("Listening on port wss://localhost:%d\n", config.port);
 	}
 }
 
 void open_handler(uws_websocket_t* ws, void* user_data) {
-
+	std::cout << "open_handler" << std::endl;
 	/* Open event here, you may access uws_ws_get_user_data(WS) which points to a PerSocketData struct */
 }
 
 void message_handler(uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, void* user_data) {
+	std::cout << "message_handler" << std::endl;
 	uws_ws_send(SSL, ws, message, length, opcode);
 }
 
 void close_handler(uws_websocket_t* ws, int code, const char* message, size_t length, void* user_data) {
 
+	std::cout << "close_handler" << std::endl;
 	/* You may access uws_ws_get_user_data(ws) here, but sending or
      * doing any kind of I/O with the socket is not valid. */
 }
 
 void drain_handler(uws_websocket_t* ws, void* user_data) {
+	std::cout << "drain_handler" << std::endl;
 	/* Check uws_ws_get_buffered_amount(ws) here */
 }
 
 void ping_handler(uws_websocket_t* ws, const char* message, size_t length, void* user_data) {
+	std::cout << "ping_handler" << std::endl;
 	/* You don't need to handle this one, we automatically respond to pings as per standard */
 }
 
 void pong_handler(uws_websocket_t* ws, const char* message, size_t length, void* user_data) {
+	std::cout << "pong_handler" << std::endl;
 
 	/* You don't need to handle this one either */
 }
