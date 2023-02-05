@@ -48,6 +48,7 @@ local EvoBuildTarget = {
 		"libluajit.a",
 		"libluv.a",
 		"libuv_a.a",
+		"libwebsockets_static.a",
 	},
 	sharedLibraries = (
 		isWindows
