@@ -51,6 +51,7 @@ local EvoBuildTarget = {
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
 		"deps/zhaog/lua-openssl/src",
+		"deps/uNetworking/uWebSockets/capi",
 		"deps/uNetworking/uWebSockets/src",
 		"deps/uNetworking/uWebSockets/uSockets/src",
 	},
@@ -61,6 +62,8 @@ local EvoBuildTarget = {
 		"openssl.a",
 		"libssl.a",
 		"libcrypto.a",
+		"libuwebsockets.a",
+		"uSockets.a",
 	},
 	sharedLibraries = (
 		isWindows
