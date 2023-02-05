@@ -1,52 +1,76 @@
-/* We simply call the root header file "App.h", giving you uWS::App and uWS::SSLApp */
-#include "App.h"
+#include "libuwebsockets.h"
+#include <stdio.h>
+// #include <malloc.h>
 
-/* This is a simple WebSocket echo server example.
+#define SSL 0 // TODO
+
+/* This is a simple WebSocket "sync" upgrade example.
  * You may compile it with "WITH_OPENSSL=1 make" or with "make" */
 
-int uws_test() {
-	/* ws->getUserData returns one of these */
-	struct PerSocketData {
-		/* Fill with user data */
-	};
+/* ws->getUserData returns one of these */
+struct PerSocketData {
+	/* Fill with user data */
+};
 
-	/* Keep in mind that uWS::SSLApp({options}) is the same as uWS::App() when compiled without SSL support.
-     * You may swap to using uWS:App() if you don't need SSL */
-	uWS::App(
-		// {
-		/* There are example certificates in uWebSockets.js repo */
-		// .key_file_name = "misc/key.pem",
-		// .cert_file_name = "misc/cert.pem",
-		// .passphrase = "1234"
-		// }
-		)
-		.ws<PerSocketData>("/*", { /* Settings */
-									 .compression = uWS::CompressOptions(uWS::DEDICATED_COMPRESSOR_4KB | uWS::DEDICATED_DECOMPRESSOR),
-									 .maxPayloadLength = 100 * 1024 * 1024,
-									 .idleTimeout = 16,
-									 .maxBackpressure = 100 * 1024 * 1024,
-									 .closeOnBackpressureLimit = false,
-									 .resetIdleTimeoutOnSend = false,
-									 .sendPingsAutomatically = true,
-									 /* Handlers */
-									 .upgrade = nullptr,
-									 .open = [](auto* /*ws*/) {
-										 /* Open event here, you may access ws->getUserData() which points to a PerSocketData struct */ },
-									 .message = [](auto* ws, std::string_view message, uWS::OpCode opCode) { ws->send(message, opCode, true); },
-									 .drain = [](auto* /*ws*/) {
-            /* Check ws->getBufferedAmount() here */ },
-									 .ping = [](auto* /*ws*/, std::string_view) {
-            /* Not implemented yet */ },
-									 .pong = [](auto* /*ws*/, std::string_view) {
-            /* Not implemented yet */ },
-									 .close = [](auto* /*ws*/, int /*code*/, std::string_view /*message*/) {
-            /* You may access ws->getUserData() here */ } })
-		.listen(9001, [](auto* listen_socket) {
-			if(listen_socket) {
-				std::cout << "Listening on port " << 9001 << std::endl;
-			}
-		})
-		.run();
+void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_listen_config_t config, void* user_data) {
+	if(listen_socket) {
+		printf("Listening on port wss://localhost:%d\n", config.port);
+	}
+}
+
+void open_handler(uws_websocket_t* ws) {
+
+	/* Open event here, you may access uws_ws_get_user_data(WS) which points to a PerSocketData struct */
+}
+
+void message_handler(uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode) {
+	uws_ws_send(SSL, ws, message, length, opcode);
+}
+
+void close_handler(uws_websocket_t* ws, int code, const char* message, size_t length) {
+
+	/* You may access uws_ws_get_user_data(ws) here, but sending or
+     * doing any kind of I/O with the socket is not valid. */
+}
+
+void drain_handler(uws_websocket_t* ws) {
+	/* Check uws_ws_get_buffered_amount(ws) here */
+}
+
+void ping_handler(uws_websocket_t* ws, const char* message, size_t length) {
+	/* You don't need to handle this one, we automatically respond to pings as per standard */
+}
+
+void pong_handler(uws_websocket_t* ws, const char* message, size_t length) {
+
+	/* You don't need to handle this one either */
+}
+
+int uws_test() {
+
+	uws_app_t* app = uws_create_app(SSL, (struct us_socket_context_options_t) { /* There are example certificates in uWebSockets.js repo */
+											 .key_file_name = "../misc/key.pem",
+											 .cert_file_name = "../misc/cert.pem",
+											 .passphrase = "1234" });
+
+	uws_ws(SSL, app, "/*", (uws_socket_behavior_t) {
+							   //    .compression = uws_compress_options_t::SHARED_COMPRESSOR,
+							   .maxPayloadLength = 16 * 1024,
+							   .idleTimeout = 12,
+							   .maxBackpressure = 1 * 1024 * 1024,
+							   .upgrade = NULL,
+							   //    .open = open_handler,
+							   //    .message = message_handler,
+							   //    .drain = drain_handler,
+							   //    .ping = ping_handler,
+							   //    .pong = pong_handler,
+							   //    .close = close_handler,
+						   },
+		nullptr);
+
+	uws_app_listen(SSL, app, 9001, listen_handler, NULL);
+
+	uws_app_run(SSL, app);
 
 	return 0;
 }
