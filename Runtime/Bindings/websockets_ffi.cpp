@@ -131,7 +131,7 @@ sigint_handler(int sig) {
 	lws_default_loop_exit(cx);
 }
 
-int lws_test(int argc, const char** argv) {
+int lws_test(int argc, const char** argv) { // TODO should be const char in main also
 	struct lws_context_creation_info info;
 
 	lws_context_info_defaults(&info, "example-policy.json");
