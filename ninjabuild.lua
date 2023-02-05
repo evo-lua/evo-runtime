@@ -41,6 +41,7 @@ local EvoBuildTarget = {
 		"deps/LuaJIT/LuaJIT/src",
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
+		"deps/warmcat/libwebsockets/include",
 		"deps/webview/webview",
 	},
 	staticLibraries = {
