@@ -27,18 +27,18 @@ public:
 	}
 
 	void SendMessage(const char* message) {
-		std::unique_lock<std::mutex> lock(send_queue_mutex);
+		// std::unique_lock<std::mutex> lock(send_queue_mutex);
 		send_queue.push(message);
 		lws_callback_on_writable_all_protocol(context);
 	}
 
 	int GetNumMessages() {
-		std::unique_lock<std::mutex> lock(recv_queue_mutex);
+		// std::unique_lock<std::mutex> lock(recv_queue_mutex);
 		return recv_queue.size();
 	}
 
 	const char* GetMessage() {
-		std::unique_lock<std::mutex> lock(recv_queue_mutex);
+		// std::unique_lock<std::mutex> lock(recv_queue_mutex);
 		if(recv_queue.empty()) {
 			return nullptr;
 		}
@@ -54,8 +54,8 @@ private:
 
 	std::queue<std::string> recv_queue;
 	std::queue<std::string> send_queue;
-	std::mutex recv_queue_mutex;
-	std::mutex send_queue_mutex;
+	// std::mutex recv_queue_mutex;
+	// std::mutex send_queue_mutex;
 
 	static int callback_http(lws* wsi, lws_callback_reasons reason, void* user, void* in, size_t len) {
 		return 0;
@@ -68,11 +68,11 @@ private:
 			std::cout << "WebSocket connection established" << std::endl;
 			break;
 		case LWS_CALLBACK_RECEIVE:
-			std::unique_lock<std::mutex> lock(ws->recv_queue_mutex);
+			// std::unique_lock<std::mutex> lock(ws->recv_queue_mutex);
 			ws->recv_queue.push(std::string(reinterpret_cast<char*>(in), len));
 			break;
 		case LWS_CALLBACK_SERVER_WRITEABLE:
-			std::unique_lock<std::mutex> lock(ws->send_queue_mutex);
+			// std::unique_lock<std::mutex> lock(ws->send_queue_mutex);
 			if(ws->send_queue.empty()) {
 				break;
 			default:
