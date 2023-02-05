@@ -211,7 +211,10 @@ function assertions.assertEqualBooleans(firstValue, secondValue)
 end
 
 function assertions.assertEqualPointers(firstValue, secondValue)
-	if type(firstValue) == "cdata" and type(secondValue) == "cdata" then
+	local areBothValuesStructs = type(firstValue) == "cdata" and type(secondValue) == "cdata"
+	local areBothValuesUserdata = type(firstValue) == "userdata" and type(secondValue) == "userdata"
+
+	if areBothValuesStructs or areBothValuesUserdata then
 		if firstValue == secondValue then
 			return true
 		else
@@ -219,7 +222,7 @@ function assertions.assertEqualPointers(firstValue, secondValue)
 		end
 	else
 		error(
-			"ASSERTION FAILURE: Both values must be cdata pointers, but got "
+			"ASSERTION FAILURE: Both values must be cdata or userdata pointers, but got "
 				.. tostring(firstValue)
 				.. " and "
 				.. tostring(secondValue),
@@ -297,7 +300,7 @@ function assertions.assertEquals(firstValue, secondValue)
 	end
 
 	if areBothValuesUserdata then
-		return assertions.assertEqualFFI(firstValue, secondValue)
+		return assertions.assertEqualPointers(firstValue, secondValue)
 	end
 
 	if areBothValuesTables then

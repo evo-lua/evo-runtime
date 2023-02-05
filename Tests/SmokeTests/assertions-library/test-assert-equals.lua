@@ -99,6 +99,36 @@ local function testNumberAndNilCase()
 	)
 end
 
+local function testIdenticalStringBufferCase()
+	local string_buffer = require("string.buffer")
+	local firstBuffer = string_buffer.new()
+	local secondBuffer = string_buffer.new()
+
+	local status, errorMessage = pcall(assertEquals, firstBuffer, secondBuffer)
+
+	assert(status == false, "assertEquals should throw an error when comparing different cdata values")
+	assert(
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected .* but got .*") ~= nil,
+		"assertEquals should throw an error message with the proper format"
+	)
+end
+
+local function testDistinctUserdataCase()
+	local string_buffer = require("string.buffer")
+	local firstBuffer = string_buffer.new()
+	local secondBuffer = string_buffer.new()
+
+	firstBuffer:put("Hello")
+
+	local status, errorMessage = pcall(assertEquals, firstBuffer, secondBuffer)
+
+	assert(status == false, "assertEquals should throw an error when comparing different cdata values")
+	assert(
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected .* but got .*") ~= nil,
+		"assertEquals should throw an error message with the proper format"
+	)
+end
+
 local function testDistinctStructsCase()
 	local status, errorMessage = pcall(assertEquals, ffi.new("int[1]", 1), ffi.new("int[1]", 2))
 	assert(status == false, "assertEquals should throw an error when comparing different cdata values")
@@ -130,6 +160,8 @@ local function testAssertEquals()
 	testEqualStringBuffersCase()
 	testDistinctStringBuffersCase()
 
+	testIdenticalStringBufferCase()
+	testDistinctUserdataCase()
 	testDistinctStructsCase()
 
 	testBuiltinFunctionsCase()
