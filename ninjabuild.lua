@@ -51,6 +51,8 @@ local EvoBuildTarget = {
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
 		"deps/zhaog/lua-openssl/src",
+		"deps/uNetworking/uWebSockets/src",
+		"deps/uNetworking/uWebSockets/uSockets/src",
 	},
 	staticLibraries = {
 		"libluajit.a",
