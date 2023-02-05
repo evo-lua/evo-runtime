@@ -37,6 +37,7 @@ local EvoBuildTarget = {
 	cppSources = {
 		"Runtime/main.cpp",
 		"Runtime/evo.cpp",
+		"Runtime/Bindings/uws.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
 	},
