@@ -1,6 +1,8 @@
 local bdd = require("bdd")
 local ffi = require("ffi")
 
+local format = string.format
+
 local evo = {}
 
 function evo.run()
@@ -41,6 +43,12 @@ function evo.registerGlobalAliases()
 	_G.dump = debug.dump
 	_G.format = string.format
 	_G.it = bdd.it
+
+	_G.printf = evo.printf
+end
+
+function evo.printf(...)
+	return print(format(...))
 end
 
 return evo
