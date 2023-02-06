@@ -10,6 +10,10 @@ extern "C" {
 
 #include "LuaVirtualMachine.hpp"
 
+static void idle_cb(uv_idle_t* handle) {
+	std::cout << "idler be idling" << std::endl;
+}
+
 int main(int argc, char* argv[]) {
 	LuaVirtualMachine* luaVM = new LuaVirtualMachine();
 
@@ -36,7 +40,17 @@ int main(int argc, char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	uws_test((void*)luv_loop(luaVM->m_luaState));
+	uv_idle_t idler;
+	uv_loop_t* loop = luv_loop(luaVM->m_luaState);
+
+	uv_idle_init(loop, &idler);
+
+	uv_idle_start(&idler, idle_cb);
+
+	uws_test((void*)loop);
+	uv_run(loop, UV_RUN_DEFAULT);
+
+	uv_loop_close(loop);
 
 	return EXIT_SUCCESS;
 }
