@@ -11,7 +11,7 @@ extern "C" {
 #include "LuaVirtualMachine.hpp"
 
 static void idle_cb(uv_idle_t* handle) {
-	std::cout << "idler be idling" << std::endl;
+	// std::cout << "idler be idling" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
