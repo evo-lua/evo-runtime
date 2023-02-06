@@ -1,7 +1,6 @@
 #include "libuwebsockets.h"
 #include <stdio.h>
 #include <iostream>
-// #include <malloc.h>
 
 #define SSL 1 // TODO
 
@@ -53,7 +52,9 @@ void pong_handler(uws_websocket_t* ws, const char* message, size_t length, void*
 	/* You don't need to handle this one either */
 }
 
-int uws_test() {
+int uws_test(void* loop) {
+
+	uws_get_loop_with_native(loop);
 
 	uws_app_t* app = uws_create_app(SSL, (struct us_socket_context_options_t) { /* There are example certificates in uWebSockets.js repo */
 											 .key_file_name = "../misc/key.pem",

@@ -1,3 +1,3 @@
 #pragma once
 
-int uws_test();
+int uws_test(void* loop);

@@ -21,9 +21,9 @@ class LuaVirtualMachine {
 		void CreateGlobalNamespace(std::string name);
 		void AssignGlobalVariable(std::string key, std::string value);
 		bool CheckStack();
+		lua_State* m_luaState;
 
 	private:
-		lua_State* m_luaState;
 		int m_onLuaErrorIndex;
 		// Getting these offsets wrong will cause segfaults, so let's just track them and get it over with...
 		int m_numExpectedArgsFromLuaMain;

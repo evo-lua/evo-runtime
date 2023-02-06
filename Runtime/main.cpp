@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	uws_test();
+	uws_test((void*)luv_loop(luaVM->m_luaState));
 
 	return EXIT_SUCCESS;
 }
