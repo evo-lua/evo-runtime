@@ -29,7 +29,7 @@ cd $UWS_DIR/capi
 # make capi
 # todo move to ninjabuild I guess
 LIBRARY_NAME=libuwebsockets
-g++ -DUWS_WITH_PROXY -DUWS_NO_ZLIB -DLIBUS_NO_SSL -DLIBUS_USE_LIBUV -c -O3 -std=c++17 -lz -luv -fPIC -I ../src -I ../uSockets/src $LIBRARY_NAME.cpp
+g++ -DUWS_WITH_PROXY -DUWS_NO_ZLIB -DLIBUS_NO_SSL -c -O3 -std=c++17 -lz -luv -fPIC -I ../src -I ../uSockets/src $LIBRARY_NAME.cpp
 ar rvs $LIBRARY_NAME.a $LIBRARY_NAME.o $ABS_BUILD_DIR/uSockets.a
 
 cd -
