@@ -27,7 +27,15 @@ struct static_webview_exports_table {
 	const webview_version_info_t* (*webview_version)(void);
 };
 
+// TODO remove
+#include <iostream>
+void webview_run_once(webview_t w) {
+	std::cout << "webview_run_once" << std::endl;
+}
+
 namespace webview_ffi {
+	// TODO
+
 	void* getExportsTable() {
 		static struct static_webview_exports_table webview_exports_table;
 
