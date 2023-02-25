@@ -29,6 +29,20 @@ describe("webview", function()
 				assertEquals(type(webview.bindings[functionName]), "cdata")
 			end
 		end)
+
+		describe("run_once", function()
+			it("should not block the event loop", function()
+				local view = webview.bindings.webview_create(true, nil)
+
+				webview.bindings.webview_run(view)
+				webview.bindings.webview_terminate(view)
+				webview.bindings.webview_destroy(view)
+			end)
+
+			it("should update the state of the webview", function()
+				-- TODO
+			end)
+		end)
 	end)
 
 	-- This should be moved to the runtime library, once it is actually implemented...
