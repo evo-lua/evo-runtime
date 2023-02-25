@@ -34,7 +34,7 @@ describe("webview", function()
 			it("should not block the event loop", function()
 				local view = webview.bindings.webview_create(true, nil)
 
-				webview.bindings.webview_run(view)
+				webview.bindings.webview_run_once(view)
 				webview.bindings.webview_terminate(view)
 				webview.bindings.webview_destroy(view)
 			end)
