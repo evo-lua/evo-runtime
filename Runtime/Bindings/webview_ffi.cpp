@@ -41,6 +41,7 @@ namespace webview_ffi {
 		webview_exports_table.webview_navigate = webview_navigate;
 		webview_exports_table.webview_return = webview_return;
 		webview_exports_table.webview_run = webview_run;
+		webview_exports_table.webview_run_once = webview_run_once;
 		webview_exports_table.webview_set_html = webview_set_html;
 		webview_exports_table.webview_set_size = webview_set_size;
 		webview_exports_table.webview_set_title = webview_set_title;
