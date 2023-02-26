@@ -75,8 +75,8 @@ int step(int blocking) { return gtk_main_iteration_do(blocking); }
 
 int step(int blocking) {
 	//
-
-	throw "Nonblocking WebView updates aren't implemented for Mac OS :()"
+	return 0;
+	//throw "Nonblocking WebView updates aren't implemented for Mac OS :()";
 	// id until =
 	//     (blocking
 	//          ? ((id(*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantFuture"_sel)
