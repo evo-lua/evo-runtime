@@ -45,13 +45,13 @@ describe("webview", function()
 				webview.bindings.webview_navigate(view, "https://github.com/webview/webview")
 				local i
 				for i = 0, 25, 1 do
-					assert(webview.bindings.webview_run_once(view, false) == 0)
+					assertEquals(webview.bindings.webview_run_once(view, false), 0)
 				end
 				for i = 0, 25, 1 do
-					assert(webview.bindings.webview_run_once(view, true) == 0)
+					assertEquals(webview.bindings.webview_run_once(view, true), 0)
 				end
 				webview.bindings.webview_terminate(view)
-				assert(webview.bindings.webview_run_once(view, false) ~= 0)
+				assertNotEquals(webview.bindings.webview_run_once(view, false), 0)
 			end)
 
 			it("should update the state of the webview", function()

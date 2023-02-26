@@ -30,7 +30,7 @@ struct static_webview_exports_table {
 // TODO remove
 #include <iostream>
 void webview_run_once(webview_t w, bool blocking) {
-	std::cout << "webview_run_once (blocking = )" << blocking << ")" << std::endl;
+	std::cout << "webview_run_once (blocking = " << blocking << ")" << std::endl;
 }
 
 namespace webview_ffi {
