@@ -14,8 +14,11 @@ local webview_destroy = webview.bindings.webview_destroy
 
 -- Docs:
 -- Scenario one: 1 webview, run blocking -> observation: async work pauses until window is close,d then resumes)
--- 2: 1 webview, run_once blocking ->
+-- 2: 1 webview, run_once blocking (standalone, not inside idle)-> wv updates once then freezes (blocking has no effect?)
+-- same, but inside idle -> wv updates and so does event loop (console output is choppy, but let's ignore that for now)
+-- set blocking to false, updates much faster?? WTF does it do?
 
+-- TODO convert to actual test case, with timer or just idle count
 local view = webview_create(true, nil)
 
 -- TODO start timer to kill idle (and webview)
@@ -30,17 +33,22 @@ local idle = uv.new_idle()
 idle:start(function()
 	numEventLoopIerations = numEventLoopIerations + 1
 	print("Before I/O polling, no blocking", numEventLoopIerations)
+	-- webview_run_once(view, true)
+	webview_run_once(view, false)
 
 	-- webview_run_once(view, true)
-	if numEventLoopIerations == 100 then
+	if numEventLoopIerations == 256 then
 		print("Stopping event loop", numEventLoopIerations)
-		-- uv.stop()
+		-- TODO disable these three for the tutorial, but enable for unit test
+		uv.stop()
+		webview_terminate(view)
+		webview_destroy(view)
 	end
 end)
 
-webview_run(view)
 -- BLOCKS the event loop (don't do this if you need other work to complete!)
+-- webview_run(view)
 -- webview_terminate(view)
-webview_destroy(view)
+-- webview_destroy(view)
 
 uv.run()
