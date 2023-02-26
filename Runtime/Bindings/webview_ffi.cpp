@@ -43,8 +43,39 @@ int step(int blocking) { return gtk_main_iteration_do(blocking); }
 
 #define NSEventMaskAny ULONG_MAX
 
+// int step(int blocking) {
+//   NSDate *untilDate = nil;
+//   if (blocking) {
+//     // If blocking, wait until a future date (distant future).
+//     untilDate = [NSDate distantFuture];
+//   } else {
+//     // If non-blocking, wait until a past date (distant past).
+//     untilDate = [NSDate distantPast];
+//   }
+
+//   NSApplication *app = [NSApplication sharedApplication];
+
+//   // Retrieve the next event from the event queue that matches any event type,
+//   // is scheduled to occur before the specified date, and dequeues the event.
+//   NSEvent *event = [app nextEventMatchingMask:NSEventMaskAny
+//                                      untilDate:untilDate
+//                                         inMode:NSDefaultRunLoopMode
+//                                        dequeue:YES];
+
+//   // Send the event to the application's event handling system for processing.
+//   if (event) {
+//     [app sendEvent:event];
+//   }
+
+//   // Return a value to indicate whether the message loop should exit.
+//   return should_exit;
+// }
+
 // TODO this will not work without changes to the cocoa_webview_engine in webview.h
+
 int step(int blocking) {
+	//
+
 	throw "Nonblocking WebView updates aren't implemented for Mac OS :()"
 	// id until =
 	//     (blocking
