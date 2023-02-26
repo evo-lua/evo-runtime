@@ -1,0 +1,1 @@
+-- https://github.com/webview/webview_deno/pull/112/files#diff-8374b0f8a86b17fbc3e686c8c47b2ab3eb7ede9bb463a3837987545782e30cbc
