@@ -64,7 +64,7 @@ int step(int blocking) {
 		(*f)();
 		delete f;
 	} else if(msg.message == WM_QUIT) {
-		return -1;
+		return 1; // true
 	}
 
 	return 0;
@@ -75,6 +75,7 @@ int step(int blocking) {
 int webview_run_once(webview_t w, bool blocking) {
 	std::cout << "webview_run_once (blocking = " << blocking << ")" << std::endl;
 	return step(blocking);
+	// return bool shouldExit
 }
 
 namespace webview_ffi {

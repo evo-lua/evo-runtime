@@ -34,14 +34,14 @@ idle:start(function()
 	numEventLoopIerations = numEventLoopIerations + 1
 	print("Before I/O polling, no blocking", numEventLoopIerations)
 	-- webview_run_once(view, true)
-	webview_run_once(view, false)
+	webview_run_once(view, true)
 
 	-- webview_run_once(view, true)
-	if numEventLoopIerations == 256 then
+	if numEventLoopIerations == 25 then
 		print("Stopping event loop", numEventLoopIerations)
 		-- TODO disable these three for the tutorial, but enable for unit test
 		uv.stop()
-		webview_terminate(view)
+		-- webview_terminate(view)
 		webview_destroy(view)
 	end
 end)
