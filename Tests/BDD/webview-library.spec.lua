@@ -34,7 +34,7 @@ describe("webview", function()
 			it("should not block the event loop", function()
 				local view = webview.bindings.webview_create(true, nil)
 
-				webview.bindings.webview_run_once(view)
+				webview.bindings.webview_run_once(view, false)
 				-- webview.bindings.webview_terminate(view)
 				webview.bindings.webview_destroy(view)
 			end)
@@ -45,13 +45,13 @@ describe("webview", function()
 				webview.bindings.webview_navigate(view, "https://github.com/webview/webview")
 				local i
 				for i = 0, 25, 1 do
-					assert(webview.bindings.webview_run_once(0) == 0)
+					assert(webview.bindings.webview_run_once(view, false) == 0)
 				end
 				for i = 0, 25, 1 do
-					assert(webview.bindings.webview_run_once(1) == 0)
+					assert(webview.bindings.webview_run_once(view, true) == 0)
 				end
 				webview.bindings.webview_terminate(view)
-				assert(webview.bindings.webview_run_once(0) ~= 0)
+				assert(webview.bindings.webview_run_once(view, false) ~= 0)
 			end)
 
 			it("should update the state of the webview", function()
@@ -59,7 +59,7 @@ describe("webview", function()
 
 				-- webview.bindings.webview_run_once(view)
 				webview.bindings.webview_set_title(view, "TEST")
-				webview.bindings.webview_run_once(view)
+				webview.bindings.webview_run_once(view, false)
 				-- webview.bindings.webview_terminate(view)
 				webview.bindings.webview_destroy(view)
 

@@ -11,7 +11,7 @@ struct static_webview_exports_table {
 	webview_t (*webview_create)(int debug, void* window);
 	void (*webview_destroy)(webview_t w);
 	void (*webview_run)(webview_t w);
-	void (*webview_run_once)(webview_t w);
+	void (*webview_run_once)(webview_t w, bool blocking);
 	void (*webview_terminate)(webview_t w);
 	void (*webview_dispatch)(webview_t w, webview_dispatch_function_t fn, void* arg);
 	void* (*webview_get_window)(webview_t w);
@@ -29,8 +29,8 @@ struct static_webview_exports_table {
 
 // TODO remove
 #include <iostream>
-void webview_run_once(webview_t w) {
-	std::cout << "webview_run_once" << std::endl;
+void webview_run_once(webview_t w, bool blocking) {
+	std::cout << "webview_run_once (blocking = )" << blocking << ")" << std::endl;
 }
 
 namespace webview_ffi {
