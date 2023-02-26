@@ -39,16 +39,32 @@ describe("webview", function()
 				webview.bindings.webview_destroy(view)
 			end)
 
+			it("should be able to take steps", function()
+				-- TEST: start app as loop using step and terminate it.
+				local view = webview.bindings.webview_create(true, nil)
+				webview.bindings.webview_navigate(view, "https://github.com/webview/webview")
+				local i
+				for i = 0, 25, 1 do
+					assert(webview.bindings.webview_run_once(0) == 0)
+				end
+				for i = 0, 25, 1 do
+					assert(webview.bindings.webview_run_once(1) == 0)
+				end
+				webview.bindings.webview_terminate(view)
+				assert(webview.bindings.webview_run_once(0) ~= 0)
+			end)
+
 			it("should update the state of the webview", function()
 				local view = webview.bindings.webview_create(true, nil)
 
+				-- webview.bindings.webview_run_once(view)
+				webview.bindings.webview_set_title(view, "TEST")
 				webview.bindings.webview_run_once(view)
 				-- webview.bindings.webview_terminate(view)
 				webview.bindings.webview_destroy(view)
 
 				-- local view = webview.bindings.webview_create(true, nil)
 
-				-- webview.bindings.webview_set_title("TEST")
 				-- webview.bindings.webview_run_once(view)
 
 				-- webview.bindings.webview_terminate(view)
