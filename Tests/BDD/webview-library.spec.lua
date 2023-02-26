@@ -35,12 +35,24 @@ describe("webview", function()
 				local view = webview.bindings.webview_create(true, nil)
 
 				webview.bindings.webview_run_once(view)
-				webview.bindings.webview_terminate(view)
+				-- webview.bindings.webview_terminate(view)
 				webview.bindings.webview_destroy(view)
 			end)
 
 			it("should update the state of the webview", function()
-				-- TODO
+				local view = webview.bindings.webview_create(true, nil)
+
+				webview.bindings.webview_run_once(view)
+				-- webview.bindings.webview_terminate(view)
+				webview.bindings.webview_destroy(view)
+
+				-- local view = webview.bindings.webview_create(true, nil)
+
+				-- webview.bindings.webview_set_title("TEST")
+				-- webview.bindings.webview_run_once(view)
+
+				-- webview.bindings.webview_terminate(view)
+				-- webview.bindings.webview_destroy(view)
 			end)
 		end)
 	end)
