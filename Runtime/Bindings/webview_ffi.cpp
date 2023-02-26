@@ -32,7 +32,7 @@ struct static_webview_exports_table {
 // Adapted from https://github.com/webview/webview/pull/735/files
 #ifdef __unix__
 // #include "webview_unix.hpp"
-	int step(int blocking) { return gtk_main_iteration_do(blocking); }
+int step(int blocking) { return gtk_main_iteration_do(blocking); }
 #endif
 
 #ifdef __APPLE__
