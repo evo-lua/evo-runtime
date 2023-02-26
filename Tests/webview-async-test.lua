@@ -40,15 +40,15 @@ idle:start(function()
 	if numEventLoopIerations == 25 then
 		print("Stopping event loop", numEventLoopIerations)
 		-- TODO disable these three for the tutorial, but enable for unit test
-		uv.stop()
+		--uv.stop()
 		-- webview_terminate(view)
-		webview_destroy(view)
+		--webview_destroy(view)
 	end
 end)
 
 -- BLOCKS the event loop (don't do this if you need other work to complete!)
--- webview_run(view)
+webview_run(view)
 -- webview_terminate(view)
 -- webview_destroy(view)
 
-uv.run()
+--uv.run()
