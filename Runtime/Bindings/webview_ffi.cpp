@@ -29,8 +29,19 @@ struct static_webview_exports_table {
 
 // TODO remove
 
+// Adapted from https://github.com/webview/webview/pull/735/files
+#ifdef __unix__
+// #include "webview_unix.hpp"
+	int step(int blocking) { return gtk_main_iteration_do(blocking); }
+#endif
+
+#ifdef __APPLE__
+// #include "webview_mac.hpp"
+#endif
+
 // TODO integrate with set_fullscreen branch (crossplatform plumbing exists)
 #ifdef __WIN32__
+// #include "webview_windows.hpp"
 int step(int blocking) {
 	MSG msg;
 
