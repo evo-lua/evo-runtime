@@ -36,6 +36,33 @@ int step(int blocking) { return gtk_main_iteration_do(blocking); }
 #endif
 
 #ifdef __APPLE__
+
+#define NSApplicationDefinedEvent 15
+
+#define NSBackingStoreBuffered 2
+
+#define NSEventMaskAny ULONG_MAX
+
+// TODO this will not work without changes to the cocoa_webview_engine in webview.h
+  int step(int blocking) {
+    id until =
+        (blocking
+             ? ((id(*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantFuture"_sel)
+             : ((id(*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantPast"_sel));
+    id app = ((id(*)(id, SEL))objc_msgSend)("NSApplication"_cls,
+                                            "sharedApplication"_sel);
+
+    id event = ((id(*)(id, SEL, unsigned long long, id, id, bool))objc_msgSend)(
+        app, "nextEventMatchingMask:untilDate:inMode:dequeue:"_sel, ULONG_MAX,
+        until, "kCFRunLoopDefaultMode"_str, true);
+
+    if (event) {
+      ((id(*)(id, SEL, id))objc_msgSend)(app, "sendEvent:"_sel, event);
+    }
+
+    return should_exit;
+  }
+
 // #include "webview_mac.hpp"
 #endif
 
