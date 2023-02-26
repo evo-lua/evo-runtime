@@ -10,6 +10,7 @@
 [submodule "deps/openssl/openssl"]
 	path = deps/openssl/openssl
 	url = https://github.com/openssl/openssl
+	ignore = dirty
 [submodule "deps/evo-lua/lpeg-compat-52"]
 	path = deps/evo-lua/lpeg-compat-52
 	url = https://github.com/evo-lua/lpeg-compat-52
@@ -34,6 +35,7 @@
 [submodule "deps/luvit/luv"]
 	path = deps/luvit/luv
 	url = https://github.com/luvit/luv
+	ignore = dirty
 [submodule "deps/kikito/inspect.lua"]
 	path = deps/kikito/inspect.lua
 	url = https://github.com/kikito/inspect.lua.git
