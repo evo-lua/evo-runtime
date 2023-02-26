@@ -55,6 +55,8 @@ describe("webview", function()
 				assertEquals(webview.bindings.webview_run_once(view, false), 0) -- TBD Why this?
 			end)
 
+			it("should integrate with existing async work that's running in the background", function() end)
+
 			it("should update the state of the webview", function()
 				local view = webview.bindings.webview_create(true, nil)
 
