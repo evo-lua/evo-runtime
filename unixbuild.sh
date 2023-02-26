@@ -1,6 +1,8 @@
 BUILD_DIR=ninjabuild-unix
 mkdir -p $BUILD_DIR
 
+TOOLCHAIN_PRESET=$1
+
 LUAJIT_EXE="$BUILD_DIR/luajit"
 if ! test -f "$LUAJIT_EXE"; then
     echo "LuaJIT executable not found in $BUILD_DIR! Run the *-unixbuild scripts first."
@@ -8,7 +10,7 @@ if ! test -f "$LUAJIT_EXE"; then
 fi
 
 # For bootstrapping purposes, it's assumed LuaJIT itself can be built manually (if needed) using their own build system
-$LUAJIT_EXE ninjabuild.lua
+$LUAJIT_EXE ninjabuild.lua $TOOLCHAIN_PRESET
 
 # LuaJIT's jit module is implemented in Lua and needs to be loaded via LUA_PATH for bytecode generation
 export LUA_PATH="$BUILD_DIR/?.lua;./?.lua"

@@ -2,6 +2,11 @@ local ffi = require("ffi")
 
 local isWindows = (ffi.os == "Windows")
 
+
+local TOOLCHAIN_PRESET = arg[1]
+-- print("Selected toolchain preset: " .. TOOLCHAIN_PRESET)
+
+
 local C_BuildTools = {
 	OBJECT_FILE_EXTENSION = (isWindows and "obj" or "o"),
 	STATIC_LIBRARY_EXTENSION = (isWindows and ".lib" or ".a"),
@@ -10,7 +15,7 @@ local C_BuildTools = {
 	DEFAULT_BUILD_DIRECTORY_NAME = "ninjabuild-" .. (isWindows and "windows" or "unix"),
 	GCC_COMPILATION_SETTINGS = {
 		displayName = "GNU Compiler Collection",
-		CPP_COMPILER = "g++",
+		CPP_COMPILER = TOOLCHAIN_PRESET == "WSL" and "g++-10" or "g++",
 		COMPILER_FLAGS = "-O2 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing",
 		CPP_LINKER = "g++",
 		-- Must export the entry point of bytecode objects so that LuaJIT can load them via require()
