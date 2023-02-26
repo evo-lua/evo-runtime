@@ -2,10 +2,8 @@ local ffi = require("ffi")
 
 local isWindows = (ffi.os == "Windows")
 
-
 local TOOLCHAIN_PRESET = arg[1] or ""
 -- print("Selected toolchain preset: " .. TOOLCHAIN_PRESET)
-
 
 local C_BuildTools = {
 	OBJECT_FILE_EXTENSION = (isWindows and "obj" or "o"),
