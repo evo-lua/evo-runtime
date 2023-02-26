@@ -11,7 +11,7 @@ struct static_webview_exports_table {
 	webview_t (*webview_create)(int debug, void* window);
 	void (*webview_destroy)(webview_t w);
 	void (*webview_run)(webview_t w);
-	void (*webview_run_once)(webview_t w, bool blocking);
+	int (*webview_run_once)(webview_t w, bool blocking);
 	void (*webview_terminate)(webview_t w);
 	void (*webview_dispatch)(webview_t w, webview_dispatch_function_t fn, void* arg);
 	void* (*webview_get_window)(webview_t w);
@@ -28,9 +28,42 @@ struct static_webview_exports_table {
 };
 
 // TODO remove
+
+// TODO integrate with set_fullscreen branch (crossplatform plumbing exists)
+#ifdef __WIN32__
+int step(int blocking) {
+	MSG msg;
+
+	if(blocking) {
+		if(GetMessage(&msg, nullptr, 0, 0) < 0)
+			return 0;
+	} else {
+		if(!PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+			return 0;
+	}
+
+	if(msg.hwnd) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		return 0;
+	}
+
+	if(msg.message == WM_APP) {
+		auto f = (webview::dispatch_fn_t*)(msg.lParam);
+		(*f)();
+		delete f;
+	} else if(msg.message == WM_QUIT) {
+		return -1;
+	}
+
+	return 0;
+}
+#endif
+
 #include <iostream>
-void webview_run_once(webview_t w, bool blocking) {
+int webview_run_once(webview_t w, bool blocking) {
 	std::cout << "webview_run_once (blocking = " << blocking << ")" << std::endl;
+	return step(blocking);
 }
 
 namespace webview_ffi {
