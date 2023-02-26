@@ -34,7 +34,7 @@ idle:start(function()
 	numEventLoopIerations = numEventLoopIerations + 1
 	print("Before I/O polling, no blocking", numEventLoopIerations)
 	-- webview_run_once(view, true)
-	webview_run_once(view, true)
+	webview_run_once(view, false)
 
 	-- webview_run_once(view, true)
 	if numEventLoopIerations == 25 then
