@@ -47,8 +47,8 @@ idle:start(function()
 end)
 
 -- BLOCKS the event loop (don't do this if you need other work to complete!)
-webview_run(view)
+-- webview_run(view)
 -- webview_terminate(view)
 -- webview_destroy(view)
 
---uv.run()
+uv.run()
