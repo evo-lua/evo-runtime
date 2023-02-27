@@ -25,6 +25,12 @@
 #ifndef WEBVIEW_H
 #define WEBVIEW_H
 
+#include <iostream>
+#include <sstream>
+#include <chrono>
+#include <random>
+
+
 #ifndef WEBVIEW_API
 #define WEBVIEW_API extern
 #endif
@@ -652,6 +658,7 @@ using browser_engine = detail::gtk_webkit_engine;
 
 #elif defined(WEBVIEW_COCOA)
 
+
 //
 // ====================================================================
 //
@@ -721,19 +728,31 @@ inline id operator"" _str(const char *s, std::size_t) {
   return objc::msg_send<id>("NSString"_cls, "stringWithUTF8String:"_sel, s);
 }
 
+static id m_sharedAppDelegate = nullptr; // HACK, also g_...
+
 class cocoa_wkwebview_engine {
 public:
   cocoa_wkwebview_engine(bool debug, void *window)
       : m_debug{debug}, m_parent_window{window} {
+
     auto app = get_shared_application();
-    auto delegate = create_app_delegate();
-    objc_setAssociatedObject(delegate, "webview", (id)this,
+	// auto delegate = m_sharedAppDelegate;
+    if(m_sharedAppDelegate == nullptr) {
+		m_sharedAppDelegate = create_app_delegate();
+		// m_sharedAppDelegate = delegate;
+		if(m_sharedAppDelegate == nullptr) {
+			std::cerr << "Failed to create cocoa app delegate (class-pair allocation failed?)" << std::endl;
+			return;
+		}
+	}
+
+    objc_setAssociatedObject(m_sharedAppDelegate, "webview", (id)this,
                              OBJC_ASSOCIATION_ASSIGN);
-    objc::msg_send<void>(app, "setDelegate:"_sel, delegate);
+    objc::msg_send<void>(app, "setDelegate:"_sel, m_sharedAppDelegate);
 
     // See comments related to application lifecycle in create_app_delegate().
     if (window) {
-      on_application_did_finish_launching(delegate, app);
+      on_application_did_finish_launching(m_sharedAppDelegate, app);
     } else {
       // Start the main run loop so that the app delegate gets the
       // NSApplicationDidFinishLaunchingNotification notification after the run
@@ -844,14 +863,51 @@ public:
                          nullptr);
   }
 
+
 private:
+	// id m_sharedAppDelegate;
+std::string generate_delegate_name() {
+    // Generate a random string
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 25);
+    std::stringstream ss;
+    for (int i = 0; i < 10; ++i) {
+        char c = 'a' + dis(gen);
+        ss << c;
+    }
+    std::string random_string = ss.str();
+
+    // Get the current timestamp
+    auto now = std::chrono::system_clock::now();
+    auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+
+    // Combine the random string and timestamp to create a unique ID
+    std::stringstream id_ss;
+    id_ss << random_string << "_" << timestamp;
+    return id_ss.str();
+}
+
   virtual void on_message(const std::string &msg) = 0;
   id create_app_delegate() {
-    // Note: Avoid registering the class name "AppDelegate" as it is the
+    // HACK: Should use a single delegate for all browser windows instead
+	std::string randomString = generate_delegate_name();
+  	// Append the random string to the delegate name
+  	std::string delegateName = "RandomizedWebviewAppDelegate";
+  	delegateName += randomString;
+
+  	std::cout << "Assigning randomized delegate name: " << delegateName << std::endl;
+
+
+
+	// Note: Avoid registering the class name "AppDelegate" as it is the
     // default name in projects created with Xcode, and using the same name
     // causes objc_registerClassPair to crash.
     auto cls = objc_allocateClassPair((Class) "NSResponder"_cls,
-                                      "WebviewAppDelegate", 0);
+                                      delegateName.c_str(), 0);
+	if(cls == nullptr) return nullptr;
+	std::cout << "Created Cocoa app delegate" << std::endl;
+	//assert(cls != nullptr);
     class_addProtocol(cls, objc_getProtocol("NSTouchBarProvider"));
     class_addMethod(cls, "applicationShouldTerminateAfterLastWindowClosed:"_sel,
                     (IMP)(+[](id, SEL, id) -> BOOL { return 1; }), "c@:@");
@@ -870,7 +926,9 @@ private:
                       "v@:@");
     }
     objc_registerClassPair(cls);
-    return objc::msg_send<id>((id)cls, "new"_sel);
+
+	m_sharedAppDelegate = objc::msg_send<id>((id)cls, "new"_sel);
+	return m_sharedAppDelegate;
   }
   id create_script_message_handler() {
     auto cls = objc_allocateClassPair((Class) "NSResponder"_cls,
