@@ -57,7 +57,7 @@ local EvoBuildTarget = {
 			and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32 -l SHELL32 -l OLE32 -l VERSION -l shlwapi"
 		or "-lm -ldl -pthread"
 			.. (
-				isMacOS and " -framework WebKit -framework Cocoa -framework Foundation"
+				isMacOS and " -framework WebKit"
 				or isUnix and " -lwebkit2gtk-4.0 -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lsoup-2.4 -lgmodule-2.0 -pthread -lglib-2.0 -lgio-2.0 -ljavascriptcoregtk-4.0 -lgobject-2.0 -lglib-2.0"
 				or ""
 			)
