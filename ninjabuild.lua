@@ -23,6 +23,7 @@ local EvoBuildTarget = {
 	luaSources = {
 		"deps/kikito/inspect.lua/inspect.lua",
 		"Runtime/evo.lua",
+		"Runtime/API/C_Runtime.lua",
 		"Runtime/Bindings/webview.lua",
 		"Runtime/Extensions/debugx.lua",
 		"Runtime/Extensions/stringx.lua",

@@ -37,4 +37,6 @@ globals = {
 	"printf",
 	"format",
 
+	-- API namespaces
+	"C_Runtime",
 }

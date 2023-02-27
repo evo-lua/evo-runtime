@@ -9,6 +9,7 @@ function evo.run()
 	evo.loadNonstandardExtensions()
 	evo.initializeStaticLibraryExports()
 	evo.registerGlobalAliases()
+	evo.initializeGlobalNamespaces()
 
 	print("Hello from evo.lua!")
 
@@ -45,6 +46,10 @@ function evo.registerGlobalAliases()
 	_G.it = bdd.it
 
 	_G.printf = evo.printf
+end
+
+function evo.initializeGlobalNamespaces()
+	require("C_Runtime")
 end
 
 function evo.printf(...)
