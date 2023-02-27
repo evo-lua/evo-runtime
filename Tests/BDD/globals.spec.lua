@@ -10,11 +10,23 @@ local globalAliases = {
 	["printf"] = evo.printf,
 }
 
-describe("globals", function()
+local globalNamespaces = {
+	["C_Runtime"] = C_Runtime,
+}
+
+describe("_G", function()
 	for globalName, target in pairs(globalAliases) do
 		it("should export global alias " .. globalName, function()
 			local alias = _G[globalName]
 			assertEquals(alias, target)
 		end)
 	end
+
+	for globalName, target in pairs(globalNamespaces) do
+		it("should export global namespace " .. globalName, function()
+			local alias = _G[globalName]
+			assertEquals(alias, target)
+		end)
+	end
+
 end)

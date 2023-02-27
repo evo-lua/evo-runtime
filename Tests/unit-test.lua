@@ -9,6 +9,7 @@ local specFiles = {
 	"Tests/BDD/globals.spec.lua",
 	"Tests/BDD/uv-library.spec.lua",
 	"Tests/BDD/webview-library.spec.lua",
+	"Tests/BDD/runtime-namespace.spec.lua",
 }
 
 local function runBasicTests()
