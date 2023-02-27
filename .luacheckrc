@@ -27,6 +27,14 @@ globals = {
 	"assertEqualBytes",
 	"assertEquals",
 
+	-- bdd library
 	"describe",
 	"it",
+
+	-- global aliases
+	"buffer",
+	"dump",
+	"printf",
+	"format",
+
 }
