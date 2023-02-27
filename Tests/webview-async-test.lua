@@ -1,3 +1,5 @@
+-- TODO use timer_cb instead of idler pattern, too much CPU usage
+
 local webview = require("webview")
 local webview_create = webview.bindings.webview_create
 local webview_navigate = webview.bindings.webview_navigate
