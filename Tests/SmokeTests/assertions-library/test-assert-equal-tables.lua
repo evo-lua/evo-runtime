@@ -18,7 +18,7 @@ local function testFlatTablesNotEqualCase()
 	assert(not success, "Expected assertEqualTables to raise an error but it did not")
 	assert(
 		string.match(errorMessage, "ASSERTION FAILURE: Expected .* but got .*") ~= nil,
-		"Error message not as expected"
+		"Error message not as expected: \n" .. errorMessage
 	)
 end
 
@@ -27,7 +27,7 @@ local function testFlatTablesWithDifferentLengthCase()
 	assert(not success, "Expected assertEqualTables to raise an error but it did not")
 	assert(
 		string.match(errorMessage, "ASSERTION FAILURE: Expected .* but got .*") ~= nil,
-		"Error message not as expected"
+		"Error message not as expected: \n" .. errorMessage
 	)
 end
 
@@ -48,7 +48,7 @@ local function testNestedTablesNotEqualCase()
 	assert(not success, "Expected assertEqualTables to raise an error but it did not")
 	assert(
 		string.match(errorMessage, "ASSERTION FAILURE: Expected .* but got .*") ~= nil,
-		"Error message not as expected"
+		"Error message not as expected: \n" .. errorMessage
 	)
 end
 
