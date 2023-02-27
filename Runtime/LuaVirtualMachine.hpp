@@ -18,6 +18,7 @@ class LuaVirtualMachine {
 		bool RunCompiledChunk();
 		bool SetGlobalArgs(int argc, char* argv[]);
 		void BindStaticLibraryExports(std::string fieldName, void* staticExportsTable);
+		void CreateGlobalNamespace(std::string name);
 		bool CheckStack();
 
 	private:
