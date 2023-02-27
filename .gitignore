@@ -45,3 +45,4 @@ ninjabuild-*/
 .ninja_log
 build.ninja
 webview
+deps/luvit/.DS_Store
