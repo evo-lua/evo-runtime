@@ -23,6 +23,19 @@ local webview_destroy = webview.bindings.webview_destroy
 -- TODO convert to actual test case, with timer or just idle count
 local view = webview_create(true, nil)
 
+-- webview::webview w(true, nullptr);
+-- // webview::webview w2(true, nullptr);
+-- w.set_title("First window");
+-- w.set_size(640, 480, WEBVIEW_HINT_NONE);
+-- w.navigate("https://en.m.wikipedia.org/wiki/Main_Page");
+
+local WEBVIEW_HINT_NONE = 0
+webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE);
+webview.bindings.webview_set_title(view, "First window")
+webview.bindings.webview_navigate(view, "https://en.m.wikipedia.org/wiki/Main_Page");
+--
+-- webview.bindings.webview_run(wv)
+
 -- TODO start timer to kill idle (and webview)
 
 -- TODO start webview with run, it should block the idle
