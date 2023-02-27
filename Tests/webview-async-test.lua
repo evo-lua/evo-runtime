@@ -44,10 +44,26 @@ webview.bindings.webview_navigate(view, "https://en.m.wikipedia.org/wiki/Main_Pa
 -- TODO stop uv run if idle has counted enough / or use timer
 local uv = require("uv")
 local numEventLoopIerations = 0
-local idle = uv.new_idle()
-idle:start(function()
+
+-- Creating a simple setInterval wrapper
+local function setInterval(interval, callback)
+	local timer = uv.new_timer()
+	timer:start(interval, interval, function ()
+	  callback()
+	end)
+	return timer
+  end
+
+local TARGET_FPS = 60 -- Since timers are inherently at least a little inaccurate, might have to be increased ?
+local GUI_UPDATE_INTERVAL_IN_MS = 1000 / TARGET_FPS
+local guiUpdateTimer = uv.new_timer()
+-- local idle = uv.new_idle()
+-- idle:start(function()
+	-- timerAsUserdata, timeout, repeatAfter, callback
+	guiUpdateTimer:start(GUI_UPDATE_INTERVAL_IN_MS, GUI_UPDATE_INTERVAL_IN_MS,function()
 	numEventLoopIerations = numEventLoopIerations + 1
-	print("Before I/O polling, no blocking", numEventLoopIerations)
+	-- TBD rename to numUpdates since it doesn't correspond 1:1 to the event ticks anymore
+	print("GUI_UPDATE No. " ..  numEventLoopIerations .. " (performed at " .. TARGET_FPS .. " FPS - one update every " .. GUI_UPDATE_INTERVAL_IN_MS .. " ms)")
 	-- webview_run_once(view, true)
 	webview_run_once(view, false)
 
