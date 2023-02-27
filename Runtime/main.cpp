@@ -22,6 +22,8 @@ int main(int argc, char* argv[]) {
 
 	// Some namespaces cannot be created from Lua because they store info only available in C++ land (like #defines)
 	luaVM->CreateGlobalNamespace("C_Runtime");
+	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
+
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
 
