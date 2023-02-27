@@ -32,14 +32,15 @@ struct static_webview_exports_table {
 // Adapted from https://github.com/webview/webview/pull/735/files
 #ifdef __unix__
 // #include "webview_unix.hpp"
-// TODO only works for one webview window?
-int step(webview_t w, int blocking) { return gtk_main_iteration_do(blocking); }
+int step(int blocking) { return gtk_main_iteration_do(blocking); }
 #endif
 
 #ifdef __APPLE__
 
 #define NSApplicationDefinedEvent 15
+
 #define NSBackingStoreBuffered 2
+
 #define NSEventMaskAny ULONG_MAX
 
 // int step(int blocking) {
@@ -72,9 +73,9 @@ int step(webview_t w, int blocking) { return gtk_main_iteration_do(blocking); }
 
 // TODO this will not work without changes to the cocoa_webview_engine in webview.h
 
-int step(webview_t w, int blocking) {
-
-	return webview_step(w, blocking);
+int step(int blocking) {
+	//
+	return 0;
 	//throw "Nonblocking WebView updates aren't implemented for Mac OS :()";
 	// id until =
 	//     (blocking
@@ -100,7 +101,7 @@ int step(webview_t w, int blocking) {
 // TODO integrate with set_fullscreen branch (crossplatform plumbing exists)
 #ifdef __WIN32__
 // #include "webview_windows.hpp"
-int step(webview_t w, int blocking) {
+int step(int blocking) {
 	MSG msg;
 
 	if(blocking) {
@@ -132,8 +133,8 @@ int step(webview_t w, int blocking) {
 #include <iostream>
 int webview_run_once(webview_t w, bool blocking) {
 	std::cout << "webview_run_once (blocking = " << blocking << ")" << std::endl;
-	return webview_step(w, blocking);
-	// static_cast<webview::webview *>(w)->
+	return step(blocking);
+	// return bool shouldExit
 }
 
 namespace webview_ffi {

@@ -29,9 +29,6 @@
 #define WEBVIEW_API extern
 #endif
 
-// TODO Remove
-#include <iostream>
-
 #ifndef WEBVIEW_VERSION_MAJOR
 // The current library major version.
 #define WEBVIEW_VERSION_MAJOR 0
@@ -688,9 +685,6 @@ Result msg_send(Args... args) noexcept {
 
 } // namespace objc
 
-#define NSApplicationDefinedEvent 15
-#define NSEventMaskAny ULONG_MAX
-
 enum NSBackingStoreType : NSUInteger { NSBackingStoreBuffered = 2 };
 
 enum NSWindowStyleMask : NSUInteger {
@@ -748,24 +742,6 @@ public:
   void terminate() {
     auto app = get_shared_application();
     objc::msg_send<void>(app, "terminate:"_sel, nullptr);
-  }
-  int step(int blocking) {
-    id until =
-        (blocking
-             ? ((id(*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantFuture"_sel)
-             : ((id(*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantPast"_sel));
-    id app = ((id(*)(id, SEL))objc_msgSend)("NSApplication"_cls,
-                                            "sharedApplication"_sel);
-
-    id event = ((id(*)(id, SEL, unsigned long long, id, id, bool))objc_msgSend)(
-        app, "nextEventMatchingMask:untilDate:inMode:dequeue:"_sel, ULONG_MAX,
-        until, "kCFRunLoopDefaultMode"_str, true);
-
-    if (event) {
-      ((id(*)(id, SEL, id))objc_msgSend)(app, "sendEvent:"_sel, event);
-    }
-
-    return should_exit;
   }
   void run() {
     auto app = get_shared_application();
@@ -994,27 +970,6 @@ private:
       m_window = (id)m_parent_window;
     }
 
-auto window_cls =
-        objc_allocateClassPair((Class) "NSObject"_cls, "WindowDelegate", 0);
-    class_addProtocol(window_cls, objc_getProtocol("NSWindowDelegate"));
-    class_replaceMethod(
-        window_cls, "windowWillClose:"_sel, (IMP)(+[](id self, SEL, id) {
-          auto w = (cocoa_wkwebview_engine *)objc_getAssociatedObject(
-              self, "webview");
-          assert(w);
-          w->should_exit = 1;
-        }),
-        "v@:@");
-    class_replaceMethod(window_cls, "windowShouldClose:"_sel,
-                        (IMP)(+[](id, SEL, id) -> BOOL { return 1; }), "B@:@");
-    objc_registerClassPair(window_cls);
-    auto window_delegate =
-        ((id(*)(id, SEL))objc_msgSend)((id)window_cls, "new"_sel);
-    objc_setAssociatedObject(window_delegate, "webview", (id)this,
-                             OBJC_ASSOCIATION_ASSIGN);
-    ((void (*)(id, SEL, id))objc_msgSend)(m_window, "setDelegate:"_sel,
-                                          window_delegate);
-
     // Webview
     auto config = objc::msg_send<id>("WKWebViewConfiguration"_cls, "new"_sel);
     m_manager = objc::msg_send<id>(config, "userContentController"_sel);
@@ -1070,7 +1025,6 @@ auto window_cls =
   }
   bool m_debug;
   void *m_parent_window;
-  int should_exit = 0;
   id m_window;
   id m_webview;
   id m_manager;
@@ -2267,11 +2221,6 @@ WEBVIEW_API webview_t webview_create(int debug, void *wnd) {
 
 WEBVIEW_API void webview_destroy(webview_t w) {
   delete static_cast<webview::webview *>(w);
-}
-
-WEBVIEW_API int webview_step(webview_t w, int blocking) {
-	std::cout << "webview_step (in webview.h)" << std::endl;
-  return static_cast<webview::webview *>(w)->step(blocking);
 }
 
 WEBVIEW_API void webview_run(webview_t w) {
