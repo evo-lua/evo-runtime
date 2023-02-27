@@ -54,6 +54,12 @@ local function setInterval(interval, callback)
 	return timer
   end
 
+local simulateBlockingWorkTimer = uv.new_timer()
+simulateBlockingWorkTimer:start(5000, 5000, function()
+	print("Simulating heavy CPU load now, for 2.5 seconds (UI should become unresponsive)")
+	uv.sleep(2500) -- Simulate decoding for 2.5sec or whatever (not a good idea to do this on the main thread)
+end)
+
 local TARGET_FPS = 60 -- Since timers are inherently at least a little inaccurate, might have to be increased ?
 local GUI_UPDATE_INTERVAL_IN_MS = 1000 / TARGET_FPS
 local guiUpdateTimer = uv.new_timer()
