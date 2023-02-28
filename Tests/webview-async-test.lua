@@ -56,8 +56,8 @@ local function setInterval(interval, callback)
 
 local simulateBlockingWorkTimer = uv.new_timer()
 simulateBlockingWorkTimer:start(5000, 5000, function()
-	print("Simulating heavy CPU load now, for 2.5 seconds (UI should become unresponsive)")
-	uv.sleep(2500) -- Simulate decoding for 2.5sec or whatever (not a good idea to do this on the main thread)
+	-- print("Simulating heavy CPU load now, for 2.5 seconds (UI should become unresponsive)")
+	-- uv.sleep(2500) -- Simulate decoding for 2.5sec or whatever (not a good idea to do this on the main thread)
 end)
 
 local TARGET_FPS = 60 -- Since timers are inherently at least a little inaccurate, might have to be increased ?
@@ -69,7 +69,7 @@ local guiUpdateTimer = uv.new_timer()
 	guiUpdateTimer:start(GUI_UPDATE_INTERVAL_IN_MS, GUI_UPDATE_INTERVAL_IN_MS,function()
 	numEventLoopIerations = numEventLoopIerations + 1
 	-- TBD rename to numUpdates since it doesn't correspond 1:1 to the event ticks anymore
-	print("GUI_UPDATE No. " ..  numEventLoopIerations .. " (performed at " .. TARGET_FPS .. " FPS - one update every " .. GUI_UPDATE_INTERVAL_IN_MS .. " ms)")
+	-- print("GUI_UPDATE No. " ..  numEventLoopIerations .. " (performed at " .. TARGET_FPS .. " FPS - one update every " .. GUI_UPDATE_INTERVAL_IN_MS .. " ms)")
 	-- webview_run_once(view, true)
 	webview_run_once(view, false)
 
