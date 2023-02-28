@@ -1,3 +1,5 @@
+set -e
+
 echo "Building target zlib"
 
 OUT_DIR=ninjabuild-unix

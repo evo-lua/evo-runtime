@@ -1,3 +1,5 @@
+set -e
+
 echo Building target luajit
 
 LUAJIT_DIR=deps/LuaJIT/LuaJIT

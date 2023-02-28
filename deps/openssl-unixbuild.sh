@@ -1,3 +1,5 @@
+set -e
+
 NUM_PARALLEL_JOBS=$(nproc)
 
 echo "Building target openssl with $NUM_PARALLEL_JOBS jobs"

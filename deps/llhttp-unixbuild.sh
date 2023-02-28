@@ -1,3 +1,5 @@
+set -e
+
 echo "Building target llhttp"
 
 SRC_DIR=deps/nodejs/llhttp
