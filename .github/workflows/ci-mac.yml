@@ -23,6 +23,8 @@ jobs:
     if: github.event.pull_request.draft == false
     name: Build for Mac OS
     runs-on: macos-latest
+    env:
+        MACOSX_DEPLOYMENT_TARGET: 10.12
 
     steps:
       - name: Check out Git repository
