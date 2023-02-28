@@ -1,3 +1,5 @@
+local console = require("console")
+
 describe("C_Runtime", function()
 	-- Ideally there should be some high-level snapshot tests, but more plumbing is needed
 	-- Not great, but for the time being this will have to do - will revisit later, when it makes sense
@@ -36,6 +38,32 @@ describe("C_Runtime", function()
 			local returnedValue, anotherReturnedValue = C_Runtime.EvaluateString('return 42, "hello"')
 			assertEquals(returnedValue, 42)
 			assertEquals(anotherReturnedValue, "hello")
+		end)
+
+		it("should print the result of the evaluation to the standard output", function()
+			console.capture()
+			C_Runtime.EvaluateString('print("meep")')
+			local capturedOutput = console.release()
+			assertEquals(capturedOutput, "meep\n")
+		end)
+	end)
+
+	describe("PrintVersionString", function()
+		it("should print the build version of the runtime to the standard output", function()
+			console.capture()
+			C_Runtime.PrintVersionString()
+			local capturedOutput = console.release()
+
+			local SEMANTIC_VERSION_STRING_PATTERN = "(v(%d+)%.(%d+)%.(%d+).*)"
+			local versionString, expectedMajorVersion, expectedMinorVersion, expectedPatchVersion =
+				string.match(EVO_VERSION, SEMANTIC_VERSION_STRING_PATTERN)
+			local displayedVersionString, displayedMajorVersion, displayedMinorVersion, displayedPatchVersion =
+				string.match(capturedOutput, SEMANTIC_VERSION_STRING_PATTERN)
+
+			assertEquals(displayedVersionString, versionString .. "\n")
+			assertEquals(displayedMajorVersion, expectedMajorVersion)
+			assertEquals(displayedMinorVersion, expectedMinorVersion)
+			assertEquals(displayedPatchVersion, expectedPatchVersion)
 		end)
 	end)
 end)

@@ -30,7 +30,7 @@ describe("_G", function()
 	end
 
 	it("should export important defines from the native entry point", function()
-		local runtimeVersionDefinedAtBuildTime = _G.EVO_VERSION
+		local runtimeVersionDefinedAtBuildTime = EVO_VERSION
 		-- Technically git describe adds more information in between releases, but it's still "semver-like" enough
 		assertEquals(type(runtimeVersionDefinedAtBuildTime), "string")
 
