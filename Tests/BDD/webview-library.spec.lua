@@ -36,7 +36,7 @@ describe("webview", function()
 
 				webview.bindings.webview_run_once(view, false)
 				-- webview.bindings.webview_terminate(view)
-				-- webview.bindings.webview_destroy(view)
+				webview.bindings.webview_destroy(view)
 			end)
 
 			-- TBD what does blocking mean in this context? Maybe Mac OS related IIRC?
@@ -48,16 +48,16 @@ describe("webview", function()
 				for i = 0, 25, 1 do
 					-- print(i, webview.bindings.webview_run_once(view, true))
 					print(i, webview.bindings.webview_run_once(view, false))
-					-- assertEquals(webview.bindings.webview_run_once(view, false), 0)
+					assertEquals(webview.bindings.webview_run_once(view, false), 0)
 				end
 				for i = 0, 25, 1 do
 					print(i)
-					-- assertEquals(webview.bindings.webview_run_once(view, true), 0)
+					assertEquals(webview.bindings.webview_run_once(view, true), 0)
 				end
 				-- webview.bindings.webview_terminate(view) -- TBD segfaults
 				-- assertEquals(webview.bindings.webview_run_once(view, false), 0) -- TBD Why this?
 				-- webview.bindings.webview_terminate(view)
-				-- webview.bindings.webview_destroy(view)
+				webview.bindings.webview_destroy(view)
 			end)
 
 			it("should integrate with existing async work that's running in the background", function() end)
@@ -76,7 +76,7 @@ describe("webview", function()
 				-- webview.bindings.webview_run_once(view)
 
 				-- webview.bindings.webview_terminate(view)
-				-- webview.bindings.webview_destroy(view)
+				webview.bindings.webview_destroy(view)
 			end)
 		end)
 	end)
