@@ -1,3 +1,5 @@
+set -e
+
 # Should probably be the same that webview uses
 MSWEBVIEW_VERSION=1.0.1150.38
 # If nuget isn't installed, it doesn't seem to use the default source on first startup

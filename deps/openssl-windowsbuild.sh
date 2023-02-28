@@ -1,3 +1,5 @@
+set -e
+
 # All this MUST be ran from MSYS2! OpenSSL's build system is the stuff of nightmares, and doesn't work with native perl
 #The standard gcc won't work either, so make sure to install this one first (and all the other tools required):
 # pacman -S git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake --noconfirm

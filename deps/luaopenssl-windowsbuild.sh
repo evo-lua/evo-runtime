@@ -1,3 +1,5 @@
+set -e
+
 echo "Building target lua-openssl"
 
 SRC_DIR=deps/lua-openssl

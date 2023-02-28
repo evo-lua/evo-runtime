@@ -1,3 +1,5 @@
+set -e
+
 echo "Building target luv"
 
 SRC_DIR=deps/luvit/luv

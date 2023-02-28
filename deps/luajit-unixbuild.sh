@@ -1,3 +1,5 @@
+set -e
+
 echo Building target luajit
 
 LUAJIT_DIR=deps/LuaJIT/LuaJIT
@@ -8,8 +10,6 @@ mkdir -p $BUILD_DIR/jit
 
 cd $LUAJIT_DIR
 
-# TBD Use whatever is available in GH Actions?
-export MACOSX_DEPLOYMENT_TARGET="10.12"
 make clean
 make BUILDMODE=static XCFLAGS=-DLUAJIT_ENABLE_LUA52COMPAT
 

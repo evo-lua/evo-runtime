@@ -1,3 +1,5 @@
+set -e
+
 echo "Building target pcre2"
 
 OUT_DIR=ninjabuild-unix
