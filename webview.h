@@ -1021,9 +1021,9 @@ auto window_cls =
 	m_webview = ((id(*)(Class, SEL))objc_msgSend)(objc_getClass("WKWebView"), sel_getUid("alloc"));
 
 	// Webview [only one instance ...]
-    auto config = objc::msg_send<id>("WKWebViewConfiguration"_cls, "new"_sel);
-    m_manager = objc::msg_send<id>(config, "userContentController"_sel);
-    m_webview = objc::msg_send<id>("WKWebView"_cls, "alloc"_sel);
+    // auto config = objc::msg_send<id>("WKWebViewConfiguration"_cls, "new"_sel);
+    // m_manager = objc::msg_send<id>(config, "userContentController"_sel);
+    // m_webview = objc::msg_send<id>("WKWebView"_cls, "alloc"_sel);
 
     if (m_debug) {
       // Equivalent Obj-C:
