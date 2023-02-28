@@ -138,14 +138,14 @@ int webview_run_once(webview_t w, bool blocking) {
 
 static bool hasCreatedWebview = false;
 void* webview_create_singleton(int withDevToolsEnabled, void* existingNativeWindow) {
-	if(! hasCreatedWebview) {
+	// if(! hasCreatedWebview) {
 		std::cout << "Creating WebView (singleton mode for now)" << std::endl;
-		hasCreatedWebview = true; // Cannot create more or the library will SEGFAULT on OSX
+		// hasCreatedWebview = true; // Cannot create more or the library will SEGFAULT on OSX
 		return webview_create(withDevToolsEnabled, existingNativeWindow);
-	} else {
+	// } else {
 		std::cerr << "Failed to create native WebView (only one instance can currently be created)" << std::endl;
-		return nullptr;
-	}
+		// return nullptr;
+	// }
 }
 
 namespace webview_ffi {
