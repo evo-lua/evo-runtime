@@ -72,7 +72,7 @@ function C_Runtime.EvaluateString(luaCode)
 end
 
 function C_Runtime.PrintVersionString()
-	print(_G.EVO_VERSION)
+	print(EVO_VERSION)
 end
 
 return C_Runtime
