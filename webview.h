@@ -1015,7 +1015,12 @@ auto window_cls =
     ((void (*)(id, SEL, id))objc_msgSend)(m_window, "setDelegate:"_sel,
                                           window_delegate);
 
-    // Webview
+    // Webview [multiple instances ...]
+	auto config = ((id(*)(Class, SEL))objc_msgSend)(objc_getClass("WKWebViewConfiguration"), sel_getUid("new"));
+	m_manager = ((id(*)(id, SEL))objc_msgSend)(config, sel_getUid("userContentController"));
+	m_webview = ((id(*)(Class, SEL))objc_msgSend)(objc_getClass("WKWebView"), sel_getUid("alloc"));
+
+	// Webview [only one instance ...]
     auto config = objc::msg_send<id>("WKWebViewConfiguration"_cls, "new"_sel);
     m_manager = objc::msg_send<id>(config, "userContentController"_sel);
     m_webview = objc::msg_send<id>("WKWebView"_cls, "alloc"_sel);
