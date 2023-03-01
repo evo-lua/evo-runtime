@@ -11,8 +11,9 @@ ignore = {
 	"213", -- unused loop variable (kept for readability's sake)
 }
 globals = {
-	-- defines
+	-- C++ entry point
 	"EVO_VERSION",
+	"STATIC_FFI_EXPORTS",
 
 	-- assertions library
 	"assertTrue",
