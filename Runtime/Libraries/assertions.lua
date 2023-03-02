@@ -65,7 +65,7 @@ function assertions.assertDoesNotThrow(codeUnderTest)
 	return true
 end
 
-function assertions.assertFailure(codeUnderTest, errorMessage)
+function assertions.assertFailure(codeUnderTest, expectedErrorMessage)
 	local success, status, value = pcall(codeUnderTest)
 	if not success then
 		error("ASSERTION FAILURE: Expected a failure but got an error", 0)
@@ -75,11 +75,11 @@ function assertions.assertFailure(codeUnderTest, errorMessage)
 		error(format("ASSERTION FAILURE: Expected a failure but got success with value %s", tostring(value)), 0)
 	end
 
-	if errorMessage and value ~= errorMessage then
+	if expectedErrorMessage and value ~= expectedErrorMessage then
 		error(
 			format(
 				"ASSERTION FAILURE: Expected failure message '%s' but got '%s'",
-				tostring(errorMessage),
+				tostring(expectedErrorMessage),
 				tostring(value)
 			),
 			0
