@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <iostream>
 
-#define SSL 1 // TODO
+// TODO
+// #define SSL 0
+constexpr int SSL = 0;
 
 /* This is a simple WebSocket "sync" upgrade example.
  * You may compile it with "WITH_OPENSSL=1 make" or with "make" */
