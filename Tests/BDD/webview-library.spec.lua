@@ -16,6 +16,7 @@ describe("webview", function()
 				"webview_navigate",
 				"webview_return",
 				"webview_run",
+				"webview_run_once",
 				"webview_set_html",
 				"webview_set_size",
 				"webview_set_title",
