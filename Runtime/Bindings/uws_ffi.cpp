@@ -82,3 +82,15 @@ int uws_test(void* loop) {
 
 	return 0;
 }
+
+
+// HTTP client
+// HTTPS client
+// HTTP server
+// HTTPS server
+// WS client
+// WSS client
+// WS server
+// WSS server
+// HTTP2
+// HTTP3/QUIC
