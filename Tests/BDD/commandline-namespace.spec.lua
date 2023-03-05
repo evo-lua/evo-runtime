@@ -1,0 +1,205 @@
+describe("C_CommandLine", function()
+	-- Remove the runtime handlers (they aren't needed after the tests have started running, anyway)
+	C_CommandLine.UnregisterAllCommands()
+
+	describe("RegisterCommand", function()
+		it("should throw if a command with the same name has already been registered", function()
+			local function registerFooCommand()
+				C_CommandLine.RegisterCommand("foo", print)
+			end
+			assertDoesNotThrow(registerFooCommand)
+			assertThrows(
+				registerFooCommand,
+				"Failed to register command 'foo' (a command handler already exists for this command)"
+			)
+
+			-- Cleanup
+			C_CommandLine.UnregisterCommand("foo")
+		end)
+
+		it("should throw if no command name was given", function()
+			local function registerWithoutCommandName()
+				C_CommandLine.RegisterCommand(nil, print)
+			end
+			assertThrows(
+				registerWithoutCommandName,
+				"Expected argument commandName to be a string value, but received a nil value instead"
+			)
+		end)
+
+		it("should throw if no command handler was given", function()
+			local function registerWithoutCommandHandler()
+				C_CommandLine.RegisterCommand("test123", nil)
+			end
+			assertThrows(
+				registerWithoutCommandHandler,
+				"Expected argument commandHandler to be a function value, but received a nil value instead"
+			)
+		end)
+
+		it("should throw if an invalid description was given", function()
+			local function registerWithInvalidDescription()
+				C_CommandLine.RegisterCommand("test123", print, 42)
+			end
+			assertThrows(
+				registerWithInvalidDescription,
+				"Expected argument description to be a string value, but received a number value instead"
+			)
+		end)
+
+		it("should register the command with a default placeholder description if none was given", function()
+			C_CommandLine.RegisterCommand("bar", print)
+			assertEquals(C_CommandLine.GetCommandList(), {
+				bar = C_CommandLine.PLACEHOLDER_COMMAND_DESCRIPTION,
+			})
+
+			-- Cleanup
+			C_CommandLine.UnregisterCommand("bar")
+		end)
+
+		it("should register the command with the given description if one was given", function()
+			local description = "User-defined description (optional argument)"
+			C_CommandLine.RegisterCommand("baz", print, description)
+			assertEquals(C_CommandLine.GetCommandList(), {
+				baz = description,
+			})
+
+			-- Cleanup
+			C_CommandLine.UnregisterCommand("baz")
+		end)
+	end)
+
+	describe("UnregisterCommand", function()
+		it("should throw if no command name was given", function()
+			local function unregisterNilCommand()
+				C_CommandLine.UnregisterCommand()
+			end
+
+			assertThrows(
+				unregisterNilCommand,
+				"Expected argument commandName to be a string value, but received a nil value instead"
+			)
+		end)
+
+		it("should throw if no command with the given name was registered", function()
+			local function unregisterInvalidCommand()
+				C_CommandLine.UnregisterCommand("invalid")
+			end
+
+			assertThrows(unregisterInvalidCommand, "Failed to unregister command 'invalid' (not a registered command)")
+		end)
+
+		it("should remove the command handler if an existing command name was given", function()
+			C_CommandLine.RegisterCommand("temp", print)
+			assertEquals(C_CommandLine.GetCommandList(), {
+				temp = C_CommandLine.PLACEHOLDER_COMMAND_DESCRIPTION,
+			})
+			C_CommandLine.UnregisterCommand("temp")
+			assertEquals(C_CommandLine.GetCommandList(), {})
+		end)
+	end)
+
+	describe("ProcessArguments", function()
+		it("should throw if a non-table value was passed", function()
+			local invalidValues = {
+				42,
+				"hi",
+				print,
+				true,
+				false,
+				nil,
+			}
+			for index, value in ipairs(invalidValues) do
+				local function processInvalidArguments()
+					C_CommandLine.ProcessArguments(value)
+				end
+				assertThrows(
+					processInvalidArguments,
+					"Expected argument argumentsVector to be a table value, but received a "
+						.. type(value)
+						.. " value instead"
+				)
+			end
+		end)
+
+		it("should trigger the registered default handler on invalid command", function()
+			-- Setup
+			C_CommandLine.SetDefaultHandler(function(command)
+				error("This is the default command handler: " .. command, 0)
+			end)
+
+			local function triggerDefaultHandler()
+				C_CommandLine.ProcessArguments({ [0] = "invalid-command" })
+			end
+			assertThrows(triggerDefaultHandler, "This is the default command handler: invalid-command")
+
+			-- Cleanup
+			C_CommandLine.SetDefaultHandler(C_CommandLine.FALLBACK_COMMAND_HANDLER)
+		end)
+
+		it("should trigger the appropriate command handler if one was registered", function()
+			-- Setup
+			local function handler(command)
+				error("Triggered handler for command " .. command, 0)
+			end
+			C_CommandLine.RegisterCommand("asdf", handler)
+
+			local function triggerRegisteredHandler()
+				C_CommandLine.ProcessArguments({ [0] = "asdf" })
+			end
+			assertThrows(triggerRegisteredHandler, "Triggered handler for command asdf")
+
+			-- Cleanup
+			C_CommandLine.UnregisterCommand("asdf")
+		end)
+	end)
+
+	describe("GetUsageInfo", function()
+		it("should return an empty string if no commands were registered", function()
+			assertEquals(C_CommandLine.GetCommandList(), {})
+			assertEquals(C_CommandLine.GetUsageInfo(), "")
+		end)
+
+		it(
+			"should return an ordered list of all registered commands and their description if any were registered",
+			function()
+				-- Setup
+				C_CommandLine.RegisterCommand("foo", print, "Does something else")
+				C_CommandLine.RegisterCommand("bar", print, "Does something")
+
+				assertEquals(
+					C_CommandLine.GetUsageInfo(),
+					"\tbar\t\tDoes something\n" .. "\tfoo\t\tDoes something else\n"
+				)
+
+				-- Cleanup
+				C_CommandLine.UnregisterCommand("foo")
+				C_CommandLine.UnregisterCommand("bar")
+			end
+		)
+	end)
+
+	describe("SetDefaultHandler", function()
+		it("should throw if a non-function value was passed", function()
+			local invalidValues = {
+				42,
+				"hi",
+				{},
+				true,
+				false,
+				nil,
+			}
+			for index, value in ipairs(invalidValues) do
+				local function setInvalidHandler()
+					C_CommandLine.SetDefaultHandler(value)
+				end
+				assertThrows(
+					setInvalidHandler,
+					"Expected argument newDefaultHandler to be a function value, but received a "
+						.. type(value)
+						.. " value instead"
+				)
+			end
+		end)
+	end)
+end)
