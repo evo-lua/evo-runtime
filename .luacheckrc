@@ -42,5 +42,6 @@ globals = {
 	"format",
 
 	-- API namespaces
+	"C_CommandLine",
 	"C_Runtime",
 }
