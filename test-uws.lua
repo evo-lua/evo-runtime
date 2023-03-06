@@ -23,11 +23,11 @@ local app = uws_create_app(false, socketOptions)
 local socketBehavior = ffi.new("struct uws_socket_behavior_t")
 socketBehavior.upgrade = uws.bindings.upgrade_handler
 socketBehavior.open = uws.bindings.open_handler
-socketBehavior.message = uws.bindings.upgrade_handler
-socketBehavior.drain = uws.bindings.upgrade_handler
-socketBehavior.ping = uws.bindings.upgrade_handler
-socketBehavior.pong = uws.bindings.upgrade_handler
-socketBehavior.close = uws.bindings.upgrade_handler
+socketBehavior.message = uws.bindings.message_handler
+socketBehavior.drain = uws.bindings.drain_handler
+socketBehavior.ping = uws.bindings.ping_handler
+socketBehavior.pong = uws.bindings.pong_handler
+socketBehavior.close = uws.bindings.close_handler
 socketBehavior.subscription = uws.bindings.subscription_handler
 
 uws_ws(false, app, "/*", socketBehavior, nil)
