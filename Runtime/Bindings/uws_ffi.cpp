@@ -2,6 +2,52 @@
 #include <stdio.h>
 #include <iostream>
 
+struct static_uws_exports_table {
+// 	webview_t (*webview_create)(int debug, void* window);
+// 	void (*webview_destroy)(webview_t w);
+// 	void (*webview_run)(webview_t w);
+// 	int (*webview_run_once)(webview_t w, int blocking);
+// 	void (*webview_terminate)(webview_t w);
+// 	void (*webview_dispatch)(webview_t w, webview_dispatch_function_t fn, void* arg);
+// 	void* (*webview_get_window)(webview_t w);
+// 	void (*webview_set_title)(webview_t w, const char* title);
+// 	void (*webview_set_size)(webview_t w, int width, int height, int hints);
+// 	void (*webview_navigate)(webview_t w, const char* url);
+// 	void (*webview_set_html)(webview_t w, const char* html);
+// 	void (*webview_init)(webview_t w, const char* js);
+// 	void (*webview_eval)(webview_t w, const char* js);
+// 	void (*webview_bind)(webview_t w, const char* name, promise_function_t fn, void* arg);
+// 	void (*webview_unbind)(webview_t w, const char* name);
+// 	void (*webview_return)(webview_t w, const char* seq, int status, const char* result);
+// 	const webview_version_info_t* (*webview_version)(void);
+};
+
+namespace uwebsockets_ffi {
+void* getExportsTable() {
+		static struct static_uws_exports_table uwebsockets_exports_table;
+
+		// uwebsockets_exports_table.webview_bind = webview_bind;
+		// uwebsockets_exports_table.webview_create = webview_create;
+		// uwebsockets_exports_table.webview_destroy = webview_destroy;
+		// uwebsockets_exports_table.webview_dispatch = webview_dispatch;
+		// uwebsockets_exports_table.webview_eval = webview_eval;
+		// uwebsockets_exports_table.webview_get_window = webview_get_window;
+		// uwebsockets_exports_table.webview_init = webview_init;
+		// uwebsockets_exports_table.webview_navigate = webview_navigate;
+		// uwebsockets_exports_table.webview_return = webview_return;
+		// uwebsockets_exports_table.webview_run = webview_run;
+		// uwebsockets_exports_table.webview_run_once = webview_run_once;
+		// uwebsockets_exports_table.webview_set_html = webview_set_html;
+		// uwebsockets_exports_table.webview_set_size = webview_set_size;
+		// uwebsockets_exports_table.webview_set_title = webview_set_title;
+		// uwebsockets_exports_table.webview_terminate = webview_terminate;
+		// uwebsockets_exports_table.webview_unbind = webview_unbind;
+		// uwebsockets_exports_table.webview_version = webview_version;
+
+		return &uwebsockets_exports_table;
+	}
+}
+
 // TODO
 // #define SSL 0
 constexpr int SSL = 0;
