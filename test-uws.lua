@@ -9,8 +9,8 @@ local uws_app_run = uws.bindings.uws_app_run
 
 local idler = uv.new_timer()
 
-idler:start(1000, 1000, function()
-	print("The event loop is still ticking")
+idler:start(5000, 5000, function()
+	print("The event loop is still alive")
 end)
 
 local socketOptions = ffi.new("struct us_socket_context_options_t")
