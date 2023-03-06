@@ -7,6 +7,8 @@ local uwebsockets = {}
 -- $1 (*$2) ($3);
 -- (vscode find/replace)
 
+-- gen symbols list (for unit test): "$2",
+
 -- TBD typedef long unsigned int uintmax_t;
 uwebsockets.cdefs = [[
 
