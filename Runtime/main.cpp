@@ -33,6 +33,10 @@ int main(int argc, char* argv[]) {
 	luaVM->CreateGlobalNamespace("C_Runtime");
 	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
 
+	// TODO test wss with/without this
+	uv_loop_t* loop = luv_loop(luaVM->m_luaState);
+	uws_get_loop_with_native(loop);
+
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
 
@@ -43,9 +47,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// uv_idle_t idler;
-	// TODO test wss with/without this
-	uv_loop_t* loop = luv_loop(luaVM->m_luaState);
-	uws_get_loop_with_native(loop);
+
 
 	// uv_idle_init(loop, &idler);
 
