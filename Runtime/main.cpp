@@ -48,7 +48,6 @@ int main(int argc, char* argv[]) {
 
 	// uv_idle_t idler;
 
-
 	// uv_idle_init(loop, &idler);
 
 	// uv_idle_start(&idler, idle_cb);

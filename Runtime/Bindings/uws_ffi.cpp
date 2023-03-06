@@ -43,13 +43,13 @@ static void pong_handler(uws_websocket_t* ws, const char* message, size_t length
 	/* You don't need to handle this one either */
 }
 
-static void upgrade_handler(uws_res_t *response, uws_req_t *request, uws_socket_context_t *context, void* user_data) {
+static void upgrade_handler(uws_res_t* response, uws_req_t* request, uws_socket_context_t* context, void* user_data) {
 	std::cout << "upgrade_handler" << std::endl;
 }
 
-		static void subscription_handler(uws_websocket_t *ws, const char *topic_name, size_t topic_name_length, int new_number_of_subscriber, int old_number_of_subscriber, void* user_data) {
-			std::cout << "subscription_handler" << std::endl;
-		}
+static void subscription_handler(uws_websocket_t* ws, const char* topic_name, size_t topic_name_length, int new_number_of_subscriber, int old_number_of_subscriber, void* user_data) {
+	std::cout << "subscription_handler" << std::endl;
+}
 
 // uws_method_handler
 // void (*uws_method_handler)(uws_res_t *response, uws_req_t *request, void *user_data);
@@ -165,13 +165,13 @@ namespace uwebsockets_ffi {
 		// method_handler ?
 
 		// uws_websocket_upgrade_handler upgrade;
-        // uws_websocket_handler open;
-        // uws_websocket_message_handler message;
-        // uws_websocket_handler drain;
-        // uws_websocket_ping_pong_handler ping;
-        // uws_websocket_ping_pong_handler pong;
-        // uws_websocket_close_handler close;
-        // uws_websocket_subscription_handler subscription;
+		// uws_websocket_handler open;
+		// uws_websocket_message_handler message;
+		// uws_websocket_handler drain;
+		// uws_websocket_ping_pong_handler ping;
+		// uws_websocket_ping_pong_handler pong;
+		// uws_websocket_close_handler close;
+		// uws_websocket_subscription_handler subscription;
 
 		uwebsockets_exports_table.uws_create_app = uws_create_app;
 		uwebsockets_exports_table.uws_app_destroy = uws_app_destroy;
@@ -272,7 +272,6 @@ constexpr int SSL = 0;
 struct PerSocketData {
 	/* Fill with user data */
 };
-
 
 void open_handler(uws_websocket_t* ws, void* user_data) {
 	std::cout << "open_handler" << std::endl;

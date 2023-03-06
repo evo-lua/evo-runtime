@@ -38,8 +38,8 @@ uws_ws(false, app, "/*", socketBehavior, nil)
 -- .maxBackpressure = 1 * 1024 * 1024,
 -- },
 
-uws_app_listen(false, app, 9001, uws.bindings.listen_handler, nil);
+uws_app_listen(false, app, 9001, uws.bindings.listen_handler, nil)
 
-uws_app_run(false, app);
+uws_app_run(false, app)
 
 uv.run()
