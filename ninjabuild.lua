@@ -25,6 +25,7 @@ local EvoBuildTarget = {
 		"Runtime/evo.lua",
 		"Runtime/API/C_CommandLine.lua",
 		"Runtime/API/C_Runtime.lua",
+		"Runtime/Bindings/uws.lua",
 		"Runtime/Bindings/webview.lua",
 		"Runtime/Extensions/debugx.lua",
 		"Runtime/Extensions/stringx.lua",
