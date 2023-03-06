@@ -18,7 +18,9 @@ void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_listen_con
 	std::cout << "listen_handler" << std::endl;
 	if(listen_socket) {
 		printf("Listening on port wss://localhost:%d\n", config.port);
-	}
+	} else {
+        std::cout << "Failed to load certs or to bind to port" << std::endl;
+    }
 }
 
 void open_handler(uws_websocket_t* ws, void* user_data) {
@@ -63,8 +65,8 @@ uWS::WebSocketClientBehavior b = {
         .open = [](/*auto *ws*/) {
             std::cout << "Hello and welcome" << std::endl;
         },
-        .message = [](/*auto *ws, auto message*/) {
-            // std::cout << "Received message: " << message << std::endl;
+        .message = []() {
+            std::cout << "Received message: " << std::endl;
         },
         .close = [](/*auto *ws*/) {
             std::cout << "We are about to close, sir" << std::endl;
@@ -73,7 +75,7 @@ uWS::WebSocketClientBehavior b = {
 
 	    uWS::ClientApp app(std::move(b));
 
-    app.connect("ws://localhost:3000", "protocol");
+    app.connect("ws://localhost:9001");
 
     app.run();
 }
@@ -81,8 +83,9 @@ uWS::WebSocketClientBehavior b = {
 int uws_test(void* loop) {
 
 	uws_get_loop_with_native(loop);
+	// http_client_test();
 
-	http_client_test();
+	// return 0;
 
 	uws_app_t* app = uws_create_app(SSL, (struct us_socket_context_options_t) { /* There are example certificates in uWebSockets.js repo */
 											 .key_file_name = "../misc/key.pem",
