@@ -1,4 +1,5 @@
 extern "C" {
+#include "libuwebsockets.h"
 #include "luv.h"
 #include "openssl.h"
 }
@@ -42,12 +43,13 @@ int main(int argc, char* argv[]) {
 	}
 
 	// uv_idle_t idler;
-	// uv_loop_t* loop = luv_loop(luaVM->m_luaState);
+	// TODO test wss with/without this
+	uv_loop_t* loop = luv_loop(luaVM->m_luaState);
+	uws_get_loop_with_native(loop);
 
 	// uv_idle_init(loop, &idler);
 
 	// uv_idle_start(&idler, idle_cb);
-
 	// uws_test((void*)loop);
 	// // http_client_test();
 	// uv_run(loop, UV_RUN_DEFAULT);
