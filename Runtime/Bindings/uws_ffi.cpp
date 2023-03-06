@@ -128,6 +128,7 @@ uWS::WebSocketClientBehavior b = {
 
 int uws_test(void* loop) {
 
+// TBD set once in main?
 	uws_get_loop_with_native(loop);
 	// http_client_test();
 
