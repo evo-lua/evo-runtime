@@ -21,6 +21,8 @@ class LuaVirtualMachine {
 		void CreateGlobalNamespace(std::string name);
 		void AssignGlobalVariable(std::string key, std::string value);
 		bool CheckStack();
+
+		// Unfortunately this needs to be exposed so that other async libraries may cooperate with the event loop
 		lua_State* m_luaState;
 
 	private:
