@@ -26,7 +26,7 @@ static void message_handler(uws_websocket_t* ws, const char* message, size_t len
 }
 
 static void close_handler(uws_websocket_t* ws, int code, const char* message, size_t length, void* user_data) {
-	std::cout << "close_handler" << std::endl;
+	std::cout << "close_handler - " << code << ": " << message << std::endl;
 	/* You may access uws_ws_get_user_data(ws) here, but sending or
 	 * doing any kind of I/O with the socket is not valid. */
 }
