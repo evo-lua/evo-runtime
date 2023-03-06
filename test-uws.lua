@@ -7,21 +7,11 @@ local uws_ws = uws.bindings.uws_ws
 local uws_app_listen = uws.bindings.uws_app_listen
 local uws_app_run = uws.bindings.uws_app_run
 
--- static void idle_cb(uv_idle_t* handle) {
--- // std::cout << "idler be idling" << std::endl;
--- }
+local idler = uv.new_timer()
 
-local idler = uv.new_idle()
-
--- // uv_idle_init(loop, &idler);
-
-idler:start(function()
-	print("Idler be idling")
+idler:start(1000, 1000, function()
+	print("The event loop is still ticking")
 end)
--- // uv_idle_start(&idler, idle_cb);
--- // uws_test((void*)loop);
--- // // http_client_test();
--- // uv_run(loop, UV_RUN_DEFAULT);
 
 local socketOptions = ffi.new("struct us_socket_context_options_t")
 
@@ -46,21 +36,6 @@ uws_ws(false, app, "/*", socketBehavior, nil)
 -- .close = close_handler,
 -- },
 
--- todo listen_handler in exports table, queue msg
-local function listen_handler(listen_socket, config, user_data)
-	-- void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_listen_config_t config, void* user_data) {
-	-- 	std::cout << "listen_handler" << std::endl;
-	if listen_socket then
-		print("listen ok")
-	else
-		print("listen failed")
-	end
-	-- 		printf("Listening on port wss://localhost:%d\n", config.port);
-	-- 	} else {
-	-- 		std::cout << "Failed to load certs or to bind to port" << std::endl;
-	-- 	}
-	-- }
-end
 uws_app_listen(false, app, 9001, uws.bindings.listen_handler, nil);
 
 uws_app_run(false, app);
