@@ -12,8 +12,21 @@ local uwebsockets = {}
 -- TBD typedef long unsigned int uintmax_t;
 uwebsockets.cdefs = [[
 
+	// TBD C++ typedefs
 	typedef long unsigned int uintmax_t;
 
+	// us header
+	struct us_socket_context_options_t {
+		const char *key_file_name;
+		const char *cert_file_name;
+		const char *passphrase;
+		const char *dh_params_file_name;
+		const char *ca_file_name;
+		const char *ssl_ciphers;
+		int ssl_prefer_low_memory_usage; /* Todo: rename to prefer_low_memory_usage and apply for TCP as well */
+	};
+
+	// uws header
 	typedef enum
 	{
 		/* These are not actual compression options */
@@ -95,7 +108,7 @@ uwebsockets.cdefs = [[
 	typedef void (*uws_websocket_upgrade_handler)(uws_res_t *response, uws_req_t *request, uws_socket_context_t *context, void* user_data);
 	typedef void (*uws_websocket_subscription_handler)(uws_websocket_t *ws, const char *topic_name, size_t topic_name_length, int new_number_of_subscriber, int old_number_of_subscriber, void* user_data);
 
-	typedef struct
+	typedef struct uws_socket_behavior_t
 	{
 		uws_compress_options_t compression;
 		/* Maximum message size we can receive */
@@ -295,8 +308,8 @@ uwebsockets.cdefs = [[
 		void (*uws_res_upgrade) (int ssl, uws_res_t* res, void* data, const char* sec_web_socket_key, size_t sec_web_socket_key_length, const char* sec_web_socket_protocol, size_t sec_web_socket_protocol_length, const char* sec_web_socket_extensions, size_t sec_web_socket_extensions_length, uws_socket_context_t* ws);
 		size_t (*uws_res_get_remote_address) (int ssl, uws_res_t* res, const char** dest);
 		size_t (*uws_res_get_remote_address_as_text) (int ssl, uws_res_t* res, const char** dest);
-		size_t (*uws_res_get_proxied_remote_address) (int ssl, uws_res_t* res, const char** dest);
-		size_t (*uws_res_get_proxied_remote_address_as_text) (int ssl, uws_res_t* res, const char** dest);
+		//size_t (*uws_res_get_proxied_remote_address) (int ssl, uws_res_t* res, const char** dest);
+		//size_t (*uws_res_get_proxied_remote_address_as_text) (int ssl, uws_res_t* res, const char** dest);
 		void* (*uws_res_get_native_handle) (int ssl, uws_res_t* res);
 		bool (*uws_req_is_ancient) (uws_req_t* res);
 		bool (*uws_req_get_yield) (uws_req_t* res);

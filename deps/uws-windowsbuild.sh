@@ -27,6 +27,7 @@ cd $UWS_DIR/capi
 # WITH_LTO doesn't work on Windows
 # WITH_LIBUV=1 WITH_LTO=0
 # make capi
+# TBD WITH_PROXY ?
 # todo move to ninjabuild I guess
 LIBRARY_NAME=libuwebsockets
 g++ -DUWS_WITH_PROXY -DUWS_NO_ZLIB -DLIBUS_NO_SSL -c -O3 -std=c++17 -lz -luv -fPIC -I ../src -I ../uSockets/src $LIBRARY_NAME.cpp
