@@ -187,24 +187,6 @@ namespace uwebsockets_ffi {
 		uwebsockets_exports_table.uws_req_get_parameter = uws_req_get_parameter;
 		uwebsockets_exports_table.uws_get_loop = uws_get_loop;
 		uwebsockets_exports_table.uws_get_loop_with_native = uws_get_loop_with_native;
-		// uwebsockets_exports_table.webview_bind = webview_bind;
-		// uwebsockets_exports_table.webview_bind = webview_bind;
-		// uwebsockets_exports_table.webview_create = webview_create;
-		// uwebsockets_exports_table.webview_destroy = webview_destroy;
-		// uwebsockets_exports_table.webview_dispatch = webview_dispatch;
-		// uwebsockets_exports_table.webview_eval = webview_eval;
-		// uwebsockets_exports_table.webview_get_window = webview_get_window;
-		// uwebsockets_exports_table.webview_init = webview_init;
-		// uwebsockets_exports_table.webview_navigate = webview_navigate;
-		// uwebsockets_exports_table.webview_return = webview_return;
-		// uwebsockets_exports_table.webview_run = webview_run;
-		// uwebsockets_exports_table.webview_run_once = webview_run_once;
-		// uwebsockets_exports_table.webview_set_html = webview_set_html;
-		// uwebsockets_exports_table.webview_set_size = webview_set_size;
-		// uwebsockets_exports_table.webview_set_title = webview_set_title;
-		// uwebsockets_exports_table.webview_terminate = webview_terminate;
-		// uwebsockets_exports_table.webview_unbind = webview_unbind;
-		// uwebsockets_exports_table.webview_version = webview_version;
 
 		return &uwebsockets_exports_table;
 	}
