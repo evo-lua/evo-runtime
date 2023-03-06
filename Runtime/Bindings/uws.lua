@@ -242,6 +242,14 @@ uwebsockets.cdefs = [[
 
 	struct static_uws_exports_table {
 		uws_listen_handler listen_handler;
+		uws_websocket_upgrade_handler upgrade_handler;
+		uws_websocket_handler open_handler;
+		uws_websocket_message_handler message_handler;
+		uws_websocket_handler drain_handler;
+		uws_websocket_ping_pong_handler ping_handler;
+		uws_websocket_ping_pong_handler pong_handler;
+		uws_websocket_close_handler close_handler;
+		uws_websocket_subscription_handler subscription_handler;
 		uws_app_t* (*uws_create_app) (int ssl, struct us_socket_context_options_t options);
 		void (*uws_app_destroy) (int ssl, uws_app_t* app);
 		void (*uws_app_get) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);

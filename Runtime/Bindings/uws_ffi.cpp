@@ -11,8 +11,6 @@ static void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_lis
 	}
 }
 
-
-
 static void open_handler(uws_websocket_t* ws, void* user_data) {
 	std::cout << "open_handler" << std::endl;
 	/* Open event here, you may access uws_ws_get_user_data(WS) which points to a PerSocketData struct */
@@ -24,7 +22,6 @@ static void message_handler(uws_websocket_t* ws, const char* message, size_t len
 }
 
 static void close_handler(uws_websocket_t* ws, int code, const char* message, size_t length, void* user_data) {
-
 	std::cout << "close_handler" << std::endl;
 	/* You may access uws_ws_get_user_data(ws) here, but sending or
 	 * doing any kind of I/O with the socket is not valid. */
@@ -46,9 +43,27 @@ static void pong_handler(uws_websocket_t* ws, const char* message, size_t length
 	/* You don't need to handle this one either */
 }
 
+        uws_websocket_upgrade_handler upgrade;
+ void (*uws_websocket_upgrade_handler)(uws_res_t *response, uws_req_t *request, uws_socket_context_t *context, void* user_data);
+
+
+
+        uws_websocket_subscription_handler subscription;
+		void (*uws_websocket_subscription_handler)(uws_websocket_t *ws, const char *topic_name, size_t topic_name_length, int new_number_of_subscriber, int old_number_of_subscriber, void* user_data);
+
+// uws_method_handler
+// void (*uws_method_handler)(uws_res_t *response, uws_req_t *request, void *user_data);
 
 struct static_uws_exports_table {
 	uws_listen_handler listen_handler;
+	uws_websocket_upgrade_handler upgrade_handler;
+	uws_websocket_handler open_handler;
+	uws_websocket_message_handler message_handler;
+	uws_websocket_handler drain_handler;
+	uws_websocket_ping_pong_handler ping_handler;
+	uws_websocket_ping_pong_handler pong_handler;
+	uws_websocket_close_handler close_handler;
+	uws_websocket_subscription_handler subscription_handler;
 	uws_app_t* (*uws_create_app)(int ssl, struct us_socket_context_options_t options);
 	void (*uws_app_destroy)(int ssl, uws_app_t* app);
 	void (*uws_app_get)(int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
@@ -139,6 +154,24 @@ namespace uwebsockets_ffi {
 		static struct static_uws_exports_table uwebsockets_exports_table;
 
 		uwebsockets_exports_table.listen_handler = listen_handler;
+		uwebsockets_exports_table.upgrade_handler = upgrade_handler;
+		uwebsockets_exports_table.open_handler = open_handler;
+		uwebsockets_exports_table.message_handler = message_handler;
+		uwebsockets_exports_table.drain_handler = drain_handler;
+		uwebsockets_exports_table.ping_handler = ping_handler;
+		uwebsockets_exports_table.pong_handler = pong_handler;
+		uwebsockets_exports_table.close_handler = close_handler;
+		uwebsockets_exports_table.subscription_handler = subscription_handler;
+		// method_handler ?
+
+		// uws_websocket_upgrade_handler upgrade;
+        // uws_websocket_handler open;
+        // uws_websocket_message_handler message;
+        // uws_websocket_handler drain;
+        // uws_websocket_ping_pong_handler ping;
+        // uws_websocket_ping_pong_handler pong;
+        // uws_websocket_close_handler close;
+        // uws_websocket_subscription_handler subscription;
 
 		uwebsockets_exports_table.uws_create_app = uws_create_app;
 		uwebsockets_exports_table.uws_app_destroy = uws_app_destroy;

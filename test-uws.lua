@@ -21,19 +21,21 @@ local app = uws_create_app(false, socketOptions)
 -- .passphrase = "1234" });
 
 local socketBehavior = ffi.new("struct uws_socket_behavior_t")
+socketBehavior.upgrade = uws.bindings.upgrade_handler
+socketBehavior.open = uws.bindings.open_handler
+socketBehavior.message = uws.bindings.upgrade_handler
+socketBehavior.drain = uws.bindings.upgrade_handler
+socketBehavior.ping = uws.bindings.upgrade_handler
+socketBehavior.pong = uws.bindings.upgrade_handler
+socketBehavior.close = uws.bindings.upgrade_handler
+socketBehavior.subscription = uws.bindings.subscription_handler
+
 uws_ws(false, app, "/*", socketBehavior, nil)
 
 -- .compression = uws_compress_options_t::SHARED_COMPRESSOR,
 -- .maxPayloadLength = 16 * 1024,
 -- .idleTimeout = 12,
 -- .maxBackpressure = 1 * 1024 * 1024,
--- .upgrade = NULL,
--- .open = open_handler,
--- .message = message_handler,
--- .drain = drain_handler,
--- .ping = ping_handler,
--- .pong = pong_handler,
--- .close = close_handler,
 -- },
 
 uws_app_listen(false, app, 9001, uws.bindings.listen_handler, nil);
