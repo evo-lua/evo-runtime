@@ -32,7 +32,7 @@ socketBehavior.subscription = uws.bindings.subscription_handler
 
 socketBehavior.maxPayloadLength = 16 * 1024
 socketBehavior.maxBackpressure = 1 * 1024 * 1024
-socketBehavior.idleTimeout = 3 -- 12
+socketBehavior.idleTimeout = 8 -- 12
 
 -- .compression = uws_compress_options_t::SHARED_COMPRESSOR,
 
