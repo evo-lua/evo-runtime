@@ -1,6 +1,12 @@
 local ffi = require("ffi")
 
 local uwebsockets = {}
+
+-- autogen via regexp replace
+-- (.+)\s+(\w+)\((.*)\);
+-- $1 (*$2) ($3);
+-- (vscode find/replace)
+
 -- TBD typedef long unsigned int uintmax_t;
 uwebsockets.cdefs = [[
 
