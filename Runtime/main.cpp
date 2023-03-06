@@ -40,18 +40,18 @@ int main(int argc, char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	uv_idle_t idler;
-	uv_loop_t* loop = luv_loop(luaVM->m_luaState);
+	// uv_idle_t idler;
+	// uv_loop_t* loop = luv_loop(luaVM->m_luaState);
 
-	uv_idle_init(loop, &idler);
+	// uv_idle_init(loop, &idler);
 
-	uv_idle_start(&idler, idle_cb);
+	// uv_idle_start(&idler, idle_cb);
 
-	uws_test((void*)loop);
-	// http_client_test();
-	uv_run(loop, UV_RUN_DEFAULT);
+	// uws_test((void*)loop);
+	// // http_client_test();
+	// uv_run(loop, UV_RUN_DEFAULT);
 
-	uv_loop_close(loop);
+	// uv_loop_close(loop);
 
 	return EXIT_SUCCESS;
 }
