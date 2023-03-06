@@ -47,8 +47,31 @@ static void pong_handler(uws_websocket_t* ws, const char* message, size_t length
 	/* You don't need to handle this one either */
 }
 
+static void on_res_aborted(uws_res_t *response, void *data)
+{
+	std::cout << "on_res_aborted" << std::endl;
+    // struct UpgradeData *upgrade_data = (struct UpgradeData *)data;
+    /* We don't implement any kind of cancellation here,
+     * so simply flag us as aborted */
+    // upgrade_data->aborted = true;
+}
+
 static void upgrade_handler(uws_res_t* response, uws_req_t* request, uws_socket_context_t* context, void* user_data) {
 	std::cout << "upgrade_handler" << std::endl;
+    /* HttpRequest (req) is only valid in this very callback, so we must COPY the headers
+     * we need later on while upgrading to WebSocket. You must not access req after first return.
+     * Here we create a heap allocated struct holding everything we will need later on. */
+
+    // struct UpgradeData *data = (struct UpgradeData *)malloc(sizeof(struct UpgradeData));
+    // data->aborted = false;
+    // data->context = context;
+    // data->response = response;
+
+	    /* We have to attach an abort handler for us to be aware
+     * of disconnections while we perform async tasks */
+
+    uws_res_on_aborted(SSL, response, on_res_aborted, nullptr);
+    // uws_res_on_aborted(SSL, response, on_res_aborted, data);
 }
 
 static void subscription_handler(uws_websocket_t* ws, const char* topic_name, size_t topic_name_length, int new_number_of_subscriber, int old_number_of_subscriber, void* user_data) {
