@@ -2,7 +2,17 @@
 #include <stdio.h>
 #include <iostream>
 
+static void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_listen_config_t config, void* user_data) {
+	std::cout << "listen_handler" << std::endl;
+	if(listen_socket) {
+		printf("Listening on port wss://localhost:%d\n", config.port);
+	} else {
+		std::cout << "Failed to load certs or to bind to port" << std::endl;
+	}
+}
+
 struct static_uws_exports_table {
+	uws_listen_handler listen_handler;
 	uws_app_t* (*uws_create_app)(int ssl, struct us_socket_context_options_t options);
 	void (*uws_app_destroy)(int ssl, uws_app_t* app);
 	void (*uws_app_get)(int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
@@ -91,6 +101,9 @@ struct static_uws_exports_table {
 namespace uwebsockets_ffi {
 	void* getExportsTable() {
 		static struct static_uws_exports_table uwebsockets_exports_table;
+
+		uwebsockets_exports_table.listen_handler = listen_handler;
+
 		uwebsockets_exports_table.uws_create_app = uws_create_app;
 		uwebsockets_exports_table.uws_app_destroy = uws_app_destroy;
 		uwebsockets_exports_table.uws_app_get = uws_app_get;
@@ -209,14 +222,6 @@ struct PerSocketData {
 	/* Fill with user data */
 };
 
-void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_listen_config_t config, void* user_data) {
-	std::cout << "listen_handler" << std::endl;
-	if(listen_socket) {
-		printf("Listening on port wss://localhost:%d\n", config.port);
-	} else {
-		std::cout << "Failed to load certs or to bind to port" << std::endl;
-	}
-}
 
 void open_handler(uws_websocket_t* ws, void* user_data) {
 	std::cout << "open_handler" << std::endl;

@@ -241,6 +241,7 @@ uwebsockets.cdefs = [[
 	struct us_loop_t *uws_get_loop_with_native(void* existing_native_loop);
 
 	struct static_uws_exports_table {
+		uws_listen_handler listen_handler;
 		uws_app_t* (*uws_create_app) (int ssl, struct us_socket_context_options_t options);
 		void (*uws_app_destroy) (int ssl, uws_app_t* app);
 		void (*uws_app_get) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);

@@ -31,7 +31,7 @@ local app = uws_create_app(false, socketOptions)
 -- .passphrase = "1234" });
 
 local socketBehavior = ffi.new("struct uws_socket_behavior_t")
--- uws_ws(false, app, "/*", socketBehavior, nil)
+uws_ws(false, app, "/*", socketBehavior, nil)
 
 -- .compression = uws_compress_options_t::SHARED_COMPRESSOR,
 -- .maxPayloadLength = 16 * 1024,
@@ -61,8 +61,8 @@ local function listen_handler(listen_socket, config, user_data)
 	-- 	}
 	-- }
 end
--- uws_app_listen(false, app, 9001, listen_handler, nil);
+uws_app_listen(false, app, 9001, uws.bindings.listen_handler, nil);
 
--- uws_app_run(false, app);
+uws_app_run(false, app);
 
 uv.run()
