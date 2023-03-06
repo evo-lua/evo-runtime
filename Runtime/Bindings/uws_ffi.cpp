@@ -3,27 +3,93 @@
 #include <iostream>
 
 struct static_uws_exports_table {
-// 	webview_t (*webview_create)(int debug, void* window);
-// 	void (*webview_destroy)(webview_t w);
-// 	void (*webview_run)(webview_t w);
-// 	int (*webview_run_once)(webview_t w, int blocking);
-// 	void (*webview_terminate)(webview_t w);
-// 	void (*webview_dispatch)(webview_t w, webview_dispatch_function_t fn, void* arg);
-// 	void* (*webview_get_window)(webview_t w);
-// 	void (*webview_set_title)(webview_t w, const char* title);
-// 	void (*webview_set_size)(webview_t w, int width, int height, int hints);
-// 	void (*webview_navigate)(webview_t w, const char* url);
-// 	void (*webview_set_html)(webview_t w, const char* html);
-// 	void (*webview_init)(webview_t w, const char* js);
-// 	void (*webview_eval)(webview_t w, const char* js);
-// 	void (*webview_bind)(webview_t w, const char* name, promise_function_t fn, void* arg);
-// 	void (*webview_unbind)(webview_t w, const char* name);
-// 	void (*webview_return)(webview_t w, const char* seq, int status, const char* result);
-// 	const webview_version_info_t* (*webview_version)(void);
+	uws_app_t* (*uws_create_app) (int ssl, struct us_socket_context_options_t options);
+	void (*uws_app_destroy) (int ssl, uws_app_t* app);
+	void (*uws_app_get) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_post) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_options) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_delete) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_patch) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_put) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_head) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_connect) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_trace) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_any) (int ssl, uws_app_t* app, const char* pattern, uws_method_handler handler, void* user_data);
+	void (*uws_app_run) (int ssl, uws_app_t*);
+	void (*uws_app_listen) (int ssl, uws_app_t* app, int port, uws_listen_handler handler, void* user_data);
+	void (*uws_app_listen_with_config) (int ssl, uws_app_t* app, uws_app_listen_config_t config, uws_listen_handler handler, void* user_data);
+	void (*uws_app_listen_domain) (int ssl, uws_app_t* app, const char* domain, size_t domain_length, uws_listen_domain_handler handler, void* user_data);
+	void (*uws_app_listen_domain_with_options) (int ssl, uws_app_t* app, const char* domain, size_t domain_length, int options, uws_listen_domain_handler handler, void* user_data);
+	void (*uws_app_domain) (int ssl, uws_app_t* app, const char* server_name, size_t server_name_length);
+	bool (*uws_constructor_failed) (int ssl, uws_app_t* app);
+	unsigned int (*uws_num_subscribers) (int ssl, uws_app_t* app, const char* topic, size_t topic_length);
+	bool (*uws_publish) (int ssl, uws_app_t* app, const char* topic, size_t topic_length, const char* message, size_t message_length, uws_opcode_t opcode, bool compress);
+	void* (*uws_get_native_handle) (int ssl, uws_app_t* app);
+	void (*uws_remove_server_name) (int ssl, uws_app_t* app, const char* hostname_pattern, size_t hostname_pattern_length);
+	void (*uws_add_server_name) (int ssl, uws_app_t* app, const char* hostname_pattern, size_t hostname_pattern_length);
+	void (*uws_add_server_name_with_options) (int ssl, uws_app_t* app, const char* hostname_pattern, size_t hostname_pattern_length, struct us_socket_context_options_t options);
+	void (*uws_missing_server_name) (int ssl, uws_app_t* app, uws_missing_server_handler handler, void* user_data);
+	void (*uws_filter) (int ssl, uws_app_t* app, uws_filter_handler handler, void* user_data);
+	void (*uws_ws) (int ssl, uws_app_t* app, const char* pattern, uws_socket_behavior_t behavior, void* user_data);
+	void* (*uws_ws_get_user_data) (int ssl, uws_websocket_t* ws);
+	void (*uws_ws_close) (int ssl, uws_websocket_t* ws);
+	uws_sendstatus_t (*uws_ws_send) (int ssl, uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode);
+	uws_sendstatus_t (*uws_ws_send_with_options) (int ssl, uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, bool compress, bool fin);
+	uws_sendstatus_t (*uws_ws_send_fragment) (int ssl, uws_websocket_t* ws, const char* message, size_t length, bool compress);
+	uws_sendstatus_t (*uws_ws_send_first_fragment) (int ssl, uws_websocket_t* ws, const char* message, size_t length, bool compress);
+	uws_sendstatus_t (*uws_ws_send_first_fragment_with_opcode) (int ssl, uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, bool compress);
+	uws_sendstatus_t (*uws_ws_send_last_fragment) (int ssl, uws_websocket_t* ws, const char* message, size_t length, bool compress);
+	void (*uws_ws_end) (int ssl, uws_websocket_t* ws, int code, const char* message, size_t length);
+	void (*uws_ws_cork) (int ssl, uws_websocket_t* ws, void (*handler)(void* user_data), void* user_data);
+	bool (*uws_ws_subscribe) (int ssl, uws_websocket_t* ws, const char* topic, size_t length);
+	bool (*uws_ws_unsubscribe) (int ssl, uws_websocket_t* ws, const char* topic, size_t length);
+	bool (*uws_ws_is_subscribed) (int ssl, uws_websocket_t* ws, const char* topic, size_t length);
+	void (*uws_ws_iterate_topics) (int ssl, uws_websocket_t* ws, void (*callback)(const char* topic, size_t length, void* user_data), void* user_data);
+	bool (*uws_ws_publish) (int ssl, uws_websocket_t* ws, const char* topic, size_t topic_length, const char* message, size_t message_length);
+	bool (*uws_ws_publish_with_options) (int ssl, uws_websocket_t* ws, const char* topic, size_t topic_length, const char* message, size_t message_length, uws_opcode_t opcode, bool compress);
+	unsigned int (*uws_ws_get_buffered_amount) (int ssl, uws_websocket_t* ws);
+	size_t (*uws_ws_get_remote_address) (int ssl, uws_websocket_t* ws, const char** dest);
+	size_t (*uws_ws_get_remote_address_as_text) (int ssl, uws_websocket_t* ws, const char** dest);
+	void (*uws_res_end) (int ssl, uws_res_t* res, const char* data, size_t length, bool close_connection);
+	uws_try_end_result_t (*uws_res_try_end) (int ssl, uws_res_t* res, const char* data, size_t length, uintmax_t total_size, bool close_connection);
+	void (*uws_res_cork) (int ssl, uws_res_t* res, void (*callback)(uws_res_t* res, void* user_data), void* user_data);
+	void (*uws_res_pause) (int ssl, uws_res_t* res);
+	void (*uws_res_resume) (int ssl, uws_res_t* res);
+	void (*uws_res_write_continue) (int ssl, uws_res_t* res);
+	void (*uws_res_write_status) (int ssl, uws_res_t* res, const char* status, size_t length);
+	void (*uws_res_write_header) (int ssl, uws_res_t* res, const char* key, size_t key_length, const char* value, size_t value_length);
+	void (*uws_res_write_header_int) (int ssl, uws_res_t* res, const char* key, size_t key_length, uint64_t value);
+	void (*uws_res_end_without_body) (int ssl, uws_res_t* res, bool close_connection);
+	bool (*uws_res_write) (int ssl, uws_res_t* res, const char* data, size_t length);
+	uintmax_t (*uws_res_get_write_offset) (int ssl, uws_res_t* res);
+	void (*uws_res_override_write_offset) (int ssl, uws_res_t* res, uintmax_t offset);
+	bool (*uws_res_has_responded) (int ssl, uws_res_t* res);
+	void (*uws_res_on_writable) (int ssl, uws_res_t* res, bool (*handler)(uws_res_t* res, uintmax_t, void* optional_data), void* user_data);
+	void (*uws_res_on_aborted) (int ssl, uws_res_t* res, void (*handler)(uws_res_t* res, void* optional_data), void* optional_data);
+	void (*uws_res_on_data) (int ssl, uws_res_t* res, void (*handler)(uws_res_t* res, const char* chunk, size_t chunk_length, bool is_end, void* optional_data), void* optional_data);
+	void (*uws_res_upgrade) (int ssl, uws_res_t* res, void* data, const char* sec_web_socket_key, size_t sec_web_socket_key_length, const char* sec_web_socket_protocol, size_t sec_web_socket_protocol_length, const char* sec_web_socket_extensions, size_t sec_web_socket_extensions_length, uws_socket_context_t* ws);
+	size_t (*uws_res_get_remote_address) (int ssl, uws_res_t* res, const char** dest);
+	size_t (*uws_res_get_remote_address_as_text) (int ssl, uws_res_t* res, const char** dest);
+	size_t (*uws_res_get_proxied_remote_address) (int ssl, uws_res_t* res, const char** dest);
+	size_t (*uws_res_get_proxied_remote_address_as_text) (int ssl, uws_res_t* res, const char** dest);
+	void* (*uws_res_get_native_handle) (int ssl, uws_res_t* res);
+	bool (*uws_req_is_ancient) (uws_req_t* res);
+	bool (*uws_req_get_yield) (uws_req_t* res);
+	void (*uws_req_set_yield) (uws_req_t* res, bool yield);
+	size_t (*uws_req_get_url) (uws_req_t* res, const char** dest);
+	size_t (*uws_req_get_full_url) (uws_req_t* res, const char** dest);
+	size_t (*uws_req_get_method) (uws_req_t* res, const char** dest);
+	size_t (*uws_req_get_case_sensitive_method) (uws_req_t* res, const char** dest);
+	size_t (*uws_req_get_header) (uws_req_t* res, const char* lower_case_header, size_t lower_case_header_length, const char** dest);
+	void (*uws_req_for_each_header) (uws_req_t* res, uws_get_headers_server_handler handler, void* user_data);
+	size_t (*uws_req_get_query) (uws_req_t* res, const char* key, size_t key_length, const char** dest);
+	size_t (*uws_req_get_parameter) (uws_req_t* res, unsigned short index, const char** dest);
+	struct us_loop_t* (*uws_get_loop) ();
+	struct us_loop_t* (*uws_get_loop_with_native) (void* existing_native_loop);
 };
 
 namespace uwebsockets_ffi {
-void* getExportsTable() {
+	void* getExportsTable() {
 		static struct static_uws_exports_table uwebsockets_exports_table;
 
 		// uwebsockets_exports_table.webview_bind = webview_bind;
@@ -65,8 +131,8 @@ void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_listen_con
 	if(listen_socket) {
 		printf("Listening on port wss://localhost:%d\n", config.port);
 	} else {
-        std::cout << "Failed to load certs or to bind to port" << std::endl;
-    }
+		std::cout << "Failed to load certs or to bind to port" << std::endl;
+	}
 }
 
 void open_handler(uws_websocket_t* ws, void* user_data) {
@@ -83,7 +149,7 @@ void close_handler(uws_websocket_t* ws, int code, const char* message, size_t le
 
 	std::cout << "close_handler" << std::endl;
 	/* You may access uws_ws_get_user_data(ws) here, but sending or
-     * doing any kind of I/O with the socket is not valid. */
+	 * doing any kind of I/O with the socket is not valid. */
 }
 
 void drain_handler(uws_websocket_t* ws, void* user_data) {
@@ -107,28 +173,22 @@ void pong_handler(uws_websocket_t* ws, const char* message, size_t length, void*
 
 void http_client_test() {
 
-uWS::WebSocketClientBehavior b = {
-        .open = [](/*auto *ws*/) {
-            std::cout << "Hello and welcome" << std::endl;
-        },
-        .message = []() {
-            std::cout << "Received message: " << std::endl;
-        },
-        .close = [](/*auto *ws*/) {
-            std::cout << "We are about to close, sir" << std::endl;
-        }
-    };
+	uWS::WebSocketClientBehavior b = {
+		.open = [](/*auto *ws*/) { std::cout << "Hello and welcome" << std::endl; },
+		.message = []() { std::cout << "Received message: " << std::endl; },
+		.close = [](/*auto *ws*/) { std::cout << "We are about to close, sir" << std::endl; }
+	};
 
-	    uWS::ClientApp app(std::move(b));
+	uWS::ClientApp app(std::move(b));
 
-    app.connect("ws://localhost:9001");
+	app.connect("ws://localhost:9001");
 
-    app.run();
+	app.run();
 }
 
 int uws_test(void* loop) {
 
-// TBD set once in main?
+	// TBD set once in main?
 	uws_get_loop_with_native(loop);
 	// http_client_test();
 
@@ -160,9 +220,6 @@ int uws_test(void* loop) {
 
 	return 0;
 }
-
-
-
 
 // HTTPS client
 // HTTP server
