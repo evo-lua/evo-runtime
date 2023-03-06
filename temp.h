@@ -1,4 +1,3 @@
-
     //Basic HTTP
     DLL_EXPORT uws_app_t *uws_create_app(int ssl, struct us_socket_context_options_t options);
     DLL_EXPORT void uws_app_destroy(int ssl, uws_app_t *app);
