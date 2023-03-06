@@ -54,9 +54,35 @@ void pong_handler(uws_websocket_t* ws, const char* message, size_t length, void*
 	/* You don't need to handle this one either */
 }
 
+// HTTP client
+#include "ClientApp.h"
+
+void http_client_test() {
+
+uWS::WebSocketClientBehavior b = {
+        .open = [](/*auto *ws*/) {
+            std::cout << "Hello and welcome" << std::endl;
+        },
+        .message = [](/*auto *ws, auto message*/) {
+            // std::cout << "Received message: " << message << std::endl;
+        },
+        .close = [](/*auto *ws*/) {
+            std::cout << "We are about to close, sir" << std::endl;
+        }
+    };
+
+	    uWS::ClientApp app(std::move(b));
+
+    app.connect("ws://localhost:3000", "protocol");
+
+    app.run();
+}
+
 int uws_test(void* loop) {
 
 	uws_get_loop_with_native(loop);
+
+	http_client_test();
 
 	uws_app_t* app = uws_create_app(SSL, (struct us_socket_context_options_t) { /* There are example certificates in uWebSockets.js repo */
 											 .key_file_name = "../misc/key.pem",
@@ -86,7 +112,8 @@ int uws_test(void* loop) {
 }
 
 
-// HTTP client
+
+
 // HTTPS client
 // HTTP server
 // HTTPS server
