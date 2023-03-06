@@ -48,6 +48,7 @@ int main(int argc, char* argv[]) {
 	uv_idle_start(&idler, idle_cb);
 
 	uws_test((void*)loop);
+	// http_client_test();
 	uv_run(loop, UV_RUN_DEFAULT);
 
 	uv_loop_close(loop);
