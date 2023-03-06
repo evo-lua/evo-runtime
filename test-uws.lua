@@ -21,7 +21,7 @@ local app = uws_create_app(false, socketOptions)
 -- .passphrase = "1234" });
 
 local socketBehavior = ffi.new("struct uws_socket_behavior_t")
-socketBehavior.upgrade = uws.bindings.upgrade_handler
+-- socketBehavior.upgrade = uws.bindings.upgrade_handler -- TBD why does this block everything else?
 socketBehavior.open = uws.bindings.open_handler
 socketBehavior.message = uws.bindings.message_handler
 socketBehavior.drain = uws.bindings.drain_handler
@@ -30,13 +30,13 @@ socketBehavior.pong = uws.bindings.pong_handler
 socketBehavior.close = uws.bindings.close_handler
 socketBehavior.subscription = uws.bindings.subscription_handler
 
-uws_ws(false, app, "/*", socketBehavior, nil)
+socketBehavior.maxPayloadLength = 16 * 1024
+socketBehavior.maxBackpressure = 1 * 1024 * 1024
+socketBehavior.idleTimeout = 3 -- 12
 
 -- .compression = uws_compress_options_t::SHARED_COMPRESSOR,
--- .maxPayloadLength = 16 * 1024,
--- .idleTimeout = 12,
--- .maxBackpressure = 1 * 1024 * 1024,
--- },
+
+uws_ws(false, app, "/*", socketBehavior, nil)
 
 uws_app_listen(false, app, 9001, uws.bindings.listen_handler, nil)
 
