@@ -176,7 +176,36 @@ struct static_uws_exports_table {
 	struct us_loop_t* (*uws_get_loop_with_native)(void* existing_native_loop);
 };
 
+namespace C_Networking {
+		class WebSocket {
+			public:
+			WebSocket() {
+				m_incomingMessages = std::queue; // <std::string>> / const char*
+			}
+
+			private:
+			// TBD
+				m_isOpen = false;
+				m_hasDrained = false;
+				m_isClosed = false;
+				m_incomingMessages = nullptr;
+		};
+
+		class WebSocketServer {
+		public:
+			WebSocketServer()
+	};
+
+	void CreateWebSocketServer() {
+		WebSocketServer* server = new WebSocketServer();
+	}
+}
+
 namespace uwebsockets_ffi {
+
+
+
+
 	void* getExportsTable() {
 		static struct static_uws_exports_table uwebsockets_exports_table;
 
@@ -332,7 +361,7 @@ struct PerSocketData {
 // }
 
 // HTTP client
-#include "ClientApp.h"
+// #include "ClientApp.h"
 
 // void http_client_test() {
 
