@@ -49,6 +49,12 @@ jobs:
       - name: Build luv and libuv
         run: deps/luv-windowsbuild.sh && ls ninjabuild-windows
 
+      - name: Build openssl
+        run: deps/openssl-windowsbuild.sh && ls ninjabuild-windows
+
+      - name: Build lua-openssl
+        run: deps/luaopenssl-windowsbuild.sh && ls ninjabuild-windows
+
       - name: Build runtime
         run: ls && ./windowsbuild.cmd && ls ninjabuild-windows && cp ninjabuild-windows/evo.exe . && ls
 
