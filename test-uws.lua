@@ -25,8 +25,8 @@ local socketBehavior = ffi.new("struct uws_socket_behavior_t")
 socketBehavior.open = uws.bindings.open_handler
 socketBehavior.message = uws.bindings.message_handler
 socketBehavior.drain = uws.bindings.drain_handler
-socketBehavior.ping = uws.bindings.ping_handler
-socketBehavior.pong = uws.bindings.pong_handler
+-- socketBehavior.ping = uws.bindings.ping_handler
+-- socketBehavior.pong = uws.bindings.pong_handler
 socketBehavior.close = uws.bindings.close_handler
 socketBehavior.subscription = uws.bindings.subscription_handler
 
