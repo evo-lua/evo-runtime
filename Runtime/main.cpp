@@ -1,5 +1,6 @@
 extern "C" {
 #include "luv.h"
+#include "openssl.h"
 }
 
 #include "evo.hpp"
@@ -16,6 +17,7 @@ int main(int argc, char* argv[]) {
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
 	luaVM->PreloadPackage("uv", luaopen_luv);
+	luaVM->PreloadPackage("openssl", luaopen_openssl);
 
 	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
 	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable());

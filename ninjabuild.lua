@@ -47,11 +47,17 @@ local EvoBuildTarget = {
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
 		"deps/webview/webview",
+		"deps/openssl/openssl/include",
+		"deps/zhaog/lua-openssl/deps/auxiliar",
+		"deps/zhaog/lua-openssl/src",
 	},
 	staticLibraries = {
 		"libluajit.a",
 		"libluv.a",
 		"libuv_a.a",
+		"openssl.a",
+		"libssl.a",
+		"libcrypto.a",
 	},
 	sharedLibraries = (
 		isWindows

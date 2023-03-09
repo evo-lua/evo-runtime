@@ -47,6 +47,12 @@ jobs:
       - name: Build luv and libuv
         run: deps/luv-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build openssl
+        run: deps/openssl-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build lua-openssl
+        run: deps/luaopenssl-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build runtime
         run: ls && ./unixbuild.sh && ls ninjabuild-unix && cp ninjabuild-unix/evo . && ls
 
