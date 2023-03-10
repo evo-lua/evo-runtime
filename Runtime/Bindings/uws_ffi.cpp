@@ -22,12 +22,14 @@ static void open_handler(uws_websocket_t* ws, void* user_data) {
 }
 
 static void message_handler(uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, void* user_data) {
-	std::cout << "WEBSOCKET_MESSAGE_RECEIVED (message: " << message << ", length: " << length << ", opcode: " << opcode << ")" << std::endl;
+	std::string receivedMessage(message, length);
+	std::cout << "WEBSOCKET_MESSAGE_RECEIVED (message: " << receivedMessage << ", opcode: " << opcode << ")" << std::endl;
 	uws_ws_send(SSL, ws, message, length, opcode);
 }
 
 static void close_handler(uws_websocket_t* ws, int code, const char* message, size_t length, void* user_data) {
-	std::cout << "WEBSOCKET_CONNECTION_CLOSED (code: " << code << ", message: " << message << ", length: " << length << ")" << std::endl;
+	std::string closingMessage(message, length);
+	std::cout << "WEBSOCKET_CONNECTION_CLOSED (code: " << code << ", message: " << closingMessage << ")" << std::endl;
 	/* You may access uws_ws_get_user_data(ws) here, but sending or
 	 * doing any kind of I/O with the socket is not valid. */
 }
