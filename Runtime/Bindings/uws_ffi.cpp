@@ -27,8 +27,9 @@ class SecureWebSocketServer {
 	SecureWebSocketServer();
 	~SecureWebSocketServer();
 
-	RunWithExistingEventLoop();
 	StartListening (unsigned short localPortNumber);
+	// RunWithExistingEventLoop();
+	GetNextAvailableMessage();
 	// socketBehavior.maxPayloadLength = 16 * 1024
 	// socketBehavior.maxBackpressure = 1 * 1024 * 1024
 	// socketBehavior.idleTimeout = 8 -- 12
