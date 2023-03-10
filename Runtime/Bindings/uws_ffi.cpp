@@ -30,6 +30,7 @@ class SecureWebSocketServer {
 	StartListening (unsigned short localPortNumber);
 	// RunWithExistingEventLoop();
 	GetNextAvailableMessage();
+	// TBD: Determine other events, e.g. new connection/disconnect -> maintain connection list (and add dirty flag, then GetEstablishedConn/GetDroppedConnection/GetUpdatedConnections)
 	// socketBehavior.maxPayloadLength = 16 * 1024
 	// socketBehavior.maxBackpressure = 1 * 1024 * 1024
 	// socketBehavior.idleTimeout = 8 -- 12
