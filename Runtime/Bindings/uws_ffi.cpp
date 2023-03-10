@@ -2,6 +2,30 @@
 #include <stdio.h>
 #include <iostream>
 
+class HttpServer {
+
+	private:
+	bool m_shouldUseSSL = false;
+};
+
+class HttpsServer {
+
+	private:
+	bool m_shouldUseSSL = false;
+};
+
+class WebSocketServer {
+
+	private:
+	bool m_shouldUseSSL = false;
+};
+
+class SecureWebSocketServer {
+
+	private:
+	bool m_shouldUseSSL = true;
+};
+
 // TODO
 // #define SSL 0
 constexpr int SSL = 0;
