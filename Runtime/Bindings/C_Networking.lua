@@ -15,7 +15,7 @@ end
 
 ------------------
 
-
+-- TBD move to C++, use actual structs, return userdata (vs cdata? FFI might be faster but we won't allocate many instances...)
 local C_Networking = {}
 
 -- TCP / UDP / DHCP / DNS / ... ?
