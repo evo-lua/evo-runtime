@@ -62,6 +62,7 @@ static void open_handler(uws_websocket_t* ws, void* user_data) {
 	std::cout << "WEBSOCKET_CONNECTION_ESTABLISHED" << std::endl;
 	/* Open event here, you may access uws_ws_get_user_data(WS) which points to a PerSocketData struct */
 	// TODO Initialize queues? RAAI it though...
+	// TODO maintain connections list, uws doesn't do it. Also, how to queue IP etc/socket properties_ ws struct? us_socket_remote_address ?
 }
 
 static void message_handler(uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, void* user_data) {
