@@ -20,10 +20,27 @@ class WebSocketServer {
 	bool m_shouldUseSSL = false;
 };
 
+#include <queue>
+
 class SecureWebSocketServer {
+	public:
+	SecureWebSocketServer();
+	~SecureWebSocketServer();
+
+	RunWithExistingEventLoop();
+	StartListening (unsigned short localPortNumber);
+	// socketBehavior.maxPayloadLength = 16 * 1024
+	// socketBehavior.maxBackpressure = 1 * 1024 * 1024
+	// socketBehavior.idleTimeout = 8 -- 12
 
 	private:
+
+	std::queue<std::string> m_incomingMessagesQueue;
+
 	bool m_shouldUseSSL = true;
+	std::string m_certificateFilePath = nullptr;
+	std::string m_privateKeyFilePath = nullptr;
+	std::string m_privateKeyPassword = nullptr;
 };
 
 // TODO
