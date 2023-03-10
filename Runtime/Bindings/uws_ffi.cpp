@@ -11,7 +11,7 @@ class HttpServer {
 class HttpsServer {
 
 	private:
-	bool m_shouldUseSSL = false;
+	bool m_shouldUseSSL = true;
 };
 
 class WebSocketServer {
