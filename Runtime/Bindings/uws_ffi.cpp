@@ -16,23 +16,24 @@ static void listen_handler(struct us_listen_socket_t* listen_socket, uws_app_lis
 }
 
 static void open_handler(uws_websocket_t* ws, void* user_data) {
-	std::cout << "open_handler" << std::endl;
+	std::cout << "WEBSOCKET_CONNECTION_ESTABLISHED" << std::endl;
 	/* Open event here, you may access uws_ws_get_user_data(WS) which points to a PerSocketData struct */
+	// TODO Initialize queues? RAAI it though...
 }
 
 static void message_handler(uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, void* user_data) {
-	std::cout << "message_handler" << std::endl;
+	std::cout << "WEBSOCKET_MESSAGE_RECEIVED (length: " << length << ", opcode: " << opcode << ")" << std::endl;
 	uws_ws_send(SSL, ws, message, length, opcode);
 }
 
 static void close_handler(uws_websocket_t* ws, int code, const char* message, size_t length, void* user_data) {
-	std::cout << "close_handler - " << code << ": " << message << std::endl;
+	std::cout << "WEBSOCKET_CONNECTION_CLOSED (code: " << code << ", message: " << message << ", length: " << length << ")" << std::endl;
 	/* You may access uws_ws_get_user_data(ws) here, but sending or
 	 * doing any kind of I/O with the socket is not valid. */
 }
 
 static void drain_handler(uws_websocket_t* ws, void* user_data) {
-	std::cout << "drain_handler" << std::endl;
+	std::cout << "WEBSOCKET_DRAINED (buffered: " << uws_ws_get_buffered_amount(ws) << ")" << std::endl;
 	/* Check uws_ws_get_buffered_amount(ws) here */
 }
 
