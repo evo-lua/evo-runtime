@@ -176,30 +176,30 @@ struct static_uws_exports_table {
 	struct us_loop_t* (*uws_get_loop_with_native)(void* existing_native_loop);
 };
 
-namespace C_Networking {
-		class WebSocket {
-			public:
-			WebSocket() {
-				m_incomingMessages = std::queue; // <std::string>> / const char*
-			}
+// namespace C_Networking {
+// 		class WebSocket {
+// 			public:
+// 			WebSocket() {
+// 				m_incomingMessages = std::queue; // <std::string>> / const char*
+// 			}
 
-			private:
-			// TBD
-				m_isOpen = false;
-				m_hasDrained = false;
-				m_isClosed = false;
-				m_incomingMessages = nullptr;
-		};
+// 			private:
+// 			// TBD
+// 				m_isOpen = false;
+// 				m_hasDrained = false;
+// 				m_isClosed = false;
+// 				m_incomingMessages = nullptr;
+// 		};
 
-		class WebSocketServer {
-		public:
-			WebSocketServer()
-	};
+// 		class WebSocketServer {
+// 		public:
+// 			WebSocketServer()
+// 	};
 
-	void CreateWebSocketServer() {
-		WebSocketServer* server = new WebSocketServer();
-	}
-}
+// 	void CreateWebSocketServer() {
+// 		WebSocketServer* server = new WebSocketServer();
+// 	}
+// }
 
 namespace uwebsockets_ffi {
 
