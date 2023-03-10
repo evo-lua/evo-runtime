@@ -22,7 +22,7 @@ static void open_handler(uws_websocket_t* ws, void* user_data) {
 }
 
 static void message_handler(uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, void* user_data) {
-	std::cout << "WEBSOCKET_MESSAGE_RECEIVED (length: " << length << ", opcode: " << opcode << ")" << std::endl;
+	std::cout << "WEBSOCKET_MESSAGE_RECEIVED (message: " << message << ", length: " << length << ", opcode: " << opcode << ")" << std::endl;
 	uws_ws_send(SSL, ws, message, length, opcode);
 }
 
@@ -33,7 +33,7 @@ static void close_handler(uws_websocket_t* ws, int code, const char* message, si
 }
 
 static void drain_handler(uws_websocket_t* ws, void* user_data) {
-	std::cout << "WEBSOCKET_DRAINED (buffered: " << uws_ws_get_buffered_amount(ws) << ")" << std::endl;
+	std::cout << "WEBSOCKET_DRAINED (buffered: " << uws_ws_get_buffered_amount(SSL, ws) << ")" << std::endl;
 	/* Check uws_ws_get_buffered_amount(ws) here */
 }
 
