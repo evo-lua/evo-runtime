@@ -30,7 +30,8 @@ socketBehavior.drain = uws.bindings.drain_handler
 socketBehavior.close = uws.bindings.close_handler
 socketBehavior.subscription = uws.bindings.subscription_handler
 
-socketBehavior.maxPayloadLength = 16 * 1024
+local MAX_AUTOBAHN_MESSAGE_SIZE = 16 * 1024 * 1024 -- AB test suite sends 16M max? (perf test cases)
+socketBehavior.maxPayloadLength = MAX_AUTOBAHN_MESSAGE_SIZE + 1 -- 16 * 1024
 socketBehavior.maxBackpressure = 1 * 1024 * 1024
 socketBehavior.idleTimeout = 8 -- 12
 
