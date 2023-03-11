@@ -68,7 +68,7 @@ static void open_handler(uws_websocket_t* ws, void* user_data) {
 
 static void message_handler(uws_websocket_t* ws, const char* message, size_t length, uws_opcode_t opcode, void* user_data) {
 	std::string receivedMessage(message, length);
-	std::cout << "WEBSOCKET_MESSAGE_RECEIVED (message: " << receivedMessage << ", opcode: " << opcode << ")" << std::endl;
+	// std::cout << "WEBSOCKET_MESSAGE_RECEIVED (message: " << receivedMessage << ", opcode: " << opcode << ")" << std::endl;
 	uws_ws_send(SSL, ws, message, length, opcode);
 }
 
