@@ -11,7 +11,7 @@ function server:WEBSOCKET_CONNECTION_ESTABLISHED(client)
 end
 
 function server:WEBSOCKET_MESSAGE_RECEIVED(client, message, opCode)
-	server:SendTextMessage(client, "I received your message, and I found it wanting")
+	server:SendTextMessage(client, "I have received your message, and I found it wanting")
 end
 
 function server:WEBSOCKET_CONNECTION_CLOSED(client, code, message)
