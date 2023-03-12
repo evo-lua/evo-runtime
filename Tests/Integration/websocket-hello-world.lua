@@ -5,7 +5,7 @@ local creationOptions = {
 	port = 9001
 }
 -- local server = C_Networking.CreateWebSocketServer(creationOptions)
-local targetTickTime = 1000 / 60 -- 60 FPS
+local targetTickTime = 1000 / 50 -- 60 FPS
 
 local uv = require("uv")
 local pollingUpdateTimer = uv.new_timer()
@@ -17,7 +17,8 @@ pollingUpdateTimer:start(0, 1, function()
 
 	timeBefore = timeNow
 	local remainingTickTime = math.max(targetTickTime - timeMS, 0)
-	print("NYI: Polling for WebSocket updates", timeMS, remainingTickTime)
+	-- print("NYI: Polling for WebSocket updates", timeMS, remainingTickTime)
+	printf("Last update took %.2f ms\t\tNext update in %.2f ms", timeMS, remainingTickTime)
 	uv.sleep(remainingTickTime)
 end)
 
