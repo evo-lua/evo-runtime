@@ -22,7 +22,7 @@ pollingUpdateTimer:start(0, 1, function()
 	uv.sleep(remainingTickTime)
 end)
 
-uv.run() -- TBD move to main.cpp
+-- uv.run() -- TBD move to main.cpp
 
 -- function server:WEBSOCKET_CONNECTION_ESTABLISHED(client)
 
