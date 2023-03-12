@@ -33,7 +33,6 @@ int main(int argc, char* argv[]) {
 	luaVM->CreateGlobalNamespace("C_Runtime");
 	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
 
-	// TODO test wss with/without this
 	uv_loop_t* loop = luv_loop(luaVM->m_luaState);
 	uws_get_loop_with_native(loop);
 
@@ -46,16 +45,7 @@ int main(int argc, char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	// uv_idle_t idler;
-
-	// uv_idle_init(loop, &idler);
-
-	// uv_idle_start(&idler, idle_cb);
-	// uws_test((void*)loop);
-	// // http_client_test();
-	// uv_run(loop, UV_RUN_DEFAULT);
-
-	// uv_loop_close(loop);
+	uv_run(loop, UV_RUN_DEFAULT);
 
 	return EXIT_SUCCESS;
 }
