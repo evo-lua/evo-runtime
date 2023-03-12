@@ -4,19 +4,36 @@
 local creationOptions = {
 	port = 9001
 }
-local server = C_Networking.CreateWebSocketServer(creationOptions)
+-- local server = C_Networking.CreateWebSocketServer(creationOptions)
+local targetTickTime = 1000 / 60 -- 60 FPS
 
-function server:WEBSOCKET_CONNECTION_ESTABLISHED(client)
+local uv = require("uv")
+local pollingUpdateTimer = uv.new_timer()
+local timeBefore = uv.hrtime()
+pollingUpdateTimer:start(0, 1, function()
+	local timeNow = uv.hrtime()
+	local timeSInceLastUpdate = timeNow - timeBefore -- ns
+	local timeMS = timeSInceLastUpdate / 10E5
 
-end
+	timeBefore = timeNow
+	local remainingTickTime = math.max(targetTickTime - timeMS, 0)
+	print("NYI: Polling for WebSocket updates", timeMS, remainingTickTime)
+	uv.sleep(remainingTickTime)
+end)
 
-function server:WEBSOCKET_MESSAGE_RECEIVED(client, message, opCode)
-	server:SendTextMessage(client, "I have received your message, and I found it wanting")
-end
+uv.run() -- TBD move to main.cpp
 
-function server:WEBSOCKET_CONNECTION_CLOSED(client, code, message)
+-- function server:WEBSOCKET_CONNECTION_ESTABLISHED(client)
 
-end
+-- end
+
+-- function server:WEBSOCKET_MESSAGE_RECEIVED(client, message, opCode)
+-- 	server:SendTextMessage(client, "I have received your message, and I found it wanting")
+-- end
+
+-- function server:WEBSOCKET_CONNECTION_CLOSED(client, code, message)
+
+-- end
 
 -- TBD use scenario framework?
 
