@@ -41,6 +41,9 @@ globals = {
 	"printf",
 	"format",
 
+	-- builtins
+	"extend",
+
 	-- API namespaces
 	"C_CommandLine",
 	"C_Runtime",
