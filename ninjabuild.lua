@@ -34,6 +34,7 @@ local EvoBuildTarget = {
 		"Runtime/Libraries/path.lua",
 		"Runtime/Libraries/transform.lua",
 		"Runtime/Libraries/validation.lua",
+		"Runtime/Libraries/v8.lua",
 	},
 	cppSources = {
 		"Runtime/main.cpp",
