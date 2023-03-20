@@ -6,6 +6,10 @@ local uv = require("uv")
 local webview = require("webview")
 
 local format = string.format
+local getmetatable = getmetatable
+local setmetatable = setmetatable
+local pairs = pairs
+local type = type
 
 local evo = {}
 
@@ -48,6 +52,7 @@ function evo.registerGlobalAliases()
 	_G.it = bdd.it
 
 	_G.printf = evo.printf
+	_G.extend = evo.extend
 end
 
 function evo.initializeGlobalNamespaces()
@@ -125,6 +130,24 @@ end
 
 function evo.printf(...)
 	return print(format(...))
+end
+
+function evo.extend(child, parent)
+	local parentMetatable = getmetatable(parent)
+
+	if type(parentMetatable) ~= "table" then
+		setmetatable(parent, {})
+		parentMetatable = getmetatable(parent)
+	end
+
+	local childMetatable = {}
+	for key, value in pairs(parentMetatable) do
+		childMetatable[key] = value
+	end
+
+	childMetatable.__index = parent
+
+	setmetatable(child, childMetatable)
 end
 
 return evo
