@@ -7,6 +7,7 @@ local globalAliases = {
 	["dump"] = debug.dump,
 	["format"] = string.format,
 	["it"] = bdd.it,
+	["path"] = require("path"),
 	["printf"] = evo.printf,
 }
 
