@@ -11,7 +11,7 @@ local C_BuildTools = {
 	GCC_COMPILATION_SETTINGS = {
 		displayName = "GNU Compiler Collection",
 		CPP_COMPILER = "g++",
-		COMPILER_FLAGS = "-O2 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing",
+		COMPILER_FLAGS = "-O2 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color",
 		CPP_LINKER = "g++",
 		-- Must export the entry point of bytecode objects so that LuaJIT can load them via require()
 		LINKER_FLAGS = isWindows and "-Wl,--export-all-symbols" or "-rdynamic",
