@@ -46,6 +46,8 @@ end
 
 function evo.registerGlobalAliases()
 	_G.buffer = require("string.buffer")
+	_G.path = require("path")
+
 	_G.describe = bdd.describe
 	_G.dump = debug.dump
 	_G.format = string.format
