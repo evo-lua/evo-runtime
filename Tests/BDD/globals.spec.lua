@@ -19,14 +19,14 @@ describe("_G", function()
 	for globalName, target in pairs(globalAliases) do
 		it("should export global alias " .. globalName, function()
 			local alias = _G[globalName]
-			assertEquals(alias, target)
+			assert(alias == target, globalName)
 		end)
 	end
 
 	for globalName, target in pairs(globalNamespaces) do
 		it("should export global namespace " .. globalName, function()
 			local alias = _G[globalName]
-			assertEquals(alias, target)
+			assert(alias == target, globalName)
 		end)
 	end
 
