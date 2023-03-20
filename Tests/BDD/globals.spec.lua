@@ -5,6 +5,7 @@ local globalAliases = {
 	["buffer"] = require("string.buffer"),
 	["describe"] = bdd.describe,
 	["dump"] = debug.dump,
+	["extend"] = evo.extend,
 	["format"] = string.format,
 	["it"] = bdd.it,
 	["printf"] = evo.printf,
