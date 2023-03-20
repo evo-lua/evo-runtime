@@ -4,6 +4,7 @@ local specFiles = {
 	"Tests/BDD/console-library.spec.lua",
 	"Tests/BDD/openssl-library.spec.lua",
 	"Tests/BDD/uv-library.spec.lua",
+	"Tests/BDD/v8-library.spec.lua",
 	"Tests/BDD/webview-library.spec.lua",
 	"Tests/BDD/commandline-namespace.spec.lua",
 	"Tests/BDD/runtime-namespace.spec.lua",
