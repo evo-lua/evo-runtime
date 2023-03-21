@@ -22,6 +22,8 @@ local table_insert = table.insert
 
 local bdd = {
 	lastExecutedSpecFile = nil,
+	lastRegisteredSetupFunction = nil,
+	lastRegisteredTeardownFunction = nil,
 	startTime = 0,
 	endTime = 0,
 	numCompletedTests = 0,
@@ -198,6 +200,14 @@ function bdd.describe(label, testFunction)
 
 	testFunction()
 
+	if bdd.lastRegisteredSetupFunction then
+		bdd.lastRegisteredSetupFunction = nil
+	end
+
+	if bdd.lastRegisteredTeardownFunction then
+		bdd.lastRegisteredTeardownFunction = nil
+	end
+
 	bdd.reportIndentationLevel = bdd.reportIndentationLevel - 1
 end
 
@@ -215,7 +225,16 @@ function bdd.it(label, testFunction)
 		return
 	end
 
+	if bdd.lastRegisteredSetupFunction then
+		bdd.lastRegisteredSetupFunction()
+	end
+
 	local success, errorDetails = xpcall(testFunction, errorHandler)
+
+	if bdd.lastRegisteredTeardownFunction then
+		bdd.lastRegisteredTeardownFunction()
+	end
+
 	if success then
 		bdd.reportPassingSubsection(label)
 		bdd.numCompletedTests = bdd.numCompletedTests + 1
@@ -300,6 +319,16 @@ function bdd.getSectionsReportString()
 	end
 
 	return reportString
+end
+
+function bdd.before(setupFunction)
+	validateFunction(setupFunction, "setupFunction")
+	bdd.lastRegisteredSetupFunction = setupFunction
+end
+
+function bdd.after(teardownFunction)
+	validateFunction(teardownFunction, "teardownFunction")
+	bdd.lastRegisteredTeardownFunction = teardownFunction
 end
 
 return bdd

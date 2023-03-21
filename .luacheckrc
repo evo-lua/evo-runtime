@@ -36,6 +36,8 @@ globals = {
 	"it",
 
 	-- global aliases
+	"after",
+	"before",
 	"buffer",
 	"dump",
 	"printf",
