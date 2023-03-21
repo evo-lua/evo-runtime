@@ -49,5 +49,6 @@ globals = {
 
 	-- API namespaces
 	"C_CommandLine",
+	"C_FileSystem",
 	"C_Runtime",
 }

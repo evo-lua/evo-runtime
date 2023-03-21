@@ -61,6 +61,7 @@ end
 
 function evo.initializeGlobalNamespaces()
 	_G.C_CommandLine = require("C_CommandLine")
+	_G.C_FileSystem = require("C_FileSystem")
 	require("C_Runtime")
 end
 

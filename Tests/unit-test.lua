@@ -8,6 +8,7 @@ local specFiles = {
 	"Tests/BDD/v8-library.spec.lua",
 	"Tests/BDD/webview-library.spec.lua",
 	"Tests/BDD/commandline-namespace.spec.lua",
+	"Tests/BDD/filesystem-namespace.spec.lua",
 	"Tests/BDD/runtime-namespace.spec.lua",
 }
 
