@@ -42,6 +42,7 @@ globals = {
 	"dump",
 	"printf",
 	"format",
+	"path",
 
 	-- builtins
 	"extend",
