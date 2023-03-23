@@ -49,3 +49,6 @@
 [submodule "deps/zhaog/lua-openssl"]
 	path = deps/zhaog/lua-openssl
 	url = https://github.com/zhaozg/lua-openssl
+[submodule "deps/mariusbancila/stduuid"]
+	path = deps/mariusbancila/stduuid
+	url = https://github.com/mariusbancila/stduuid
