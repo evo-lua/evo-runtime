@@ -26,6 +26,7 @@ local EvoBuildTarget = {
 		"Runtime/API/C_CommandLine.lua",
 		"Runtime/API/C_FileSystem.lua",
 		"Runtime/API/C_Runtime.lua",
+		"Runtime/Bindings/stduuid.lua",
 		"Runtime/Bindings/webview.lua",
 		"Runtime/Extensions/debugx.lua",
 		"Runtime/Extensions/stringx.lua",
@@ -40,6 +41,7 @@ local EvoBuildTarget = {
 	cppSources = {
 		"Runtime/main.cpp",
 		"Runtime/evo.cpp",
+		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
 	},
@@ -49,6 +51,7 @@ local EvoBuildTarget = {
 		"deps/LuaJIT/LuaJIT/src",
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
+		"deps/mariusbancila/stduuid/include",
 		"deps/webview/webview",
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
@@ -67,8 +70,8 @@ local EvoBuildTarget = {
 			and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32 -l SHELL32 -l OLE32 -l VERSION -l shlwapi"
 		or "-lm -ldl -pthread"
 			.. (
-				isMacOS and " -framework WebKit"
-				or isUnix and " -lwebkit2gtk-4.0 -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lsoup-2.4 -lgmodule-2.0 -pthread -lglib-2.0 -lgio-2.0 -ljavascriptcoregtk-4.0 -lgobject-2.0 -lglib-2.0"
+				isMacOS and " -framework WebKit -framework CoreFoundation"
+				or isUnix and " -luuid -lwebkit2gtk-4.0 -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lsoup-2.4 -lgmodule-2.0 -pthread -lglib-2.0 -lgio-2.0 -ljavascriptcoregtk-4.0 -lgobject-2.0 -lglib-2.0"
 				or ""
 			)
 	),
