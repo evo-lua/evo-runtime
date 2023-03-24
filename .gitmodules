@@ -16,21 +16,6 @@
 [submodule "deps/richgel999/miniz"]
 	path = deps/richgel999/miniz
 	url = https://github.com/richgel999/miniz
-[submodule "deps/facebookresearch/CParser"]
-	path = deps/facebookresearch/CParser
-	url = https://github.com/facebookresearch/CParser
-[submodule "deps/PortAudio/portaudio"]
-	path = deps/PortAudio/portaudio
-	url = https://github.com/PortAudio/portaudio.git
-[submodule "deps/mikke89/RmlUi"]
-	path = deps/mikke89/RmlUi
-	url = https://github.com/mikke89/RmlUi
-[submodule "deps/ocornut/imgui"]
-	path = deps/ocornut/imgui
-	url = https://github.com/ocornut/imgui
-[submodule "deps/glfw/glfw"]
-	path = deps/glfw/glfw
-	url = https://github.com/glfw/glfw
 [submodule "deps/luvit/luv"]
 	path = deps/luvit/luv
 	url = https://github.com/luvit/luv
@@ -43,9 +28,6 @@
 [submodule "deps/uNetworking/uWebSockets"]
 	path = deps/uNetworking/uWebSockets
 	url = https://github.com/uNetworking/uWebSockets.git
-[submodule "deps/warmcat/libwebsockets"]
-	path = deps/warmcat/libwebsockets
-	url = https://github.com/warmcat/libwebsockets.git
 [submodule "deps/zhaog/lua-openssl"]
 	path = deps/zhaog/lua-openssl
 	url = https://github.com/zhaozg/lua-openssl
