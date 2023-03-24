@@ -2,6 +2,7 @@ local bdd = require("bdd")
 local ffi = require("ffi")
 local jit = require("jit")
 local openssl = require("openssl")
+local stduuid = require("stduuid")
 local uv = require("uv")
 local webview = require("webview")
 
@@ -94,6 +95,7 @@ function evo.showVersionStrings(commandName, ...)
 	local embeddedLibraryVersions = {
 		libuv = uv.version_string(),
 		openssl = opensslVersionString .. "(via lua-openssl " .. luaOpensslVersionString .. ")",
+		stduuid = stduuid.version(),
 		webview = webview.version(),
 	}
 	versionText = versionText .. "Embedded libraries:\n\n"
