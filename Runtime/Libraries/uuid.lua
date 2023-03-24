@@ -13,7 +13,7 @@ local uuid = {
 	RFC_STRING_PATTERN = "^%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$",
 }
 
-function uuid.create_v4()
+function uuid.createBasicUUID()
 	local guid = ffi_new("uuid_rfc_string_t")
 	local guidPointer = ffi_cast("uuid_rfc_string_t*", guid)
 
@@ -23,7 +23,7 @@ function uuid.create_v4()
 	return guid
 end
 
-function uuid.create_mersenne_twisted()
+function uuid.createMersenneTwistedUUID()
 	local guid = ffi_new("uuid_rfc_string_t")
 	local guidPointer = ffi_cast("uuid_rfc_string_t*", guid)
 
@@ -33,11 +33,11 @@ function uuid.create_mersenne_twisted()
 	return guid
 end
 
-function uuid.create_v5(namespace, name)
+function uuid.createNameBasedUUID(namespace, name)
 	validateString(namespace, "namespace")
 	validateString(name, "name")
 
-	if not uuid.is_valid(namespace) then
+	if not uuid.isCanonical(namespace) then
 		error("Expected argument namespace to be a valid RFC UUID string", 0)
 	end
 
@@ -50,7 +50,7 @@ function uuid.create_v5(namespace, name)
 	return guid
 end
 
-function uuid.create_system_guid()
+function uuid.createSystemUUID()
 	local guid = ffi_new("uuid_rfc_string_t")
 	local guidPointer = ffi_cast("uuid_rfc_string_t*", guid)
 
@@ -60,7 +60,7 @@ function uuid.create_system_guid()
 	return guid
 end
 
-function uuid.is_valid(input)
+function uuid.isCanonical(input)
 	if type(input) ~= "string" then
 		return false
 	end
