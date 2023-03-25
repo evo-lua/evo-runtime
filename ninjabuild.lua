@@ -65,6 +65,7 @@ local EvoBuildTarget = {
 		"openssl.a",
 		"libssl.a",
 		"libcrypto.a",
+		"zlibstatic.a",
 	},
 	sharedLibraries = (
 		isWindows
