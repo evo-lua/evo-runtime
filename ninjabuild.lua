@@ -194,6 +194,10 @@ function EvoBuildTarget:GetDefines(cppSourceFilePath)
 		defines = defines .. format(' -DVERSION=\\"%s\\"', lrexlibVersionString)
 	end
 
+	-- uws doesn't export the version at all, so another hack is needed to retrieve it ...
+	local uwsVersionString = self:DiscoverUwsVersion()
+	defines = defines .. format(' -DUWS_VERSION=\\"%s\\"', uwsVersionString)
+
 	return defines
 end
 
@@ -210,6 +214,13 @@ function EvoBuildTarget:DiscoverLrexlibVersion()
 	lrexlibMakefile:close()
 
 	return discoveredLrexlibVersion
+end
+
+function EvoBuildTarget:DiscoverUwsVersion()
+	local command = "cat deps/uNetworking/UWS_VERSION.out"
+	local versionWithNewline = NinjaBuildTools.GetOutputFromShellCommand(command)
+	local versionTag = string.sub(versionWithNewline, 0, string.len(versionWithNewline) - 1)
+	return versionTag
 end
 
 function EvoBuildTarget:ProcessLuaSources()
