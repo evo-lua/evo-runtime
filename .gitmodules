@@ -34,3 +34,6 @@
 [submodule "deps/mariusbancila/stduuid"]
 	path = deps/mariusbancila/stduuid
 	url = https://github.com/mariusbancila/stduuid
+[submodule "deps/brimworks/lua-zlib"]
+	path = deps/brimworks/lua-zlib
+	url = https://github.com/brimworks/lua-zlib
