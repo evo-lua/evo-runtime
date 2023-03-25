@@ -44,6 +44,7 @@ local EvoBuildTarget = {
 		"Runtime/evo.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
+		"Runtime/Bindings/lzlib.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
 	},
 	includeDirectories = {
@@ -57,6 +58,7 @@ local EvoBuildTarget = {
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
 		"deps/zhaog/lua-openssl/src",
+		"deps/brimworks/lua-zlib",
 	},
 	staticLibraries = {
 		"libluajit.a",
