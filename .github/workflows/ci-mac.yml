@@ -25,6 +25,7 @@ jobs:
     runs-on: macos-latest
     env:
         MACOSX_DEPLOYMENT_TARGET: 10.13
+        HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 # Prevent brew updates in the ccache setup step (~2GB download ...)
 
     steps:
       - name: Check out Git repository
@@ -33,9 +34,16 @@ jobs:
           submodules: recursive
           fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
 
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
       - name: Install Ninja
         run: brew install ninja
 
+      - name: Configure environment
+        run: |
+          echo "CC=ccache gcc" >> $GITHUB_ENV
+          echo "CXX=ccache g++" >> $GITHUB_ENV
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 

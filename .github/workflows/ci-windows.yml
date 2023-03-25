@@ -23,6 +23,8 @@ jobs:
     if: github.event.pull_request.draft == false
     name: Build for Windows
     runs-on: windows-latest
+    env:
+      SCCACHE_GHA_ENABLED: "true"
 
     defaults:
       run:
@@ -40,8 +42,19 @@ jobs:
         with:
           install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake
 
+      - name: Setup sccache
+        uses: mozilla-actions/sccache-action@v0.0.3
+
       - name: Download Webview2 SDK
         run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
+
+      - name: Configure environment
+        run: |
+          export SCCACHE_WINDOWS_PATH=${SCCACHE_PATH}
+          export SCCACHE_UNIX_PATH=$(cygpath -u "$SCCACHE_WINDOWS_PATH")
+          echo "SCCACHE_UNIX_PATH=$SCCACHE_UNIX_PATH" >> $GITHUB_ENV
+          echo "CC=${SCCACHE_UNIX_PATH} gcc" >> $GITHUB_ENV
+          echo "CXX=${SCCACHE_UNIX_PATH} g++" >> $GITHUB_ENV
 
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
