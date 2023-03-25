@@ -38,13 +38,13 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
 
-      - name: Find ccache
-        run: which ccache
-
       - name: Set up MSYS2 environment
         uses: msys2/setup-msys2@v2
         with:
           install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake
+
+      - name: Find ccache
+        run: which ccache
 
       - name: Download Webview2 SDK
         run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
