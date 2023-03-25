@@ -31,6 +31,9 @@ jobs:
           submodules: recursive
           fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
 
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
       - name: Update apt cache
         run: sudo apt-get update
 
@@ -40,6 +43,12 @@ jobs:
       # Can't actually be used on CI runners, but we need the headers for embedding webview
       - name: Install WebKitGTK
         run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
+
+      - name: Configure environment
+        run: |
+            export PATH="/usr/lib/ccache:$PATH"
+            echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
+            echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
 
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
