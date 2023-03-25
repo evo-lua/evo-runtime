@@ -52,6 +52,9 @@ jobs:
       - name: Build lua-openssl
         run: deps/luaopenssl-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build zlib
+        run: deps/zlib-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build runtime
         run: ls && ./unixbuild.sh && ls ninjabuild-unix && cp ninjabuild-unix/evo . && ls
 
