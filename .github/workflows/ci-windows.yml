@@ -50,9 +50,9 @@ jobs:
 
       - name: Configure environment
         run: |
-          export PATH="/usr/lib/ccache/bin:$PATH"
-          echo "CC=/usr/lib/ccache/bin/gcc" >> $GITHUB_ENV
-          echo "CXX=/usr/lib/ccache/bin/g++" >> $GITHUB_ENV
+          export PATH="/usr/lib/ccache:$PATH"
+          echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
+          echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
 
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
