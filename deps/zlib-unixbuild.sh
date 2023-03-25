@@ -3,7 +3,7 @@ set -e
 echo "Building target zlib"
 
 OUT_DIR=ninjabuild-unix
-SRC_DIR=Dependencies/madler/zlib
+SRC_DIR=deps/madler/zlib
 BUILD_DIR=$SRC_DIR/cmakebuild-unix
 
 cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_COMPILER=gcc

@@ -5,6 +5,7 @@ local openssl = require("openssl")
 local stduuid = require("stduuid")
 local uv = require("uv")
 local webview = require("webview")
+local zlib = require("zlib")
 
 local format = string.format
 local getmetatable = getmetatable
@@ -97,6 +98,7 @@ function evo.showVersionStrings(commandName, ...)
 		openssl = opensslVersionString .. "(via lua-openssl " .. luaOpensslVersionString .. ")",
 		stduuid = stduuid.version(),
 		webview = webview.version(),
+		zlib = format("%d.%d.%d", zlib.version()),
 	}
 	versionText = versionText .. "Embedded libraries:\n\n"
 	for libraryName, versionString in pairs(embeddedLibraryVersions) do
