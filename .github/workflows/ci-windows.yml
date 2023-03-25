@@ -35,16 +35,13 @@ jobs:
           submodules: recursive
           fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
 
-      - name: Setup ccache
+      - name: Set up ccache
         uses: hendrikmuhs/ccache-action@v1.2
 
       - name: Set up MSYS2 environment
         uses: msys2/setup-msys2@v2
         with:
           install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake
-
-      - name: Find ccache
-        run: which ccache
 
       - name: Download Webview2 SDK
         run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
