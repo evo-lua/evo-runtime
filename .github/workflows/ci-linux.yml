@@ -31,7 +31,7 @@ jobs:
           submodules: recursive
           fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
 
-      - name: Setup ccache
+      - name: Set up ccache
         uses: hendrikmuhs/ccache-action@v1.2
 
       - name: Update apt cache

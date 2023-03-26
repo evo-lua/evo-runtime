@@ -42,7 +42,7 @@ jobs:
         with:
           install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake
 
-      - name: Setup sccache
+      - name: Set up sccache
         uses: mozilla-actions/sccache-action@v0.0.3
 
       - name: Download Webview2 SDK
