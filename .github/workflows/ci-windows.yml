@@ -46,6 +46,18 @@ jobs:
       - name: Download Webview2 SDK
         run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
 
+      - name: Find ccache.exe
+        run: |
+          ccache_path=$(find / -type f -iname "ccache.exe" 2>/dev/null)
+          if [ -n "$ccache_path" ]; then
+            echo "ccache.exe found at: $ccache_path"
+            ccache_dir=$(dirname "$ccache_path")
+            export PATH=$ccache_dir:$PATH
+            echo "Updated PATH: $PATH"
+          else
+            echo "ccache.exe not found."
+          fi
+
       - name: Configure environment
         run: |
           echo $PATH
