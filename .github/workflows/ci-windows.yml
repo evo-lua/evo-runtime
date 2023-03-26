@@ -70,6 +70,7 @@ jobs:
           echo "CXX=ccache g++" >> $GITHUB_ENV
           ls $(cygpath -u "$USERPROFILE")/ccache | file $(cygpath -u "$USERPROFILE")/ccache
           ls -l $(cygpath -u "$USERPROFILE")
+          ls -l $(cygpath -u "$USERPROFILE")/ccache
           which ccache | which sccache | file $(cygpath -u "$USERPROFILE")/ccache
 
 
