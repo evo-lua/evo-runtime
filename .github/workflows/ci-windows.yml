@@ -63,7 +63,7 @@ jobs:
           echo $PATH
           echo $MSYS2_PATH
           export PATH=$(cygpath -u "$USERPROFILE")/ccache:$PATH
-          export MSYS2_PATH=$(cygpath -u "$USERPROFILE)/ccache":$MSYS2_PATH
+          export MSYS2_PATH=$(cygpath -u "$USERPROFILE")/ccache:$MSYS2_PATH
           echo $PATH
           echo $MSYS2_PATH
           echo "CC=ccache gcc" >> $GITHUB_ENV
