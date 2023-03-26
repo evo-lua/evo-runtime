@@ -54,8 +54,13 @@ jobs:
           echo "export MSYS2_PATH=$USERPROFILE/.cargo/bin:$MSYS2_PATH" >> $GITHUB_ENV
           echo $PATH
           echo $MSYS2_PATH
+          echo "export PATH=$(cygpath -u "$USERPROFILE/.cargo/bin"):$PATH" >> $GITHUB_ENV
+          echo "export PATH=$(cygpath -u "$USERPROFILE/.cargo/bin"):$PATH" >> $GITHUB_ENV
+          echo "export MSYS2_PATH=$(cygpath -u "$USERPROFILE"):$PATH" >> $GITHUB_ENV
+          echo "export MSYS2_PATH=$(cygpath -u "$USERPROFILE/.cargo/bin"):$PATH" >> $GITHUB_ENV
           echo "CC=ccache gcc" >> $GITHUB_ENV
           echo "CXX=ccache g++" >> $GITHUB_ENV
+          which ccache | which sccache | ls $(cygpath -u "$USERPROFILE")
 
       - name: Set PATH to include ccache
         run: echo "PATH=${env:USERPROFILE}\.cargo\bin;${env:PATH}" >> $GITHUB_ENV
