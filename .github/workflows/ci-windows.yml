@@ -73,7 +73,7 @@ jobs:
           ls -l $(cygpath -u "$USERPROFILE")/ccache
           ls -l -a $(cygpath -u "$USERPROFILE")
           ls -l -a $(cygpath -u "$USERPROFILE")/.cargo/bin
-          ls -l -a $(cygpath -u "$USERPROFILE")/AppData/Roaming/ccache
+          ls -l -a $(cygpath -u "$USERPROFILE")/AppData
           ls -l -a $(cygpath -u "$USERPROFILE")/AppData/Roaming
           ls -l -a $(cygpath -u "$USERPROFILE")/AppData/Roaming/ccache
           which ccache | which sccache | file $(cygpath -u "$USERPROFILE")/ccache
