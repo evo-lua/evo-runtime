@@ -47,8 +47,13 @@ jobs:
         run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
 
       - name: Configure environment
+        # These directories are way out there, but it's what ccache-action uses ...
         run: |
-          export PATH="/usr/lib/ccache:$PATH"
+          echo $PATH
+          export PATH="${process.env.USERPROFILE}\\.cargo\\bin:$PATH"
+          echo $PATH
+          export PATH="$(cygpath -u ${process.env.USERPROFILE}\\.cargo\\bin):$PATH"
+          echo $PATH
           echo "CC=ccache gcc" >> $GITHUB_ENV
           echo "CXX=ccache g++" >> $GITHUB_ENV
 
