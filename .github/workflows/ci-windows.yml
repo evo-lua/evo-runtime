@@ -49,6 +49,9 @@ jobs:
       - name: Configure environment
         run: |
             which ccache
+            ls -l -a $(which ccache)
+            ls -l -a $(which ccache)/..
+            ls -l -a $(basename($(which ccache))
             echo "CC=ccache gcc" >> $GITHUB_ENV
             echo "CXX=ccache g++" >> $GITHUB_ENV
 
