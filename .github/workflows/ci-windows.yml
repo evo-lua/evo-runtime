@@ -52,7 +52,7 @@ jobs:
             ls -l -a $(which ccache)
             ls -l -a /usr/bin/ccache
             ls -l -a /usr/lib/ccache
-            ls -l -a $(basename($(which ccache))
+            ls -l -a $(basename(/usr/bin/ccache)
             echo "CC=ccache gcc" >> $GITHUB_ENV
             echo "CXX=ccache g++" >> $GITHUB_ENV
 
