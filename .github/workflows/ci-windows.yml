@@ -41,7 +41,7 @@ jobs:
       - name: Set up MSYS2 environment
         uses: msys2/setup-msys2@v2
         with:
-          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake
+          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake ccache
 
       - name: Download Webview2 SDK
         run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
@@ -68,7 +68,7 @@ jobs:
           echo $MSYS2_PATH
           echo "CC=bash -xc ccache gcc" >> $GITHUB_ENV
           echo "CXX=bash -xc ccache g++" >> $GITHUB_ENV
-          bash -xc ccache
+          ls -l -a /usr/local/bin
 
 
       - name: Set PATH to include ccache
