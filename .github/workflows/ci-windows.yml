@@ -68,8 +68,6 @@ jobs:
           echo $MSYS2_PATH
           echo "CC=bash -xc ccache gcc" >> $GITHUB_ENV
           echo "CXX=bash -xc ccache g++" >> $GITHUB_ENV
-          ls -l -a /usr/local/bin
-
 
       - name: Set PATH to include ccache
         run: echo "PATH=${env:USERPROFILE}\.cargo\bin;${env:PATH}" >> $GITHUB_ENV
