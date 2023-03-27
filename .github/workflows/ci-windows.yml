@@ -50,15 +50,11 @@ jobs:
         run: |
             which ccache
             ls -l -a $(which ccache)
-            ls -l -a $(which ccache)/..
+            ls -l -a /usr/bin/ccache
+            ls -l -a /usr/lib/ccache
             ls -l -a $(basename($(which ccache))
             echo "CC=ccache gcc" >> $GITHUB_ENV
             echo "CXX=ccache g++" >> $GITHUB_ENV
-
-      - name: Set PATH to include ccache
-        run: echo "PATH=${env:USERPROFILE}\.cargo\bin;${env:PATH}" >> $GITHUB_ENV
-      - name: Set MSYS2_PATH to include ccache
-        run: echo "MSYS2_PATH=${env:USERPROFILE}\.cargo\bin;${env:MSYS2_PATH}" >> $GITHUB_ENV
 
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
