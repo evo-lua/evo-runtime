@@ -48,6 +48,7 @@ jobs:
 
       - name: Configure environment
         run: |
+            which ccache
             echo "CC=ccache gcc" >> $GITHUB_ENV
             echo "CXX=ccache g++" >> $GITHUB_ENV
 
