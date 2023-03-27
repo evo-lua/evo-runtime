@@ -46,18 +46,6 @@ jobs:
       - name: Download Webview2 SDK
         run: deps/fetch-mswebview2.sh && ls ninjabuild-windows
 
-      - name: Find ccache.exe
-        run: |
-          ccache_path=$(find / -type f -iname "ccache.exe" 2>/dev/null)
-          if [ -n "$ccache_path" ]; then
-            echo "ccache.exe found at: $ccache_path"
-            ccache_dir=$(dirname "$ccache_path")
-            export PATH=$ccache_dir:$PATH
-            echo "Updated PATH: $PATH"
-          else
-            echo "ccache.exe not found."
-          fi
-
       - name: Configure environment
         run: |
           echo $PATH
@@ -78,8 +66,8 @@ jobs:
           export MSYS2_PATH=$(cygpath -u "$USERPROFILE")/ccache:$MSYS2_PATH
           echo $PATH
           echo $MSYS2_PATH
-          echo "CC=ccache gcc" >> $GITHUB_ENV
-          echo "CXX=ccache g++" >> $GITHUB_ENV
+          echo "CC=bash -xc ccache gcc" >> $GITHUB_ENV
+          echo "CXX=bash -xc ccache g++" >> $GITHUB_ENV
           ls $(cygpath -u "$USERPROFILE")/ccache | file $(cygpath -u "$USERPROFILE")/ccache
           ls -l $(cygpath -u "$USERPROFILE")
           ls -l $(cygpath -u "$USERPROFILE")/ccache
@@ -88,7 +76,7 @@ jobs:
           ls -l -a $(cygpath -u "$USERPROFILE")/AppData
           ls -l -a $(cygpath -u "$USERPROFILE")/AppData/Roaming
           ls -l -a $(cygpath -u "$USERPROFILE")/AppData/Roaming/ccache
-          which ccache | which sccache | file $(cygpath -u "$USERPROFILE")/ccache
+          bash -xc ccache
 
 
       - name: Set PATH to include ccache
