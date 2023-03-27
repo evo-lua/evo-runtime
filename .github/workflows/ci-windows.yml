@@ -52,9 +52,10 @@ jobs:
             ls -l -a $(which ccache)
             ls -l -a /usr/bin/ccache
             ls -l -a /usr/lib/ccache
+            ls -l -a /usr/lib/ccache/bin
             ls -l -a $(basename(/usr/bin/ccache)
-            echo "CC=ccache gcc" >> $GITHUB_ENV
-            echo "CXX=ccache g++" >> $GITHUB_ENV
+            echo "CC=/usr/lib/ccache/bin/gcc" >> $GITHUB_ENV
+            echo "CXX=/usr/lib/ccache/bin/g++" >> $GITHUB_ENV
 
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
