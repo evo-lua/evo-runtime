@@ -136,9 +136,22 @@ function assertions.assertEqualStrings(firstValue, secondValue)
 	end
 end
 
-function assertions.assertEqualNumbers(firstValue, secondValue)
+function assertions.assertEqualNumbers(firstValue, secondValue, delta)
 	if type(firstValue) ~= "number" or type(secondValue) ~= "number" then
 		error("ASSERTION FAILURE: Expected numbers but got " .. type(firstValue) .. " and " .. type(secondValue), 0)
+	elseif delta then
+		local difference = math.abs(firstValue - secondValue)
+		if difference > delta then
+			error(
+				"ASSERTION FAILURE: Expected "
+					.. tostring(secondValue)
+					.. " but got "
+					.. tostring(firstValue)
+					.. " within delta "
+					.. tostring(delta),
+				0
+			)
+		end
 	elseif firstValue ~= secondValue then
 		error("ASSERTION FAILURE: Expected " .. tostring(secondValue) .. " but got " .. tostring(firstValue), 0)
 	end

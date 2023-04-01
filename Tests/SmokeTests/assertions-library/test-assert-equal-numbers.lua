@@ -5,6 +5,8 @@ local num1 = 1
 local num2 = 1
 local num3 = 2
 local num4 = 0
+local num5 = 1.0001
+local num6 = 1.0002
 
 local function testEqualNumbersCase()
 	assert(assertEqualNumbers(num1, num2) == true, "assertEqualNumbers(num1, num2) should return true")
@@ -13,6 +15,37 @@ local function testEqualNumbersCase()
 	assert(
 		string.match(errorMessage, "^ASSERTION FAILURE: Expected 2 but got 1$"),
 		"assertEqualNumbers(num1, num3) should raise an error with the correct message"
+	)
+end
+
+local function testAlmostEqualFloatsWithoutDeltaCase()
+	local success, errorMessage = pcall(assertEqualNumbers, num5, num6)
+	assert(success == false, "assertEqualNumbers(num5, num6) should raise an error")
+	assert(
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1.0002 but got 1.0001$"),
+		"assertEqualNumbers(num5, num6) should raise an error with the correct message"
+	)
+end
+
+local function testEqualFloatsWithinDeltaCase()
+	assert(assertEqualNumbers(num5, num6, 0.001) == true, "assertEqualNumbers(num5, num6, 0.001) should return true")
+end
+
+local function testEqualFloatsOutsideDeltaCase()
+	local success, errorMessage = pcall(assertEqualNumbers, num5, num6, 0.00001)
+	assert(success == false, "assertEqualNumbers(num5, num6, 0.00001) should raise an error")
+	assert(
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1.0002 but got 1.0001 within delta 1e%-05$"),
+		"assertEqualNumbers(num5, num6, 0.00001) should raise an error with the correct message"
+	)
+end
+
+local function testAlmostEqualFloatsWithZeroDeltaCase()
+	local success, errorMessage = pcall(assertEqualNumbers, num5, num6, 0)
+	assert(success == false, "assertEqualNumbers(num5, num6, 0) should raise an error")
+	assert(
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1.0002 but got 1.0001 within delta 0$"),
+		"assertEqualNumbers(num5, num6, 0) should raise an error with the correct message"
 	)
 end
 
@@ -45,6 +78,10 @@ end
 
 local function testAssertEqualNumbers()
 	testEqualNumbersCase()
+	testAlmostEqualFloatsWithoutDeltaCase()
+	testEqualFloatsWithinDeltaCase()
+	testEqualFloatsOutsideDeltaCase()
+	testAlmostEqualFloatsWithZeroDeltaCase()
 	testDifferentNumbersCase()
 	testNumberAndStringCase()
 	testAlmostEqualNumbersCase()
