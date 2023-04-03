@@ -36,4 +36,31 @@ describe("evo", function()
 			assertTrue(hasDocumentationLink)
 		end)
 	end)
+
+	describe("displayHelpText", function()
+		it("should display the usage instructions", function()
+			console.capture()
+			evo.displayHelpText()
+			local capturedOutput = console.release()
+
+			local USAGE_PATTERN = "Usage: evo %[ script%.lua %| command %.%.%. %]"
+
+			local usageInfoText = capturedOutput:match(USAGE_PATTERN)
+			assertEquals(usageInfoText, "Usage: evo [ script.lua | command ... ]")
+		end)
+
+		it("should display the list of available commands", function()
+			console.capture()
+			evo.displayHelpText()
+			local capturedOutput = console.release()
+
+			local evalCommandInfo = capturedOutput:match("eval" .. "%s+" .. "Evaluate the next token as a Lua chunk")
+			local helpCommandInfo = capturedOutput:match("help" .. "%s+" .. "Display usage instructions %(this text%)")
+			local versionCommandInfo = capturedOutput:match("version" .. "%s+" .. "Show versioning information")
+
+			assertEquals(evalCommandInfo, "eval\t\tEvaluate the next token as a Lua chunk")
+			assertEquals(helpCommandInfo, "help\t\tDisplay usage instructions (this text)")
+			assertEquals(versionCommandInfo, "version\t\tShow versioning information")
+		end)
+	end)
 end)
