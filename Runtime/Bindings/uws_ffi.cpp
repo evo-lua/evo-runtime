@@ -1,3 +1,6 @@
+// These have to be included directly since uws is a header-only library
+#include <App.h>
+
 #include "uws_ffi.hpp"
 
 const char* uws_version() {
@@ -13,4 +16,9 @@ namespace uws_ffi {
 
 		return &uwebsockets_exports_table;
 	}
+
+	void assignEventLoop(void* existing_native_loop) {
+		uWS::Loop::get(existing_native_loop); // Actually: Assign and then return
+	}
+
 }

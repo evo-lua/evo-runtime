@@ -6,4 +6,5 @@ struct static_uws_exports_table {
 
 namespace uws_ffi{
 	void* getExportsTable();
+	void assignEventLoop(void* existing_native_loop);
 }

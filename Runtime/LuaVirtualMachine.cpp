@@ -138,3 +138,7 @@ bool LuaVirtualMachine::CheckStack() {
 
 	return true;
 }
+
+lua_State* LuaVirtualMachine::GetState() {
+	return m_luaState;
+}

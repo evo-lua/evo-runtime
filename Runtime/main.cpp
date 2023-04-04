@@ -32,6 +32,10 @@ int main(int argc, char* argv[]) {
 	luaVM->CreateGlobalNamespace("C_Runtime");
 	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
 
+	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
+	uv_loop_t* loop = luv_loop(luaVM->GetState());
+	uws_ffi::assignEventLoop(loop);
+
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
 
@@ -40,6 +44,8 @@ int main(int argc, char* argv[]) {
 		PrintRuntimeError("Failed to require evo.lua", "Could not load embedded bytecode object", "Please report this problem on GitHub", FROM_HERE);
 		return EXIT_FAILURE;
 	}
+
+	uv_run(loop, UV_RUN_DEFAULT);
 
 	return EXIT_SUCCESS;
 }

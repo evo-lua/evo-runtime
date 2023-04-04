@@ -7,8 +7,11 @@ UWS_SOURCE_DIR=$UWS_DIR/src
 BUILD_DIR=ninjabuild-unix
 ABS_BUILD_DIR=$(pwd)/$BUILD_DIR
 
+LIBUV_INCLUDE_DIR=$(pwd)/deps/luvit/luv/deps/libuv/include
+
 cd $UWS_DIR/uSockets
-make
+make WITH_LIBUV=1 CFLAGS+="-I $LIBUV_INCLUDE_DIR"
+
 cp uSockets.a $ABS_BUILD_DIR
 cd -
 
