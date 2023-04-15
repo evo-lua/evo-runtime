@@ -1,3 +1,5 @@
+set -e
+
 BUILD_DIR=ninjabuild-unix
 mkdir -p $BUILD_DIR
 
