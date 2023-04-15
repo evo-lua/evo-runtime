@@ -75,6 +75,9 @@ jobs:
       - name: Run unit tests
         run: ./evo Tests/unit-test.lua
 
+      - name: Run integration tests
+        run: ./evo Tests/integration-test.lua
+
       - name: Prepare artifacts
         run: cp evo evo-macos-x64
 
