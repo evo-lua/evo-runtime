@@ -65,6 +65,9 @@ jobs:
       - name: Build zlib
         run: deps/zlib-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build uwebsockets
+        run: deps/uws-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build runtime
         run: ls && ./unixbuild.sh && ls ninjabuild-unix && cp ninjabuild-unix/evo . && ls
 

@@ -21,6 +21,7 @@ describe("evo", function()
 				libuv = (capturedOutput:match("libuv" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				openssl = (capturedOutput:match("openssl" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				stduuid = (capturedOutput:match("stduuid" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
+				uws = (capturedOutput:match("uws" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				webview = (capturedOutput:match("webview" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				zlib = (capturedOutput:match("zlib" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 			}
@@ -31,6 +32,7 @@ describe("evo", function()
 			assertTrue(hasEmbeddedLibraryVersions.libuv)
 			assertTrue(hasEmbeddedLibraryVersions.openssl)
 			assertTrue(hasEmbeddedLibraryVersions.stduuid)
+			assertTrue(hasEmbeddedLibraryVersions.uws)
 			assertTrue(hasEmbeddedLibraryVersions.webview)
 			assertTrue(hasEmbeddedLibraryVersions.zlib)
 			assertTrue(hasDocumentationLink)

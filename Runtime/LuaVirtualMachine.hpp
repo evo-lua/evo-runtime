@@ -21,6 +21,7 @@ class LuaVirtualMachine {
 		void CreateGlobalNamespace(std::string name);
 		void AssignGlobalVariable(std::string key, std::string value);
 		bool CheckStack();
+		lua_State* GetState();
 
 	private:
 		lua_State* m_luaState;

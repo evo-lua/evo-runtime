@@ -4,6 +4,7 @@ local jit = require("jit")
 local openssl = require("openssl")
 local stduuid = require("stduuid")
 local uv = require("uv")
+local uws = require("uws")
 local webview = require("webview")
 local zlib = require("zlib")
 
@@ -97,6 +98,7 @@ function evo.showVersionStrings(commandName, ...)
 		libuv = uv.version_string(),
 		openssl = opensslVersionString .. "(via lua-openssl " .. luaOpensslVersionString .. ")",
 		stduuid = stduuid.version(),
+		uws = uws.version(),
 		webview = webview.version(),
 		zlib = format("%d.%d.%d", zlib.version()),
 	}

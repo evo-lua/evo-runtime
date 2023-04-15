@@ -27,6 +27,7 @@ local EvoBuildTarget = {
 		"Runtime/API/C_FileSystem.lua",
 		"Runtime/API/C_Runtime.lua",
 		"Runtime/Bindings/stduuid.lua",
+		"Runtime/Bindings/uws.lua",
 		"Runtime/Bindings/webview.lua",
 		"Runtime/Extensions/debugx.lua",
 		"Runtime/Extensions/stringx.lua",
@@ -43,6 +44,7 @@ local EvoBuildTarget = {
 		"Runtime/main.cpp",
 		"Runtime/evo.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
+		"Runtime/Bindings/uws_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
 		"Runtime/Bindings/lzlib.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
@@ -59,6 +61,8 @@ local EvoBuildTarget = {
 		"deps/zhaog/lua-openssl/deps/auxiliar",
 		"deps/zhaog/lua-openssl/src",
 		"deps/brimworks/lua-zlib",
+		"deps/uNetworking/uWebSockets/src",
+		"deps/uNetworking/uWebSockets/uSockets/src",
 	},
 	staticLibraries = {
 		"libluajit.a",
@@ -67,6 +71,7 @@ local EvoBuildTarget = {
 		"openssl.a",
 		"libssl.a",
 		"libcrypto.a",
+		"uSockets.a",
 		"zlibstatic.a",
 	},
 	sharedLibraries = (
@@ -193,6 +198,11 @@ function EvoBuildTarget:GetDefines(cppSourceFilePath)
 		-- LREXLIB's overly generic VERSION define causes a conflict with LPEG (which does the same thing)
 		defines = defines .. format(' -DVERSION=\\"%s\\"', lrexlibVersionString)
 	end
+
+	-- uws doesn't export the version at all, so we have to discover it manually (hacky!)
+	local uwsVersionTag = require(self.BUILD_DIR .. ".uws-version")
+	local uwsVersionString = string.match(uwsVersionTag, "(%d+.%d+.%d+)")
+	defines = defines .. format(' -DUWS_VERSION=\\"%s\\"', uwsVersionString)
 
 	return defines
 end
