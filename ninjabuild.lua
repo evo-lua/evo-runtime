@@ -49,6 +49,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/uws_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
 		"Runtime/Bindings/lzlib.cpp",
+		"Runtime/Bindings/WebServer.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
 	},
 	includeDirectories = {
