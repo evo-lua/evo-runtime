@@ -6,6 +6,7 @@ local validation = require("validation")
 local validateString = validation.validateString
 
 local ipairs = ipairs
+local string_gmatch = string.gmatch
 local table_concat = table.concat
 local table_insert = table.insert
 
@@ -50,4 +51,16 @@ end
 
 function string.diff(firstValue, secondValue)
 	return diffByLines(firstValue, secondValue)
+end
+
+function string.explode(inputString, delimiter)
+	validateString(inputString, "inputString")
+	delimiter = delimiter or "%s"
+	validateString(delimiter, "delimiter")
+
+	local tokens = {}
+	for token in string_gmatch(inputString, "([^" .. delimiter .. "]+)") do
+		table_insert(tokens, token)
+	end
+	return tokens
 end
