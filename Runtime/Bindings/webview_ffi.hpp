@@ -1,5 +1,5 @@
 #pragma once
 
-namespace webview_ffi{
+namespace webview_ffi {
 	void* getExportsTable();
 }
