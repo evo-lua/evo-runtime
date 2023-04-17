@@ -136,11 +136,11 @@ WebSocket* WebServer::FindClientByID(const std::string& clientID) {
 void WebServer::DisconnectAllClients() {
 	UWS_DEBUG("Disconnecting all clients ...");
 
-	for(const auto& client : m_websocketClientsMap) {
-		bool isFadedClient = (client.second == nullptr);
+	for(const auto& [clientID, websocket] : m_websocketClientsMap) {
+		bool isFadedClient = (websocket == nullptr);
 		if(isFadedClient) continue;
 
-		client.second->close();
+		websocket->close();
 	}
 
 	m_websocketClientsMap.clear();
