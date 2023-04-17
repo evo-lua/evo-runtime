@@ -42,5 +42,22 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Perform static analysis
+      - name: Run luacheck
         run: luacheck .
+
+      # apt only has an ancient version, which behaves inconsistently
+      - name: Install cppcheck
+        run: |
+          git clone --depth 1 https://github.com/danmar/cppcheck.git
+          cd cppcheck
+          git fetch --tags
+          latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          git checkout $latestTag
+          mkdir build
+          cd build
+          cmake ..
+          make -j$(nproc)
+          sudo make install
+
+      - name: Run cppcheck
+        run: deps/cppcheck.sh

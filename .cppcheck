@@ -1,0 +1,16 @@
+// The performance impact is irrelevant where deliberately used, but it affects readability
+passedByValue
+
+// Debug functions left in on purpose
+unusedFunction:Runtime/LuaVirtualMachine.cpp
+unusedFunction:Runtime/Bindings/WebServer.cpp
+
+// FFI exports used from Lua, which cppcheck can't see
+unusedStructMember:Runtime/Bindings/stduuid_ffi.hpp
+unusedStructMember:Runtime/Bindings/uws_ffi.hpp
+
+// PerSocketData is actually used, but cppcheck can't see it
+unusedStructMember:Runtime/Bindings/WebServer.hpp
+
+// Let's just hope we don't have to descent into the depths of Objective C hell ever again
+cstyleCast:Runtime/Bindings/webview_mac.hpp

@@ -94,7 +94,7 @@ public:
 private:
 	// Internal references (used to make us and uws API calls)
 	uWS::TemplatedApp<false> m_uwsAppHandle; // Set isUsingSSL=true once SSL support is in
-	struct us_listen_socket_t* m_usListenSocket;
+	struct us_listen_socket_t* m_usListenSocket = nullptr;
 
 	// Auxiliary state (needed because uws doesn't provide APIs for these)
 	std::queue<DeferredEvent> m_deferredEventsQueue;

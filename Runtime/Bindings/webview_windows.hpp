@@ -27,7 +27,7 @@ namespace webview_ffi {
 			}
 
 			if(msg.message == WM_APP) {
-				auto f = (dispatch_fn_t*)(msg.lParam);
+				auto f = reinterpret_cast<dispatch_fn_t*>(msg.lParam);
 				(*f)();
 				delete f;
 			} else if(msg.message == WM_QUIT) {
