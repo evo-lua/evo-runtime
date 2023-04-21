@@ -206,6 +206,7 @@ function EvoBuildTarget:GetDefines(cppSourceFilePath)
 	local uwsVersionTag = require(self.BUILD_DIR .. ".uws-version")
 	local uwsVersionString = string.match(uwsVersionTag, "(%d+.%d+.%d+)")
 	defines = defines .. format(' -DUWS_VERSION=\\"%s\\"', uwsVersionString)
+	defines = defines .. " -DUWS_HTTPRESPONSE_NO_WRITEMARK"
 
 	return defines
 end

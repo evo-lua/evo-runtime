@@ -75,7 +75,6 @@ function WebSocketTestClient:TCP_CHUNK_RECEIVED(chunk)
 		.. "Connection: Upgrade\r\n"
 		.. "Sec%-WebSocket%-Accept: ([%w+/]+=*)\r\n"
 		.. "Date: ([%w, %-:]+)\r\n"
-		.. "uWebSockets: (%d+)\r\n\r\n"
 
 	-- Boldly assume it arrives in a single chunk here because we're only testing a local server
 	local isProtocolUpgradeResponse = string.match(chunk, upgradeResponsePattern)
