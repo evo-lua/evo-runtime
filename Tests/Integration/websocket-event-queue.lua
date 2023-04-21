@@ -1,14 +1,16 @@
 local uv = require("uv")
 
+local port = 8886
+
 local WebSocketServer = require("WebSocketServer")
 local WebSocketTestClient = require("WebSocketTestClient")
 
 local server = WebSocketServer()
 local client = WebSocketTestClient()
 
-server:StartListening(9001)
+server:StartListening(port)
 
-client:Connect("127.0.0.1", 9001)
+client:Connect("127.0.0.1", port)
 
 local observedEvents = {}
 

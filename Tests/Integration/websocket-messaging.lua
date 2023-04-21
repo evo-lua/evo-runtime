@@ -3,14 +3,16 @@ local uv = require("uv")
 local WebSocketServer = require("WebSocketServer")
 local WebSocketTestClient = require("WebSocketTestClient")
 
+local port = 8885
+
 local server = WebSocketServer()
 local clientA = WebSocketTestClient()
 local clientB = WebSocketTestClient()
 
-server:StartListening(9001)
+server:StartListening(port)
 
-clientA:Connect("127.0.0.1", 9001)
-clientB:Connect("127.0.0.1", 9001)
+clientA:Connect("127.0.0.1", port)
+clientB:Connect("127.0.0.1", port)
 
 -- Note: Should actually check the SendStatus here, but can probably assume no backpressure occurs while running this test ¯\_(ツ)_/¯
 function server:WEBSOCKET_CONNECTION_ESTABLISHED(event, payload)
