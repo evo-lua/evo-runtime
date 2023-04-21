@@ -51,4 +51,5 @@ globals = {
 	"C_CommandLine",
 	"C_FileSystem",
 	"C_Runtime",
+	"C_Timer",
 }

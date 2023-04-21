@@ -70,6 +70,7 @@ function evo.initializeGlobalNamespaces()
 	_G.C_CommandLine = require("C_CommandLine")
 	_G.C_FileSystem = require("C_FileSystem")
 	require("C_Runtime")
+	_G.C_Timer = require("C_Timer")
 end
 
 function evo.createSignalHandlers()
