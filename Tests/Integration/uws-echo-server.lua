@@ -1,18 +1,20 @@
 local uv = require("uv")
 local uws = require("uws")
 
+local port = 8888
+
 local WebSocketTestClient = require("WebSocketTestClient")
 
 local server = uws.bindings.uws_webserver_create()
 local client = WebSocketTestClient()
 
-uws.bindings.uws_webserver_listen(server, 9001)
+uws.bindings.uws_webserver_listen(server, port)
 uws.bindings.uws_webserver_set_echo_mode(server, true)
 
 print("WebServer created with the following settings:")
 uws.bindings.uws_webserver_dump_config(server)
 
-client:Connect("127.0.0.1", 9001)
+client:Connect("127.0.0.1", port)
 
 local receivedEchoedMessage = nil
 local hasUpdatedClientCount = false
