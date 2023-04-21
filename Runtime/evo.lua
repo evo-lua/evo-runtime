@@ -32,6 +32,7 @@ end
 function evo.loadNonstandardExtensions()
 	require("debugx")
 	require("stringx")
+	require("tablex")
 end
 
 function evo.initializeStaticLibraryExports()
