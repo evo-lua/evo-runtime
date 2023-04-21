@@ -14,13 +14,16 @@ local setmetatable = setmetatable
 local pairs = pairs
 local type = type
 
-local evo = {}
+local evo = {
+	signals = {},
+}
 
 function evo.run()
 	evo.loadNonstandardExtensions()
 	evo.initializeStaticLibraryExports()
 	evo.registerGlobalAliases()
 	evo.initializeGlobalNamespaces()
+	evo.createSignalHandlers()
 	evo.setUpCommandLineInterface()
 
 	C_CommandLine.ProcessArguments(arg)
@@ -66,6 +69,16 @@ function evo.initializeGlobalNamespaces()
 	_G.C_CommandLine = require("C_CommandLine")
 	_G.C_FileSystem = require("C_FileSystem")
 	require("C_Runtime")
+end
+
+function evo.createSignalHandlers()
+	-- An unhandled SIGPIPE error signal will crash servers on platforms that send it, e.g. when attempting to write to a closed socket
+	if uv.constants.SIGPIPE then
+		local sigpipeSignal = uv.new_signal()
+		sigpipeSignal:start("sigpipe")
+		uv.unref(sigpipeSignal)
+		evo.signals.SIGPIPE = sigpipeSignal
+	end
 end
 
 function evo.setUpCommandLineInterface()

@@ -1,5 +1,6 @@
 local console = require("console")
 local evo = require("evo")
+local uv = require("uv")
 
 describe("evo", function()
 	describe("showVersionStrings", function()
@@ -63,6 +64,22 @@ describe("evo", function()
 			assertEquals(evalCommandInfo, "eval\t\tEvaluate the next token as a Lua chunk")
 			assertEquals(helpCommandInfo, "help\t\tDisplay usage instructions (this text)")
 			assertEquals(versionCommandInfo, "version\t\tShow versioning information")
+		end)
+	end)
+
+	describe("signals", function()
+		it("should be exported even if there are no dereferenced signal handlers", function()
+			assertEquals(type(evo.signals), "table")
+		end)
+
+		it("should store the dereferenced SIGPIPE handler when one is required", function()
+			-- This is a no-op on Windows
+			if not uv.constants.SIGPIPE then
+				return
+			end
+
+			local sigpipeHandler = evo.signals.SIGPIPE
+			assertEquals(type(sigpipeHandler), "userdata")
 		end)
 	end)
 end)
