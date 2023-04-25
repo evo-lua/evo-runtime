@@ -48,7 +48,7 @@ function bdd.startTestRunner(specFiles)
 
 	if bdd.isBasicReportingMode() then
 		local numSpecFiles = tostring(#specFiles)
-		bdd.report("Starting new test runner with a total of " .. bold(numSpecFiles) .. " spec file(s)")
+		bdd.report("Test runner started with a total of " .. bold(numSpecFiles) .. " spec file(s)")
 		bdd.report("")
 	end
 
