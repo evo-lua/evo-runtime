@@ -112,7 +112,7 @@ local function testBasicEmptyTestCase()
 	assertEquals(numFailingTests, 0)
 
 	local reportString = bdd.getReport()
-	local expectedReportString = "Starting new test runner with a total of "
+	local expectedReportString = "Test runner started with a total of "
 		.. bold("1")
 		.. " spec file(s)"
 		.. "\n\n"
@@ -135,7 +135,7 @@ local function testBasicEmptyTestCases()
 	assertEquals(numFailingTests, 0)
 
 	local reportString = bdd.getReport()
-	local expectedReportString = "Starting new test runner with a total of "
+	local expectedReportString = "Test runner started with a total of "
 		.. bold("2")
 		.. " spec file(s)"
 		.. "\n\n"
@@ -160,7 +160,7 @@ local function testBasicPassingTestCase()
 	assertEquals(numFailingTests, 0)
 
 	local reportString = bdd.getReport()
-	local expectedReportString = "Starting new test runner with a total of "
+	local expectedReportString = "Test runner started with a total of "
 		.. bold("1")
 		.. " spec file(s)"
 		.. "\n\n"
@@ -184,7 +184,7 @@ local function testBasicFailingTestCase()
 	assertEquals(numFailingTests, 1)
 
 	local reportString = bdd.getReport()
-	local expectedReportString = "Starting new test runner with a total of "
+	local expectedReportString = "Test runner started with a total of "
 		.. bold("1")
 		.. " spec file(s)"
 		.. "\n\n"
