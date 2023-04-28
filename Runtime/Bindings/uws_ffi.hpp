@@ -4,6 +4,13 @@
 
 #include <string>
 
+typedef enum {
+	None = 0,
+	Sent = 1,
+	Ended = 2,
+	SentAndEnded = 3
+} HttpSendStatus;
+
 typedef void* uws_webserver_t;
 
 typedef struct uws_webserver_event_t {
@@ -29,6 +36,7 @@ typedef struct static_uws_exports_table {
 
 	void (*uws_webserver_set_echo_mode)(uws_webserver_t server, bool enabled_flag);
 	void (*uws_webserver_dump_config)(uws_webserver_t server);
+	void (*uws_webserver_dump_events)(uws_webserver_t server);
 
 	size_t (*uws_webserver_get_client_count)(uws_webserver_t server);
 	size_t (*uws_webserver_get_event_count)(uws_webserver_t server);
@@ -42,7 +50,27 @@ typedef struct static_uws_exports_table {
 	int (*uws_webserver_send_binary)(uws_webserver_t server, const char* binary, size_t length, const char* client_id);
 	int (*uws_webserver_send_compressed)(uws_webserver_t server, const char* compressed, size_t length, const char* client_id);
 
+	HttpSendStatus (*uws_webserver_response_write)(uws_webserver_t server, const char* request_id, const char* data, size_t length);
+	HttpSendStatus (*uws_webserver_response_end)(uws_webserver_t server, const char* request_id, const char* data, size_t length);
+	HttpSendStatus (*uws_webserver_response_try_end)(uws_webserver_t server, const char* request_id, const char* data, size_t length);
+
+	bool (*uws_webserver_has_request)(uws_webserver_t server, const char* request_id);
+	bool (*uws_webserver_request_method)(uws_webserver_t server, const char* request_id, char* data, size_t length);
+	bool (*uws_webserver_request_url)(uws_webserver_t server, const char* request_id, char* data, size_t length);
+	bool (*uws_webserver_request_query)(uws_webserver_t server, const char* request_id, char* data, size_t length);
+	bool (*uws_webserver_request_endpoint)(uws_webserver_t server, const char* request_id, char* data, size_t length);
+	bool (*uws_webserver_request_serialized_headers)(uws_webserver_t server, const char* request_id, char* data, size_t length);
+	bool (*uws_webserver_request_header_value)(uws_webserver_t server, const char* request_id, char* header, char* data, size_t length);
+
 	void (*uws_webserver_add_websocket_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_get_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_post_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_options_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_delete_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_patch_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_put_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_head_route)(uws_webserver_t server, const char* route);
+	void (*uws_webserver_add_any_route)(uws_webserver_t server, const char* route);
 
 } static_uws_exports_table;
 
