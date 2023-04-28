@@ -15,7 +15,7 @@ void WebServer::StartListening(int port) {
 			return UWS_DEBUG("Failed to listen on port ", port);
 
 		UWS_DEBUG("Now listening on port ", port);
-		this->m_usListenSocket = listenSocket;
+		m_usListenSocket = listenSocket;
 
 		m_deferredEventsQueue.emplace(DeferredEvent::Type::LISTEN, "SERVER", std::to_string(port));
 	});
@@ -24,15 +24,15 @@ void WebServer::StartListening(int port) {
 void WebServer::StopListening() {
 	UWS_DEBUG("Shutting down ...");
 
-	if(this->m_usListenSocket == nullptr) {
+	if(m_usListenSocket == nullptr) {
 		std::cerr << "Failed shutdown: m_usListenSocket is nullptr" << std::endl;
 		return;
 	}
 
 	DisconnectAllClients();
 
-	us_listen_socket_close(false, this->m_usListenSocket);
-	this->m_usListenSocket = nullptr;
+	us_listen_socket_close(false, m_usListenSocket);
+	m_usListenSocket = nullptr;
 
 	UWS_DEBUG("Shutdown complete");
 	m_deferredEventsQueue.emplace(DeferredEvent::Type::SHUTDOWN, "SERVER", "Going Away");
@@ -55,19 +55,19 @@ void WebServer::AddWebSocketRoute(std::string route) {
 	wsBehavior.maxLifetime = m_maxSocketLifetimeInMinutes;
 
 	wsBehavior.upgrade = [this](auto* response, auto* request, auto* socketContext) {
-		this->OnUpgrade(response, request, socketContext);
+		OnUpgrade(response, request, socketContext);
 	};
 
 	wsBehavior.open = [this](auto* websocket) {
-		this->OnWebSocketOpen(websocket);
+		OnWebSocketOpen(websocket);
 	};
 
 	wsBehavior.message = [this](auto* websocket, std::string_view message, uWS::OpCode opCode) {
-		this->OnWebSocketMessage(websocket, message, opCode);
+		OnWebSocketMessage(websocket, message, opCode);
 	};
 
 	wsBehavior.close = [this](auto* websocket, int code, std::string_view message) {
-		this->OnWebSocketClose(websocket, code, message);
+		OnWebSocketClose(websocket, code, message);
 	};
 
 	// Should probably store the route, allow removing it, and more (all saved for later)
