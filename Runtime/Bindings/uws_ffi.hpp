@@ -42,6 +42,8 @@ typedef struct static_uws_exports_table {
 	int (*uws_webserver_send_binary)(uws_webserver_t server, const char* binary, size_t length, const char* client_id);
 	int (*uws_webserver_send_compressed)(uws_webserver_t server, const char* compressed, size_t length, const char* client_id);
 
+	void (*uws_webserver_add_websocket_route)(uws_webserver_t server, const char* route);
+
 } static_uws_exports_table;
 
 namespace uws_ffi {

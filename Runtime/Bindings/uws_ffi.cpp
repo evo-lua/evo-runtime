@@ -99,6 +99,10 @@ const char* uws_event_name(uws_webserver_event_t event) {
 	}
 }
 
+void uws_webserver_add_websocket_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddWebSocketRoute(std::string(route));
+}
+
 namespace uws_ffi {
 
 	void* getExportsTable() {
@@ -130,6 +134,8 @@ namespace uws_ffi {
 		uwebsockets_exports_table.uws_webserver_send_text = uws_webserver_send_text;
 		uwebsockets_exports_table.uws_webserver_send_binary = uws_webserver_send_binary;
 		uwebsockets_exports_table.uws_webserver_send_compressed = uws_webserver_send_compressed;
+
+		uwebsockets_exports_table.uws_webserver_add_websocket_route = uws_webserver_add_websocket_route;
 
 		return &uwebsockets_exports_table;
 	}

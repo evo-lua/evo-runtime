@@ -27,6 +27,9 @@ function WebSocketServer:Construct()
 	instance.preallocatedPayloadBuffer = payload
 	instance.preallocatedEventBuffer = preallocatedEventBuffer
 
+	-- Should be made configurable probably, but that can wait
+	uws.bindings.uws_webserver_add_websocket_route(instance.nativeHandle, "/*")
+
 	setmetatable(instance, self)
 
 	return instance

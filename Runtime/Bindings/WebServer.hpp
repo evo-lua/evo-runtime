@@ -59,7 +59,7 @@ public:
 	size_t GetMaxAllowedPayloadSize();
 
 	// Routing
-	void AddWebSocketRoute(std::string route, uWS::App::WebSocketBehavior<PerSocketData>&& wsBehavior);
+	void AddWebSocketRoute(std::string route);
 
 	// Event handlers (uws glue)
 	void OnUpgrade(auto* response, auto* request, auto* context);

@@ -9,6 +9,7 @@ local WebSocketTestClient = require("WebSocketTestClient")
 local server = uws.bindings.uws_webserver_create()
 local client = WebSocketTestClient()
 
+uws.bindings.uws_webserver_add_websocket_route(server, "/*")
 uws.bindings.uws_webserver_listen(server, port)
 
 client:Connect("127.0.0.1", port)
