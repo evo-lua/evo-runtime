@@ -6,35 +6,7 @@
 #include <iomanip>
 
 WebServer::WebServer() {
-	uWS::App::WebSocketBehavior<PerSocketData> wsBehavior;
-
-	wsBehavior.compression = m_compressionMode;
-	wsBehavior.maxPayloadLength = m_maxPayloadSize;
-	wsBehavior.idleTimeout = m_idleTimeoutInSeconds;
-	wsBehavior.maxBackpressure = m_maxBackpressureLimit;
-	wsBehavior.closeOnBackpressureLimit = m_closeOnBackpressureLimit;
-	wsBehavior.resetIdleTimeoutOnSend = m_resetIdleTimeoutOnSend;
-	wsBehavior.sendPingsAutomatically = m_sendPingsAutomatically;
-	wsBehavior.maxLifetime = m_maxSocketLifetimeInMinutes;
-
-	wsBehavior.upgrade = [this](auto* response, auto* request, auto* socketContext) {
-		this->OnUpgrade(response, request, socketContext);
-	};
-
-	wsBehavior.open = [this](auto* websocket) {
-		this->OnWebSocketOpen(websocket);
-	};
-
-	wsBehavior.message = [this](auto* websocket, std::string_view message, uWS::OpCode opCode) {
-		this->OnWebSocketMessage(websocket, message, opCode);
-	};
-
-	wsBehavior.close = [this](auto* websocket, int code, std::string_view message) {
-		this->OnWebSocketClose(websocket, code, message);
-	};
-
-	// This default catch-all route should likely be made configurable, but for now it's sufficient
-	AddWebSocketRoute("/*", std::move(wsBehavior));
+	// TLS setup and managing creation options should be handled here, but it's not yet implemented
 }
 
 void WebServer::StartListening(int port) {
@@ -70,9 +42,38 @@ size_t WebServer::GetMaxAllowedPayloadSize() {
 	return m_maxPayloadSize;
 }
 
-void WebServer::AddWebSocketRoute(std::string route, uWS::App::WebSocketBehavior<PerSocketData>&& wsBehavior) {
+void WebServer::AddWebSocketRoute(std::string route) {
+	uWS::App::WebSocketBehavior<PerSocketData> wsBehavior;
+
+	wsBehavior.compression = m_compressionMode;
+	wsBehavior.maxPayloadLength = m_maxPayloadSize;
+	wsBehavior.idleTimeout = m_idleTimeoutInSeconds;
+	wsBehavior.maxBackpressure = m_maxBackpressureLimit;
+	wsBehavior.closeOnBackpressureLimit = m_closeOnBackpressureLimit;
+	wsBehavior.resetIdleTimeoutOnSend = m_resetIdleTimeoutOnSend;
+	wsBehavior.sendPingsAutomatically = m_sendPingsAutomatically;
+	wsBehavior.maxLifetime = m_maxSocketLifetimeInMinutes;
+
+	wsBehavior.upgrade = [this](auto* response, auto* request, auto* socketContext) {
+		this->OnUpgrade(response, request, socketContext);
+	};
+
+	wsBehavior.open = [this](auto* websocket) {
+		this->OnWebSocketOpen(websocket);
+	};
+
+	wsBehavior.message = [this](auto* websocket, std::string_view message, uWS::OpCode opCode) {
+		this->OnWebSocketMessage(websocket, message, opCode);
+	};
+
+	wsBehavior.close = [this](auto* websocket, int code, std::string_view message) {
+		this->OnWebSocketClose(websocket, code, message);
+	};
+
 	// Should probably store the route, allow removing it, and more (all saved for later)
 	m_uwsAppHandle.ws<PerSocketData>(route, std::move(wsBehavior));
+
+	UWS_DEBUG("WebSocket route registered: ", route);
 }
 
 void WebServer::OnUpgrade(auto* response, auto* request, auto* socketContext) {
