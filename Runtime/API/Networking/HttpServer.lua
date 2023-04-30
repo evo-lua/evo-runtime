@@ -144,6 +144,10 @@ function HttpServer:StreamResponse(requestID, message)
 	return uws.bindings.uws_webserver_response_try_end(self.nativeHandle, requestID, message, #message)
 end
 
+function HttpServer:WriteStatus(requestID, statusCodeAndText)
+	return uws.bindings.uws_webserver_response_status(self.nativeHandle, requestID, statusCodeAndText)
+end
+
 function HttpServer:GetRequestEndpoint(requestID)
 	local cdata = self.preallocatedRequestDataBuffer
 
