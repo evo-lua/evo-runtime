@@ -3,7 +3,6 @@ passedByValue
 
 // Debug functions left in on purpose
 unusedFunction:Runtime/LuaVirtualMachine.cpp
-unusedFunction:Runtime/Bindings/WebServer.cpp
 
 // FFI exports used from Lua, which cppcheck can't see
 unusedStructMember:Runtime/Bindings/stduuid_ffi.hpp
