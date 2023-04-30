@@ -1,9 +1,12 @@
+#include <macros.hpp>
+
 #include "WebServer.hpp"
 
 #include "uws_ffi.hpp"
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 WebServer::WebServer() {
 	// TLS setup and managing creation options should be handled here, but it's not yet implemented
@@ -11,8 +14,11 @@ WebServer::WebServer() {
 
 void WebServer::StartListening(int port) {
 	m_uwsAppHandle.listen(port, [this, port](auto* listenSocket) {
-		if(!listenSocket)
-			return UWS_DEBUG("Failed to listen on port ", port);
+		if(!listenSocket) {
+			std::cerr << "[" << FROM_HERE << "] "
+					  << "Failed to listen on port " << port << std::endl;
+			return;
+		}
 
 		UWS_DEBUG("Now listening on port ", port);
 		m_usListenSocket = listenSocket;
@@ -25,11 +31,13 @@ void WebServer::StopListening() {
 	UWS_DEBUG("Shutting down ...");
 
 	if(m_usListenSocket == nullptr) {
-		std::cerr << "Failed shutdown: m_usListenSocket is nullptr" << std::endl;
+		std::cerr << "[" << FROM_HERE << "] "
+				  << "Failed shutdown: m_usListenSocket is nullptr" << std::endl;
 		return;
 	}
 
 	DisconnectAllClients();
+	AbortAllConnections();
 
 	us_listen_socket_close(false, m_usListenSocket);
 	m_usListenSocket = nullptr;
@@ -76,6 +84,70 @@ void WebServer::AddWebSocketRoute(std::string route) {
 	UWS_DEBUG("WebSocket route registered: ", route);
 }
 
+void WebServer::AddGetRoute(std::string route) {
+	m_uwsAppHandle.get(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("GET", route, response, request);
+	});
+
+	UWS_DEBUG("GET route registered: ", route);
+}
+
+void WebServer::AddPostRoute(std::string route) {
+	m_uwsAppHandle.post(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("POST", route, response, request);
+	});
+
+	UWS_DEBUG("POST route registered: ", route);
+}
+
+void WebServer::AddOptionsRoute(std::string route) {
+	m_uwsAppHandle.options(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("OPTIONS", route, response, request);
+	});
+
+	UWS_DEBUG("OPTIONS route registered: ", route);
+}
+
+void WebServer::AddDeleteRoute(std::string route) {
+	m_uwsAppHandle.del(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("DELETE", route, response, request);
+	});
+
+	UWS_DEBUG("DELETE route registered: ", route);
+}
+
+void WebServer::AddPatchRoute(std::string route) {
+	m_uwsAppHandle.patch(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("PATCH", route, response, request);
+	});
+
+	UWS_DEBUG("PATCH route registered: ", route);
+}
+
+void WebServer::AddPutRoute(std::string route) {
+	m_uwsAppHandle.put(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("PUT", route, response, request);
+	});
+
+	UWS_DEBUG("PUT route registered: ", route);
+}
+
+void WebServer::AddHeadRoute(std::string route) {
+	m_uwsAppHandle.head(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("HEAD", route, response, request);
+	});
+
+	UWS_DEBUG("HEAD route registered: ", route);
+}
+
+void WebServer::AddAnyRoute(std::string route) {
+	m_uwsAppHandle.any(route, [this, route](auto* response, auto* request) {
+		CreateRouteHandler("ANY", route, response, request);
+	});
+
+	UWS_DEBUG("ANY route registered: ", route);
+}
+
 void WebServer::OnUpgrade(auto* response, auto* request, auto* socketContext) {
 	uuid_rfc_string_t clientID;
 	uuid_create_mt19937(&clientID);
@@ -120,6 +192,37 @@ void WebServer::OnWebSocketMessage(auto* websocket, std::string_view message, uW
 	websocket->send(message, opCode, shouldCompressMessage);
 }
 
+void WebServer::OnRequest(std::string requestID, auto* response, auto* request, std::string route) {
+	UWS_DEBUG("HTTP request started: ", requestID, " (Headers complete)");
+	m_deferredEventsQueue.emplace(DeferredEvent::Type::HTTP_START, requestID, "");
+
+	StoreRequestDetails(requestID, response, request, route);
+	SetCallbackHandlers(requestID, response, request);
+}
+
+void WebServer::OnChunkReceived(std::string requestID, std::string_view chunk) {
+	UWS_DEBUG("HTTP request updated: ", requestID, " (", chunk.length(), " bytes received)");
+	m_deferredEventsQueue.emplace(DeferredEvent::Type::HTTP_DATA, requestID, std::string(chunk));
+}
+
+void WebServer::OnLastChunkReceived(std::string requestID, std::string_view chunk) {
+	UWS_DEBUG("HTTP request finished: ", requestID, " (", chunk.length(), " bytes received)");
+	m_deferredEventsQueue.emplace(DeferredEvent::Type::HTTP_END, requestID, std::string(chunk));
+}
+
+void WebServer::OnConnectionWritable(std::string requestID, long unsigned int offset) {
+	UWS_DEBUG("HTTP connection writable: ", requestID, " (offset is now ", offset, ")");
+
+	m_deferredEventsQueue.emplace(DeferredEvent::Type::HTTP_WRITABLE, requestID, "");
+}
+
+void WebServer::OnConnectionAborted(std::string requestID) {
+	UWS_DEBUG("HTTP connection aborted: ", requestID, " (Peer has gone away)");
+
+	m_deferredEventsQueue.emplace(DeferredEvent::Type::HTTP_ABORT, requestID, "");
+	m_httpClientsMap.erase(requestID);
+}
+
 size_t WebServer::GetNumConnectedClients() {
 	// Also includes faded clients: PurgeFadedClients() can remove them before calling this if needed
 	return m_websocketClientsMap.size();
@@ -162,6 +265,28 @@ size_t WebServer::PurgeFadedClients() {
 	}
 
 	return numPurgedClients;
+}
+
+size_t WebServer::AbortAllConnections() {
+
+	UWS_DEBUG("Aborting pending requests ...");
+
+	size_t numAbortedConnections = 0;
+
+	for(const auto& [requestID, httpMessageData] : m_httpClientsMap) {
+
+		httpMessageData.response->writeStatus("503 Service Unavailable");
+		httpMessageData.response->writeHeader("Content-Type", "text/plain");
+		httpMessageData.response->end("Service Unavailable: Server shutting down");
+
+		UWS_DEBUG("HTTP request aborted: ", requestID, " (Server shutting down)");
+
+		numAbortedConnections++;
+	}
+
+	m_httpClientsMap.clear();
+
+	return numAbortedConnections;
 }
 
 WebSocket::SendStatus WebServer::BroadcastTextMessage(const std::string& message) {
@@ -227,6 +352,128 @@ WebSocket::SendStatus WebServer::SendCompressedTextMessageToClient(const std::st
 	return websocket->send(message, uWS::OpCode::TEXT, true /* compress */);
 }
 
+HttpSendStatus WebServer::WriteResponse(const std::string& requestID, const std::string& data) {
+	auto iterator = m_httpClientsMap.find(requestID);
+	if(iterator == m_httpClientsMap.end()) {
+		return HttpSendStatus::None;
+	}
+
+	auto& response = iterator->second.response;
+	bool success = response->write(data);
+
+	if(!success) return HttpSendStatus::None;
+	return HttpSendStatus::SentAndEnded;
+}
+
+HttpSendStatus WebServer::EndResponse(const std::string& requestID, const std::string& data) {
+	UWS_DEBUG("HTTP request finished: ", requestID, " (Sending response with ", data.size(), " bytes)");
+
+	auto iterator = m_httpClientsMap.find(requestID);
+	if(iterator == m_httpClientsMap.end()) {
+		return HttpSendStatus::None;
+	}
+
+	auto& response = iterator->second.response;
+
+	response->end(data);
+	m_httpClientsMap.erase(iterator);
+	return HttpSendStatus::SentAndEnded;
+}
+
+HttpSendStatus WebServer::TryEndResponse(const std::string& requestID, const std::string& data) {
+	auto iterator = m_httpClientsMap.find(requestID);
+	if(iterator == m_httpClientsMap.end()) {
+		return HttpSendStatus::None;
+	}
+
+	auto& response = iterator->second.response;
+	auto result = response->tryEnd(data);
+	if(result.second) {
+		m_httpClientsMap.erase(iterator);
+	}
+
+	HttpSendStatus encodedResult = static_cast<HttpSendStatus>((result.first ? 1 : 0) | (result.second ? 2 : 0));
+	return encodedResult;
+}
+
+bool WebServer::HasRequest(std::string requestID) {
+	return (m_httpClientsMap.find(requestID) != m_httpClientsMap.end());
+}
+
+bool WebServer::GetRequestMethod(const std::string& requestID, char* buffer, size_t bufferSize) {
+	auto httpMessageDataIter = m_httpClientsMap.find(requestID);
+	if(httpMessageDataIter != m_httpClientsMap.end()) {
+		strncpy(buffer, httpMessageDataIter->second.requestDetails.method.c_str(), bufferSize - 1);
+		buffer[bufferSize - 1] = '\0';
+		return true;
+	}
+	return false;
+}
+
+bool WebServer::GetRequestURL(const std::string& requestID, char* buffer, size_t bufferSize) {
+	auto httpMessageDataIter = m_httpClientsMap.find(requestID);
+	if(httpMessageDataIter != m_httpClientsMap.end()) {
+		strncpy(buffer, httpMessageDataIter->second.requestDetails.url.c_str(), bufferSize - 1);
+		buffer[bufferSize - 1] = '\0';
+		return true;
+	}
+	return false;
+}
+
+bool WebServer::GetRequestQuery(const std::string& requestID, char* buffer, size_t bufferSize) {
+	auto httpMessageDataIter = m_httpClientsMap.find(requestID);
+	if(httpMessageDataIter != m_httpClientsMap.end()) {
+		strncpy(buffer, httpMessageDataIter->second.requestDetails.query.c_str(), bufferSize - 1);
+		buffer[bufferSize - 1] = '\0';
+		return true;
+	}
+	return false;
+}
+
+bool WebServer::GetRequestHeader(const std::string& requestID, const std::string& headerName, char* buffer, size_t bufferSize) {
+	auto httpMessageDataIter = m_httpClientsMap.find(requestID);
+	if(httpMessageDataIter != m_httpClientsMap.end()) {
+		auto headersIter = httpMessageDataIter->second.requestDetails.headers.find(headerName);
+		if(headersIter != httpMessageDataIter->second.requestDetails.headers.end()) {
+			strncpy(buffer, headersIter->second.c_str(), bufferSize - 1);
+			buffer[bufferSize - 1] = '\0';
+			return true;
+		}
+	}
+	return false;
+}
+
+bool WebServer::GetRequestEndpoint(const std::string& requestID, char* buffer, size_t bufferSize) {
+	auto httpMessageDataIter = m_httpClientsMap.find(requestID);
+	if(httpMessageDataIter != m_httpClientsMap.end()) {
+		strncpy(buffer, httpMessageDataIter->second.requestDetails.endpoint.c_str(), bufferSize - 1);
+		buffer[bufferSize - 1] = '\0';
+		return true;
+	}
+	return false;
+}
+
+bool WebServer::GetSerializedRequestHeaders(const std::string& requestID, char* buffer, size_t bufferSize) {
+	auto httpMessageDataIter = m_httpClientsMap.find(requestID);
+	if(httpMessageDataIter != m_httpClientsMap.end()) {
+		std::stringstream ss;
+		for(const auto& header : httpMessageDataIter->second.requestDetails.headers) {
+			ss << header.first << ": " << header.second << "\r\n";
+		}
+		std::string serializedHeaders = ss.str();
+
+		if(serializedHeaders.size() + 1 > bufferSize) {
+			// Not enough space in the buffer to store the serialized headers.
+			return false;
+		}
+
+		strncpy(buffer, serializedHeaders.c_str(), bufferSize - 1);
+		buffer[bufferSize - 1] = '\0';
+		return true;
+	}
+	return false;
+}
+
 size_t WebServer::GetNumDeferredEvents() {
 	return m_deferredEventsQueue.size();
 }
@@ -237,17 +484,20 @@ bool WebServer::HasDeferredEvents() {
 
 void WebServer::GetNextDeferredEvent(uws_webserver_event_t* preallocatedEventBuffer) {
 	if(preallocatedEventBuffer == nullptr) {
-		std::cerr << "Failed to GetNextDeferredEvent: Missing preallocated event buffer" << std::endl;
+		std::cerr << "[" << FROM_HERE << "] "
+				  << "Failed to GetNextDeferredEvent: Missing preallocated event buffer" << std::endl;
 		return;
 	}
 
 	if(preallocatedEventBuffer->payload == nullptr) {
-		std::cerr << "Failed to GetNextDeferredEvent: Uninitialized payload buffer" << std::endl;
+		std::cerr << "[" << FROM_HERE << "] "
+				  << "Failed to GetNextDeferredEvent: Uninitialized payload buffer" << std::endl;
 		return;
 	}
 
 	if(m_deferredEventsQueue.empty()) {
-		std::cerr << "Failed to GetNextDeferredEvent: Queue is empty" << std::endl;
+		std::cerr << "[" << FROM_HERE << "] "
+				  << "Failed to GetNextDeferredEvent: Queue is empty" << std::endl;
 		return;
 	}
 
@@ -261,7 +511,9 @@ void WebServer::GetNextDeferredEvent(uws_webserver_event_t* preallocatedEventBuf
 
 	// If the preallocated buffer is too small, there's only so much we can do here
 	size_t payloadLength = std::min(m_maxPayloadSize - 1, event.payload.size());
-	if(payloadLength < event.payload.size()) std::cerr << "Warning: Payload buffer too small (data may be truncated)" << std::endl;
+	if(payloadLength < event.payload.size())
+		std::cerr << "[" << FROM_HERE << "] "
+				  << "Warning: Payload buffer too small (data may be truncated)" << std::endl;
 
 	memcpy(preallocatedEventBuffer->payload, event.payload.c_str(), payloadLength);
 	preallocatedEventBuffer->payload[payloadLength] = '\0';
@@ -305,4 +557,64 @@ void WebServer::DumpDeferredEvents() {
 	}
 
 	m_deferredEventsQueue = std::move(tempQueue);
+}
+
+inline std::string WebServer::GetCurrentTimeAsText() {
+	auto now = std::chrono::system_clock::now();
+	auto currentTimeSinceEpoch = std::chrono::system_clock::to_time_t(now);
+	std::string currentTimeString = std::ctime(&currentTimeSinceEpoch);
+	currentTimeString.pop_back(); // Removes the redundant \n
+
+	return currentTimeString;
+}
+
+inline void WebServer::CreateRouteHandler(std::string method, std::string route, auto* response, auto* request) {
+	uuid_rfc_string_t requestID;
+	uuid_create_mt19937(&requestID);
+
+	UWS_DEBUG(method, " request ", requestID, " received from ", response->getRemoteAddressAsText(), " on ", GetCurrentTimeAsText(), " for URL ", request->getUrl());
+
+	OnRequest(requestID, response, request, route);
+}
+
+inline bool WebServer::StoreRequestDetails(std::string requestID, auto* response, auto* request, std::string route) {
+	bool hasAnotherRequestWithThisID = (m_httpClientsMap.find(requestID) != m_httpClientsMap.end());
+	if(hasAnotherRequestWithThisID) { // Extremely unlikely, but better safe than sorry?
+		std::cerr << "[" << FROM_HERE << "] "
+				  << "Request ID " << requestID << " is already in use" << std::endl;
+		return false;
+	}
+
+	// The request may be deleted before LuaJIT gets to query it, so we must copy what we need for future reference
+	HttpRequestDetails requestDetails;
+	requestDetails.method = request->getMethod();
+	requestDetails.url = request->getUrl();
+	requestDetails.query = request->getQuery();
+	requestDetails.endpoint = route;
+
+	for(const auto& [key, value] : *request) {
+		requestDetails.headers[std::string(key)] = std::string(value);
+	}
+
+	std::shared_ptr<HttpResponse> sharedResponsePointer(response, [](HttpResponse*) {}); // Empty deleter because uws owns the data
+	m_httpClientsMap.emplace(requestID, HttpMessageData { requestDetails, sharedResponsePointer });
+
+	return true;
+}
+
+inline void WebServer::SetCallbackHandlers(std::string requestID, auto* response, auto* request) {
+	response->onData([this, requestID](const std::string_view& chunk, bool isLast) {
+		if(isLast) OnLastChunkReceived(requestID, chunk);
+		else OnChunkReceived(requestID, chunk);
+	});
+
+	response->onAborted([this, requestID]() {
+		OnConnectionAborted(requestID);
+	});
+
+	response->onWritable([this, requestID](long unsigned int offset) {
+		OnConnectionWritable(requestID, offset);
+		// Always continue to poll for writability, for now - there's probably no way to control this from LuaJIT?
+		return true;
+	});
 }
