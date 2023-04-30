@@ -97,6 +97,10 @@ HttpSendStatus uws_webserver_response_try_end(uws_webserver_t server, const char
 	return static_cast<WebServer*>(server)->TryEndResponse(std::string(request_id), std::string(data, length));
 }
 
+bool uws_webserver_response_status(uws_webserver_t server, const char* request_id, const char* status_code_and_text) {
+	return static_cast<WebServer*>(server)->WriteResponseStatus(std::string(request_id), status_code_and_text);
+}
+
 bool uws_webserver_has_request(uws_webserver_t server, const char* request_id) {
 	return static_cast<WebServer*>(server)->HasRequest(std::string(request_id));
 }
@@ -219,6 +223,7 @@ namespace uws_ffi {
 		uwebsockets_exports_table.uws_webserver_response_write = uws_webserver_response_write;
 		uwebsockets_exports_table.uws_webserver_response_end = uws_webserver_response_end;
 		uwebsockets_exports_table.uws_webserver_response_try_end = uws_webserver_response_try_end;
+		uwebsockets_exports_table.uws_webserver_response_status = uws_webserver_response_status;
 
 		uwebsockets_exports_table.uws_webserver_has_request = uws_webserver_has_request;
 		uwebsockets_exports_table.uws_webserver_request_method = uws_webserver_request_method;
