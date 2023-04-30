@@ -406,6 +406,16 @@ bool WebServer::WriteResponseStatus(const std::string& requestID, const std::str
 	return response->writeStatus(statusCodeAndText);
 }
 
+bool WebServer::WriteResponseHeader(const std::string& requestID, const std::string& key, const std::string& value) {
+	auto iterator = m_httpClientsMap.find(requestID);
+	if(iterator == m_httpClientsMap.end()) {
+		return false;
+	}
+
+	auto& response = iterator->second.response;
+	return response->writeHeader(key, value);
+}
+
 bool WebServer::HasRequest(std::string requestID) {
 	return (m_httpClientsMap.find(requestID) != m_httpClientsMap.end());
 }
