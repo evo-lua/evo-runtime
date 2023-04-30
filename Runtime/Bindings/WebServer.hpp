@@ -118,6 +118,7 @@ public:
 	HttpSendStatus WriteResponse(const std::string& requestID, const std::string& data);
 	HttpSendStatus EndResponse(const std::string& requestID, const std::string& data);
 	HttpSendStatus TryEndResponse(const std::string& requestID, const std::string& data);
+	bool WriteResponseStatus(const std::string& requestID, const std::string& statusCodeAndText);
 
 	// Async polling (Lua/C++ interop)
 	size_t GetNumDeferredEvents();
