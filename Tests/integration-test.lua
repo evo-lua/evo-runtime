@@ -7,6 +7,7 @@ local testFiles = {
 	"Tests/Integration/http-routing.lua",
 	"Tests/Integration/http-event-queue.lua",
 	"Tests/Integration/http-shutdown-with-503.lua",
+	"Tests/Integration/http-response-status.lua",
 }
 
 local numFailedTests = C_Runtime.RunBasicTests(testFiles)
