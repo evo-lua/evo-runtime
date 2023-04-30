@@ -126,18 +126,18 @@ function WebSocketServer:OnEvent(eventName, payload)
 	if eventHandler then
 		eventHandler(self, eventName, payload)
 	else
-		self:UNKNOWN_OR_INVALID_WEBSOCKET_EVENT(eventName, payload)
+		self:UNKNOWN_OR_INVALID_WEBSERVER_EVENT(eventName, payload)
 	end
 end
 
 function WebSocketServer:ASYNC_POLLING_UPDATE() end
 
-function WebSocketServer:WEBSOCKET_SERVER_STARTED(event, payload)
-	print("[WebSocketServer] WEBSOCKET_SERVER_STARTED")
+function WebSocketServer:SERVER_STARTED_LISTENING(event, payload)
+	print("[WebSocketServer] SERVER_STARTED_LISTENING")
 end
 
-function WebSocketServer:WEBSOCKET_SERVER_STOPPED(event, payload)
-	print("[WebSocketServer] WEBSOCKET_SERVER_STOPPED")
+function WebSocketServer:SERVER_STOPPED_LISTENING(event, payload)
+	print("[WebSocketServer] SERVER_STOPPED_LISTENING")
 end
 
 function WebSocketServer:WEBSOCKET_CONNECTION_ESTABLISHED(event, payload)
@@ -152,8 +152,8 @@ function WebSocketServer:WEBSOCKET_MESSAGE_RECEIVED(event, payload)
 	print("[WebSocketServer] WEBSOCKET_MESSAGE_RECEIVED", #payload.message, payload.clientID)
 end
 
-function WebSocketServer:UNKNOWN_OR_INVALID_WEBSOCKET_EVENT(event, payload)
-	print("[WebSocketServer] UNKNOWN_OR_INVALID_WEBSOCKET_EVENT")
+function WebSocketServer:UNKNOWN_OR_INVALID_WEBSERVER_EVENT(event, payload)
+	print("[WebSocketServer] UNKNOWN_OR_INVALID_WEBSERVER_EVENT")
 
 	dump(payload)
 	error(format("Encountered unknown WebSocket event %s (this should never happen)", event), 0)

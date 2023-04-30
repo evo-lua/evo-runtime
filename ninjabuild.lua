@@ -27,6 +27,7 @@ local EvoBuildTarget = {
 		"Runtime/API/C_FileSystem.lua",
 		"Runtime/API/C_Runtime.lua",
 		"Runtime/API/C_Timer.lua",
+		"Runtime/API/Networking/HttpServer.lua",
 		"Runtime/API/Networking/WebSocketTestClient.lua",
 		"Runtime/API/Networking/WebSocketServer.lua",
 		"Runtime/Bindings/stduuid.lua",
@@ -56,6 +57,7 @@ local EvoBuildTarget = {
 	},
 	includeDirectories = {
 		NinjaBuildTools.DEFAULT_BUILD_DIRECTORY_NAME, -- For auto-generated headers (e.g., PCRE2)
+		"Runtime",
 		"Runtime/Bindings",
 		"deps/LuaJIT/LuaJIT/src",
 		"deps/luvit/luv/src",

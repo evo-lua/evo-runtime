@@ -41,6 +41,10 @@ void uws_webserver_dump_config(uws_webserver_t server) {
 	static_cast<WebServer*>(server)->DumpConfiguredSettings();
 }
 
+void uws_webserver_dump_events(uws_webserver_t server) {
+	static_cast<WebServer*>(server)->DumpDeferredEvents();
+}
+
 size_t uws_webserver_get_client_count(uws_webserver_t server) {
 	return static_cast<WebServer*>(server)->GetNumConnectedClients();
 }
@@ -81,26 +85,102 @@ int uws_webserver_send_compressed(uws_webserver_t server, const char* compressed
 	return static_cast<WebServer*>(server)->SendCompressedTextMessageToClient(std::string(compressed, length), std::string(client_id));
 }
 
+HttpSendStatus uws_webserver_response_write(uws_webserver_t server, const char* request_id, const char* data, size_t length) {
+	return static_cast<WebServer*>(server)->WriteResponse(std::string(request_id), std::string(data, length));
+}
+
+HttpSendStatus uws_webserver_response_end(uws_webserver_t server, const char* request_id, const char* data, size_t length) {
+	return static_cast<WebServer*>(server)->EndResponse(std::string(request_id), std::string(data, length));
+}
+
+HttpSendStatus uws_webserver_response_try_end(uws_webserver_t server, const char* request_id, const char* data, size_t length) {
+	return static_cast<WebServer*>(server)->TryEndResponse(std::string(request_id), std::string(data, length));
+}
+
+bool uws_webserver_has_request(uws_webserver_t server, const char* request_id) {
+	return static_cast<WebServer*>(server)->HasRequest(std::string(request_id));
+}
+
+bool uws_webserver_request_method(uws_webserver_t server, const char* request_id, char* data, size_t length) {
+	return static_cast<WebServer*>(server)->GetRequestMethod(std::string(request_id), data, length);
+}
+
+bool uws_webserver_request_url(uws_webserver_t server, const char* request_id, char* data, size_t length) {
+	return static_cast<WebServer*>(server)->GetRequestURL(std::string(request_id), data, length);
+}
+
+bool uws_webserver_request_query(uws_webserver_t server, const char* request_id, char* data, size_t length) {
+	return static_cast<WebServer*>(server)->GetRequestQuery(std::string(request_id), data, length);
+}
+
+bool uws_webserver_request_endpoint(uws_webserver_t server, const char* request_id, char* data, size_t length) {
+	return static_cast<WebServer*>(server)->GetRequestEndpoint(std::string(request_id), data, length);
+}
+
+bool uws_webserver_request_serialized_headers(uws_webserver_t server, const char* request_id, char* data, size_t length) {
+	return static_cast<WebServer*>(server)->GetSerializedRequestHeaders(std::string(request_id), data, length);
+}
+
+bool uws_webserver_request_header_value(uws_webserver_t server, const char* request_id, char* header, char* data, size_t length) {
+	return static_cast<WebServer*>(server)->GetRequestHeader(std::string(request_id), std::string(header), data, length);
+}
+
+// Can't use C++ enum types here because LuaJIT doesn't understand them
+static const std::unordered_map<int, const char*> eventNameLookupTable = {
+	{ 0, "UNKNOWN_OR_INVALID_WEBSERVER_EVENT" },
+	{ 1, "WEBSOCKET_CONNECTION_ESTABLISHED" },
+	{ 2, "WEBSOCKET_MESSAGE_RECEIVED" },
+	{ 3, "WEBSOCKET_CONNECTION_CLOSED" },
+	{ 4, "SERVER_STARTED_LISTENING" },
+	{ 5, "SERVER_STOPPED_LISTENING" },
+	{ 6, "HTTP_REQUEST_STARTED" },
+	{ 7, "HTTP_DATA_RECEIVED" },
+	{ 8, "HTTP_REQUEST_FINISHED" },
+	{ 9, "HTTP_CONNECTION_ABORTED" },
+	{ 10, "HTTP_CONNECTION_WRITABLE" }
+};
+
 const char* uws_event_name(uws_webserver_event_t event) {
-	switch(event.type) {
-	case DeferredEvent::Type::OPEN:
-		return "WEBSOCKET_CONNECTION_ESTABLISHED";
-	case DeferredEvent::Type::MESSAGE:
-		return "WEBSOCKET_MESSAGE_RECEIVED";
-	case DeferredEvent::Type::CLOSE:
-		return "WEBSOCKET_CONNECTION_CLOSED";
-	case DeferredEvent::Type::LISTEN:
-		return "WEBSOCKET_SERVER_STARTED";
-	case DeferredEvent::Type::SHUTDOWN:
-		return "WEBSOCKET_SERVER_STOPPED";
-	case DeferredEvent::Type::INVALID:
-	default:
-		return "UNKNOWN_OR_INVALID_WEBSOCKET_EVENT";
-	}
+	auto iterator = eventNameLookupTable.find(event.type);
+
+	if(iterator != eventNameLookupTable.end()) return iterator->second;
+	else return "UNKNOWN_OR_INVALID_WEBSERVER_EVENT";
 }
 
 void uws_webserver_add_websocket_route(uws_webserver_t server, const char* route) {
 	static_cast<WebServer*>(server)->AddWebSocketRoute(std::string(route));
+}
+
+void uws_webserver_add_get_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddGetRoute(std::string(route));
+}
+
+void uws_webserver_add_post_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddPostRoute(std::string(route));
+}
+
+void uws_webserver_add_options_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddOptionsRoute(std::string(route));
+}
+
+void uws_webserver_add_delete_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddDeleteRoute(std::string(route));
+}
+
+void uws_webserver_add_patch_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddPatchRoute(std::string(route));
+}
+
+void uws_webserver_add_put_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddPutRoute(std::string(route));
+}
+
+void uws_webserver_add_head_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddHeadRoute(std::string(route));
+}
+
+void uws_webserver_add_any_route(uws_webserver_t server, const char* route) {
+	static_cast<WebServer*>(server)->AddAnyRoute(std::string(route));
 }
 
 namespace uws_ffi {
@@ -122,6 +202,7 @@ namespace uws_ffi {
 
 		uwebsockets_exports_table.uws_webserver_set_echo_mode = uws_webserver_set_echo_mode;
 		uwebsockets_exports_table.uws_webserver_dump_config = uws_webserver_dump_config;
+		uwebsockets_exports_table.uws_webserver_dump_events = uws_webserver_dump_events;
 
 		uwebsockets_exports_table.uws_webserver_get_client_count = uws_webserver_get_client_count;
 		uwebsockets_exports_table.uws_webserver_get_event_count = uws_webserver_get_event_count;
@@ -135,7 +216,27 @@ namespace uws_ffi {
 		uwebsockets_exports_table.uws_webserver_send_binary = uws_webserver_send_binary;
 		uwebsockets_exports_table.uws_webserver_send_compressed = uws_webserver_send_compressed;
 
+		uwebsockets_exports_table.uws_webserver_response_write = uws_webserver_response_write;
+		uwebsockets_exports_table.uws_webserver_response_end = uws_webserver_response_end;
+		uwebsockets_exports_table.uws_webserver_response_try_end = uws_webserver_response_try_end;
+
+		uwebsockets_exports_table.uws_webserver_has_request = uws_webserver_has_request;
+		uwebsockets_exports_table.uws_webserver_request_method = uws_webserver_request_method;
+		uwebsockets_exports_table.uws_webserver_request_url = uws_webserver_request_url;
+		uwebsockets_exports_table.uws_webserver_request_query = uws_webserver_request_query;
+		uwebsockets_exports_table.uws_webserver_request_endpoint = uws_webserver_request_endpoint;
+		uwebsockets_exports_table.uws_webserver_request_serialized_headers = uws_webserver_request_serialized_headers;
+		uwebsockets_exports_table.uws_webserver_request_header_value = uws_webserver_request_header_value;
+
 		uwebsockets_exports_table.uws_webserver_add_websocket_route = uws_webserver_add_websocket_route;
+		uwebsockets_exports_table.uws_webserver_add_get_route = uws_webserver_add_get_route;
+		uwebsockets_exports_table.uws_webserver_add_post_route = uws_webserver_add_post_route;
+		uwebsockets_exports_table.uws_webserver_add_options_route = uws_webserver_add_options_route;
+		uwebsockets_exports_table.uws_webserver_add_delete_route = uws_webserver_add_delete_route;
+		uwebsockets_exports_table.uws_webserver_add_patch_route = uws_webserver_add_patch_route;
+		uwebsockets_exports_table.uws_webserver_add_put_route = uws_webserver_add_put_route;
+		uwebsockets_exports_table.uws_webserver_add_head_route = uws_webserver_add_head_route;
+		uwebsockets_exports_table.uws_webserver_add_any_route = uws_webserver_add_any_route;
 
 		return &uwebsockets_exports_table;
 	}
