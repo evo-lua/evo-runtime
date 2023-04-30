@@ -125,32 +125,26 @@ bool uws_webserver_request_header_value(uws_webserver_t server, const char* requ
 	return static_cast<WebServer*>(server)->GetRequestHeader(std::string(request_id), std::string(header), data, length);
 }
 
+// Can't use C++ enum types here because LuaJIT doesn't understand them
+static const std::unordered_map<int, const char*> eventNameLookupTable = {
+	{ 0, "UNKNOWN_OR_INVALID_WEBSERVER_EVENT" },
+	{ 1, "WEBSOCKET_CONNECTION_ESTABLISHED" },
+	{ 2, "WEBSOCKET_MESSAGE_RECEIVED" },
+	{ 3, "WEBSOCKET_CONNECTION_CLOSED" },
+	{ 4, "SERVER_STARTED_LISTENING" },
+	{ 5, "SERVER_STOPPED_LISTENING" },
+	{ 6, "HTTP_REQUEST_STARTED" },
+	{ 7, "HTTP_DATA_RECEIVED" },
+	{ 8, "HTTP_REQUEST_FINISHED" },
+	{ 9, "HTTP_CONNECTION_ABORTED" },
+	{ 10, "HTTP_CONNECTION_WRITABLE" }
+};
+
 const char* uws_event_name(uws_webserver_event_t event) {
-	switch(event.type) {
-	case DeferredEvent::Type::OPEN:
-		return "WEBSOCKET_CONNECTION_ESTABLISHED";
-	case DeferredEvent::Type::MESSAGE:
-		return "WEBSOCKET_MESSAGE_RECEIVED";
-	case DeferredEvent::Type::CLOSE:
-		return "WEBSOCKET_CONNECTION_CLOSED";
-	case DeferredEvent::Type::LISTEN:
-		return "SERVER_STARTED_LISTENING";
-	case DeferredEvent::Type::SHUTDOWN:
-		return "SERVER_STOPPED_LISTENING";
-	case DeferredEvent::Type::HTTP_START:
-		return "HTTP_REQUEST_STARTED";
-	case DeferredEvent::Type::HTTP_DATA:
-		return "HTTP_DATA_RECEIVED";
-	case DeferredEvent::Type::HTTP_END:
-		return "HTTP_REQUEST_FINISHED";
-	case DeferredEvent::Type::HTTP_ABORT:
-		return "HTTP_CONNECTION_ABORTED";
-	case DeferredEvent::Type::HTTP_WRITABLE:
-		return "HTTP_CONNECTION_WRITABLE";
-	case DeferredEvent::Type::INVALID:
-	default:
-		return "UNKNOWN_OR_INVALID_WEBSERVER_EVENT";
-	}
+	auto iterator = eventNameLookupTable.find(event.type);
+
+	if(iterator != eventNameLookupTable.end()) return iterator->second;
+	else return "UNKNOWN_OR_INVALID_WEBSERVER_EVENT";
 }
 
 void uws_webserver_add_websocket_route(uws_webserver_t server, const char* route) {
