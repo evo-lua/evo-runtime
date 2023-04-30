@@ -148,6 +148,10 @@ function HttpServer:WriteStatus(requestID, statusCodeAndText)
 	return uws.bindings.uws_webserver_response_status(self.nativeHandle, requestID, statusCodeAndText)
 end
 
+function HttpServer:WriteHeader(requestID, headerName, headerValue)
+	return uws.bindings.uws_webserver_response_header(self.nativeHandle, requestID, headerName, headerValue)
+end
+
 function HttpServer:GetRequestEndpoint(requestID)
 	local cdata = self.preallocatedRequestDataBuffer
 
