@@ -396,6 +396,16 @@ HttpSendStatus WebServer::TryEndResponse(const std::string& requestID, const std
 	return encodedResult;
 }
 
+bool WebServer::WriteResponseStatus(const std::string& requestID, const std::string& statusCodeAndText) {
+	auto iterator = m_httpClientsMap.find(requestID);
+	if(iterator == m_httpClientsMap.end()) {
+		return false;
+	}
+
+	auto& response = iterator->second.response;
+	return response->writeStatus(statusCodeAndText);
+}
+
 bool WebServer::HasRequest(std::string requestID) {
 	return (m_httpClientsMap.find(requestID) != m_httpClientsMap.end());
 }

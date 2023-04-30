@@ -53,6 +53,7 @@ typedef struct static_uws_exports_table {
 	HttpSendStatus (*uws_webserver_response_write)(uws_webserver_t server, const char* request_id, const char* data, size_t length);
 	HttpSendStatus (*uws_webserver_response_end)(uws_webserver_t server, const char* request_id, const char* data, size_t length);
 	HttpSendStatus (*uws_webserver_response_try_end)(uws_webserver_t server, const char* request_id, const char* data, size_t length);
+	bool (*uws_webserver_response_status)(uws_webserver_t server, const char* request_id, const char* status_code_and_text);
 
 	bool (*uws_webserver_has_request)(uws_webserver_t server, const char* request_id);
 	bool (*uws_webserver_request_method)(uws_webserver_t server, const char* request_id, char* data, size_t length);
