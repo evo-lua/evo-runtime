@@ -117,7 +117,7 @@ function C_BuildTools.DiscoverMergeCommitsBetween(oldVersion, newVersion)
 end
 
 function C_BuildTools.DiscoverCommitAuthorsBetween(oldVersion, newVersion)
-	local gitLogCommand = 'git log --pretty=format:"%an" v3.0.0..v3.1.0 | sort | uniq'
+	local gitLogCommand = 'git log --pretty=format:"%an" ' .. oldVersion .. ".." .. newVersion .. " | sort | uniq"
 
 	local committers = C_BuildTools.GetOutputFromShellCommand(gitLogCommand)
 	committers = string.explode(committers, "\n") -- By default, git log outputs one entry per line
