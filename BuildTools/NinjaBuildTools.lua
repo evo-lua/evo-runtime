@@ -76,7 +76,7 @@ end
 
 function C_BuildTools.DiscoverPreviousGitVersionTag()
 	-- Need to exclude non-versioned tags, but git tag can't do the filtering by itself...
-	local gitDescribeCommand = "git tag --sort=-creatordate | grep v[0-9]*.[0-9]*.[0-9]* | head -1"
+	local gitDescribeCommand = 'git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*" HEAD~1'
 	local versionTag = C_BuildTools.GetOutputFromShellCommand(gitDescribeCommand)
 
 	-- Strip final newline since that's not very useful outside of the shell
@@ -117,7 +117,7 @@ function C_BuildTools.DiscoverMergeCommitsBetween(oldVersion, newVersion)
 end
 
 function C_BuildTools.DiscoverCommitAuthorsBetween(oldVersion, newVersion)
-	local gitLogCommand = 'git log --pretty=format:"%an" v3.0.0..v3.1.0 | sort | uniq'
+	local gitLogCommand = 'git log --pretty=format:"%an" ' .. oldVersion .. ".." .. newVersion .. " | sort | uniq"
 
 	local committers = C_BuildTools.GetOutputFromShellCommand(gitLogCommand)
 	committers = string.explode(committers, "\n") -- By default, git log outputs one entry per line
@@ -238,53 +238,54 @@ function C_BuildTools.StringifyChangelogContents(changelogEntry)
 	return markdownFile
 end
 
--- This is NOT obsolete, but needs to be added to the C++ version of the runtime still
 function C_BuildTools.GenerateChangeLog(from, to)
-	-- local currentVersionTag = C_BuildTools.DiscoverGitVersionTag()
-	-- local previousVersionTag = C_BuildTools.DiscoverPreviousGitVersionTag()
+	local transform = require("transform")
 
-	-- previousVersionTag = from or previousVersionTag
-	-- currentVersionTag = to or currentVersionTag
+	local currentVersionTag = C_BuildTools.DiscoverGitVersionTag()
+	local previousVersionTag = C_BuildTools.DiscoverPreviousGitVersionTag()
 
-	-- DEBUG("Generating changelog for release " .. transform.green(currentVersionTag))
-	-- DEBUG(
-	-- 	"Including changes from " .. transform.green(previousVersionTag) .. " to " .. transform.green(currentVersionTag)
-	-- )
+	previousVersionTag = from or previousVersionTag
+	currentVersionTag = to or currentVersionTag
 
-	-- local changes = C_BuildTools.GetChangelogEntry(previousVersionTag, currentVersionTag)
-	-- local markdownChanges = C_BuildTools.StringifyChangelogContents(changes)
+	print("Generating changelog for release " .. transform.green(currentVersionTag))
+	print(
+		"Including changes from " .. transform.green(previousVersionTag) .. " to " .. transform.green(currentVersionTag)
+	)
 
-	-- DEBUG("Changelog summary:")
+	local changes = C_BuildTools.GetChangelogEntry(previousVersionTag, currentVersionTag)
+	local markdownChanges = C_BuildTools.StringifyChangelogContents(changes)
 
-	-- local numPullRequests = #changes.pullRequests
-	-- if numPullRequests == 0 then
-	-- 	numPullRequests = "NO"
-	-- end
-	-- local numFeatures = #changes.newFeatures
-	-- if numFeatures == 0 then
-	-- 	numFeatures = "NO"
-	-- end
-	-- local numImprovements = #changes.improvements
-	-- if numImprovements == 0 then
-	-- 	numImprovements = "NO"
-	-- end
-	-- local numBreakingChanges = #changes.breakingChanges
-	-- if numBreakingChanges == 0 then
-	-- 	numBreakingChanges = "NO"
-	-- end
-	-- local numContributors = #changes.contributors
-	-- if numContributors == 0 then
-	-- 	numContributors = "NO"
-	-- end
+	print("Changelog summary:")
 
-	-- DEBUG(format("* %s new feature%s", numFeatures, numFeatures == 1 and "" or "s"))
-	-- DEBUG(format("* %s improvement%s", numImprovements, numImprovements == 1 and "" or "s"))
-	-- DEBUG(format("* %s breaking change%s", numBreakingChanges, numBreakingChanges == 1 and "" or "s"))
-	-- DEBUG(format("* %s pull request%s", numPullRequests, numPullRequests == 1 and "" or "s"))
-	-- DEBUG(format("* %s external contributor%s", numContributors, numContributors == 1 and "" or "s"))
-	-- DEBUG("Saving changelog as " .. transform.green(C_BuildTools.CHANGELOG_FILE_PATH))
+	local numPullRequests = #changes.pullRequests
+	if numPullRequests == 0 then
+		numPullRequests = "NO"
+	end
+	local numFeatures = #changes.newFeatures
+	if numFeatures == 0 then
+		numFeatures = "NO"
+	end
+	local numImprovements = #changes.improvements
+	if numImprovements == 0 then
+		numImprovements = "NO"
+	end
+	local numBreakingChanges = #changes.breakingChanges
+	if numBreakingChanges == 0 then
+		numBreakingChanges = "NO"
+	end
+	local numContributors = #changes.contributors
+	if numContributors == 0 then
+		numContributors = "NO"
+	end
 
-	-- C_FileSystem.WriteFile(C_BuildTools.CHANGELOG_FILE_PATH, markdownChanges)
+	printf("* %s new feature%s", numFeatures, numFeatures == 1 and "" or "s")
+	printf("* %s improvement%s", numImprovements, numImprovements == 1 and "" or "s")
+	printf("* %s breaking change%s", numBreakingChanges, numBreakingChanges == 1 and "" or "s")
+	printf("* %s pull request%s", numPullRequests, numPullRequests == 1 and "" or "s")
+	printf("* %s external contributor%s", numContributors, numContributors == 1 and "" or "s")
+	print("Saving changelog as " .. transform.green(C_BuildTools.CHANGELOG_FILE_PATH))
+
+	C_FileSystem.WriteFile(C_BuildTools.CHANGELOG_FILE_PATH, markdownChanges)
 end
 
 return C_BuildTools
