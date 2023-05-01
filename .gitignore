@@ -44,3 +44,4 @@ ninjabuild-*/
 .ninja_deps
 .ninja_log
 build.ninja
+CHANGELOG.MD
