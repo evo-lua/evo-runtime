@@ -76,7 +76,7 @@ end
 
 function C_BuildTools.DiscoverPreviousGitVersionTag()
 	-- Need to exclude non-versioned tags, but git tag can't do the filtering by itself...
-	local gitDescribeCommand = "git tag --sort=-creatordate | grep v[0-9]*.[0-9]*.[0-9]* | head -1"
+	local gitDescribeCommand = 'git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*" HEAD~1'
 	local versionTag = C_BuildTools.GetOutputFromShellCommand(gitDescribeCommand)
 
 	-- Strip final newline since that's not very useful outside of the shell
