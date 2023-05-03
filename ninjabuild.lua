@@ -48,6 +48,7 @@ local EvoBuildTarget = {
 	cppSources = {
 		"Runtime/main.cpp",
 		"Runtime/evo.cpp",
+		"Runtime/Bindings/icu_ffi.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
@@ -70,6 +71,7 @@ local EvoBuildTarget = {
 		"deps/brimworks/lua-zlib",
 		"deps/uNetworking/uWebSockets/src",
 		"deps/uNetworking/uWebSockets/uSockets/src",
+		"deps/unicode-org/icu/icu4c/source/common",
 	},
 	staticLibraries = {
 		"libluajit.a",

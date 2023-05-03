@@ -6,6 +6,7 @@ extern "C" {
 
 #include "evo.hpp"
 #include "macros.hpp"
+#include "icu_ffi.hpp"
 #include "stduuid_ffi.hpp"
 #include "uws_ffi.hpp"
 #include "webview_ffi.hpp"
@@ -44,6 +45,8 @@ int main(int argc, char* argv[]) {
 		PrintRuntimeError("Failed to require evo.lua", "Could not load embedded bytecode object", "Please report this problem on GitHub", FROM_HERE);
 		return EXIT_FAILURE;
 	}
+
+	icu_test();
 
 	uv_run(loop, UV_RUN_DEFAULT);
 
