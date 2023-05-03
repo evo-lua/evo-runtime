@@ -37,3 +37,6 @@
 [submodule "deps/brimworks/lua-zlib"]
 	path = deps/brimworks/lua-zlib
 	url = https://github.com/brimworks/lua-zlib
+[submodule "deps/unicode-org/icu"]
+	path = deps/unicode-org/icu
+	url = https://github.com/unicode-org/icu.git
