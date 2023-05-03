@@ -12,12 +12,11 @@ cd $SRC_DIR
 
 # The ICU configure script seems to pick clang by default
 export CC=gcc
-  export CXX=g++
+export CXX=g++
 
-./runConfigureICU MinGW
-# TODO
-# make -j $NUM_PARALLEL_JOBS
+./runConfigureICU MinGW --enable-static --disable-shared
+make -j $NUM_PARALLEL_JOBS
+
 cd -
 
-# TODO
-# cp $BUILD_DIR/libicu.a $OUT_DIR
+cp $SRC_DIR/lib/*.a $OUT_DIR
