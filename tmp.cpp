@@ -4,6 +4,8 @@
 #include <unicode/ucnv.h>
 #include <unicode/ustring.h>
 
+// TODO use icu namespace
+
 std::string convert_encoding_icu(const std::string& src_str, const std::string& src_encoding, const std::string& target_encoding) {
 	UErrorCode err = U_ZERO_ERROR;
 	UConverter* conv_src = ucnv_open(src_encoding.c_str(), &err);
