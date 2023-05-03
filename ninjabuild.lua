@@ -74,6 +74,11 @@ local EvoBuildTarget = {
 		"deps/unicode-org/icu/icu4c/source/common",
 	},
 	staticLibraries = {
+		"libsicudt.a", -- Data tables
+		"libsicuin.a", -- Character set conversion
+		-- "libsicuio.a",
+		-- "libsicutu.a",
+		"libsicuuc.a", -- Unicode utilities
 		"libluajit.a",
 		"libluv.a",
 		"libuv_a.a",
