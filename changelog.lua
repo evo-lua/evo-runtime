@@ -9,11 +9,11 @@ local changelog = {
 			"Embedded LuaJIT FFI bindings for webview, uws, and stduuid",
 			"Embedded Lua bindings for libuv, zlib, and openssl",
 			"Several extensions to the Lua standard libraries",
-			"High-level API namespace for file system access",
+			"High-level API namespaces for file system access and timer management",
 			"Lua library for UUID generation (via stduuid)",
 		},
 		breakingChanges = {
-			"This version of the runtime is completely backwards-incompatible with the previous (C-based) iteration, though many APIs are still the same",
+			"This version of the runtime is generally backwards-incompatible with the previous (C-based) iteration, though many APIs are still the same",
 		},
 	},
 	["v0.0.0"] = {
