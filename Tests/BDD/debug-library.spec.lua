@@ -1,0 +1,55 @@
+describe("debug", function()
+	describe("filesize", function()
+		it('should return "0 bytes" for negative sizes', function()
+			assertEquals(debug.filesize(-1), "0 bytes")
+		end)
+
+		it('should return "0 bytes" for a size of 0', function()
+			assertEquals(debug.filesize(0), "0 bytes")
+		end)
+
+		it("should return value in bytes when size is less than 1KB", function()
+			assertEquals(debug.filesize(512), "512 bytes")
+		end)
+
+		it("should return value in KB when size is between 1KB and 1MB", function()
+			assertEquals(debug.filesize(1024), "1 KB")
+			assertEquals(debug.filesize(5120), "5 KB")
+		end)
+
+		it("should return value in MB when size is between 1MB and 1GB", function()
+			assertEquals(debug.filesize(1048576), "1.00 MB")
+			assertEquals(debug.filesize(5242880), "5.00 MB")
+		end)
+
+		it("should return value in GB when size is between 1GB and 1TB", function()
+			assertEquals(debug.filesize(1073741824), "1.00 GB")
+			assertEquals(debug.filesize(5368709120), "5.00 GB")
+		end)
+
+		it("should return value in TB when size is between 1TB and 1PB", function()
+			assertEquals(debug.filesize(1099511627776), "1.00 TB")
+			assertEquals(debug.filesize(5497558138880), "5.00 TB")
+		end)
+
+		it("should return value in PB when size is between 1PB and 1EB", function()
+			assertEquals(debug.filesize(1125899906842624), "1.00 PB")
+			assertEquals(debug.filesize(5629499534213120), "5.00 PB")
+		end)
+
+		it("should return value in EB when size is between 1EB and 1ZB", function()
+			assertEquals(debug.filesize(1152921504606846976), "1.00 EB")
+			assertEquals(debug.filesize(5764607523034234880), "5.00 EB")
+		end)
+
+		it("should return value in ZB when size is between 1ZB and 1YB", function()
+			assertEquals(debug.filesize(1180591620717411303424), "1.00 ZB")
+			assertEquals(debug.filesize(5902958103587056517120), "5.00 ZB")
+		end)
+
+		it("should return value in YB when size is larger than 1YB", function()
+			assertEquals(debug.filesize(1208925819614629174706176), "1.00 YB")
+			assertEquals(debug.filesize(6044629098073145873530880), "5.00 YB")
+		end)
+	end)
+end)
