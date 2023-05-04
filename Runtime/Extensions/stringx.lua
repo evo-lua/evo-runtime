@@ -6,6 +6,10 @@ local validation = require("validation")
 local validateString = validation.validateString
 
 local ipairs = ipairs
+local format = string.format
+local math_floor = math.floor
+local math_pow = math.pow
+local math_log10 = math.log10
 local string_gmatch = string.gmatch
 local table_concat = table.concat
 local table_insert = table.insert
@@ -63,4 +67,21 @@ function string.explode(inputString, delimiter)
 		table_insert(tokens, token)
 	end
 	return tokens
+end
+
+function string.filesize(size)
+	if size <= 0 then -- Negative file sizes don't make any sense
+		return "0 bytes"
+	end
+
+	local units = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" }
+	local digitGroup = math_floor(math_log10(size) / math_log10(1024))
+
+	if digitGroup == 0 then
+		return size .. " bytes"
+	elseif digitGroup == 1 then
+		return format("%d %s", size / math_pow(1024, digitGroup), units[digitGroup + 1])
+	else
+		return format("%.2f %s", size / math_pow(1024, digitGroup), units[digitGroup + 1])
+	end
 end
