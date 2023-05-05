@@ -71,7 +71,7 @@ function evo.initializeGlobalNamespaces()
 	_G.C_FileSystem = require("C_FileSystem")
 	require("C_Runtime")
 	_G.C_Timer = require("C_Timer")
-	_G.C_Timer = require("C_WebView")
+	_G.C_WebView = require("C_WebView")
 end
 
 function evo.createSignalHandlers()
