@@ -46,6 +46,17 @@ namespace webview_ffi {
 			else FullscreenModeToWindowed(nativeWindowHandle, windowStyle);
 		}
 
+		bool setAppIcon(const char* iconPath) {
+			HWND nativeWindowHandle = (HWND)window();
+			HICON icon = (HICON)LoadImage(nullptr, iconPath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+			if(icon) {
+				SendMessage(nativeWindowHandle, WM_SETICON, ICON_BIG, (LPARAM)icon);
+				SendMessage(nativeWindowHandle, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+				return true;
+			}
+			return false;
+		}
+
 	private:
 		void WindowedModeToFullscreen(HWND nativeWindowHandle, const DWORD& windowStyle) {
 			MONITORINFO monitorInfo = { sizeof(monitorInfo) };
