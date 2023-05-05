@@ -103,12 +103,16 @@ function C_WebView.ResolvePromise(asyncPromiseID, isResultValidJSON, jsonResultS
 	webview.bindings.webview_return(self.activeWindow, asyncPromiseID, isResultValidJSON, jsonResultString)
 end
 
-function C_WebView.SetApplicationIcon(iconPath)
+function C_WebView.SetAppIcon(iconPath)
 	webview.bindings.webview_set_icon(self.activeWindow, iconPath)
 end
 
 function C_WebView.ToggleFullscreenMode()
 	webview.bindings.webview_toggle_fullscreen(self.activeWindow)
+end
+
+function C_WebView.IsRunning()
+	return self.isRunning
 end
 
 return C_WebView
