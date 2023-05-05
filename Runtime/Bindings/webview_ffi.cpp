@@ -42,33 +42,9 @@ struct static_webview_exports_table {
 #endif
 
 namespace webview_ffi {
-
-	class callback_dispatcher {
-	public:
-		callback_dispatcher(webview::dispatch_fn_t fn, void* arg)
-			: m_fn(fn)
-			, m_arg(arg) { }
-
-		void operator()() {
-			if(m_fn) {
-				m_fn();
-			}
-		}
-
-	private:
-		webview::dispatch_fn_t m_fn;
-		void* m_arg;
-	};
-
-	void webview_invoke(WebviewBrowserEngine* w, webview::dispatch_fn_t fn, void* arg) {
-		if(w == nullptr || fn == nullptr) {
-			return;
-		}
-		auto dispatcher = new callback_dispatcher(fn, arg);
-		w->dispatch([dispatcher]() {
-			(*dispatcher)();
-			delete dispatcher;
-		});
+	void cpp_callback(webview_t w, const char* data) {
+		auto webview_instance = reinterpret_cast<WebviewBrowserEngine*>(w);
+		webview_instance->set_callback_data(data);
 	}
 
 	webview_t webview_create(int withDevToolsEnabled, void* existingNativeWindow) {
