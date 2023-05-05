@@ -60,6 +60,27 @@ describe("webview", function()
 				uv.run()
 			end)
 		end)
+
+		describe("toggle_fullscreen", function()
+			it("should toggle the fullscreen state of the window", function()
+				-- We can't actually test this, but it should at least not crash...
+				local view = webview_create(true, nil)
+
+				local WEBVIEW_HINT_NONE = 0
+				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				webview.bindings.webview_set_title(view, "Fullscreen window")
+
+				webview.bindings.webview_toggle_fullscreen(view)
+
+				webview_run_once(view, false)
+
+				webview.bindings.webview_toggle_fullscreen(view)
+
+				webview_run_once(view, false)
+
+				webview.bindings.webview_destroy(view)
+			end)
+		end)
 	end)
 
 	-- This should be moved to the runtime library, once it is actually implemented...
