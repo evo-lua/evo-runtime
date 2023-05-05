@@ -1,12 +1,10 @@
-local webview_lua_binding = require("webview_lua_binding")
-
 -- Create a webview window without dev tools
-webview_lua_binding.CreateWithoutDevTools()
+C_WebView.CreateWithoutDevTools()
 
 -- Set window title, size, and navigate to a URL
-webview_lua_binding.SetWindowTitle("Webview Test")
-webview_lua_binding.SetWindowSize(800, 600)
-webview_lua_binding.NavigateToURL("https://example.com")
+C_WebView.SetWindowTitle("Webview Test")
+C_WebView.SetWindowSize(800, 600)
+C_WebView.NavigateToURL("https://evo-lua.github.io/")
 
 -- A sample Lua function to be called from JavaScript
 local function my_callback_function(_, value)
@@ -14,7 +12,7 @@ local function my_callback_function(_, value)
 end
 
 -- Bind the Lua function to be called from JavaScript
-webview_lua_binding.BindCallbackFunction("myCallback", my_callback_function)
+C_WebView.BindCallbackFunction("myCallback", my_callback_function)
 
 -- Set a script to be executed when the webview loads the page
 local onload_script = [[
@@ -24,11 +22,11 @@ local onload_script = [[
     }
   });
 ]]
-webview_lua_binding.SetOnLoadScript(onload_script)
+C_WebView.SetOnLoadScript(onload_script)
 
 -- Run the application and wait for user input to close the window
 print("Press enter to close the webview window...")
 io.read()
 
 -- Close the webview window and clean up resources
-webview_lua_binding.Destroy()
+C_WebView.Destroy()
