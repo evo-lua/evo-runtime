@@ -40,6 +40,12 @@ namespace webview_ffi {
 			return m_shouldExit;
 		}
 
+		void toggleFullScreen() {
+			id nsWindow = (id)window();
+
+			((void (*)(id, SEL, id))objc_msgSend)(nsWindow, sel_registerName("toggleFullScreen:"), nullptr);
+		}
+
 	private:
 		int m_shouldExit = 0;
 	};

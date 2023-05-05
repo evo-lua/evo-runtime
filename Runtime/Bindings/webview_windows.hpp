@@ -36,6 +36,39 @@ namespace webview_ffi {
 
 			return 0;
 		}
-	};
 
+		void toggleFullScreen() {
+			HWND nativeWindowHandle = (HWND)window();
+			DWORD windowStyle = GetWindowLong(nativeWindowHandle, GWL_STYLE);
+
+			bool isInWindowedMode = (windowStyle & WS_OVERLAPPEDWINDOW);
+			if(isInWindowedMode) WindowedModeToFullscreen(nativeWindowHandle, windowStyle);
+			else FullscreenModeToWindowed(nativeWindowHandle, windowStyle);
+		}
+
+	private:
+		void WindowedModeToFullscreen(HWND nativeWindowHandle, const DWORD& windowStyle) {
+			MONITORINFO monitorInfo = { sizeof(monitorInfo) };
+
+			if(!GetWindowPlacement(nativeWindowHandle, &m_windowPlacement)) return;
+
+			if(!GetMonitorInfo(MonitorFromWindow(nativeWindowHandle, MONITOR_DEFAULTTOPRIMARY), &monitorInfo)) return;
+
+			SetWindowLong(nativeWindowHandle, GWL_STYLE, windowStyle & ~WS_OVERLAPPEDWINDOW);
+			SetWindowPos(nativeWindowHandle, HWND_TOP,
+				monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top,
+				monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
+				monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
+				SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+		}
+
+		void FullscreenModeToWindowed(HWND nativeWindowHandle, const DWORD& windowStyle) {
+			SetWindowLong(nativeWindowHandle, GWL_STYLE, windowStyle | WS_OVERLAPPEDWINDOW);
+			SetWindowPlacement(nativeWindowHandle, &m_windowPlacement);
+			SetWindowPos(nativeWindowHandle, nullptr, 0, 0, 0, 0,
+				SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+		}
+
+		WINDOWPLACEMENT m_windowPlacement = { sizeof(m_windowPlacement) };
+	};
 }

@@ -5,6 +5,10 @@ local webview = require("webview")
 local webview_create = webview.bindings.webview_create
 local webview_run_once = webview.bindings.webview_run_once
 
+-- Workaround for OSX SEGFAULT: Create shared view and reuse it
+-- See https://github.com/evo-lua/evo-runtime/issues/77
+local view = webview_create(true, nil)
+
 describe("webview", function()
 	describe("bindings", function()
 		it("should export the entirety of the webview API", function()
@@ -24,6 +28,7 @@ describe("webview", function()
 				"webview_set_size",
 				"webview_set_title",
 				"webview_terminate",
+				"webview_toggle_fullscreen",
 				"webview_unbind",
 				"webview_version",
 			}
@@ -35,8 +40,6 @@ describe("webview", function()
 
 		describe("run_once", function()
 			it("should not block the event loop", function()
-				local view = webview_create(true, nil)
-
 				local WEBVIEW_HINT_NONE = 0
 				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
 				webview.bindings.webview_set_title(view, "Le window")
@@ -53,11 +56,31 @@ describe("webview", function()
 
 					if numUpdates == 6 then
 						uv.stop()
-						webview.bindings.webview_destroy(view)
+						-- Should destroy view here, but it's shared
 					end
 				end)
 
 				uv.run()
+			end)
+		end)
+
+		describe("toggle_fullscreen", function()
+			it("should toggle the fullscreen state of the window", function()
+				-- We can't actually test this, but it should at least not crash...
+
+				local WEBVIEW_HINT_NONE = 0
+				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				webview.bindings.webview_set_title(view, "Fullscreen window")
+
+				webview.bindings.webview_toggle_fullscreen(view)
+
+				webview_run_once(view, false)
+
+				webview.bindings.webview_toggle_fullscreen(view)
+
+				webview_run_once(view, false)
+
+				-- Should destroy view here, but it's shared
 			end)
 		end)
 	end)
