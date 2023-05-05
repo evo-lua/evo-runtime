@@ -57,6 +57,16 @@ namespace webview_ffi {
 			return false;
 		}
 
+		void set_callback_data(const std::string& data) {
+			std::lock_guard<std::mutex> lock(m_callback_data_mutex);
+			m_callback_data = data;
+		}
+
+		std::string get_callback_data() {
+			std::lock_guard<std::mutex> lock(m_callback_data_mutex);
+			return m_callback_data;
+		}
+
 	private:
 		void WindowedModeToFullscreen(HWND nativeWindowHandle, const DWORD& windowStyle) {
 			MONITORINFO monitorInfo = { sizeof(monitorInfo) };
@@ -81,5 +91,7 @@ namespace webview_ffi {
 		}
 
 		WINDOWPLACEMENT m_windowPlacement = { sizeof(m_windowPlacement) };
+		std::mutex m_callback_data_mutex; // TBD needed? Does the JS main thread interfere with the Lua/C++ main thread?
+		std::string m_callback_data;
 	};
 }
