@@ -20,6 +20,7 @@ describe("webview", function()
 				"webview_eval",
 				"webview_get_window",
 				"webview_init",
+				"webview_set_icon",
 				"webview_navigate",
 				"webview_return",
 				"webview_run",
@@ -79,6 +80,39 @@ describe("webview", function()
 				webview.bindings.webview_toggle_fullscreen(view)
 
 				webview_run_once(view, false)
+
+				-- Should destroy view here, but it's shared
+			end)
+		end)
+
+		describe("webview_set_icon", function()
+			local extensions = {
+				["OSX"] = ".icns",
+				["Windows"] = ".ico",
+				["Linux"] = ".png",
+			}
+			local expectedFileExtension = extensions[ffi.os]
+
+			it("should return false if the icon file does not exist", function()
+				local WEBVIEW_HINT_NONE = 0
+				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				webview.bindings.webview_set_title(view, "Icon window")
+
+				local success = webview.bindings.webview_set_icon(view, "does_not_exist.png")
+				assertFalse(success)
+
+				-- Should destroy view here, but it's shared
+			end)
+
+			it("should retun true if the icon file exists and is in the right OS-dependent format", function()
+				-- Can't really check th icon, but it should load without errors and never crash
+				local WEBVIEW_HINT_NONE = 0
+				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				webview.bindings.webview_set_title(view, "Icon window")
+
+				local success =
+					webview.bindings.webview_set_icon(view, "Tests/Fixtures/test-icon" .. expectedFileExtension)
+				assertTrue(success)
 
 				-- Should destroy view here, but it's shared
 			end)
