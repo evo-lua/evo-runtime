@@ -25,6 +25,7 @@ webview.cdefs = [[
 	struct static_webview_exports_table {
 		webview_t (*webview_create)(int debug, void *window);
 		void (*webview_destroy)(webview_t w);
+		void (*webview_toggle_fullscreen)(webview_t w);
 		void (*webview_run)(webview_t w);
 		int (*webview_run_once)(webview_t w, int blocking);
 		void (*webview_terminate)(webview_t w);

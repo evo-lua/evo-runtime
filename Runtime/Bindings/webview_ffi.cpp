@@ -10,6 +10,7 @@ typedef void (*webview_dispatch_function_t)(webview_t w, void* arg);
 struct static_webview_exports_table {
 	webview_t (*webview_create)(int debug, void* window);
 	void (*webview_destroy)(webview_t w);
+	void (*webview_toggle_fullscreen)(webview_t w);
 	void (*webview_run)(webview_t w);
 	int (*webview_run_once)(webview_t w, int blocking);
 	void (*webview_terminate)(webview_t w);
@@ -59,6 +60,10 @@ namespace webview_ffi {
 
 	void webview_destroy(webview_t w) {
 		delete static_cast<WebviewBrowserEngine*>(w);
+	}
+
+	void webview_toggle_fullscreen(webview_t w) {
+		static_cast<WebviewBrowserEngine*>(w)->toggleFullScreen();
 	}
 
 	void webview_run(webview_t w) {
@@ -130,6 +135,7 @@ namespace webview_ffi {
 		webview_exports_table.webview_bind = webview_bind;
 		webview_exports_table.webview_create = webview_create;
 		webview_exports_table.webview_destroy = webview_destroy;
+		webview_exports_table.webview_toggle_fullscreen = webview_toggle_fullscreen;
 		webview_exports_table.webview_dispatch = webview_dispatch;
 		webview_exports_table.webview_eval = webview_eval;
 		webview_exports_table.webview_get_window = webview_get_window;
