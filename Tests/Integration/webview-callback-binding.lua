@@ -1,16 +1,29 @@
+local ffi = require("ffi")
+local jit = require("jit")
+local uv = require("uv")
+
+jit.off()
+
+-- Create a webview window without dev tools
 C_WebView.CreateWithoutDevTools()
 
-C_WebView.SetWindowTitle("Webview Callback Binding Test")
+-- Set window title, size, and navigate to a URL
+C_WebView.SetWindowTitle("Webview Test")
 C_WebView.SetWindowSize(800, 600)
+C_WebView.NavigateToURL("https://github.com")
 
-C_WebView.NavigateToURL("https://evo-lua.github.io/")
-
+-- A sample Lua function to be called from JavaScript
 local function my_callback_function(_, value)
-	print("Callback called from JavaScript with value:", value)
+	print("Callback called from JavaScript with value:", ffi.string(value))
 end
 
-C_WebView.BindCallbackFunction("myCallback", my_callback_function)
+-- Store the callback function in the global environment to prevent garbage collection
+_G.my_callback_function = my_callback_function
 
+-- Bind the Lua function to be called from JavaScript
+C_WebView.BindCallbackFunction("myCallback", _G.my_callback_function)
+
+-- Set a script to be executed when the webview loads the page
 local onload_script = [[
   document.addEventListener('DOMContentLoaded', function() {
     if (window.myCallback) {
@@ -20,13 +33,7 @@ local onload_script = [[
 ]]
 C_WebView.SetOnLoadScript(onload_script)
 
--- print("Press enter to close the webview window...")
--- io.read()
-
-C_Timer.After(5000, function()
-	C_WebView.Destroy()
-end)
-
-local uv = require("uv")
-
 uv.run()
+
+-- Remove the callback function from the global environment when no longer needed
+_G.my_callback_function = nil

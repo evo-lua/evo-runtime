@@ -91,9 +91,13 @@ function C_WebView.EvaluateScript(jsCodeString)
 	webview.bindings.webview_eval(self.activeWindow, jsCodeString)
 end
 
+local jit = require("jit")
+
 function C_WebView.BindCallbackFunction(assignedGlobalName, callback)
 	webview.bindings.webview_bind(self.activeWindow, assignedGlobalName, callback, nil)
 end
+
+jit.off(C_WebView.BindCallbackFunction)
 
 function C_WebView.RemoveBinding(assignedGlobalName)
 	webview.bindings.webview_unbind(self.activeWindow, assignedGlobalName)
