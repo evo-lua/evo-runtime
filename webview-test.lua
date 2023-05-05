@@ -8,7 +8,7 @@ C_WebView.NavigateToURL("https://evo-lua.github.io/")
 
 -- A sample Lua function to be called from JavaScript
 local function my_callback_function(_, value)
-  print("Callback called from JavaScript with value:", value)
+	print("Callback called from JavaScript with value:", value)
 end
 
 -- Bind the Lua function to be called from JavaScript
