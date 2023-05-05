@@ -52,4 +52,5 @@ globals = {
 	"C_FileSystem",
 	"C_Runtime",
 	"C_Timer",
+	"C_WebView",
 }
