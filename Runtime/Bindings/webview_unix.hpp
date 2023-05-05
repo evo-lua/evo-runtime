@@ -19,5 +19,20 @@ namespace webview_ffi {
 			if(state & GDK_WINDOW_STATE_FULLSCREEN) gtk_window_unfullscreen(gtkWindow);
 			else gtk_window_fullscreen(gtkWindow);
 		}
+
+		bool setAppIcon(const char* iconPath) {
+			GError* error = NULL;
+			GdkPixbuf* pixelBuffer = gdk_pixbuf_new_from_file(iconPath, &error);
+
+			if(pixelBuffer != NULL) {
+				gtk_window_set_icon(GTK_WINDOW(window()), pixelBuffer);
+				g_object_unref(pixelBuffer);
+				return true;
+			} else {
+				g_warning("Failed to set app icon: %s", error->message);
+				g_error_free(error);
+				return false;
+			}
+		}
 	};
 }

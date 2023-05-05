@@ -46,8 +46,32 @@ namespace webview_ffi {
 			((void (*)(id, SEL, id))objc_msgSend)(nsWindow, sel_registerName("toggleFullScreen:"), nullptr);
 		}
 
+		bool setAppIcon(const char* iconPath) {
+			id iconImagePath = ((id(*)(id, SEL, const char*))objc_msgSend)("NSString"_cls, "stringWithUTF8String:"_sel, iconPath);
+			id iconImage = ((id(*)(id, SEL))objc_msgSend)("NSImage"_cls, "alloc"_sel);
+			iconImage = ((id(*)(id, SEL, id))objc_msgSend)(iconImage, "initWithContentsOfFile:"_sel, iconImagePath);
+
+			if(!iconImage) return false;
+
+			// 10.13 and earlier: Set icon in the window's title bar (now deprecated)
+			id nsWindow = (id)window();
+			if(nsWindow) {
+				id fileURL = ((id(*)(id, SEL, id))objc_msgSend)("NSURL"_cls, "fileURLWithPath:"_sel, iconImagePath);
+				((void (*)(id, SEL, id))objc_msgSend)(nsWindow, "setRepresentedURL:"_sel, fileURL);
+				return true;
+			}
+
+			// 10.14 and later: Set icon in the dock
+			id app = ((id(*)(id, SEL))objc_msgSend)("NSApplication"_cls, "sharedApplication"_sel);
+			if(app) {
+				((void (*)(id, SEL, id))objc_msgSend)(app, "setApplicationIconImage:"_sel, iconImage);
+				return true;
+			}
+
+			return false;
+		}
+
 	private:
 		int m_shouldExit = 0;
 	};
-
 }
