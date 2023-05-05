@@ -24,6 +24,7 @@ describe("webview", function()
 				"webview_set_size",
 				"webview_set_title",
 				"webview_terminate",
+				"webview_toggle_fullscreen",
 				"webview_unbind",
 				"webview_version",
 			}
