@@ -1,7 +1,6 @@
 local uv = require("uv")
 local webview = require("webview")
 
-
 local C_WebView = {
 	pollingUpdateTimeInMilliseconds = 16,
 	pollingUpdateTimer = uv.new_timer(),
@@ -28,7 +27,6 @@ local C_WebView = {
 local self = C_WebView
 
 function C_WebView.CreateWithoutDevTools()
-
 	if C_WebView.isRunning then
 		return
 	end
@@ -44,7 +42,6 @@ function C_WebView.CreateWithoutDevTools()
 end
 
 function C_WebView.CreateWithDevTools()
-
 	if self.isRunning then
 		return
 	end
@@ -60,7 +57,6 @@ function C_WebView.CreateWithDevTools()
 end
 
 function C_WebView.Destroy()
-
 	if not self.isRunning then
 		return
 	end
