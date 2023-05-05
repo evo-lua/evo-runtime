@@ -26,6 +26,7 @@ struct static_webview_exports_table {
 	void (*webview_unbind)(webview_t w, const char* name);
 	void (*webview_return)(webview_t w, const char* seq, int status, const char* result);
 	const webview_version_info_t* (*webview_version)(void);
+	bool (*webview_set_icon)(webview_t w, const char* file_path);
 };
 
 #ifdef __unix__
@@ -129,6 +130,10 @@ namespace webview_ffi {
 		static_cast<WebviewBrowserEngine*>(w)->resolve(seq, status, result);
 	}
 
+	bool webview_set_icon(webview_t w, const char* file_path) {
+		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
+	}
+
 	void* getExportsTable() {
 		static struct static_webview_exports_table webview_exports_table;
 
@@ -150,6 +155,7 @@ namespace webview_ffi {
 		webview_exports_table.webview_terminate = webview_terminate;
 		webview_exports_table.webview_unbind = webview_unbind;
 		webview_exports_table.webview_version = webview_version;
+		webview_exports_table.webview_set_icon = webview_set_icon;
 
 		return &webview_exports_table;
 	}

@@ -41,6 +41,7 @@ webview.cdefs = [[
 		void (*webview_unbind)(webview_t w, const char *name);
 		void (*webview_return)(webview_t w, const char *seq, int status, const char *result);
 		const webview_version_info_t* (*webview_version)(void);
+		bool (*webview_set_icon)(webview_t w, const char *file_path);
 	};
 ]]
 
