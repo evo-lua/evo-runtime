@@ -77,6 +77,9 @@ jobs:
       - name: Build runtime
         run: ls && ./windowsbuild.cmd && ls ninjabuild-windows && cp ninjabuild-windows/evo.exe . && ls
 
+      - name: Scan DLL dependencies
+        run: .github/scan-dll-deps.sh
+
       - name: Run smoke tests
         run: ./evo Tests/smoke-test.lua
 
