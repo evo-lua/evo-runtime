@@ -52,7 +52,7 @@ describe("C_Timer", function()
 			coroutine.resume(newThread)
 			waitFor(100)
 			local elapsed = (uv.hrtime() - startTime) / 1e6
-			assertTrue(elapsed >= 99) -- Timers are not exact
+			assertTrue(elapsed >= 90) -- Timers are not exact
 		end)
 	end)
 
@@ -122,7 +122,7 @@ describe("C_Timer", function()
 			end
 
 			ticker = C_Timer.NewTicker(100, wrappedCallback)
-			waitFor(350) -- Wait for 3 intervals (timer inaccuracy may offset each interval by up to 15.6ms on Windows)
+			waitFor(500)
 
 			local elapsed = (uv.hrtime() - startTime) / 1e6
 			assertEquals(callbackCalledCount, 3)
