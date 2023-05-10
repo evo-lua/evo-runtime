@@ -14,13 +14,13 @@ local Test = {
 	},
 	clients = {},
 	receivedChunks = {
-		GET = {},
-		POST = {},
-		OPTIONS = {},
-		DELETE = {},
-		PATCH = {},
-		PUT = {},
-		HEAD = {},
+		GET = buffer.new(),
+		POST = buffer.new(),
+		OPTIONS = buffer.new(),
+		DELETE = buffer.new(),
+		PATCH = buffer.new(),
+		PUT = buffer.new(),
+		HEAD = buffer.new(),
 	},
 }
 
@@ -82,10 +82,7 @@ function Test:CreateClient(method)
 			end
 
 			if chunk then
-				local lines = string.explode(chunk, "\r\n")
-				for _, line in ipairs(lines) do
-					self.receivedChunks[method][#self.receivedChunks[method] + 1] = line
-				end
+				self.receivedChunks[method]:put(chunk)
 			end
 		end)
 
@@ -118,13 +115,23 @@ function Test:Teardown()
 end
 
 function Test:AssertClientsReceivedResponses()
-	assertTrue(table.contains(self.receivedChunks.GET, "GET response body"))
-	assertTrue(table.contains(self.receivedChunks.POST, "POST response body"))
-	assertTrue(table.contains(self.receivedChunks.OPTIONS, "OPTIONS response body"))
-	assertTrue(table.contains(self.receivedChunks.DELETE, "DELETE response body"))
-	assertTrue(table.contains(self.receivedChunks.PATCH, "PATCH response body"))
-	assertTrue(table.contains(self.receivedChunks.PUT, "PUT response body"))
-	assertTrue(table.contains(self.receivedChunks.HEAD, "HEAD response body"))
+	local receivedLines = {
+		GET = string.explode(tostring(self.receivedChunks.GET), "\r\n"),
+		POST = string.explode(tostring(self.receivedChunks.POST), "\r\n"),
+		OPTIONS = string.explode(tostring(self.receivedChunks.OPTIONS), "\r\n"),
+		DELETE = string.explode(tostring(self.receivedChunks.DELETE), "\r\n"),
+		PATCH = string.explode(tostring(self.receivedChunks.PATCH), "\r\n"),
+		PUT = string.explode(tostring(self.receivedChunks.PUT), "\r\n"),
+		HEAD = string.explode(tostring(self.receivedChunks.HEAD), "\r\n"),
+	}
+
+	assertTrue(table.contains(receivedLines.GET, "GET response body"))
+	assertTrue(table.contains(receivedLines.POST, "POST response body"))
+	assertTrue(table.contains(receivedLines.OPTIONS, "OPTIONS response body"))
+	assertTrue(table.contains(receivedLines.DELETE, "DELETE response body"))
+	assertTrue(table.contains(receivedLines.PATCH, "PATCH response body"))
+	assertTrue(table.contains(receivedLines.PUT, "PUT response body"))
+	assertTrue(table.contains(receivedLines.HEAD, "HEAD response body"))
 end
 
 Test:Setup()
