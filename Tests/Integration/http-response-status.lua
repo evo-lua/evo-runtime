@@ -5,7 +5,7 @@ local table_contains = table.contains
 
 local Test = {
 	port = 9004,
-	receivedChunks = {},
+	receivedChunks = buffer.new(),
 }
 
 function Test:Setup()
@@ -43,10 +43,7 @@ function Test:CreateClient()
 				return -- FIN received, connection shutting down
 			end
 
-			local lines = string.explode(chunk, "\r\n")
-			for _, line in ipairs(lines) do
-				self.receivedChunks[#self.receivedChunks + 1] = line
-			end
+			self.receivedChunks:put(chunk)
 		end)
 
 		local getRequest = "GET /does-not-exist.html HTTP/1.1\r\nUser-Agent: evo\r\nHost: www.example.org\r\n\r\n"
@@ -75,11 +72,12 @@ function Test:Teardown()
 end
 
 function Test:AssertClientReceivedShutdownResponse()
-	dump(self.receivedChunks)
-	assertEquals(#self.receivedChunks, 3)
+	local receivedLines = string.explode(tostring(self.receivedChunks), "\r\n")
 
-	assertTrue(table_contains(self.receivedChunks, "HTTP/1.1 404 Not Found"))
-	assertTrue(table_contains(self.receivedChunks, "Content-Length: 0"))
+	assertEquals(#receivedLines, 3)
+
+	assertTrue(table_contains(receivedLines, "HTTP/1.1 404 Not Found"))
+	assertTrue(table_contains(receivedLines, "Content-Length: 0"))
 end
 
 Test:Setup()

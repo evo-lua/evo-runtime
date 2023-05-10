@@ -5,7 +5,7 @@ local table_contains = table.contains
 
 local Test = {
 	port = 9004,
-	receivedChunks = {},
+	receivedChunks = buffer.new(),
 }
 
 function Test:Setup()
@@ -37,10 +37,7 @@ function Test:CreateClient()
 				return -- FIN received, connection shutting down
 			end
 
-			local lines = string.explode(chunk, "\r\n")
-			for _, line in ipairs(lines) do
-				self.receivedChunks[#self.receivedChunks + 1] = line
-			end
+			self.receivedChunks:put(chunk)
 		end)
 
 		-- We have to send a request (at least up to the headers) so that the server keeps the connection open until shutdown
@@ -70,12 +67,14 @@ function Test:Teardown()
 end
 
 function Test:AssertClientReceivedShutdownResponse()
-	assertEquals(#self.receivedChunks, 5)
+	local receivedLines = string.explode(tostring(self.receivedChunks), "\r\n")
 
-	assertTrue(table_contains(self.receivedChunks, "HTTP/1.1 503 Service Unavailable"))
-	assertTrue(table_contains(self.receivedChunks, "Content-Type: text/plain"))
-	assertTrue(table_contains(self.receivedChunks, "Content-Length: 41"))
-	assertTrue(table_contains(self.receivedChunks, "Service Unavailable: Server shutting down"))
+	assertEquals(#receivedLines, 5)
+
+	assertTrue(table_contains(receivedLines, "HTTP/1.1 503 Service Unavailable"))
+	assertTrue(table_contains(receivedLines, "Content-Type: text/plain"))
+	assertTrue(table_contains(receivedLines, "Content-Length: 41"))
+	assertTrue(table_contains(receivedLines, "Service Unavailable: Server shutting down"))
 end
 
 Test:Setup()
