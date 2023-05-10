@@ -9,6 +9,9 @@ local testFiles = {
 	"Tests/Integration/http-shutdown-with-503.lua",
 	"Tests/Integration/http-response-status.lua",
 	"Tests/Integration/http-json-response.lua",
+	"Tests/Integration/webview-fullscreen-mode.lua",
+	"Tests/Integration/webview-app-icon.lua",
+	"Tests/Integration/webview-multiple-windows.lua",
 }
 
 local numFailedTests = C_Runtime.RunBasicTests(testFiles)
