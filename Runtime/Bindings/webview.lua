@@ -33,6 +33,8 @@ webview.cdefs = [[
 		void (*webview_get_title)(webview_t w, char* buffer, size_t length);
 		size_t (*webview_get_title_length)(webview_t w);
 		void* (*webview_get_window)(webview_t w);
+		bool (*webview_is_fullscreen)(webview_t w);
+		bool (*webview_is_windowed)(webview_t w);
 		void (*webview_set_title)(webview_t w, const char *title);
 		void (*webview_set_size)(webview_t w, int width, int height, int hints);
 		void (*webview_navigate)(webview_t w, const char *url);

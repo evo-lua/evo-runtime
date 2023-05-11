@@ -18,6 +18,8 @@ struct static_webview_exports_table {
 	void (*webview_get_title)(webview_t w, char* buffer, size_t length);
 	size_t (*webview_get_title_length)(webview_t w);
 	void* (*webview_get_window)(webview_t w);
+	bool (*webview_is_fullscreen)(webview_t w);
+	bool (*webview_is_windowed)(webview_t w);
 	void (*webview_set_title)(webview_t w, const char* title);
 	void (*webview_set_size)(webview_t w, int width, int height, int hints);
 	void (*webview_navigate)(webview_t w, const char* url);
@@ -153,6 +155,16 @@ namespace webview_ffi {
 		buffer[numCharsToCopy] = '\0';
 	}
 
+	bool webview_is_fullscreen(webview_t w) {
+		// TODO
+		return false;
+	}
+
+	bool webview_is_windowed(webview_t w) {
+		// TODO
+		return false;
+	}
+
 	void* getExportsTable() {
 		static struct static_webview_exports_table webview_exports_table;
 
@@ -165,6 +177,8 @@ namespace webview_ffi {
 		webview_exports_table.webview_get_title = webview_get_title;
 		webview_exports_table.webview_get_title_length = webview_get_title_length;
 		webview_exports_table.webview_get_window = webview_get_window;
+		webview_exports_table.webview_is_fullscreen = webview_is_fullscreen;
+		webview_exports_table.webview_is_windowed = webview_is_windowed;
 		webview_exports_table.webview_init = webview_init;
 		webview_exports_table.webview_navigate = webview_navigate;
 		webview_exports_table.webview_return = webview_return;
