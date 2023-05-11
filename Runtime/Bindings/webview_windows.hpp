@@ -57,6 +57,10 @@ namespace webview_ffi {
 			return false;
 		}
 
+		std::string getWindowTitle() {
+			return "Placeholder";
+		}
+
 	private:
 		void WindowedModeToFullscreen(HWND nativeWindowHandle, const DWORD& windowStyle) {
 			MONITORINFO monitorInfo = { sizeof(monitorInfo) };

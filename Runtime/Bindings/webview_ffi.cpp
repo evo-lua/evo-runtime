@@ -15,6 +15,8 @@ struct static_webview_exports_table {
 	int (*webview_run_once)(webview_t w, int blocking);
 	void (*webview_terminate)(webview_t w);
 	void (*webview_dispatch)(webview_t w, webview_dispatch_function_t fn, void* arg);
+	void (*webview_get_title)(webview_t w, char* buffer, size_t length);
+	size_t (*webview_get_title_length)(webview_t w);
 	void* (*webview_get_window)(webview_t w);
 	void (*webview_set_title)(webview_t w, const char* title);
 	void (*webview_set_size)(webview_t w, int width, int height, int hints);
@@ -134,6 +136,23 @@ namespace webview_ffi {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
 	}
 
+	size_t webview_get_title_length(webview_t w) {
+		std::string windowTitle = static_cast<WebviewBrowserEngine*>(w)->getWindowTitle();
+		return windowTitle.size();
+	}
+
+	void webview_get_title(webview_t w, char* buffer, size_t length) {
+		std::string windowTitle = static_cast<WebviewBrowserEngine*>(w)->getWindowTitle();
+
+		if(buffer == nullptr) return;
+
+		if(length <= 0) return;
+
+		size_t numCharsToCopy = std::min(windowTitle.size(), length - 1);
+		strncpy(buffer, windowTitle.c_str(), numCharsToCopy);
+		buffer[numCharsToCopy] = '\0';
+	}
+
 	void* getExportsTable() {
 		static struct static_webview_exports_table webview_exports_table;
 
@@ -143,6 +162,8 @@ namespace webview_ffi {
 		webview_exports_table.webview_toggle_fullscreen = webview_toggle_fullscreen;
 		webview_exports_table.webview_dispatch = webview_dispatch;
 		webview_exports_table.webview_eval = webview_eval;
+		webview_exports_table.webview_get_title = webview_get_title;
+		webview_exports_table.webview_get_title_length = webview_get_title_length;
 		webview_exports_table.webview_get_window = webview_get_window;
 		webview_exports_table.webview_init = webview_init;
 		webview_exports_table.webview_navigate = webview_navigate;

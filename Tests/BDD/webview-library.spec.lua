@@ -70,14 +70,19 @@ describe("webview", function()
 
 		describe("get_title", function()
 			it("should return a default title if none has been set", function()
-				local cdata = webview.bindings.webview_get_title(view)
-				assertEquals(ffi.string(cdata), "Foo")
+				local length = webview.bindings.webview_get_title_length(view)
+				local buffer = ffi.new("char[?]", length)
+				webview.bindings.webview_get_title(view, buffer, length)
+				assertEquals(ffi.string(buffer), "Foo")
 			end)
 
 			it("should return the new title when it has been updated", function()
 				webview.bindings.webview_set_title(view, "New title")
-				local cdata = webview.bindings.webview_get_title(view)
-				assertEquals(ffi.string(cdata), "Foo123")
+
+				local length = webview.bindings.webview_get_title_length(view)
+				local buffer = ffi.new("const* char[?]", length)
+				webview.bindings.webview_get_title(view, buffer, length)
+				assertEquals(ffi.string(buffer), "Foo")
 			end)
 		end)
 
