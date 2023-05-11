@@ -58,7 +58,15 @@ namespace webview_ffi {
 		}
 
 		std::string getWindowTitle() {
-			return "Placeholder";
+			HWND nativeWindowHandle = (HWND)window();
+			int length = GetWindowTextLength(nativeWindowHandle) + 1;
+
+			char* title = new char[length];
+			GetWindowText(nativeWindowHandle, title, length);
+			std::string windowTitle(title);
+			delete[] title;
+
+			return windowTitle;
 		}
 
 	private:
