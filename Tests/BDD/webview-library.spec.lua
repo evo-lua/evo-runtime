@@ -93,22 +93,24 @@ describe("webview", function()
 				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
 				webview.bindings.webview_set_title(view, "Fullscreen window")
 
+				webview_run_once(view, false)
+
 				assertFalse(webview.bindings.webview_is_fullscreen(view))
 				assertTrue(webview.bindings.webview_is_windowed(view))
 
 				webview.bindings.webview_toggle_fullscreen(view)
+
+				webview_run_once(view, false)
 
 				assertTrue(webview.bindings.webview_is_fullscreen(view))
 				assertFalse(webview.bindings.webview_is_windowed(view))
 
-				webview_run_once(view, false)
-
 				webview.bindings.webview_toggle_fullscreen(view)
+
+				webview_run_once(view, false)
 
 				assertFalse(webview.bindings.webview_is_fullscreen(view))
 				assertTrue(webview.bindings.webview_is_windowed(view))
-
-				webview_run_once(view, false)
 
 				-- Should destroy view here, but it's shared
 			end)

@@ -69,6 +69,12 @@ namespace webview_ffi {
 			return windowTitle;
 		}
 
+		bool isFullscreenWindow() {
+			HWND nativeWindowHandle = (HWND)window();
+			DWORD style = GetWindowLong(nativeWindowHandle, GWL_STYLE);
+			return (style & WS_POPUP) && (style & WS_VISIBLE) && !(style & WS_DLGFRAME) && !(style & WS_BORDER);
+		}
+
 	private:
 		void WindowedModeToFullscreen(HWND nativeWindowHandle, const DWORD& windowStyle) {
 			MONITORINFO monitorInfo = { sizeof(monitorInfo) };
