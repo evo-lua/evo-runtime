@@ -68,6 +68,19 @@ describe("webview", function()
 			end)
 		end)
 
+		describe("get_title", function()
+			it("should return a default title if none has been set", function()
+				local cdata = webview.bindings.webview_get_title(view)
+				assertEquals(ffi.string(cdata), "Foo")
+			end)
+
+			it("should return the new title when it has been updated", function()
+				webview.bindings.webview_set_title(view, "New title")
+				local cdata = webview.bindings.webview_get_title(view)
+				assertEquals(ffi.string(cdata), "Foo123")
+			end)
+		end)
+
 		describe("toggle_fullscreen", function()
 			it("should toggle the fullscreen state of the window", function()
 				-- We can't actually test this, but it should at least not crash...
