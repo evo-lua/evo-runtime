@@ -71,8 +71,10 @@ namespace webview_ffi {
 
 		bool isFullscreenWindow() {
 			HWND nativeWindowHandle = (HWND)window();
-			DWORD style = GetWindowLong(nativeWindowHandle, GWL_STYLE);
-			return (style & WS_POPUP) && (style & WS_VISIBLE) && !(style & WS_DLGFRAME) && !(style & WS_BORDER);
+			DWORD windowStyle = GetWindowLong(nativeWindowHandle, GWL_STYLE);
+
+			bool isInWindowedMode = (windowStyle & WS_OVERLAPPEDWINDOW);
+			return !isInWindowedMode;
 		}
 
 	private:
