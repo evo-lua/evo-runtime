@@ -46,7 +46,6 @@ describe("webview", function()
 			it("should not block the event loop", function()
 				local WEBVIEW_HINT_NONE = 0
 				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
-				webview.bindings.webview_set_title(view, "Le window")
 
 				local numUpdates = 0
 
@@ -73,7 +72,7 @@ describe("webview", function()
 				local length = webview.bindings.webview_get_title_length(view)
 				local buffer = ffi.new("char[?]", length + 1)
 				webview.bindings.webview_get_title(view, buffer, length + 1)
-				assertEquals(ffi.string(buffer), "Foo")
+				assertEquals(ffi.string(buffer), "")
 			end)
 
 			it("should return the new title when it has been updated", function()
@@ -82,7 +81,7 @@ describe("webview", function()
 				local length = webview.bindings.webview_get_title_length(view)
 				local buffer = ffi.new("char[?]", length + 1)
 				webview.bindings.webview_get_title(view, buffer, length + 1)
-				assertEquals(ffi.string(buffer), "Foo")
+				assertEquals(ffi.string(buffer), "New title")
 			end)
 		end)
 
