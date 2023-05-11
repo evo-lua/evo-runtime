@@ -73,11 +73,14 @@ describe("webview", function()
 				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
 				webview.bindings.webview_set_title(view, "Fullscreen window")
 
+				assertFalse(webview.bindings.webview_is_fullscreen(view))
 				webview.bindings.webview_toggle_fullscreen(view)
+				assertTrue(webview.bindings.webview_is_fullscreen(view))
 
 				webview_run_once(view, false)
 
 				webview.bindings.webview_toggle_fullscreen(view)
+				assertFalse(webview.bindings.webview_is_fullscreen(view))
 
 				webview_run_once(view, false)
 
