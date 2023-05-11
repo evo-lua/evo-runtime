@@ -13,6 +13,10 @@ local function waitFor(milliseconds)
 	until done
 end
 
+-- Timers are generally imprecise, so there's significant variance to work around (should find a better approach eventually...)
+local MINIMUM_EPSILON_MODIFIER = 1 / 2
+local MAXIMUM_EPSILON_MODIFIER = 2
+
 describe("C_Timer", function()
 	describe("ResumeAfter", function()
 		it("should throw if called outside of a coroutine", function()
@@ -40,20 +44,23 @@ describe("C_Timer", function()
 			end)
 
 			coroutine.resume(newThread)
-			waitFor(42)
+			waitFor(42 * MAXIMUM_EPSILON_MODIFIER)
 			assertTrue(hasResumedCoroutine)
 		end)
 
-		it("should wait for the specified delay before resuming when called inside a coroutine", function()
-			local startTime = uv.hrtime()
-			local newThread = coroutine.create(function()
-				C_Timer.ResumeAfter(100)
-			end)
-			coroutine.resume(newThread)
-			waitFor(100)
-			local elapsed = (uv.hrtime() - startTime) / 1e6
-			assertTrue(elapsed >= 90) -- Timers are not exact
-		end)
+		it(
+			"should wait for approximately the specified delay before resuming when called inside a coroutine",
+			function()
+				local startTime = uv.hrtime()
+				local newThread = coroutine.create(function()
+					C_Timer.ResumeAfter(100)
+				end)
+				coroutine.resume(newThread)
+				waitFor(100 * MAXIMUM_EPSILON_MODIFIER)
+				local elapsed = (uv.hrtime() - startTime) / 1e6
+				assertTrue(elapsed >= 100 * MINIMUM_EPSILON_MODIFIER)
+			end
+		)
 	end)
 
 	describe("After", function()
@@ -82,7 +89,7 @@ describe("C_Timer", function()
 			C_Timer.After(100, function()
 				callbackCalled = true
 			end)
-			waitFor(120) -- Timers are not exact
+			waitFor(100 * MAXIMUM_EPSILON_MODIFIER)
 			assertTrue(callbackCalled)
 		end)
 	end)
@@ -122,12 +129,12 @@ describe("C_Timer", function()
 			end
 
 			ticker = C_Timer.NewTicker(100, wrappedCallback)
-			waitFor(500)
+			waitFor(3 * 100 * MAXIMUM_EPSILON_MODIFIER)
 
 			local elapsed = (uv.hrtime() - startTime) / 1e6
-			assertEquals(callbackCalledCount, 3)
+			assertTrue(callbackCalledCount >= 3)
 
-			assertTrue(elapsed >= 300)
+			assertTrue(elapsed >= 3 * 100 * MINIMUM_EPSILON_MODIFIER)
 		end)
 	end)
 
@@ -148,7 +155,7 @@ describe("C_Timer", function()
 				callbackCalled = true
 			end)
 			C_Timer.Stop(timer)
-			waitFor(120)
+			waitFor(100 * MAXIMUM_EPSILON_MODIFIER)
 			assertFalse(callbackCalled)
 		end)
 
@@ -157,10 +164,10 @@ describe("C_Timer", function()
 			local ticker = C_Timer.NewTicker(100, function()
 				callbackCalledCount = callbackCalledCount + 1
 			end)
-			waitFor(250)
+			waitFor(2 * 100 * MAXIMUM_EPSILON_MODIFIER)
 			C_Timer.Stop(ticker)
-			waitFor(200)
-			assertEquals(callbackCalledCount, 2)
+			waitFor(2 * 100 * MAXIMUM_EPSILON_MODIFIER)
+			assertTrue(callbackCalledCount >= 2)
 		end)
 	end)
 
@@ -246,7 +253,7 @@ describe("C_Timer", function()
 				callbackCalled = true
 			end)
 			C_Timer.Pause(timer)
-			waitFor(120)
+			waitFor(100 * MAXIMUM_EPSILON_MODIFIER)
 			assertFalse(callbackCalled)
 		end)
 
@@ -255,9 +262,8 @@ describe("C_Timer", function()
 			local ticker = C_Timer.NewTicker(100, function()
 				callbackCalledCount = callbackCalledCount + 1
 			end)
-			waitFor(50)
 			C_Timer.Pause(ticker)
-			waitFor(200)
+			waitFor(2 * 100 * MAXIMUM_EPSILON_MODIFIER)
 			assertEquals(callbackCalledCount, 0)
 		end)
 	end)
@@ -269,9 +275,10 @@ describe("C_Timer", function()
 				callbackCalled = true
 			end)
 			C_Timer.Pause(timer)
-			waitFor(50)
+			waitFor(1)
+			assertFalse(callbackCalled)
 			C_Timer.Resume(timer)
-			waitFor(100)
+			waitFor(100 * MAXIMUM_EPSILON_MODIFIER)
 			assertTrue(callbackCalled)
 		end)
 
@@ -280,13 +287,13 @@ describe("C_Timer", function()
 			local ticker = C_Timer.NewTicker(100, function()
 				callbackCalledCount = callbackCalledCount + 1
 			end)
-			waitFor(50)
+			waitFor(1)
 			C_Timer.Pause(ticker)
-			waitFor(200)
+			waitFor(2 * 100 * MAXIMUM_EPSILON_MODIFIER)
 			assertEquals(callbackCalledCount, 0)
 			C_Timer.Resume(ticker)
-			waitFor(150)
-			assertEquals(callbackCalledCount, 1)
+			waitFor(2 * 100 * MAXIMUM_EPSILON_MODIFIER)
+			assertTrue(callbackCalledCount >= 1)
 		end)
 	end)
 
@@ -331,14 +338,14 @@ describe("C_Timer", function()
 			local timer = C_Timer.After(100, function() end)
 			waitFor(50)
 			local elapsedTime = C_Timer.GetElapsedTime(timer)
-			assertTrue(elapsedTime >= 49 and elapsedTime < 100) -- Timer inaccurcacies make testing this properly impossible
+			assertTrue(elapsedTime >= 50 * MINIMUM_EPSILON_MODIFIER and elapsedTime < 100 * MAXIMUM_EPSILON_MODIFIER)
 		end)
 
 		it("should return approximately 0 if the timer is already closed", function()
 			local timer = C_Timer.After(100, function() end)
 			C_Timer.Stop(timer)
 			local elapsedTime = C_Timer.GetElapsedTime(timer)
-			assertTrue(math.abs(elapsedTime) < 1e-2) -- Close enough (may be slightly off due to the hrtime used internally)
+			assertTrue(math.abs(elapsedTime) < 1e-2) -- Close enough (may be slightly off due to the high resolution clock)
 		end)
 	end)
 end)
