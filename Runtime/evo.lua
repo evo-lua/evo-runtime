@@ -108,11 +108,13 @@ end
 function evo.showVersionStrings(commandName, ...)
 	local versionText = format("This is Evo.lua %s (powered by %s)", EVO_VERSION, jit.version) .. "\n\n"
 
-	local luaOpensslVersionString, _, opensslVersionString = openssl.version()
+	-- Should use OPENSSL_VERSION_* defines here (not currently exposed via lua-openssl)
+	local _, _, opensslVersionString = openssl.version()
+	local sslVersion = opensslVersionString:match("OpenSSL%s(%d+%.%d+%.%d+)%s.*")
 
 	local embeddedLibraryVersions = {
 		libuv = uv.version_string(),
-		openssl = opensslVersionString .. "(via lua-openssl " .. luaOpensslVersionString .. ")",
+		openssl = sslVersion,
 		stduuid = stduuid.version(),
 		uws = uws.version(),
 		webview = webview.version(),
