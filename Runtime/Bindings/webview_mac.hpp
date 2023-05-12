@@ -100,8 +100,8 @@ namespace webview_ffi {
 			NSUInteger (*msgSendTyped)(id, SEL) = reinterpret_cast<NSUInteger (*)(id, SEL)>(objc_msgSend);
 			NSUInteger styleMask = msgSendTyped(nsWindow, sel_registerName("styleMask"));
 
-			const NSUInteger NSWindowStyleMaskFullScreen = 4;
-			bool isFullscreen = (styleMask & NSWindowStyleMaskFullScreen) == NSWindowStyleMaskFullScreen;
+			const NSUInteger NSFullScreenWindowMask = 1 << 14; // from NSWindow.h
+			bool isFullscreen = (styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
 
 			return isFullscreen;
 		}
