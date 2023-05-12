@@ -1,4 +1,15 @@
 local changelog = {
+	["v0.0.2"] = {
+		improvements = {
+			"The MSYS2 standard library DLLs are no longer required to run on Windows",
+		},
+		newFeatures = {
+			"High-level API namespace for managing embedded WebViews",
+			"WebViews can toggle between fullscreen and windowed mode",
+			"Scripts can now programmatically set the app icon for native WebView windows",
+			"Added a new string.filesize extension to create human-readable formatted size strings (with units)",
+		},
+	},
 	["v0.0.1"] = {
 		-- Initial release (first C++ version)
 		newFeatures = {
