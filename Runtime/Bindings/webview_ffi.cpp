@@ -160,7 +160,7 @@ namespace webview_ffi {
 	}
 
 	bool webview_is_windowed(webview_t w) {
-		return ! static_cast<WebviewBrowserEngine*>(w)->isFullscreenWindow();
+		return !static_cast<WebviewBrowserEngine*>(w)->isFullscreenWindow();
 	}
 
 	void* getExportsTable() {
