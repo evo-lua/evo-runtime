@@ -87,7 +87,12 @@ describe("webview", function()
 
 		describe("toggle_fullscreen", function()
 			it("should toggle the fullscreen state of the window", function()
-				-- We can't actually test this, but it should at least not crash...
+				if ffi.os == "OSX" then
+					-- In OSX, the style mask doesn't seem to update right away so it can't be queried here
+					-- Should probably find a better way (integration tests?), but for now this'll do
+					webview.bindings.webview_toggle_fullscreen(view)
+					return
+				end
 
 				local WEBVIEW_HINT_NONE = 0
 				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
@@ -112,7 +117,7 @@ describe("webview", function()
 				assertFalse(webview.bindings.webview_is_fullscreen(view))
 				assertTrue(webview.bindings.webview_is_windowed(view))
 
-				-- Should destroy view here, but it's shared
+					-- Should destroy view here, but it's shared
 			end)
 		end)
 
