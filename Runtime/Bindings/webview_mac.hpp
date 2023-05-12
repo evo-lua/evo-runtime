@@ -70,26 +70,38 @@ namespace webview_ffi {
 
 			return false;
 		}
-
 		std::string getWindowTitle() {
 			id nsWindow = (id)window();
-		    id title = ((id(*)(id, SEL))objc_msgSend)(nsWindow, sel_registerName("title"));
+			id (*titleFunc)(id, SEL) = (id(*)(id, SEL))objc_msgSend;
+			CFStringRef title = (CFStringRef)titleFunc(nsWindow, sel_registerName("title"));
 
-    		std::string windowTitle = "";
+			std::string windowTitle = "";
 
-			const char *c_str = (const char *)CFStringGetCStringPtr((CFStringRef)title, kCFStringEncodingUTF8);
-    		if (c_str) windowTitle = std::string(c_str);
+			// Use CFStringGetCString when CFStringGetCStringPtr returns NULL
+			const char* c_str = CFStringGetCStringPtr(title, kCFStringEncodingUTF8);
+			if(c_str) {
+				windowTitle = std::string(c_str);
+			} else {
+				// Create a buffer for the string
+				CFIndex length = CFStringGetLength(title);
+				CFIndex maxSize = CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8);
+				char* buffer = (char*)malloc(maxSize);
+				if(CFStringGetCString(title, buffer, maxSize, kCFStringEncodingUTF8)) {
+					windowTitle = std::string(buffer);
+				}
+				free(buffer);
+			}
 
-		    return windowTitle;
+			return windowTitle;
 		}
 
 		bool isFullscreenWindow() {
 			id nsWindow = (id)window();
-			id styleMask = ((id(*)(id, SEL))objc_msgSend)(nsWindow, sel_registerName("styleMask"));
-			NSUInteger mask = (NSUInteger)styleMask;
+			NSUInteger (*msgSendTyped)(id, SEL) = reinterpret_cast<NSUInteger (*)(id, SEL)>(objc_msgSend);
+			NSUInteger styleMask = msgSendTyped(nsWindow, sel_registerName("styleMask"));
 
 			const NSUInteger NSWindowStyleMaskFullScreen = 4;
-			bool isFullscreen = (mask & 4) == NSWindowStyleMaskFullScreen;
+			bool isFullscreen = (styleMask & NSWindowStyleMaskFullScreen) == NSWindowStyleMaskFullScreen;
 
 			return isFullscreen;
 		}
