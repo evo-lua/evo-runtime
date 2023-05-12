@@ -71,6 +71,28 @@ namespace webview_ffi {
 			return false;
 		}
 
+		std::string getWindowTitle() {
+		    id title = objc_msgSend(window, sel_registerName("title"));
+
+    		std::string windowTitle = "";
+
+			const char *c_str = (const char *)CFStringGetCStringPtr((CFStringRef)title, kCFStringEncodingUTF8);
+    		if (c_str) windowTitle = std::string(c_str);
+
+		    return windowTitle;
+		}
+
+		bool isFullscreenWindow() {
+			id nsWindowHandle = (id)window();
+			id styleMask = objc_msgSend(nsWindowHandle, sel_registerName("styleMask"));
+			NSUInteger mask = (NSUInteger)styleMask;
+
+			const NSUInteger NSWindowStyleMaskFullScreen = 4;
+			bool isFullscreen = (mask & 4) == NSWindowStyleMaskFullScreen;
+
+			return isFullscreen;
+		}
+
 	private:
 		int m_shouldExit = 0;
 	};
