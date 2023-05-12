@@ -41,8 +41,8 @@ namespace webview_ffi {
 		}
 
 		bool isFullscreenWindow() {
-	    	GdkWindowState state = gdk_window_get_state(gtk_widget_get_window(GTK_WIDGET(GTK_WINDOW(window()))));
-    		return state & GDK_WINDOW_STATE_FULLSCREEN;
+			GdkWindowState state = gdk_window_get_state(gtk_widget_get_window(GTK_WIDGET(GTK_WINDOW(window()))));
+			return state & GDK_WINDOW_STATE_FULLSCREEN;
 		}
 	};
 }
