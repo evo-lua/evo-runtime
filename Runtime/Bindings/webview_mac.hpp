@@ -72,7 +72,8 @@ namespace webview_ffi {
 		}
 
 		std::string getWindowTitle() {
-		    id title = objc_msgSend(window, sel_registerName("title"));
+			id nsWindow = (id)window();
+		    id title = ((id(*)(id, SEL))objc_msgSend)(nsWindow, sel_registerName("title"));
 
     		std::string windowTitle = "";
 
@@ -83,8 +84,8 @@ namespace webview_ffi {
 		}
 
 		bool isFullscreenWindow() {
-			id nsWindowHandle = (id)window();
-			id styleMask = objc_msgSend(nsWindowHandle, sel_registerName("styleMask"));
+			id nsWindow = (id)window();
+			id styleMask = ((id(*)(id, SEL))objc_msgSend)(nsWindow, sel_registerName("styleMask"));
 			NSUInteger mask = (NSUInteger)styleMask;
 
 			const NSUInteger NSWindowStyleMaskFullScreen = 4;
