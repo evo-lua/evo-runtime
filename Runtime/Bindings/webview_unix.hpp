@@ -34,5 +34,15 @@ namespace webview_ffi {
 				return false;
 			}
 		}
+
+		std::string getWindowTitle() {
+			const gchar* title = gtk_window_get_title(GTK_WINDOW(window()));
+			return std::string(title);
+		}
+
+		bool isFullscreenWindow() {
+	    	GdkWindowState state = gdk_window_get_state(gtk_widget_get_window(GTK_WIDGET(GTK_WINDOW(window()))));
+    		return state & GDK_WINDOW_STATE_FULLSCREEN;
+		}
 	};
 }
