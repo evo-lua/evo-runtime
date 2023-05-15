@@ -215,4 +215,53 @@ describe("C_FileSystem", function()
 			end, "EISDIR: illegal operation on a directory: " .. validDirectoryPath)
 		end)
 	end)
+
+	describe("MakeDirectoryTree", function()
+		local existingPath = path.join(uv.cwd(), "Tests", "Fixtures")
+		local newDirPath = path.join(existingPath, "NewDirectory")
+		local newSubDirPath = path.join(newDirPath, "SubDirectory")
+		local newSubSubDirPath = path.join(newSubDirPath, "SubSubDirectory")
+
+		after(function()
+			if C_FileSystem.Exists(newSubSubDirPath) then
+				assertTrue(C_FileSystem.Delete(newSubSubDirPath))
+			end
+
+			if C_FileSystem.Exists(newSubDirPath) then
+				assertTrue(C_FileSystem.Delete(newSubDirPath))
+			end
+
+			if C_FileSystem.Exists(newDirPath) then
+				assertTrue(C_FileSystem.Delete(newDirPath))
+			end
+		end)
+
+		it("should return true if the given path refers to an existing directory on disk", function()
+			local status, error = C_FileSystem.MakeDirectoryTree(existingPath)
+			assertTrue(status)
+			assertNil(error)
+		end)
+
+		it("should return true if the directory path doesn't exist, but its parent directories do", function()
+			local status, error = C_FileSystem.MakeDirectoryTree(newDirPath)
+			assertTrue(status)
+			assertNil(error)
+			assertTrue(C_FileSystem.IsDirectory(newDirPath))
+		end)
+
+		it("should return true if neither the directory path nor its parent directories exist", function()
+			local status, error = C_FileSystem.MakeDirectoryTree(newSubSubDirPath)
+			assertTrue(status)
+			assertNil(error)
+			assertTrue(C_FileSystem.IsDirectory(newSubSubDirPath))
+		end)
+
+		it("should return false if the path exists but is not a directory", function()
+			C_FileSystem.WriteFile(newDirPath, "this is a file")
+			local status, error = C_FileSystem.MakeDirectoryTree(newDirPath)
+			assertFalse(status)
+			assertEquals(error, "Path exists but is not a directory")
+			C_FileSystem.Delete(newDirPath)
+		end)
+	end)
 end)
