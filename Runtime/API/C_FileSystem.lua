@@ -46,6 +46,31 @@ function C_FileSystem.MakeDirectory(path)
 	return uv.fs_mkdir(path, 511)
 end
 
+function C_FileSystem.MakeDirectoryTree(path)
+	local parent = path_join(path, "..")
+	if not C_FileSystem.Exists(parent) then
+		local status, error = C_FileSystem.MakeDirectoryTree(parent)
+		if not status then
+			return false, error
+		end
+	end
+
+	if C_FileSystem.Exists(path) then
+		if C_FileSystem.IsDirectory(path) then
+			return true
+		else
+			return false, "Path exists but is not a directory"
+		end
+	end
+
+	local status, error = uv.fs_mkdir(path, 511)
+	if not status then
+		return false, error
+	end
+
+	return true
+end
+
 function C_FileSystem.ReadFile(path)
 	local fileDescriptor, fileAttributes, fileContents, errorMessage
 	fileDescriptor, errorMessage = uv.fs_open(path, "r", 438)
