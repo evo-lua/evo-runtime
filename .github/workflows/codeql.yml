@@ -1,0 +1,67 @@
+name: Semantic Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+  schedule:
+    - cron: '00 00 * * 6'
+
+jobs:
+  analyze:
+    name: Scan with CodeQL
+    runs-on: 'ubuntu-latest'
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+
+    steps:
+    - name: Checkout Git repository
+      uses: actions/checkout@v3
+      with:
+          submodules: recursive
+          fetch-depth: "0" # Required so that git describe actually works (and we can discover version tags)
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL scan
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Set up ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+
+    - name: Update apt cache
+      run: sudo apt-get update
+
+    - name: Install Ninja
+      run: sudo apt-get install ninja-build
+
+      # Can't actually be used on CI runners, but we need the headers for embedding webview
+    - name: Install WebKitGTK
+      run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
+
+    - name: Configure environment
+      run: |
+            export PATH="/usr/lib/ccache:$PATH"
+            echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
+            echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
+
+    - name: Build dependencies
+      run: bash deps/unixbuild-all.sh
+
+    - name: Build the runtime
+      run: bash ./unixbuild.sh
+
+    - name: Perform CodeQL analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"
