@@ -32,3 +32,20 @@ function json.pretty(jsonStringOrTable)
 
 	return nil, "string or table expected, got " .. type(jsonStringOrTable)
 end
+
+function json.prettier(jsonStringOrTable)
+	local encodingOptions = {
+		prettier = true,
+		sort_keys = true,
+	}
+
+	if type(jsonStringOrTable) == "string" then
+		return json.encode(json.decode(jsonStringOrTable), encodingOptions)
+	end
+
+	if type(jsonStringOrTable) == "table" then
+		return json.encode(jsonStringOrTable, encodingOptions)
+	end
+
+	return nil, "string or table expected, got " .. type(jsonStringOrTable)
+end

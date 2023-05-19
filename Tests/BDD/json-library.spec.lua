@@ -66,4 +66,26 @@ describe("json", function()
 			end, "string or table expected, got number")
 		end)
 	end)
+
+	describe("prettier", function()
+		it("should return a human-readable JSON string if a Lua table was given", function()
+			local input = { result = true, count = 42 }
+			local expectedOutput = '{\n\t"count": 42,\n\t"result": true\n}'
+			local formattedInput = json.prettier(input)
+			assertEquals(formattedInput, expectedOutput)
+		end)
+
+		it("should return a human-readable JSON string if a JSON string was given", function()
+			local input = '{"result":true,"count":42}'
+			local expectedOutput = '{\n\t"count": 42,\n\t"result": true\n}'
+			local formattedInput = json.prettier(input)
+			assertEquals(formattedInput, expectedOutput)
+		end)
+
+		it("should return nil if an invalid input was given", function()
+			assertFailure(function()
+				return json.prettier(42)
+			end, "string or table expected, got number")
+		end)
+	end)
 end)
