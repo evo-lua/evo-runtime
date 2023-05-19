@@ -57,6 +57,9 @@ jobs:
       - name: Build openssl
         run: deps/openssl-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build rapidjson
+        run: deps/rapidjson-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build lua-openssl
         run: deps/luaopenssl-unixbuild.sh && ls ninjabuild-unix
 
