@@ -15,4 +15,15 @@ describe("json", function()
 			assertEquals(type(exportedFunction), "function", "Should export function " .. functionName)
 		end
 	end)
+
+	describe("version", function()
+		it("should be a semantic version string", function()
+			local versionString = json.version()
+			local major, minor, patch = string.match(versionString, "(%d+).(%d+).(%d+)")
+
+			assertEquals(type(major), "string")
+			assertEquals(type(minor), "string")
+			assertEquals(type(patch), "string")
+		end)
+	end)
 end)

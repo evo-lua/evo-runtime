@@ -35,6 +35,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/uws.lua",
 		"Runtime/Bindings/webview.lua",
 		"Runtime/Extensions/debugx.lua",
+		"Runtime/Extensions/jsonx.lua",
 		"Runtime/Extensions/stringx.lua",
 		"Runtime/Extensions/tablex.lua",
 		"Runtime/Libraries/assertions.lua",

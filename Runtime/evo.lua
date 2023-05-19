@@ -1,6 +1,7 @@
 local bdd = require("bdd")
 local ffi = require("ffi")
 local jit = require("jit")
+local json = require("json")
 local openssl = require("openssl")
 local stduuid = require("stduuid")
 local uv = require("uv")
@@ -31,6 +32,7 @@ end
 
 function evo.loadNonstandardExtensions()
 	require("debugx")
+	require("jsonx")
 	require("stringx")
 	require("tablex")
 end
@@ -114,6 +116,7 @@ function evo.showVersionStrings(commandName, ...)
 
 	local embeddedLibraryVersions = {
 		libuv = uv.version_string(),
+		json = json.version(),
 		openssl = sslVersion,
 		stduuid = stduuid.version(),
 		uws = uws.version(),
