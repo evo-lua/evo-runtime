@@ -26,4 +26,22 @@ describe("json", function()
 			assertEquals(type(patch), "string")
 		end)
 	end)
+
+	describe("parse", function()
+		it("should parse a JSON string into a Lua table", function()
+			local luaTable = { result = true, count = 42 }
+			local jsonString = '{"result":true, "count":42}'
+			local jsonTable = json.parse(jsonString)
+			assertEquals(jsonTable, luaTable)
+		end)
+	end)
+
+	describe("stringify", function()
+		it("should stringify a Lua table into a JSON string", function()
+			assertEquals(json.stringify({ x = 5 }), '{"x":5}')
+			assertEquals(json.stringify({ 3, "false", false }), '[3,"false",false]')
+			assertEquals(json.stringify({ x = { 10, json.null, 42 } }), '{"x":[10,null,42]}')
+			assertEquals(json.stringify({ x = { 10, nil, 42 } }), '{"x":[10]}')
+		end)
+	end)
 end)
