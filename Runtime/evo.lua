@@ -88,7 +88,7 @@ end
 
 function evo.setUpCommandLineInterface()
 	C_CommandLine.RegisterCommand("help", evo.displayHelpText, "Display usage instructions (this text)")
-	C_CommandLine.RegisterCommand("version", evo.showVersionStrings, "Show versioning information")
+	C_CommandLine.RegisterCommand("version", evo.displayRuntimeVersion, "Show versioning information only")
 	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate the next token as a Lua chunk")
 	C_CommandLine.SetDefaultHandler(evo.onInvalidCommand)
 end
@@ -105,6 +105,10 @@ Commands:
 	)
 	print(helpText)
 	evo.showVersionStrings()
+end
+
+function evo.displayRuntimeVersion(commandName, ...)
+	print(EVO_VERSION)
 end
 
 function evo.showVersionStrings(commandName, ...)
