@@ -72,6 +72,8 @@ local EvoBuildTarget = {
 		"deps/brimworks/lua-zlib",
 		"deps/uNetworking/uWebSockets/src",
 		"deps/uNetworking/uWebSockets/uSockets/src",
+		"deps/xpol/lua-rapidjson/src",
+		"deps/xpol/lua-rapidjson/rapidjson/include",
 	},
 	staticLibraries = {
 		"libluajit.a",
