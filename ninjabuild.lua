@@ -77,6 +77,7 @@ local EvoBuildTarget = {
 		"libluv.a",
 		"libuv_a.a",
 		"openssl.a",
+		"librapidjson.a",
 		"libssl.a",
 		"libcrypto.a",
 		"uSockets.a",

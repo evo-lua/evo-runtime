@@ -1,6 +1,7 @@
 extern "C" {
 #include "luv.h"
 #include "lzlib.hpp"
+#include "rapidjson.hpp"
 #include "openssl.h"
 }
 
@@ -21,6 +22,7 @@ int main(int argc, char* argv[]) {
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
 	luaVM->PreloadPackage("uv", luaopen_luv);
 	luaVM->PreloadPackage("openssl", luaopen_openssl);
+	luaVM->PreloadPackage("json", luaopen_rapidjson);
 	luaVM->PreloadPackage("zlib", luaopen_zlib);
 
 	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
