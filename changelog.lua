@@ -7,7 +7,7 @@ local changelog = {
 			"High-level API namespace for managing embedded WebViews",
 			"WebViews can toggle between fullscreen and windowed mode",
 			"Scripts can now programmatically set the app icon for native WebView windows",
-			"Added a new string.filesize extension to create human-readable formatted size strings (with units)",
+			"Added a new `string.filesize` extension to create human-readable formatted size strings (with units)",
 		},
 	},
 	["v0.0.1"] = {
