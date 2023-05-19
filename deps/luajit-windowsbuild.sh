@@ -23,3 +23,6 @@ $BUILD_DIR/luajit.exe -e "print(\"Hello from LuaJIT! (This is a test and can be 
 
 # This is needed to save bytecode via luajit -b since the jit module isn't embedded inside the executable
 cp $LUAJIT_SOURCE_DIR/jit/* $BUILD_DIR/jit
+
+# This patch fixes the 'corrupt .drectve' warnings in MSYS2, but breaks MSVC (which isn't supported anyway)
+sed -i 's/\/EXPORT:/-export:/g' $BUILD_DIR/jit/bcsave.lua
