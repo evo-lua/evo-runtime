@@ -53,42 +53,53 @@ public:
 
 private:
 	template <typename Writer>
-	void encodeValue(lua_State* L, Writer* writer, int idx, int depth = 0) {
-		size_t len;
-		const char* s;
+	void encodeBoolean(lua_State* L, Writer* writer, int idx) {
+		writer->Bool(lua_toboolean(L, idx) != 0);
+	}
+
+	template <typename Writer>
+	void encodeNumber(lua_State* L, Writer* writer, int idx) {
 		int64_t integer;
+		if(luax::isinteger(L, idx, &integer))
+			writer->Int64(integer);
+		else {
+			if(!writer->Double(lua_tonumber(L, idx)))
+				luaL_error(L, "error while encode double value.");
+		}
+	}
+
+	template <typename Writer>
+	void encodeString(lua_State* L, Writer* writer, int idx) {
+		size_t len;
+		const char* s = lua_tolstring(L, idx, &len);
+		writer->String(s, static_cast<SizeType>(len));
+	}
+
+	template <typename Writer>
+	void encodeValue(lua_State* L, Writer* writer, int idx, int depth = 0) {
 		int t = lua_type(L, idx);
 		switch(t) {
 		case LUA_TBOOLEAN:
-			writer->Bool(lua_toboolean(L, idx) != 0);
-			return;
+			encodeBoolean(L, writer, idx);
+			break;
 		case LUA_TNUMBER:
-			if(luax::isinteger(L, idx, &integer))
-				writer->Int64(integer);
-			else {
-				if(!writer->Double(lua_tonumber(L, idx)))
-					luaL_error(L, "error while encode double value.");
-			}
-			return;
+			encodeNumber(L, writer, idx);
+			break;
 		case LUA_TSTRING:
-			s = lua_tolstring(L, idx, &len);
-			writer->String(s, static_cast<SizeType>(len));
-			return;
+			encodeString(L, writer, idx);
+			break;
 		case LUA_TTABLE:
-			return encodeTable(L, writer, idx, depth + 1);
+			encodeTable(L, writer, idx, depth + 1);
+			break;
 		case LUA_TNIL:
 			writer->Null();
-			return;
+			break;
 		case LUA_TLIGHTUSERDATA:
 			if(values::isnull(L, idx)) {
 				writer->Null();
-				return;
+				break;
 			}
 			[[fallthrough]];
-		case LUA_TFUNCTION:
-		case LUA_TUSERDATA:
-		case LUA_TTHREAD:
-		case LUA_TNONE:
 		default:
 			luaL_error(L, "unsupported value type : %s", lua_typename(L, t));
 		}
