@@ -37,3 +37,6 @@
 [submodule "deps/brimworks/lua-zlib"]
 	path = deps/brimworks/lua-zlib
 	url = https://github.com/brimworks/lua-zlib
+[submodule "deps/xpol/lua-rapidjson"]
+	path = deps/xpol/lua-rapidjson
+	url = https://github.com/xpol/lua-rapidjson.git
