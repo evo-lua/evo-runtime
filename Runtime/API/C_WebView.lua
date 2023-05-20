@@ -14,6 +14,7 @@ function C_WebView.CreateWithoutDevTools()
 	end
 
 	local nativeWindow = webview.bindings.webview_create(false, nil)
+	webview.bindings.webview_set_size(nativeWindow, 640, 480, 0)
 
 	self.pollingUpdateTimer:start(0, self.pollingUpdateTimeInMilliseconds, function()
 		webview.bindings.webview_run_once(nativeWindow, false)
@@ -28,6 +29,7 @@ function C_WebView.CreateWithDevTools()
 	end
 
 	local nativeWindow = webview.bindings.webview_create(true, nil)
+	webview.bindings.webview_set_size(nativeWindow, 640, 480, 0)
 
 	self.pollingUpdateTimer:start(0, self.pollingUpdateTimeInMilliseconds, function()
 		webview.bindings.webview_run_once(nativeWindow, false)
