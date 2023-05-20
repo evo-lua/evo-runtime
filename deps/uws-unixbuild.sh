@@ -16,7 +16,7 @@ cp uSockets.a $ABS_BUILD_DIR
 cd -
 
 # Since uws doesn't offer an API to get its version, a bit of a hack is needed
-function discover_uws_version() {
+discover_uws_version() {
 	cd $UWS_DIR
 
 	DISCOVERED_UWS_VERSION=$(git describe --tags --abbrev=0)
