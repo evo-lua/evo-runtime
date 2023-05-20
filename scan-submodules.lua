@@ -99,7 +99,7 @@ function SubmoduleUpdateChecker:GetUpdatedSubmoduleStatus()
 
 	for _, line in ipairs(lines) do
 		local checkedOutCommitHash, submodulePath, checkedOutVersionTag =
-			string_match(line, "%s([0-9a-z]+).*(deps/%S+).*%((.*)%)")
+			string_match(line, "%s?[%+%-U]?([0-9a-z]+).*(deps/%S+).*%((.*)%)")
 
 		local branch = nonstandardBranches[submodulePath] or "master"
 		printf("Fetching changes from %s for submodule %s ...", bold("origin/" .. branch), bold(submodulePath))
