@@ -241,6 +241,11 @@ static int json_encode_custom(lua_State* L) {
 	return 0;
 }
 
+int json_get_version_string(lua_State* L) {
+	lua_pushstring(L, RAPIDJSON_VERSION_STRING);
+	return 1;
+}
+
 //  Intendation with four spaces is hardcoded in lua-rapidjson, but tabs are objectively superior (and less wasteful)
 extern "C" {
 int luaopen_rapidjson_modified(lua_State* L) {
@@ -251,6 +256,9 @@ int luaopen_rapidjson_modified(lua_State* L) {
 
 	lua_pushcfunction(L, json_encode_custom);
 	lua_setfield(L, -2, "encode");
+
+	lua_pushcfunction(L, json_get_version_string);
+	lua_setfield(L, -2, "version");
 
 	return success;
 }
