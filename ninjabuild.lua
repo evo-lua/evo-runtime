@@ -78,7 +78,7 @@ local EvoBuildTarget = {
 	staticLibraries = {
 		"libluajit.a",
 		"libluv.a",
-		"libuv_a.a",
+		"libuv.a",
 		"openssl.a",
 		"librapidjson.a",
 		"libssl.a",
@@ -88,7 +88,7 @@ local EvoBuildTarget = {
 	},
 	sharedLibraries = (
 		isWindows
-			and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32 -l SHELL32 -l OLE32 -l VERSION -l shlwapi -static-libgcc -static-libstdc++ -static -lpthread"
+			and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32 -l SHELL32 -l OLE32 -l VERSION -l shlwapi -l DBGHELP -l uuid -static-libgcc -static-libstdc++ -static -lpthread"
 		or "-lm -ldl -pthread"
 			.. (
 				isMacOS and " -framework WebKit -framework CoreFoundation"

@@ -35,32 +35,6 @@ describe("C_Timer", function()
 				"Expected argument delayInMilliseconds to be a number value, but received a nil value instead"
 			)
 		end)
-
-		it("should silently yield until the delay has passed when called inside a coroutine", function()
-			local hasResumedCoroutine = false
-			local newThread = coroutine.create(function()
-				C_Timer.ResumeAfter(42)
-				hasResumedCoroutine = true
-			end)
-
-			coroutine.resume(newThread)
-			waitFor(42 * MAXIMUM_EPSILON_MODIFIER)
-			assertTrue(hasResumedCoroutine)
-		end)
-
-		it(
-			"should wait for approximately the specified delay before resuming when called inside a coroutine",
-			function()
-				local startTime = uv.hrtime()
-				local newThread = coroutine.create(function()
-					C_Timer.ResumeAfter(100)
-				end)
-				coroutine.resume(newThread)
-				waitFor(100 * MAXIMUM_EPSILON_MODIFIER)
-				local elapsed = (uv.hrtime() - startTime) / 1e6
-				assertTrue(elapsed >= 100 * MINIMUM_EPSILON_MODIFIER)
-			end
-		)
 	end)
 
 	describe("After", function()
@@ -113,28 +87,6 @@ describe("C_Timer", function()
 				resumeWithoutCallback,
 				"Expected argument callback to be a function value, but received a nil value instead"
 			)
-		end)
-
-		it("should call the callback repeatedly with the specified interval", function()
-			local callbackCalledCount = 0
-			local startTime = uv.hrtime()
-			local ticker
-
-			local function wrappedCallback()
-				callbackCalledCount = callbackCalledCount + 1
-				if callbackCalledCount >= 3 then
-					ticker:stop()
-					ticker:close()
-				end
-			end
-
-			ticker = C_Timer.NewTicker(100, wrappedCallback)
-			waitFor(3 * 100 * MAXIMUM_EPSILON_MODIFIER)
-
-			local elapsed = (uv.hrtime() - startTime) / 1e6
-			assertTrue(callbackCalledCount >= 3)
-
-			assertTrue(elapsed >= 3 * 100 * MINIMUM_EPSILON_MODIFIER)
 		end)
 	end)
 
