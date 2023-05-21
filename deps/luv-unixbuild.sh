@@ -11,4 +11,4 @@ cmake --build $BUILD_DIR --clean-first
 
 # Technically luv also builds LuaJIT (again), but it sometimes segfaults in JIT'ed code, so use the original instead to be safe
 cp $BUILD_DIR/libluv.a $OUT_DIR
-cp $BUILD_DIR/deps/libuv/libuv_a.a $OUT_DIR
+cp $BUILD_DIR/deps/libuv/libuv.a $OUT_DIR

@@ -78,7 +78,7 @@ local EvoBuildTarget = {
 	staticLibraries = {
 		"libluajit.a",
 		"libluv.a",
-		"libuv_a.a",
+		"libuv.a",
 		"openssl.a",
 		"librapidjson.a",
 		"libssl.a",
