@@ -20,7 +20,7 @@ describe("evo", function()
 			local hasEngineVersion = (engineVersion ~= nil)
 			local hasEmbeddedLibraryVersions = {
 				libuv = (capturedOutput:match("libuv" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				json = (capturedOutput:match("json" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
+				rapidjson = (capturedOutput:match("rapidjson" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				openssl = (capturedOutput:match("openssl" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				stduuid = (capturedOutput:match("stduuid" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				uws = (capturedOutput:match("uws" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
@@ -32,7 +32,7 @@ describe("evo", function()
 			assertTrue(hasRuntimeVersion)
 			assertTrue(hasEngineVersion)
 			assertTrue(hasEmbeddedLibraryVersions.libuv)
-			assertTrue(hasEmbeddedLibraryVersions.json)
+			assertTrue(hasEmbeddedLibraryVersions.rapidjson)
 			assertTrue(hasEmbeddedLibraryVersions.openssl)
 			assertTrue(hasEmbeddedLibraryVersions.stduuid)
 			assertTrue(hasEmbeddedLibraryVersions.uws)

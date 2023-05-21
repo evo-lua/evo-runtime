@@ -120,7 +120,7 @@ function evo.showVersionStrings(commandName, ...)
 
 	local embeddedLibraryVersions = {
 		libuv = uv.version_string(),
-		json = json.version(),
+		rapidjson = json.version(),
 		openssl = sslVersion,
 		stduuid = stduuid.version(),
 		uws = uws.version(),
