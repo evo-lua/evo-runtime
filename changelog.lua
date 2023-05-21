@@ -1,4 +1,13 @@
 local changelog = {
+	["v0.0.3"] = {
+		newFeatures = {
+			"The runtime now includes a  new `json` library (powered by rapidjson) that allows converting between JSON strings and Lua tables",
+			"A new `MakeDirectoryTree` function has been added to the `C_FileSystem` API; it recursively creates any parent directories that are missing",
+		},
+		improvements = {
+			"Native WebViews created via the `C_WebView` API should no longer be invisible on Mac OS when the window's dimensions haven't been explicitly set",
+		},
+	},
 	["v0.0.2"] = {
 		improvements = {
 			"The MSYS2 standard library DLLs are no longer required to run on Windows",
