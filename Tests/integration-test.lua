@@ -9,6 +9,8 @@ local testFiles = {
 	"Tests/Integration/http-shutdown-with-503.lua",
 	"Tests/Integration/http-response-status.lua",
 	"Tests/Integration/http-json-response.lua",
+	"Tests/Integration/timer-resume-after.lua",
+	"Tests/Integration/timer-ticker-callbacks.lua",
 	"Tests/Integration/webview-fullscreen-mode.lua",
 	"Tests/Integration/webview-app-icon.lua",
 	"Tests/Integration/webview-multiple-windows.lua",
