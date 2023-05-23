@@ -1,0 +1,8 @@
+Number of command-line arguments received:     4
+Dumping command-line arguments...
+{ "cli", "args", "go", "here" }
+Iterating over command-line arguments...
+1       cli
+2       args
+3       go
+4       here
