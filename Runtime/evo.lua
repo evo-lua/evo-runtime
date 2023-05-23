@@ -151,10 +151,10 @@ function evo.evaluateChunk(commandName, argv)
 	chunk()
 end
 
-function evo.onInvalidCommand(command)
+function evo.onInvalidCommand(command, ...)
 	local isLuaScript = string.match(string.lower(command), ".*%.lua")
 	if isLuaScript then
-		return dofile(command)
+		return loadfile(command)(...)
 	end
 
 	if command ~= "" then
