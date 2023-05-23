@@ -1,11 +1,9 @@
-local arguments = { ... }
-
-print("Number of command-line arguments received:", #arguments)
+print("Number of command-line arguments received:", #arg)
 
 print("Dumping command-line arguments...")
-dump(arguments)
+dump(arg)
 
 print("Iterating over command-line arguments...")
-for index, argument in pairs(arguments) do
+for index, argument in ipairs(arg) do
 	print(index, argument)
 end
