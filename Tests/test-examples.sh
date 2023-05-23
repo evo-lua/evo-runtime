@@ -2,6 +2,7 @@ set -e
 
 EXAMPLES_DIR="Tests/Snapshots"
 LUA_RUNTIME="evo"
+EXIT_CODE=0
 
 for EXAMPLE_SCRIPT in $EXAMPLES_DIR/*.lua
 do
@@ -20,7 +21,9 @@ do
     else
         echo "$BASE_NAME: FAILED"
         diff $OUTPUT_FILE $EXPECTED_FILE
-        exit 1
+        EXIT_CODE=1
     fi
 	rm $OUTPUT_FILE
 done
+
+exit $EXIT_CODE
