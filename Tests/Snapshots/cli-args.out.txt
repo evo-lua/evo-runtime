@@ -1,0 +1,10 @@
+Number of command-line arguments received:	4
+Dumping command-line arguments...
+{ "cli", "args", "go", "here",
+	[0] = "Tests/Snapshots/cli-args.lua"
+}
+Iterating over command-line arguments...
+1	cli
+2	args
+3	go
+4	here
