@@ -48,12 +48,12 @@ function C_WebView.Destroy()
 	self.pollingUpdateTimer:stop()
 end
 
-function C_WebView.SetWindowTitle(title)
-	webview.bindings.webview_set_title(self.nativeWindow, title)
+function C_WebView.SetWindowTitle(newWindowTitle)
+	webview.bindings.webview_set_title(self.nativeWindow, newWindowTitle)
 end
 
-function C_WebView.SetWindowSize(width, height)
-	webview.bindings.webview_set_size(self.nativeWindow, width, height, 0)
+function C_WebView.SetWindowSize(newWidthInPixels, newHeightInPixels)
+	webview.bindings.webview_set_size(self.nativeWindow, newWidthInPixels, newHeightInPixels, 0)
 end
 
 function C_WebView.NavigateToURL(url)

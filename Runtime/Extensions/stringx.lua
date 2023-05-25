@@ -69,19 +69,19 @@ function string.explode(inputString, delimiter)
 	return tokens
 end
 
-function string.filesize(size)
-	if size <= 0 then -- Negative file sizes don't make any sense
+function string.filesize(fileSizeInBytes)
+	if fileSizeInBytes <= 0 then -- Negative file sizes don't make any sense
 		return "0 bytes"
 	end
 
 	local units = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" }
-	local digitGroup = math_floor(math_log10(size) / math_log10(1024))
+	local digitGroup = math_floor(math_log10(fileSizeInBytes) / math_log10(1024))
 
 	if digitGroup == 0 then
-		return size .. " bytes"
+		return fileSizeInBytes .. " bytes"
 	elseif digitGroup == 1 then
-		return format("%d %s", size / math_pow(1024, digitGroup), units[digitGroup + 1])
+		return format("%d %s", fileSizeInBytes / math_pow(1024, digitGroup), units[digitGroup + 1])
 	else
-		return format("%.2f %s", size / math_pow(1024, digitGroup), units[digitGroup + 1])
+		return format("%.2f %s", fileSizeInBytes / math_pow(1024, digitGroup), units[digitGroup + 1])
 	end
 end
