@@ -108,42 +108,38 @@ describe("C_FileSystem", function()
 			end, "ENOENT: no such file or directory: " .. invalidPath)
 		end)
 
-		it(
-			"should return the absolute paths of files in all subdirectories if the isRecursiveMode flag is set to true",
-			function()
-				local contents = C_FileSystem.ReadDirectory(validDirectoryPath, true)
-				assertEquals(contents, {
-					[path.join(validDirectoryPath, "empty.txt")] = true,
-					[path.join(validDirectoryPath, "somefile.txt")] = true,
-					[path.join(validDirectoryPath, "Subdir1", "Subdir2", "hello.txt")] = true,
-					[path.join(validDirectoryPath, "Subdir1", "test.txt")] = true,
-				})
-			end
-		)
+		it("should return the relative paths of files in the root directory", function()
+			local contents = C_FileSystem.ReadDirectory(validDirectoryPath, false)
+			assertEquals(contents, {
+				["empty.txt"] = true,
+				["somefile.txt"] = true,
+				["Subdir1"] = true,
+			})
+		end)
+	end)
 
-		it(
-			"should return the relative paths of files in the root directory if the isRecursiveMode flag is set to false",
-			function()
-				local contents = C_FileSystem.ReadDirectory(validDirectoryPath, false)
-				assertEquals(contents, {
-					["empty.txt"] = true,
-					["somefile.txt"] = true,
-					["Subdir1"] = true,
-				})
-			end
-		)
+	describe("ReadDirectoryTree", function()
+		it("should raise an error if the path given refers to a file on disk", function()
+			assertThrows(function()
+				C_FileSystem.ReadDirectoryTree(validFilePath)
+			end, "ENOTDIR: not a directory: " .. validFilePath)
+		end)
 
-		it(
-			"should return the relative paths of files in the root directory if the isRecursiveMode flag is omitted",
-			function()
-				local contents = C_FileSystem.ReadDirectory(validDirectoryPath)
-				assertEquals(contents, {
-					["empty.txt"] = true,
-					["somefile.txt"] = true,
-					["Subdir1"] = true,
-				})
-			end
-		)
+		it("should raise an error if an invalid path was passed", function()
+			assertThrows(function()
+				C_FileSystem.ReadDirectoryTree(invalidPath)
+			end, "ENOENT: no such file or directory: " .. invalidPath)
+		end)
+
+		it("should return the absolute paths of files in all subdirectories", function()
+			local contents = C_FileSystem.ReadDirectoryTree(validDirectoryPath)
+			assertEquals(contents, {
+				[path.join(validDirectoryPath, "empty.txt")] = true,
+				[path.join(validDirectoryPath, "somefile.txt")] = true,
+				[path.join(validDirectoryPath, "Subdir1", "Subdir2", "hello.txt")] = true,
+				[path.join(validDirectoryPath, "Subdir1", "test.txt")] = true,
+			})
+		end)
 	end)
 
 	describe("ReadFile", function()
