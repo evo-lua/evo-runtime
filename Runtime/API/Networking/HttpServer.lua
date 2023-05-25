@@ -2,6 +2,7 @@ local ffi = require("ffi")
 local uv = require("uv")
 local uws = require("uws")
 
+local ffi_string = ffi.string
 local validation = require("validation")
 local validateString = validation.validateString
 
@@ -92,9 +93,9 @@ function HttpServer:ProcessDeferredEvents()
 		uws.bindings.uws_webserver_get_next_event(self.nativeHandle, cdata)
 
 		local eventType = tonumber(cdata.type)
-		local eventName = ffi.string(uws.bindings.uws_event_name(cdata))
-		local clientID = ffi.string(cdata.clientID)
-		local payloadBuffer = ffi.string(cdata.payload, cdata.payload_size)
+		local eventName = ffi_string(uws.bindings.uws_event_name(cdata))
+		local clientID = ffi_string(cdata.clientID)
+		local payloadBuffer = ffi_string(cdata.payload, cdata.payload_size)
 
 		local payload = {
 			eventTypeID = eventType,
@@ -161,7 +162,7 @@ function HttpServer:GetRequestEndpoint(requestID)
 		return
 	end
 
-	return ffi.string(cdata)
+	return ffi_string(cdata)
 end
 
 -- Potentially wasteful, but let's wait and see if it will become a problem
@@ -212,7 +213,7 @@ function HttpServer:GetRequestMethod(requestID)
 		return
 	end
 
-	return string.upper(ffi.string(cdata))
+	return string.upper(ffi_string(cdata))
 end
 
 function HttpServer:GetRequestURL(requestID)
@@ -223,7 +224,7 @@ function HttpServer:GetRequestURL(requestID)
 		return
 	end
 
-	return ffi.string(cdata)
+	return ffi_string(cdata)
 end
 
 function HttpServer:GetRequestQuery(requestID)
@@ -234,7 +235,7 @@ function HttpServer:GetRequestQuery(requestID)
 		return
 	end
 
-	return ffi.string(cdata)
+	return ffi_string(cdata)
 end
 
 function HttpServer:GetRequestHeaders(requestID)
@@ -247,7 +248,7 @@ function HttpServer:GetRequestHeaders(requestID)
 		return
 	end
 
-	return ffi.string(cdata)
+	return ffi_string(cdata)
 end
 
 function HttpServer:GetRequestHeader(requestID, headerName)
@@ -264,7 +265,7 @@ function HttpServer:GetRequestHeader(requestID, headerName)
 		return
 	end
 
-	return ffi.string(cdata)
+	return ffi_string(cdata)
 end
 
 function HttpServer:OnEvent(eventName, payload)
