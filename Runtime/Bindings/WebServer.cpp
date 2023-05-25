@@ -213,7 +213,7 @@ void WebServer::OnLastChunkReceived(std::string requestID, std::string_view chun
 void WebServer::OnConnectionWritable(std::string requestID, long unsigned int offset) {
 	UWS_DEBUG("HTTP connection writable: ", requestID, " (offset is now ", offset, ")");
 
-	m_deferredEventsQueue.emplace(DeferredEvent::Type::HTTP_WRITABLE, requestID, "");
+	m_deferredEventsQueue.emplace(DeferredEvent::Type::HTTP_WRITABLE, requestID, std::to_string(offset));
 }
 
 void WebServer::OnConnectionAborted(std::string requestID) {
