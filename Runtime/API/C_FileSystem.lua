@@ -96,8 +96,8 @@ function C_FileSystem.ReadFile(filePath)
 	return fileContents
 end
 
-function C_FileSystem.ReadDirectory(path, isRecursiveMode)
-	local libuvFileSystemRequest, errorMessage = uv.fs_scandir(path)
+local function readDirectory(filePath, isRecursiveMode)
+	local libuvFileSystemRequest, errorMessage = uv.fs_scandir(filePath)
 
 	if not libuvFileSystemRequest then
 		error(errorMessage, 0)
@@ -112,9 +112,10 @@ function C_FileSystem.ReadDirectory(path, isRecursiveMode)
 		end
 
 		local canWalkRecursively = (type == "directory")
-		local absolutePath = path_join(path, name)
+		local absolutePath = path_join(filePath, name)
 		if canWalkRecursively and isRecursiveMode then
-			local files = C_FileSystem.ReadDirectory(absolutePath, isRecursiveMode)
+			local files = isRecursiveMode and C_FileSystem.ReadDirectoryTree(absolutePath)
+				or C_FileSystem.ReadDirectory(absolutePath)
 			for key, value in pairs(files) do
 				directoryContents[key] = value
 			end
@@ -126,6 +127,14 @@ function C_FileSystem.ReadDirectory(path, isRecursiveMode)
 	end
 
 	return directoryContents
+end
+
+function C_FileSystem.ReadDirectory(filePath)
+	return readDirectory(filePath, false)
+end
+
+function C_FileSystem.ReadDirectoryTree(filePath)
+	return readDirectory(filePath, true)
 end
 
 function C_FileSystem.WriteFile(filePath, contents)
