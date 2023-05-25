@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "webview_ffi.hpp"
 #include "webview.h"
 
 typedef void (*promise_function_t)(const char* seq, const char* req, void* arg);

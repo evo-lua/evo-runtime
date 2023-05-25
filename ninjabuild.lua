@@ -8,6 +8,12 @@ local isWindows = (ffi.os == "Windows")
 local isMacOS = (ffi.os == "OSX")
 local isUnix = not (isWindows or isMacOS)
 
+local OS_SUFFIXES = {
+	Windows = "win.cpp",
+	OSX = "mac.mm",
+	Linux = "unix.cpp",
+}
+
 local NinjaBuildTools = require("BuildTools.NinjaBuildTools")
 local NinjaFile = require("BuildTools.NinjaFile")
 
@@ -52,7 +58,8 @@ local EvoBuildTarget = {
 		"Runtime/evo.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
-		"Runtime/Bindings/webview_ffi.cpp",
+		--"Runtime/Bindings/webview_ffi.cpp",
+		"Runtime/Bindings/webview_" .. OS_SUFFIXES[ffi.os],
 		"Runtime/Bindings/lzlib.cpp",
 		"Runtime/Bindings/WebServer.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
@@ -91,7 +98,7 @@ local EvoBuildTarget = {
 			and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32 -l SHELL32 -l OLE32 -l VERSION -l shlwapi -l DBGHELP -l uuid -static-libgcc -static-libstdc++ -static -lpthread"
 		or "-lm -ldl -pthread"
 			.. (
-				isMacOS and " -framework WebKit -framework CoreFoundation"
+				isMacOS and " -framework WebKit -framework Foundation -framework AppKit"
 				or isUnix and " -luuid -lwebkit2gtk-4.0 -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lsoup-2.4 -lgmodule-2.0 -pthread -lglib-2.0 -lgio-2.0 -ljavascriptcoregtk-4.0 -lgobject-2.0 -lglib-2.0"
 				or ""
 			)
