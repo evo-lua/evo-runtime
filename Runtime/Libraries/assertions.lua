@@ -255,14 +255,29 @@ function assertions.assertEqualBytes(firstValue, secondValue)
 	local firstLength = ffi.sizeof(firstValue)
 	local secondLength = ffi.sizeof(secondValue)
 
-	if ffi_string(firstValue, firstLength) ~= ffi_string(secondValue, secondLength) then
+	if firstLength ~= secondLength then
 		error(
 			"ASSERTION FAILURE: Expected "
-				.. tostring(secondValue, secondLength)
-				.. " but got "
-				.. tostring(firstValue, firstLength),
+				.. tostring(secondLength)
+				.. " bytes but got "
+				.. tostring(firstLength)
+				.. " bytes",
 			0
 		)
+	end
+
+	for i = 0, firstLength - 1 do
+		if firstValue[i] ~= secondValue[i] then
+			error(
+				"ASSERTION FAILURE: Expected "
+					.. tostring(secondValue[i])
+					.. " but got "
+					.. tostring(firstValue[i])
+					.. " at index "
+					.. tostring(i),
+				0
+			)
+		end
 	end
 
 	return true
