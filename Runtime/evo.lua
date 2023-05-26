@@ -3,6 +3,7 @@ local ffi = require("ffi")
 local jit = require("jit")
 local json = require("json")
 local openssl = require("openssl")
+local stbi = require("stbi")
 local stduuid = require("stduuid")
 local uv = require("uv")
 local uws = require("uws")
@@ -122,6 +123,7 @@ function evo.showVersionStrings(commandName, ...)
 		libuv = uv.version_string(),
 		rapidjson = json.version(),
 		openssl = sslVersion,
+		stbi = stbi.version(),
 		stduuid = stduuid.version(),
 		uws = uws.version(),
 		webview = webview.version(),
