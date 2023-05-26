@@ -31,6 +31,7 @@ local EvoBuildTarget = {
 		"Runtime/API/Networking/HttpServer.lua",
 		"Runtime/API/Networking/WebSocketTestClient.lua",
 		"Runtime/API/Networking/WebSocketServer.lua",
+		"Runtime/Bindings/stbi.lua",
 		"Runtime/Bindings/stduuid.lua",
 		"Runtime/Bindings/uws.lua",
 		"Runtime/Bindings/webview.lua",
@@ -50,6 +51,7 @@ local EvoBuildTarget = {
 	cppSources = {
 		"Runtime/main.cpp",
 		"Runtime/evo.cpp",
+		"Runtime/Bindings/stbi_ffi.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
@@ -65,6 +67,7 @@ local EvoBuildTarget = {
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
 		"deps/mariusbancila/stduuid/include",
+		"deps/nothings/stb",
 		"deps/webview/webview",
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
