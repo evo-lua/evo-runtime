@@ -10,7 +10,8 @@ namespace webview_ffi {
 		int step(int blocking);
 		void toggleFullScreen();
 		bool setAppIcon(const char* iconPath);
+
 	private:
-        int m_shouldExit = 0;
-    };
+		int m_shouldExit = 0;
+	};
 }
