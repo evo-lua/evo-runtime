@@ -75,7 +75,7 @@ function SubmoduleUpdateChecker:GetNewCommitInfo(path, branch)
 			yellow(new_commits)
 				.. (
 					(numCommits > 5)
-						and "... and " .. (numCommits - 5) .. " additional commits (skipped for brevity)\n"
+						and "... and " .. (numCommits - 5) .. " additional commits (omitted for brevity)\n"
 					or ""
 				)
 		)
