@@ -14,6 +14,14 @@ local OS_SUFFIXES = {
 	Linux = "unix.cpp",
 }
 
+local function getPlatformSpecificWebViewSource()
+	return (
+		isMacOS and "Runtime/Bindings/webview_mac.mm"
+		or (isWindows and "Runtime/Bindings/webview_windows.cpp")
+		or "Runtime/Bindings/webview_unix.cpp"
+	)
+end
+
 local NinjaBuildTools = require("BuildTools.NinjaBuildTools")
 local NinjaFile = require("BuildTools.NinjaFile")
 
@@ -58,8 +66,7 @@ local EvoBuildTarget = {
 		"Runtime/evo.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
-		--"Runtime/Bindings/webview_ffi.cpp",
-		"Runtime/Bindings/webview_" .. OS_SUFFIXES[ffi.os],
+		getPlatformSpecificWebViewSource(),
 		"Runtime/Bindings/lzlib.cpp",
 		"Runtime/Bindings/WebServer.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
