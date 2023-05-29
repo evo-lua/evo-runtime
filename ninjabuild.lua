@@ -140,21 +140,6 @@ local EvoBuildTarget = {
 	},
 }
 
--- This is another ugly hack required due to webview's lack of a build system:
--- On Linux, we need a lot of extra libraries, which could be anywhere
--- The good news is that pkg-config should help discover them more or less reliably
-if isUnix then
-	local webviewIncludeFlags = NinjaBuildTools.DiscoverIncludeDirectories("gtk+-3.0 webkit2gtk-4.0")
-	for k, includeDir in ipairs(webviewIncludeFlags) do
-		table.insert(EvoBuildTarget.includeDirectories, includeDir)
-	end
-
-	local webviewLibFlags = NinjaBuildTools.DiscoverSharedLibraries("gtk+-3.0 webkit2gtk-4.0")
-	for _, libraryFlag in string.gmatch(webviewLibFlags, "-l(%w+)%s") do
-		table.insert(EvoBuildTarget.sharedLibraries.Linux, libraryFlag)
-	end
-end
-
 function EvoBuildTarget:GenerateNinjaFile()
 	self.ninjaFile = NinjaFile()
 	self.objectFiles = {}
@@ -222,6 +207,20 @@ end
 function EvoBuildTarget:ProcessNativeSources()
 	local ninjaFile = self.ninjaFile
 	local objectFiles = self.objectFiles
+
+	-- On Linux, we need a lot of extra libraries, which could be anywhere
+	-- The good news is that pkg-config should help discover them more or less reliably
+	if isUnix then
+		local webviewIncludeFlags = NinjaBuildTools.DiscoverIncludeDirectories("gtk+-3.0 webkit2gtk-4.0")
+		for k, includeDir in ipairs(webviewIncludeFlags) do
+			table.insert(EvoBuildTarget.includeDirectories, includeDir)
+		end
+
+		local webviewLibFlags = NinjaBuildTools.DiscoverSharedLibraries("gtk+-3.0 webkit2gtk-4.0")
+		for _, libraryFlag in string.gmatch(webviewLibFlags, "-l(%w+)%s") do
+			table.insert(EvoBuildTarget.sharedLibraries.Linux, libraryFlag)
+		end
+	end
 
 	-- No point in fine-tuning include dirs since there's no duplicate headers anywhere, so just pass all of them every time
 	local includes = ""
