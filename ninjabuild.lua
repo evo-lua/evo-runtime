@@ -86,30 +86,59 @@ local EvoBuildTarget = {
 		"uSockets.a",
 		"zlibstatic.a",
 	},
-	sharedLibraries = (
-		isWindows
-			and "-l PSAPI -l USER32 -l ADVAPI32 -l IPHLPAPI -l USERENV -l WS2_32 -l GDI32 -l CRYPT32 -l SHELL32 -l OLE32 -l VERSION -l shlwapi -l DBGHELP -l uuid -static-libgcc -static-libstdc++ -static -lpthread"
-		or "-lm -ldl -pthread"
-			.. (
-				isMacOS and " -framework WebKit -framework CoreFoundation"
-				or isUnix and " -luuid -lwebkit2gtk-4.0 -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lsoup-2.4 -lgmodule-2.0 -pthread -lglib-2.0 -lgio-2.0 -ljavascriptcoregtk-4.0 -lgobject-2.0 -lglib-2.0"
-				or ""
-			)
-	),
+	sharedLibraries = {
+		Windows = {
+			"psapi",
+			"user32",
+			"advapi32",
+			"iphlpapi",
+			"userenv",
+			"ws2_32",
+			"gdi32",
+			"crypt32",
+			"shell32",
+			"ole32",
+			"version",
+			"shlwapi",
+			"dbghelp",
+			"uuid",
+		},
+		OSX = {
+			"m",
+			"dl",
+			"pthread",
+			"CoreFoundation",
+			"WebKit",
+		},
+		Linux = {
+			"m",
+			"dl",
+			"pthread",
+			"uuid",
+			"webkit2gtk-4.0",
+			"gtk-3",
+			"gdk-3",
+			"z",
+			"pangocairo-1.0",
+			"pango-1.0",
+			"harfbuzz",
+			"atk-1.0",
+			"cairo-gobject",
+			"cairo",
+			"gdk_pixbuf-2.0",
+			"soup-2.4",
+			"gmodule-2.0",
+			"glib-2.0",
+			"gio-2.0",
+			"javascriptcoregtk-4.0",
+			"gobject-2.0",
+			"glib-2.0",
+		},
+	},
+	staticallyLinkStandardLibraries = {
+		Windows = true,
+	},
 }
-
--- This is another ugly hack required due to webview's lack of a build system:
--- On Linux, we need a lot of extra libraries, which could be anywhere
--- The good news is that pkg-config should help discover them more or less reliably
-if isUnix then
-	local webviewIncludeFlags = NinjaBuildTools.DiscoverIncludeDirectories("gtk+-3.0 webkit2gtk-4.0")
-	for k, includeDir in ipairs(webviewIncludeFlags) do
-		table.insert(EvoBuildTarget.includeDirectories, includeDir)
-	end
-
-	local webviewLibFlags = NinjaBuildTools.DiscoverSharedLibraries("gtk+-3.0 webkit2gtk-4.0")
-	EvoBuildTarget.sharedLibraries = EvoBuildTarget.sharedLibraries .. " " .. webviewLibFlags
-end
 
 function EvoBuildTarget:GenerateNinjaFile()
 	self.ninjaFile = NinjaFile()
@@ -178,6 +207,20 @@ end
 function EvoBuildTarget:ProcessNativeSources()
 	local ninjaFile = self.ninjaFile
 	local objectFiles = self.objectFiles
+
+	-- On Linux, we need a lot of extra libraries, which could be anywhere
+	-- The good news is that pkg-config should help discover them more or less reliably
+	if isUnix then
+		local webviewIncludeFlags = NinjaBuildTools.DiscoverIncludeDirectories("gtk+-3.0 webkit2gtk-4.0")
+		for k, includeDir in ipairs(webviewIncludeFlags) do
+			table.insert(EvoBuildTarget.includeDirectories, includeDir)
+		end
+
+		local webviewLibFlags = NinjaBuildTools.DiscoverSharedLibraries("gtk+-3.0 webkit2gtk-4.0")
+		for _, libraryFlag in string.gmatch(webviewLibFlags, "-l(%w+)%s") do
+			table.insert(EvoBuildTarget.sharedLibraries.Linux, libraryFlag)
+		end
+	end
 
 	-- No point in fine-tuning include dirs since there's no duplicate headers anywhere, so just pass all of them every time
 	local includes = ""
@@ -256,10 +299,22 @@ function EvoBuildTarget:ProcessStaticLibraries()
 		table.insert(objectFiles, relativeLibraryPath)
 	end
 
+	local sharedLibraryFlags = ""
+	for index, libraryBaseName in ipairs(self.sharedLibraries[ffi.os]) do
+		local startsWithCapitalLetter = string.match(libraryBaseName, "^[A-Z]")
+		local isAppleFramework = isMacOS and startsWithCapitalLetter
+		local prefix = isAppleFramework and "-framework" or "-l"
+		sharedLibraryFlags = sharedLibraryFlags .. " " .. prefix .. " " .. libraryBaseName
+	end
+
+	if isWindows and self.staticallyLinkStandardLibraries.Windows then
+		sharedLibraryFlags = sharedLibraryFlags .. " " .. "-static-libgcc -static-libstdc++ -static -lpthread"
+	end
+
 	ninjaFile:AddBuildEdge(
 		self.BUILD_DIR .. "/" .. self.OUTPUT_FILE_NAME,
 		"link " .. table.concat(objectFiles, " "),
-		{ libs = self.sharedLibraries }
+		{ libs = sharedLibraryFlags }
 	)
 end
 
