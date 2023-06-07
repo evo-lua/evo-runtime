@@ -27,6 +27,38 @@ bool stbi_load_image(stbi_readonly_file_contents_t buffer, const size_t file_siz
 	return image->data != nullptr;
 }
 
+bool stbi_load_rgb(stbi_readonly_file_contents_t buffer, const size_t file_size, stbi_image_t* image) {
+	if(!buffer) return false;
+	if(!image) return false;
+
+	image->data = stbi_load_from_memory(buffer, file_size, &image->width, &image->height, &image->channels, CONVERT_TO_RGB);
+	return image->data != nullptr;
+}
+
+bool stbi_load_rgba(stbi_readonly_file_contents_t buffer, const size_t file_size, stbi_image_t* image) {
+	if(!buffer) return false;
+	if(!image) return false;
+
+	image->data = stbi_load_from_memory(buffer, file_size, &image->width, &image->height, &image->channels, CONVERT_TO_RGB_WITH_ALPHA);
+	return image->data != nullptr;
+}
+
+bool stbi_load_monochrome(stbi_readonly_file_contents_t buffer, const size_t file_size, stbi_image_t* image) {
+	if(!buffer) return false;
+	if(!image) return false;
+
+	image->data = stbi_load_from_memory(buffer, file_size, &image->width, &image->height, &image->channels, CONVERT_TO_GREYSCALE);
+	return image->data != nullptr;
+}
+
+bool stbi_load_monochrome_with_alpha(stbi_readonly_file_contents_t buffer, const size_t file_size, stbi_image_t* image) {
+	if(!buffer) return false;
+	if(!image) return false;
+
+	image->data = stbi_load_from_memory(buffer, file_size, &image->width, &image->height, &image->channels, CONVERT_TO_GREYSCALE_WITH_ALPHA);
+	return image->data != nullptr;
+}
+
 bool stbi_image_free(stbi_image_t* image) {
 	if(!image) return false;
 	if(!image->data) return false;
@@ -110,6 +142,11 @@ namespace stbi_ffi {
 		stbi_exports_table.stbi_encode_jpg = stbi_encode_jpg;
 		stbi_exports_table.stbi_encode_png = stbi_encode_png;
 		stbi_exports_table.stbi_encode_tga = stbi_encode_tga;
+
+		stbi_exports_table.stbi_load_rgb = stbi_load_rgb;
+		stbi_exports_table.stbi_load_rgba = stbi_load_rgba;
+		stbi_exports_table.stbi_load_monochrome = stbi_load_monochrome;
+		stbi_exports_table.stbi_load_monochrome_with_alpha = stbi_load_monochrome_with_alpha;
 
 		return &stbi_exports_table;
 	}
