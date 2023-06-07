@@ -1,4 +1,12 @@
 local changelog = {
+	["v0.0.4"] = {
+		newFeatures = {
+			"The runtime now includes a  new `stbi` library (powered by stb) that allows converting between common image formats",
+		},
+		breakingChanges = {
+			"Split `ReadDirectory` and `ReadDirectoryTree` (for recursive mode) in the `C_FileSystem` API namespace",
+		},
+	},
 	["v0.0.3"] = {
 		newFeatures = {
 			"The runtime now includes a  new `json` library (powered by rapidjson) that allows converting between JSON strings and Lua tables",
