@@ -11,6 +11,10 @@ describe("stbi", function()
 				"stbi_image_info",
 				"stbi_load_image",
 				"stbi_image_free",
+				"stbi_load_rgb",
+				"stbi_load_rgba",
+				"stbi_load_monochrome",
+				"stbi_load_monochrome_with_alpha",
 				"stbi_encode_bmp",
 				"stbi_encode_png",
 				"stbi_encode_jpg",
@@ -476,6 +480,239 @@ describe("stbi", function()
 				local ptr, _ = empyBuffer:ref()
 				local numBytesWritten = stbi.bindings.stbi_encode_png(image, ptr, -1, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
+			end)
+		end)
+
+		describe("stbi_load_rgb", function()
+			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+			it("should return the decoded image data if the buffer contains a supported image format", function()
+				local imageInfo = ffi.new("stbi_image_t")
+				local result = stbi.bindings.stbi_load_rgb(fileContents, #fileContents, imageInfo)
+
+				assertTrue(result)
+				assertEquals(imageInfo.width, 2)
+				assertEquals(imageInfo.height, 3)
+				assertEquals(imageInfo.channels, 3)
+
+				local expectedPixels = {
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+				}
+
+				for i = 0, imageInfo.width * imageInfo.height * imageInfo.channels - 1 do
+					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
+				end
+
+				stbi.bindings.stbi_image_free(imageInfo)
+			end)
+
+			it("should return false if a null pointer was passed as the result", function()
+				local result = stbi.bindings.stbi_load_rgb(fileContents, #fileContents, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if no image data was found in the buffer", function()
+				local result = stbi.bindings.stbi_load_rgb("not an image", 11, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was zero", function()
+				local result = stbi.bindings.stbi_load_rgb(fileContents, 0, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was negative", function()
+				local result = stbi.bindings.stbi_load_rgb(fileContents, -1, nil)
+				assertFalse(result)
+			end)
+		end)
+
+		describe("stbi_load_rgba", function()
+			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+			it("should return the decoded image data if the buffer contains a supported image format", function()
+				local imageInfo = ffi.new("stbi_image_t")
+				local result = stbi.bindings.stbi_load_rgba(fileContents, #fileContents, imageInfo)
+
+				assertTrue(result)
+				assertEquals(imageInfo.width, 2)
+				assertEquals(imageInfo.height, 3)
+				assertEquals(imageInfo.channels, 3)
+
+				local expectedPixels = {
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+				}
+
+				for i = 0, imageInfo.width * imageInfo.height * imageInfo.channels - 1 do
+					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
+				end
+
+				stbi.bindings.stbi_image_free(imageInfo)
+			end)
+
+			it("should return false if a null pointer was passed as the result", function()
+				local result = stbi.bindings.stbi_load_rgba(fileContents, #fileContents, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if no image data was found in the buffer", function()
+				local result = stbi.bindings.stbi_load_rgba("not an image", 11, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was zero", function()
+				local result = stbi.bindings.stbi_load_rgba(fileContents, 0, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was negative", function()
+				local result = stbi.bindings.stbi_load_rgba(fileContents, -1, nil)
+				assertFalse(result)
+			end)
+		end)
+
+		describe("stbi_load_monochrome", function()
+			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+			it("should return the decoded image data if the buffer contains a supported image format", function()
+				local imageInfo = ffi.new("stbi_image_t")
+				local result = stbi.bindings.stbi_load_monochrome(fileContents, #fileContents, imageInfo)
+
+				assertTrue(result)
+				assertEquals(imageInfo.width, 2)
+				assertEquals(imageInfo.height, 3)
+				assertEquals(imageInfo.channels, 3)
+
+				local expectedPixels = {
+					-- Not sure if this is what I'd consider 'monochrome', but it's what stbi does so let's leave it for now
+					28,
+					28,
+					28,
+					28,
+					28,
+					28,
+				}
+
+				-- stbi doesn't set the channels to the actual result here, but rather what it "would have been" originally...
+				local MONOCHROME_COLOR_DEPTH = 1
+				for i = 0, imageInfo.width * imageInfo.height * MONOCHROME_COLOR_DEPTH - 1 do
+					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
+				end
+
+				stbi.bindings.stbi_image_free(imageInfo)
+			end)
+
+			it("should return false if a null pointer was passed as the result", function()
+				local result = stbi.bindings.stbi_load_monochrome(fileContents, #fileContents, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if no image data was found in the buffer", function()
+				local result = stbi.bindings.stbi_load_monochrome("not an image", 11, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was zero", function()
+				local result = stbi.bindings.stbi_load_monochrome(fileContents, 0, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was negative", function()
+				local result = stbi.bindings.stbi_load_monochrome(fileContents, -1, nil)
+				assertFalse(result)
+			end)
+		end)
+
+		describe("stbi_load_monochrome_with_alpha", function()
+			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+			it("should return the decoded image data if the buffer contains a supported image format", function()
+				local imageInfo = ffi.new("stbi_image_t")
+				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, #fileContents, imageInfo)
+
+				assertTrue(result)
+				assertEquals(imageInfo.width, 2)
+				assertEquals(imageInfo.height, 3)
+				assertEquals(imageInfo.channels, 3)
+
+				local expectedPixels = {
+					-- Not sure if this is what I'd consider 'monochrome', but it's what stbi does so let's leave it for now
+					28,
+					255,
+					28,
+					255,
+					28,
+					255,
+					28,
+					255,
+					28,
+					255,
+					28,
+					255,
+				}
+
+				-- stbi doesn't set the channels to the actual result here, but rather what it "would have been" originally...
+				local MONOCHROME_ALPHA_COLOR_DEPTH = 2
+				for i = 0, imageInfo.width * imageInfo.height * MONOCHROME_ALPHA_COLOR_DEPTH - 1 do
+					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
+				end
+				stbi.bindings.stbi_image_free(imageInfo)
+			end)
+
+			it("should return false if a null pointer was passed as the result", function()
+				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, #fileContents, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if no image data was found in the buffer", function()
+				local result = stbi.bindings.stbi_load_monochrome_with_alpha("not an image", 11, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was zero", function()
+				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, 0, nil)
+				assertFalse(result)
+			end)
+
+			it("should return false if the buffer size given was negative", function()
+				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, -1, nil)
+				assertFalse(result)
 			end)
 		end)
 	end)
