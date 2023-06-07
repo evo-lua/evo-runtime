@@ -46,6 +46,14 @@ stbi.cdefs = [[
 		size_t (*stbi_encode_jpg)(stbi_image_t* image, uint8_t* buffer, const size_t buffer_size, int quality);
 		size_t (*stbi_encode_tga)(stbi_image_t* image, uint8_t* buffer, const size_t buffer_size);
 	};
+
+	// This may be moved to C later if needed, but for now it's Lua only
+	typedef struct {
+		uint8_t red;
+		uint8_t green;
+		uint8_t blue;
+		uint8_t alpha;
+	} stbi_color_t;
 ]]
 
 function stbi.initialize()
@@ -73,6 +81,24 @@ function stbi.max_bitmap_size(width, height, channels)
 
 	-- JPEG-encoded sections add significant overhead if the image is small, so let's account for that
 	return math_max(estimatedWorstCaseBitmapFileSize, JPEG_OVERHEAD_BUFFER_SIZE)
+end
+
+function stbi.replace_pixel_color_rgba(image, sourceColor, replacementColor)
+	local pixelCount = image.width * image.height
+	local pixelBuffer = ffi.cast("stbi_color_t*", image.data)
+
+	for i = 0, pixelCount - 1 do
+		local pixel = pixelBuffer[i]
+
+		if
+			pixel.red == sourceColor.red
+			and pixel.green == sourceColor.green
+			and pixel.blue == sourceColor.blue
+			and pixel.alpha == sourceColor.alpha
+		then
+			pixelBuffer[i] = replacementColor
+		end
+	end
 end
 
 return stbi
