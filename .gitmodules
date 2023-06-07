@@ -40,3 +40,6 @@
 [submodule "deps/xpol/lua-rapidjson"]
 	path = deps/xpol/lua-rapidjson
 	url = https://github.com/xpol/lua-rapidjson.git
+[submodule "deps/nothings/stb"]
+	path = deps/nothings/stb
+	url = https://github.com/nothings/stb.git
