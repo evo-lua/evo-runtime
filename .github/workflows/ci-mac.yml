@@ -50,6 +50,9 @@ jobs:
       - name: Build luv and libuv
         run: deps/luv-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build miniz
+        run: deps/miniz-unixbuild.sh && ls ninjabuild-unix
+
       # Building OpenSSL is extremely slow, so nproc is used to determine the number of parallel jobs
       - name: Install GNU coreutils
         run: brew install coreutils

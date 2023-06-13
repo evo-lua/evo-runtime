@@ -62,6 +62,9 @@ jobs:
       - name: Build luv and libuv
         run: deps/luv-windowsbuild.sh && ls ninjabuild-windows
 
+      - name: Build miniz
+        run: deps/miniz-windowsbuild.sh && ls ninjabuild-windows
+
       - name: Build rapidjson
         run: deps/rapidjson-windowsbuild.sh && ls ninjabuild-windows
 
