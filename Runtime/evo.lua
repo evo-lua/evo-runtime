@@ -2,6 +2,7 @@ local bdd = require("bdd")
 local ffi = require("ffi")
 local jit = require("jit")
 local json = require("json")
+local miniz = require("miniz")
 local openssl = require("openssl")
 local stbi = require("stbi")
 local stduuid = require("stduuid")
@@ -121,6 +122,7 @@ function evo.showVersionStrings(commandName, ...)
 
 	local embeddedLibraryVersions = {
 		libuv = uv.version_string(),
+		miniz = miniz.version(),
 		rapidjson = json.version(),
 		openssl = sslVersion,
 		stbi = stbi.version(),
