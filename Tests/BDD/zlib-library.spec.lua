@@ -29,6 +29,11 @@ describe("zlib", function()
 			local checksumComputationFunction = zlib.adler32()
 			assertEquals(type(checksumComputationFunction), "function")
 		end)
+
+		it("should compute the correct checksum", function()
+			local checksum = zlib.adler32()("Hello world")
+			assertEquals(checksum, 413860925)
+		end)
 	end)
 
 	describe("crc32", function()
