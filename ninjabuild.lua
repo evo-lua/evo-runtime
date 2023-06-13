@@ -51,6 +51,7 @@ local EvoBuildTarget = {
 	cppSources = {
 		"Runtime/main.cpp",
 		"Runtime/evo.cpp",
+		"Runtime/Bindings/lminiz.cpp",
 		"Runtime/Bindings/stbi_ffi.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
@@ -82,6 +83,7 @@ local EvoBuildTarget = {
 		"libluajit.a",
 		"libluv.a",
 		"libuv.a",
+		"libminiz.a",
 		"openssl.a",
 		"librapidjson.a",
 		"libssl.a",
