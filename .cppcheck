@@ -11,6 +11,8 @@ unusedStructMember:Runtime/Bindings/uws_ffi.hpp
 
 // PerSocketData is actually used, but cppcheck can't see it
 unusedStructMember:Runtime/Bindings/WebServer.hpp
+// The internal types are used by miniz, of course... 
+unusedStructMember:Runtime/Bindings/lminiz.hpp
 
 // Let's just hope we don't have to descent into the depths of Objective C hell ever again
 cstyleCast:Runtime/Bindings/webview_mac.hpp
