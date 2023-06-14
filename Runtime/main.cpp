@@ -1,6 +1,7 @@
 extern "C" {
 #include "luv.h"
 #include "lminiz.hpp"
+#include "lrexlib.hpp"
 #include "lzlib.hpp"
 #include "openssl.h"
 }
@@ -26,6 +27,7 @@ int main(int argc, char* argv[]) {
 	luaVM->PreloadPackage("uv", luaopen_luv);
 	luaVM->PreloadPackage("miniz", luaopen_miniz);
 	luaVM->PreloadPackage("openssl", luaopen_openssl);
+	luaVM->PreloadPackage("regex", luaopen_rex_pcre2);
 	luaVM->PreloadPackage("json", luaopen_rapidjson_modified);
 	luaVM->PreloadPackage("zlib", luaopen_zlib);
 
