@@ -56,6 +56,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
+		"Runtime/Bindings/lrexlib.cpp",
 		"Runtime/Bindings/lzlib.cpp",
 		"Runtime/Bindings/WebServer.cpp",
 		"Runtime/LuaVirtualMachine.cpp",
@@ -64,6 +65,7 @@ local EvoBuildTarget = {
 		NinjaBuildTools.DEFAULT_BUILD_DIRECTORY_NAME, -- For auto-generated headers (e.g., PCRE2)
 		"Runtime",
 		"Runtime/Bindings",
+		"deps",
 		"deps/LuaJIT/LuaJIT/src",
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
@@ -85,6 +87,7 @@ local EvoBuildTarget = {
 		"libuv.a",
 		"libminiz.a",
 		"openssl.a",
+		"libpcre2-8.a",
 		"librapidjson.a",
 		"libssl.a",
 		"libcrypto.a",
