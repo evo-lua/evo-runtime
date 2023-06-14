@@ -250,18 +250,6 @@ end
 function EvoBuildTarget:GetDefines(cppSourceFilePath)
 	local defines = format('-DEVO_VERSION=\\"%s\\"', self.GIT_VERSION_TAG)
 
-	local pcreDefines = "-DPCRE2_STATIC -DPCRE2_CODE_UNIT_WIDTH=8"
-	defines = defines .. " " .. pcreDefines -- Since the runtime itself uses PCRE2 APIs to export the version, this is mandatory
-
-	-- LREXLIB requires a VERSION define, which would be set by luarocks if we used that... but we don't, so discover it manually (hacky!)
-	if string.match(cppSourceFilePath, "lrexlib") then
-		local lrexlibVersionString = self.discoveredLrexlibVersion or self:DiscoverLrexlibVersion()
-		self.discoveredLrexlibVersion = lrexlibVersionString -- Only do it once, not once per file...
-
-		-- LREXLIB's overly generic VERSION define causes a conflict with LPEG (which does the same thing)
-		defines = defines .. format(' -DVERSION=\\"%s\\"', lrexlibVersionString)
-	end
-
 	-- uws doesn't export the version at all, so we have to discover it manually (hacky!)
 	local uwsVersionTag = require(self.BUILD_DIR .. ".uws-version")
 	local uwsVersionString = string.match(uwsVersionTag, "(%d+.%d+.%d+)")
@@ -269,21 +257,6 @@ function EvoBuildTarget:GetDefines(cppSourceFilePath)
 	defines = defines .. " -DUWS_HTTPRESPONSE_NO_WRITEMARK"
 
 	return defines
-end
-
--- DEPRECATED: Obsoleted since lrexlib is no longer required?
-function EvoBuildTarget:DiscoverLrexlibVersion()
-	-- This is somewhat sketchy as it relies on many assumptions, but since lrexlib isn't really maintained that's probably OK-ish...
-	-- The version is hardcoded in their Makefile and then propagated to the luarocks configuration
-	local lrexlibMakefile = io.open("deps/lrexlib/Makefile", "r") -- Unix paths should be fine on MSYS
-	local makefileContents = lrexlibMakefile:read("*a") -- It's not big, so no problem to keep it in memory here
-
-	local expectedVersionPattern = "VERSION = (%d+.%d+.%d+)" -- Hopefully they will never change it :/
-	local discoveredLrexlibVersion = string.match(makefileContents, expectedVersionPattern)
-
-	lrexlibMakefile:close()
-
-	return discoveredLrexlibVersion
 end
 
 function EvoBuildTarget:ProcessLuaSources()
