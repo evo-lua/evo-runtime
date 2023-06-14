@@ -69,6 +69,9 @@ jobs:
       - name: Build zlib
         run: deps/zlib-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build pcre
+        run: deps/pcre-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build uwebsockets
         run: deps/uws-unixbuild.sh && ls ninjabuild-unix
 
