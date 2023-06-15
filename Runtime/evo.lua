@@ -110,11 +110,31 @@ Commands:
 	evo.showVersionStrings()
 end
 
+function evo.getHelpText()
+	local helpText = format(
+		[[
+Usage: evo [ script.lua | command ... ]
+
+Commands:
+
+%s]],
+		C_CommandLine.GetUsageInfo()
+	)
+	return helpText
+end
+
 function evo.displayRuntimeVersion(commandName, ...)
 	print(EVO_VERSION)
 end
 
 function evo.showVersionStrings(commandName, ...)
+	local versionText = evo.getVersionText()
+
+	print(versionText)
+	print("For documentation and examples, visit https://evo-lua.github.io/")
+end
+
+function evo.getVersionText()
 	local versionText = format("This is Evo.lua %s (powered by %s)", EVO_VERSION, jit.version) .. "\n\n"
 
 	-- Should use OPENSSL_VERSION_* defines here (not currently exposed via lua-openssl)
@@ -136,14 +156,25 @@ function evo.showVersionStrings(commandName, ...)
 		uws = uws.version(),
 		webview = webview.version(),
 		zlib = format("%d.%d.%d", zlib.version()),
+		-- Since the ordering of pairs isn't well-defined, enforce alphabetic order for the CLI output
+		"libuv",
+		"miniz",
+		"openssl",
+		"pcre2",
+		"rapidjson",
+		"stbi",
+		"stduuid",
+		"uws",
+		"webview",
+		"zlib",
 	}
 	versionText = versionText .. "Embedded libraries:\n\n"
-	for libraryName, versionString in pairs(embeddedLibraryVersions) do
+	for index, libraryName in ipairs(embeddedLibraryVersions) do
+		local versionString = embeddedLibraryVersions[libraryName]
 		versionText = versionText .. "\t" .. format("%-10s", libraryName) .. "\t" .. versionString .. "\n"
 	end
 
-	print(versionText)
-	print("For documentation and examples, visit https://evo-lua.github.io/")
+	return versionText
 end
 
 function evo.evaluateChunk(commandName, argv)

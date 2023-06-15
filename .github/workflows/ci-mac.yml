@@ -78,21 +78,27 @@ jobs:
       - name: Build runtime
         run: ls && ./unixbuild.sh && ls ninjabuild-unix && cp ninjabuild-unix/evo . && ls
 
+      - name: Add executable to PATH
+        run: echo "$(pwd)" >> $GITHUB_PATH
+
       - name: Run smoke tests
-        run: ./evo Tests/smoke-test.lua
+        run: evo Tests/smoke-test.lua
+
+      - name: Run snapshot tests
+        run: evo Tests/snapshot-test.lua
 
       - name: Run unit tests
-        run: ./evo Tests/unit-test.lua
+        run: evo Tests/unit-test.lua
 
       - name: Run integration tests
-        run: ./evo Tests/integration-test.lua
+        run: evo Tests/integration-test.lua
 
       - name: Prepare artifacts
         run: cp evo evo-macos-x64
 
       # GitHub adds a heading of their own, so remove the duplicate
       - name: Generate CHANGELOG.MD
-        run: ./evo create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
+        run: evo create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
 
       - name: Publish new release
         # Truly "continuous" releases may be overkill here, so better only release tagged versions
