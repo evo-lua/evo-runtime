@@ -156,9 +156,21 @@ function evo.getVersionText()
 		uws = uws.version(),
 		webview = webview.version(),
 		zlib = format("%d.%d.%d", zlib.version()),
+		-- Since the ordering of pairs isn't well-defined, enforce alphabetic order for the CLI output
+		"libuv",
+		"miniz",
+		"openssl",
+		"pcre2",
+		"rapidjson",
+		"stbi",
+		"stduuid",
+		"uws",
+		"webview",
+		"zlib",
 	}
 	versionText = versionText .. "Embedded libraries:\n\n"
-	for libraryName, versionString in pairs(embeddedLibraryVersions) do
+	for index, libraryName in ipairs(embeddedLibraryVersions) do
+		local versionString = embeddedLibraryVersions[libraryName]
 		versionText = versionText .. "\t" .. format("%-10s", libraryName) .. "\t" .. versionString .. "\n"
 	end
 
