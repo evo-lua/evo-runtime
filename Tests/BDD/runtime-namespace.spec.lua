@@ -66,4 +66,72 @@ describe("C_Runtime", function()
 			assertEquals(displayedPatchVersion, expectedPatchVersion)
 		end)
 	end)
+
+	describe("RunSnapshotTests", function()
+		it("should throw if a non-table value was passed", function()
+			local function runWithNil()
+				C_Runtime.RunSnapshotTests(nil)
+			end
+			assertThrows(
+				runWithNil,
+				"Expected argument testCases to be a table value, but received a nil value instead"
+			)
+		end)
+
+		it("should throw if any of the given test cases is missing a valid programToRun field", function()
+			local function runWithInvalidTestCase()
+				C_Runtime.RunSnapshotTests({
+					["invalid-test-case"] = {
+						humanReadableDescription = "This test case is invalid",
+						onExit = function() end,
+					},
+				})
+			end
+			assertThrows(
+				runWithInvalidTestCase,
+				"Expected argument programToRun to be a string value, but received a nil value instead"
+			)
+		end)
+
+		it("should throw if any of the given test cases is missing a valid onExit field", function()
+			local function runWithInvalidTestCase()
+				C_Runtime.RunSnapshotTests({
+					["invalid-test-case"] = {
+						humanReadableDescription = "This test case is invalid",
+						programToRun = "echo hello world",
+					},
+				})
+			end
+			assertThrows(
+				runWithInvalidTestCase,
+				"Expected argument onExit to be a function value, but received a nil value instead"
+			)
+		end)
+
+		it("should execute the defined command for each of the given test cases", function()
+			local hasExecutedEchoTest, hasExecutedHelloWorldTest
+			local testCases = {
+				["echo-test"] = {
+					humanReadableDescription = "Print some text",
+					programToRun = "echo test123",
+					onExit = function(observedOutput)
+						assertEquals(observedOutput, "test123\n")
+						hasExecutedEchoTest = true
+					end,
+				},
+				["hello-world"] = {
+					humanReadableDescription = "Print 'hello world'",
+					programToRun = "echo hello world",
+					onExit = function(observedOutput)
+						assertEquals(observedOutput, "hello world\n")
+						hasExecutedHelloWorldTest = true
+					end,
+				},
+			}
+
+			C_Runtime.RunSnapshotTests(testCases)
+			assertTrue(hasExecutedEchoTest)
+			assertTrue(hasExecutedHelloWorldTest)
+		end)
+	end)
 end)
