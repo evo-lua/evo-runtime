@@ -103,7 +103,7 @@ function assertions.assertCallsFunction(codeUnderTest, targetFunction)
 	end
 end
 
-local function assertEqualLuastring(firstValue, secondValue)
+local function assertEqualLuaString(firstValue, secondValue)
 	if firstValue ~= secondValue then
 		error("ASSERTION FAILURE: Expected " .. secondValue .. " but got " .. firstValue)
 	end
@@ -121,16 +121,16 @@ end
 
 function assertions.assertEqualStrings(firstValue, secondValue)
 	if type(firstValue) == "string" and type(secondValue) == "string" then
-		return assertEqualLuastring(firstValue, secondValue)
+		return assertEqualLuaString(firstValue, secondValue)
 	elseif type(firstValue) == "cdata" and type(secondValue) == "cdata" then
 		return assertEqualBuffer(firstValue, secondValue)
 	elseif type(firstValue) == "string" and type(secondValue) == "cdata" then
 		local firstString = ffi_string(firstValue)
 		local secondString = ffi_string(secondValue)
-		return assertEqualLuastring(firstString, secondString)
+		return assertEqualLuaString(firstString, secondString)
 	elseif type(firstValue) == "cdata" and type(secondValue) == "string" then
 		local firstString = ffi_string(firstValue)
-		return assertEqualLuastring(firstString, secondValue)
+		return assertEqualLuaString(firstString, secondValue)
 	else
 		return nil
 	end
