@@ -166,4 +166,15 @@ describe("miniz", function()
 			assertEquals(#zipFileContents, 681)
 		end)
 	end)
+
+	describe("new_reader", function()
+		it("should fail if an invalid file path was passed", function()
+			assertFailure(
+				function()
+					return miniz.new_reader("asdf-does-not-exist.zip")
+				end,
+				"Failed to initialize miniz reader for archive asdf-does-not-exist.zip (Last error: failed finding central directory)"
+			)
+		end)
+	end)
 end)
