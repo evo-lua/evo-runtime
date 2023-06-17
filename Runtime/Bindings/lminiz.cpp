@@ -55,7 +55,7 @@ static int lmz_reader_init(lua_State* L) {
 	archive->m_pIO_opaque = zip;
 	if(!mz_zip_reader_init(archive, size, flags)) {
 		lua_pushnil(L);
-		lua_pushfstring(L, "read %s fail because of %s", path,
+		lua_pushfstring(L, "Failed to initialize miniz reader for archive %s (Last error: %s)", path,
 			mz_zip_get_error_string(mz_zip_get_last_error(archive)));
 		return 2;
 	}
