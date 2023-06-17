@@ -23,6 +23,6 @@ local specFiles = {
 	"Tests/BDD/timer-namespace.spec.lua",
 }
 
-local numFailedSections = C_Runtime.RunDetailedTests(specFiles)
+local numFailedSections = C_Runtime.RunDetailedTests(#arg > 0 and arg or specFiles)
 
 os.exit(numFailedSections)
