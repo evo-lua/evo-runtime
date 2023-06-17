@@ -68,10 +68,12 @@ describe("evo", function()
 			local evalCommandInfo = capturedOutput:match("eval" .. "%s+" .. "Evaluate the next token as a Lua chunk")
 			local helpCommandInfo = capturedOutput:match("help" .. "%s+" .. "Display usage instructions %(this text%)")
 			local versionCommandInfo = capturedOutput:match("version" .. "%s+" .. "Show versioning information")
+			local buildCommandInfo = capturedOutput:match("build" .. "%s+" .. "Create a self%-contained executable")
 
 			assertEquals(evalCommandInfo, "eval\t\tEvaluate the next token as a Lua chunk")
 			assertEquals(helpCommandInfo, "help\t\tDisplay usage instructions (this text)")
 			assertEquals(versionCommandInfo, "version\t\tShow versioning information")
+			assertEquals(buildCommandInfo, "build\t\tCreate a self-contained executable")
 		end)
 	end)
 
