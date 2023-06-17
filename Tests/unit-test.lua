@@ -15,6 +15,7 @@ local specFiles = {
 	"Tests/BDD/uuid-library.spec.lua",
 	"Tests/BDD/uv-library.spec.lua",
 	"Tests/BDD/v8-library.spec.lua",
+	"Tests/BDD/vfs-library.spec.lua",
 	"Tests/BDD/webview-library.spec.lua",
 	"Tests/BDD/zlib-library.spec.lua",
 	"Tests/BDD/commandline-namespace.spec.lua",
