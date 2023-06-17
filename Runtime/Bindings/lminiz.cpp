@@ -1,5 +1,8 @@
 #include "lminiz.hpp"
 
+#include <unordered_map>
+#include <string>
+
 extern "C" {
 #include "luv.h"
 
@@ -38,6 +41,18 @@ static int lmz_check_compression_level(lua_State* L, int index) {
 	return level;
 }
 
+static std::unordered_map<lua_State*, std::string> error_messages;
+static int lmz_last_error(lua_State* L) {
+	auto iter = error_messages.find(L);
+	if(iter == error_messages.end()) {
+		lua_pushnil(L);
+	} else {
+		lua_pushstring(L, iter->second.c_str());
+		error_messages.erase(iter);
+	}
+	return 1;
+}
+
 static int lmz_reader_init(lua_State* L) {
 	const char* path = luaL_checkstring(L, 1);
 	mz_uint32 flags = luaL_optinteger(L, 2, 0);
@@ -55,8 +70,10 @@ static int lmz_reader_init(lua_State* L) {
 	archive->m_pIO_opaque = zip;
 	if(!mz_zip_reader_init(archive, size, flags)) {
 		lua_pushnil(L);
+		const char* error_string = mz_zip_get_error_string(mz_zip_get_last_error(archive));
+		error_messages[L] = error_string;
 		lua_pushfstring(L, "Failed to initialize miniz reader for archive %s (Last error: %s)", path,
-			mz_zip_get_error_string(mz_zip_get_last_error(archive)));
+			error_string);
 		return 2;
 	}
 	return 1;
@@ -474,6 +491,7 @@ static const luaL_Reg lminiz_f[] = {
 	{ "version", lmz_version },
 	{ "new_deflator", lmz_deflator_init },
 	{ "new_inflator", lmz_inflator_init },
+	{ "last_error", lmz_last_error },
 	{ NULL, NULL }
 };
 

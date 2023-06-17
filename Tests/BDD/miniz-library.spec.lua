@@ -12,6 +12,7 @@ describe("miniz", function()
 		"uncompress",
 		"new_deflator",
 		"new_inflator",
+		"last_error",
 	}
 
 	it("should export all miniz functions", function()
@@ -169,12 +170,23 @@ describe("miniz", function()
 
 	describe("new_reader", function()
 		it("should fail if an invalid file path was passed", function()
-			assertFailure(
-				function()
-					return miniz.new_reader("asdf-does-not-exist.zip")
-				end,
-				"Failed to initialize miniz reader for archive asdf-does-not-exist.zip (Last error: failed finding central directory)"
+			local success, failureMessage = miniz.new_reader("asdf-does-not-exist.zip")
+			-- Can't use assertFailure here because the message is only available after new_reader exits
+			assertNil(success)
+			assertEquals(
+				failureMessage,
+				format(
+					"Failed to initialize miniz reader for archive asdf-does-not-exist.zip (Last error: %s)",
+					miniz.last_error()
+				)
 			)
+		end)
+	end)
+
+	describe("last_error", function()
+		it("should return nil if no error has been set", function()
+			-- Technically, an error may have been set (and not cleared) by a previous test, but that's a no-no and should be caught
+			assertNil(miniz.last_error())
 		end)
 	end)
 end)
