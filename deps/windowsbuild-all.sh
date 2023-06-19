@@ -10,3 +10,4 @@ deps/miniz-windowsbuild.sh
 deps/uws-windowsbuild.sh
 deps/zlib-windowsbuild.sh
 deps/pcre-windowsbuild.sh
+deps/glfw-windowsbuild.sh
