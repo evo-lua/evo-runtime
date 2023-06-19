@@ -10,6 +10,7 @@ extern "C" {
 
 #include "evo.hpp"
 #include "macros.hpp"
+#include "glfw_ffi.hpp"
 #include "stbi_ffi.hpp"
 #include "stduuid_ffi.hpp"
 #include "uws_ffi.hpp"
@@ -32,6 +33,7 @@ int main(int argc, char* argv[]) {
 	luaVM->PreloadPackage("zlib", luaopen_zlib);
 
 	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
+	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("uws", uws_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("stbi", stbi_ffi::getExportsTable());
