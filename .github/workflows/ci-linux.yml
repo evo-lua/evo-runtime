@@ -56,6 +56,9 @@ jobs:
       - name: Build luv and libuv
         run: deps/luv-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build glfw
+        run: deps/glfw-unixbuild.sh && ls ninjabuild-unix
+      
       - name: Build miniz
         run: deps/miniz-unixbuild.sh && ls ninjabuild-unix
 
