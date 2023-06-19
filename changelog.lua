@@ -1,4 +1,11 @@
 local changelog = {
+	["v0.0.5"] = {
+		newFeatures = {
+			"The runtime now includes bindings to the `miniz` library as a complimentary API to the existing `zlib` bindings",
+			"Also included is a new `regex` library (powered by PCRE2) for dealing with regular expressions",
+			"It's now possible to use the `evo build` command to create standalone executables from Lua apps",
+		},
+	},
 	["v0.0.4"] = {
 		newFeatures = {
 			"The runtime now includes a  new `stbi` library (powered by stb) that allows converting between common image formats",
