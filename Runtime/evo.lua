@@ -1,5 +1,6 @@
 local bdd = require("bdd")
 local ffi = require("ffi")
+local glfw = require("glfw")
 local jit = require("jit")
 local json = require("json")
 local miniz = require("miniz")
@@ -159,6 +160,7 @@ function evo.getVersionText()
 	local semanticPcre2VersionString = major .. "." .. minor .. "." .. 0
 
 	local embeddedLibraryVersions = {
+		glfw = glfw.version(),
 		libuv = uv.version_string(),
 		miniz = miniz.version(),
 		rapidjson = json.version(),
@@ -170,6 +172,7 @@ function evo.getVersionText()
 		webview = webview.version(),
 		zlib = format("%d.%d.%d", zlib.version()),
 		-- Since the ordering of pairs isn't well-defined, enforce alphabetic order for the CLI output
+		"glfw",
 		"libuv",
 		"miniz",
 		"openssl",

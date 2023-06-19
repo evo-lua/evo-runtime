@@ -19,6 +19,7 @@ describe("evo", function()
 			local hasRuntimeVersion = (runtimeVersion ~= nil)
 			local hasEngineVersion = (engineVersion ~= nil)
 			local hasEmbeddedLibraryVersions = {
+				glfw = (capturedOutput:match("glfw" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				libuv = (capturedOutput:match("libuv" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				miniz = (capturedOutput:match("miniz" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				rapidjson = (capturedOutput:match("rapidjson" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
@@ -34,6 +35,7 @@ describe("evo", function()
 
 			assertTrue(hasRuntimeVersion)
 			assertTrue(hasEngineVersion)
+			assertTrue(hasEmbeddedLibraryVersions.glfw)
 			assertTrue(hasEmbeddedLibraryVersions.libuv)
 			assertTrue(hasEmbeddedLibraryVersions.miniz)
 			assertTrue(hasEmbeddedLibraryVersions.rapidjson)
