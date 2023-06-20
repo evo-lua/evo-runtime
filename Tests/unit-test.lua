@@ -3,6 +3,7 @@ local specFiles = {
 	"Tests/BDD/globals.spec.lua",
 	"Tests/BDD/console-library.spec.lua",
 	"Tests/BDD/evo-library.spec.lua",
+	"Tests/BDD/glfw-library.spec.lua",
 	"Tests/BDD/json-library.spec.lua",
 	"Tests/BDD/miniz-library.spec.lua",
 	"Tests/BDD/openssl-library.spec.lua",
