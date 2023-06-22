@@ -36,6 +36,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/stbi.lua",
 		"Runtime/Bindings/stduuid.lua",
 		"Runtime/Bindings/uws.lua",
+		"Runtime/Bindings/webgpu.lua",
 		"Runtime/Bindings/webview.lua",
 		"Runtime/Extensions/debugx.lua",
 		"Runtime/Extensions/jsonx.lua",
@@ -60,6 +61,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/stbi_ffi.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
+		"Runtime/Bindings/webgpu_ffi.cpp",
 		"Runtime/Bindings/webview_ffi.cpp",
 		"Runtime/Bindings/lrexlib.cpp",
 		"Runtime/Bindings/lzlib.cpp",
@@ -98,6 +100,7 @@ local EvoBuildTarget = {
 		"librapidjson.a",
 		"libssl.a",
 		"libcrypto.a",
+		"libwgpu_native.a",
 		"uSockets.a",
 		"zlibstatic.a",
 	},
@@ -117,6 +120,8 @@ local EvoBuildTarget = {
 			"shlwapi",
 			"dbghelp",
 			"uuid",
+			"bcrypt",
+			"d3dcompiler",
 		},
 		OSX = {
 			"m",
@@ -124,6 +129,8 @@ local EvoBuildTarget = {
 			"pthread",
 			"Cocoa",
 			"IOKit",
+			"QuartzCore",
+			"Metal",
 			"WebKit",
 		},
 		Linux = {
@@ -263,6 +270,10 @@ function EvoBuildTarget:GetDefines(cppSourceFilePath)
 	local uwsVersionString = string.match(uwsVersionTag, "(%d+.%d+.%d+)")
 	defines = defines .. format(' -DUWS_VERSION=\\"%s\\"', uwsVersionString)
 	defines = defines .. " -DUWS_HTTPRESPONSE_NO_WRITEMARK"
+
+	local wgpuVersionTag = require(self.BUILD_DIR .. ".wgpu-version")
+	local wgpuVersionString = string.match(wgpuVersionTag, "(%d+.%d+.%d+)")
+	defines = defines .. format(' -DWGPU_VERSION=\\"%s\\"', wgpuVersionString)
 
 	return defines
 end

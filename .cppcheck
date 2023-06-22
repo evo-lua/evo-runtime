@@ -10,6 +10,7 @@ unusedStructMember:Runtime/Bindings/interop_ffi.hpp
 unusedStructMember:Runtime/Bindings/stbi_ffi.hpp
 unusedStructMember:Runtime/Bindings/stduuid_ffi.hpp
 unusedStructMember:Runtime/Bindings/uws_ffi.hpp
+unusedStructMember:Runtime/Bindings/webgpu_ffi.hpp
 
 // PerSocketData is actually used, but cppcheck can't see it
 unusedStructMember:Runtime/Bindings/WebServer.hpp
