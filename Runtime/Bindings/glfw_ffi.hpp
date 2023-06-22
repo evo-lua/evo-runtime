@@ -18,6 +18,12 @@ void glfw_set_window_refresh_callback(GLFWwindow* window, std::queue<deferred_ev
 void glfw_set_window_focus_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
 void glfw_set_window_iconify_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
 void glfw_set_window_maximize_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
+void glfw_set_mouse_button_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
+void glfw_set_cursor_move_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
+void glfw_set_cursor_enter_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
+void glfw_set_scroll_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
+void glfw_set_keyboard_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
+void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
 
 struct static_glfw_exports_table {
 	const char* (*glfw_version)(void);

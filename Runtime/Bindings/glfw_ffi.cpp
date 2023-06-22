@@ -32,6 +32,12 @@ void glfw_register_events(GLFWwindow* window, std::queue<deferred_event_t>* queu
 	glfw_set_window_focus_callback(window, queue);
 	glfw_set_window_iconify_callback(window, queue);
 	glfw_set_window_maximize_callback(window, queue);
+	glfw_set_mouse_button_callback(window, queue);
+	glfw_set_cursor_move_callback(window, queue);
+	glfw_set_cursor_enter_callback(window, queue);
+	glfw_set_scroll_callback(window, queue);
+	glfw_set_keyboard_callback(window, queue);
+	glfw_set_character_input_callback(window, queue);
 }
 
 void glfw_set_window_move_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
@@ -134,6 +140,78 @@ void glfw_set_window_maximize_callback(GLFWwindow* window, std::queue<deferred_e
 	glfwSetWindowMaximizeCallback(window, [](GLFWwindow* window, int maximized) {
 		window_maximize_event_t payload { .type = WINDOW_MAXIMIZE_EVENT, .maximized = maximized };
 		deferred_event_t event { .window_maximize_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_mouse_button_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
+		mouse_button_event_t payload { .type = MOUSE_BUTTON_EVENT, .button = button, .action = action, .mods = mods };
+		deferred_event_t event { .mouse_button_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_cursor_move_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double screenX, double screenY) {
+		cursor_move_event_t payload { .type = CURSOR_MOVE_EVENT, .x = screenX, .y = screenY };
+		deferred_event_t event { .cursor_move_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_cursor_enter_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetCursorEnterCallback(window, [](GLFWwindow* window, int entered) {
+		cursor_enter_event_t payload { .type = CURSOR_ENTER_EVENT, .entered = entered };
+		deferred_event_t event { .cursor_enter_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_scroll_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset) {
+		scroll_event_t payload { .type = SCROLL_EVENT, .x = xoffset, .y = yoffset };
+		deferred_event_t event { .scroll_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_keyboard_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+		key_event_t payload { .type = KEYBOARD_EVENT, .key = key, .scancode = scancode, .action = action, .mods = mods };
+		deferred_event_t event { .key_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int codepoint) {
+		character_input_event_t payload { .type = CHARACTER_INPUT_EVENT, .codepoint = codepoint };
+		deferred_event_t event { .character_input_details = payload };
 
 		auto userdata = glfwGetWindowUserPointer(window);
 		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
