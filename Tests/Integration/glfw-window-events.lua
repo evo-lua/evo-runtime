@@ -12,7 +12,8 @@ local interop = require("interop")
 
 glfw.bindings.glfw_init()
 
-local window = glfw.bindings.glfw_create_window(800, 600, "GLFW Test", nil, nil)
+local primaryMonitor = glfw.bindings.glfw_get_primary_monitor()
+local window = glfw.bindings.glfw_create_window(800, 600, "GLFW Test", primaryMonitor, nil)
 local eventQueue = interop.bindings.queue_create()
 glfw.bindings.glfw_register_events(window, eventQueue)
 
