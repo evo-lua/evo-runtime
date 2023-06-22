@@ -238,6 +238,12 @@ namespace glfw_ffi {
 
 		glfw_exports_table.glfw_register_events = glfw_register_events;
 
+		glfw_exports_table.glfw_get_primary_monitor = glfwGetPrimaryMonitor;
+		glfw_exports_table.glfw_get_monitors = glfwGetMonitors;
+		glfw_exports_table.glfw_get_window_monitor = glfwGetWindowMonitor;
+		glfw_exports_table.glfw_set_window_monitor = glfwSetWindowMonitor;
+		glfw_exports_table.glfw_get_video_mode = glfwGetVideoMode;
+
 		return &glfw_exports_table;
 	}
 
