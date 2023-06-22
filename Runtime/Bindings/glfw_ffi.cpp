@@ -24,12 +24,194 @@ void glfw_register_events(GLFWwindow* window, std::queue<deferred_event_t>* queu
 	glfwSetWindowUserPointer(window, queue);
 
 	glfw_set_window_move_callback(window, queue);
+	glfw_set_window_resize_callback(window, queue);
+	glfw_set_window_close_callback(window, queue);
+	glfw_set_framebuffer_resize_callback(window, queue);
+	glfw_set_content_scale_callback(window, queue);
+	glfw_set_window_refresh_callback(window, queue);
+	glfw_set_window_focus_callback(window, queue);
+	glfw_set_window_iconify_callback(window, queue);
+	glfw_set_window_maximize_callback(window, queue);
+	glfw_set_mouse_button_callback(window, queue);
+	glfw_set_cursor_move_callback(window, queue);
+	glfw_set_cursor_enter_callback(window, queue);
+	glfw_set_scroll_callback(window, queue);
+	glfw_set_keyboard_callback(window, queue);
+	glfw_set_character_input_callback(window, queue);
 }
 
 void glfw_set_window_move_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
 	glfwSetWindowPosCallback(window, [](GLFWwindow* window, int screenX, int screenY) {
 		window_move_event_t payload { .type = WINDOW_MOVE_EVENT, .x = screenX, .y = screenY };
 		deferred_event_t event { .window_move_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_window_resize_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+		window_resize_event_t payload { .type = WINDOW_RESIZE_EVENT, .width = width, .height = height };
+		deferred_event_t event { .window_resize_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_window_close_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
+		window_close_event_t payload { .type = WINDOW_CLOSE_EVENT };
+		deferred_event_t event { .window_close_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_framebuffer_resize_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+		framebuffer_resize_event_t payload { .type = FRAMEBUFFER_RESIZE_EVENT, .width = width, .height = height };
+		deferred_event_t event { .framebuffer_resize_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_content_scale_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetWindowContentScaleCallback(window, [](GLFWwindow* window, float xScale, float yScale) {
+		content_scale_event_t payload { .type = CONTENT_SCALE_EVENT, .x = xScale, .y = yScale };
+		deferred_event_t event { .content_scale_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_window_refresh_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetWindowRefreshCallback(window, [](GLFWwindow* window) {
+		window_refresh_event_t payload { .type = WINDOW_REFRESH_EVENT };
+		deferred_event_t event { .window_refresh_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_window_focus_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focused) {
+		window_focus_event_t payload { .type = WINDOW_FOCUS_EVENT, .focused = focused };
+		deferred_event_t event { .window_focus_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_window_iconify_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetWindowIconifyCallback(window, [](GLFWwindow* window, int iconified) {
+		window_iconify_event_t payload { .type = WINDOW_ICONIFY_EVENT, .iconified = iconified };
+		deferred_event_t event { .window_iconify_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_window_maximize_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetWindowMaximizeCallback(window, [](GLFWwindow* window, int maximized) {
+		window_maximize_event_t payload { .type = WINDOW_MAXIMIZE_EVENT, .maximized = maximized };
+		deferred_event_t event { .window_maximize_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_mouse_button_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
+		mouse_button_event_t payload { .type = MOUSE_BUTTON_EVENT, .button = button, .action = action, .mods = mods };
+		deferred_event_t event { .mouse_button_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_cursor_move_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double screenX, double screenY) {
+		cursor_move_event_t payload { .type = CURSOR_MOVE_EVENT, .x = screenX, .y = screenY };
+		deferred_event_t event { .cursor_move_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_cursor_enter_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetCursorEnterCallback(window, [](GLFWwindow* window, int entered) {
+		cursor_enter_event_t payload { .type = CURSOR_ENTER_EVENT, .entered = entered };
+		deferred_event_t event { .cursor_enter_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_scroll_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset) {
+		scroll_event_t payload { .type = SCROLL_EVENT, .x = xoffset, .y = yoffset };
+		deferred_event_t event { .scroll_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_keyboard_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+		key_event_t payload { .type = KEYBOARD_EVENT, .key = key, .scancode = scancode, .action = action, .mods = mods };
+		deferred_event_t event { .key_details = payload };
+
+		auto userdata = glfwGetWindowUserPointer(window);
+		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
+
+		queue->push(event);
+	});
+}
+
+void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue) {
+	glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int codepoint) {
+		character_input_event_t payload { .type = CHARACTER_INPUT_EVENT, .codepoint = codepoint };
+		deferred_event_t event { .character_input_details = payload };
 
 		auto userdata = glfwGetWindowUserPointer(window);
 		auto queue = static_cast<std::queue<deferred_event_t>*>(userdata);
