@@ -15,7 +15,8 @@ jobs:
   luacheck:
     name: Lint codebase
     runs-on: ubuntu-latest
-
+    env:
+        CPPCHECK_VERSION: 2.10.3
     steps:
 
       # LuaRocks needs the 5.1 headers to compile LuaCheck later, so we download them, too
@@ -51,8 +52,7 @@ jobs:
           git clone --depth 1 https://github.com/danmar/cppcheck.git
           cd cppcheck
           git fetch --tags
-          latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          git checkout $latestTag
+          git checkout $CPPCHECK_VERSION
           mkdir build
           cd build
           cmake ..
