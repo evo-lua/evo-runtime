@@ -8,19 +8,25 @@ if isMacOS then
 end
 
 local glfw = require("glfw")
+local interop = require("interop")
 
 glfw.bindings.glfw_init()
 
 local window = glfw.bindings.glfw_create_window(800, 600, "GLFW Test", nil, nil)
+local eventQueue = interop.bindings.queue_create()
+glfw.bindings.glfw_register_events(window, eventQueue)
 
 local ticker = C_Timer.NewTicker(250, function()
-	print("glfw_poll_events")
 	glfw.bindings.glfw_poll_events()
+
+	local numEvents = tonumber(interop.bindings.queue_size(eventQueue))
+	print("glfw_poll_events", numEvents)
 end)
 
 C_Timer.After(2500, function()
 	print("glfw_terminate")
 	glfw.bindings.glfw_destroy_window(window)
 	glfw.bindings.glfw_terminate()
+	interop.bindings.queue_destroy(eventQueue)
 	ticker:stop()
 end)
