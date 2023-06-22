@@ -189,4 +189,25 @@ describe("miniz", function()
 			assertNil(miniz.last_error())
 		end)
 	end)
+
+	describe("new_deflator", function()
+		it("should return a stream-compressing function that applies DEFLATE to the input whenever called", function()
+			local deflator = miniz.new_deflator(9)
+			local compressedInput = deflator:deflate(MINIZ_EXAMPLE_TEXT, "finish")
+
+			assertEquals(#compressedInput, 701)
+		end)
+	end)
+
+	describe("new_inflator", function()
+		it("should return a stream-decompressing function that applies INFLATE to the input whenever called", function()
+			local deflator = miniz.new_deflator(9)
+			local compressedInput = deflator:deflate(MINIZ_EXAMPLE_TEXT, "finish")
+
+			local inflator = miniz.new_inflator()
+			local decompressedInput = inflator:inflate(compressedInput)
+
+			assertEquals(decompressedInput, MINIZ_EXAMPLE_TEXT)
+		end)
+	end)
 end)
