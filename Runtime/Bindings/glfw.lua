@@ -6,6 +6,7 @@ glfw.cdefs = [[
 	// Opaque pointer types don't need to be defined as they're only ever handled by glfw internals
 	typedef struct GLFWwindow GLFWwindow;
 	typedef struct GLFWmonitor GLFWmonitor;
+	typedef void* deferred_event_queue_t;
 
 	struct static_glfw_exports_table {
 		const char* (*glfw_version)(void);
@@ -18,6 +19,8 @@ glfw.cdefs = [[
 		GLFWwindow* (*glfw_create_window)(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
 		void (*glfw_destroy_window)(GLFWwindow* window);
 		int (*glfw_window_should_close)(GLFWwindow* window);
+
+		void (*glfw_register_events)(GLFWwindow* window, deferred_event_queue_t queue);
 	};
 ]]
 
