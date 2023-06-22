@@ -6,6 +6,18 @@ describe("glfw", function()
 			local exportedApiSurface = {
 				"glfw_version",
 				"glfw_find_constant",
+				"glfw_init",
+				"glfw_terminate",
+				"glfw_poll_events",
+				"glfw_create_window",
+				"glfw_destroy_window",
+				"glfw_window_should_close",
+				"glfw_register_events",
+				"glfw_get_primary_monitor",
+				"glfw_get_monitors",
+				"glfw_get_window_monitor",
+				"glfw_set_window_monitor",
+				"glfw_get_video_mode",
 			}
 
 			for _, functionName in ipairs(exportedApiSurface) do
