@@ -235,6 +235,7 @@ namespace glfw_ffi {
 		glfw_exports_table.glfw_create_window = glfwCreateWindow;
 		glfw_exports_table.glfw_destroy_window = glfwDestroyWindow;
 		glfw_exports_table.glfw_window_should_close = glfwWindowShouldClose;
+		glfw_exports_table.glfw_window_hint = glfwWindowHint;
 
 		glfw_exports_table.glfw_register_events = glfw_register_events;
 

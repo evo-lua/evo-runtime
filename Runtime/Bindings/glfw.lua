@@ -28,6 +28,7 @@ glfw.cdefs = [[
 		GLFWwindow* (*glfw_create_window)(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
 		void (*glfw_destroy_window)(GLFWwindow* window);
 		int (*glfw_window_should_close)(GLFWwindow* window);
+		void (*glfw_window_hint)(int hint, int value);
 
 		void (*glfw_register_events)(GLFWwindow* window, deferred_event_queue_t queue);
 

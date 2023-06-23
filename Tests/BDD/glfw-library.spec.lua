@@ -12,6 +12,7 @@ describe("glfw", function()
 				"glfw_create_window",
 				"glfw_destroy_window",
 				"glfw_window_should_close",
+				"glfw_window_hint",
 				"glfw_register_events",
 				"glfw_get_primary_monitor",
 				"glfw_get_monitors",
