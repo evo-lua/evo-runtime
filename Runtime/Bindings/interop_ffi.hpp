@@ -1,7 +1,7 @@
 #pragma once
 
 #include <queue>
-#include <cstdint>
+#include <cstddef>
 
 enum {
 	UNKNOWN_ERROR = 0, // Fallback (to catch uninitialized values)
