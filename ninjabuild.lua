@@ -73,6 +73,7 @@ local EvoBuildTarget = {
 		"Runtime",
 		"Runtime/Bindings",
 		"deps",
+		"deps/eliemichel/glfw3webgpu",
 		"deps/glfw/glfw/include",
 		"deps/LuaJIT/LuaJIT/src",
 		"deps/luvit/luv/src",

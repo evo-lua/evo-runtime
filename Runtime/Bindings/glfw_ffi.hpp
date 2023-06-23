@@ -2,6 +2,7 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <webgpu.h>
 
 #include "glfw_constants.hpp"
 #include "interop_ffi.hpp"
@@ -28,6 +29,8 @@ void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_e
 struct static_glfw_exports_table {
 	const char* (*glfw_version)(void);
 	int (*glfw_find_constant)(const char* name);
+
+	WGPUSurface (*glfw_get_wgpu_surface)(WGPUInstance instance, GLFWwindow* window);
 
 	int (*glfw_init)(void);
 	void (*glfw_terminate)(void);

@@ -1,6 +1,9 @@
 #include "glfw_ffi.hpp"
 #include "interop_ffi.hpp"
 
+#include <glfw3webgpu.h>
+#include <glfw3webgpu.c>
+
 #include <string>
 
 const char* glfw_version() {
@@ -227,6 +230,8 @@ namespace glfw_ffi {
 
 		glfw_exports_table.glfw_version = glfw_version;
 		glfw_exports_table.glfw_find_constant = glfw_find_constant;
+
+		glfw_exports_table.glfw_get_wgpu_surface = glfwGetWGPUSurface;
 
 		glfw_exports_table.glfw_init = glfwInit;
 		glfw_exports_table.glfw_terminate = glfwTerminate;
