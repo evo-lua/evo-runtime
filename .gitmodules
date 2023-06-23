@@ -49,3 +49,6 @@
 [submodule "deps/glfw/glfw"]
 	path = deps/glfw/glfw
 	url = https://github.com/glfw/glfw/
+[submodule "deps/gfx-rs/wgpu-native"]
+	path = deps/gfx-rs/wgpu-native
+	url = https://github.com/gfx-rs/wgpu-native.git

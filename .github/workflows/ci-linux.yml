@@ -53,6 +53,9 @@ jobs:
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build webgpu
+        run: deps/webgpu-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build luv and libuv
         run: deps/luv-unixbuild.sh && ls ninjabuild-unix
 

@@ -11,6 +11,7 @@ local stduuid = require("stduuid")
 local uv = require("uv")
 local uws = require("uws")
 local vfs = require("vfs")
+local webgpu = require("webgpu")
 local webview = require("webview")
 local zlib = require("zlib")
 
@@ -169,6 +170,7 @@ function evo.getVersionText()
 		stbi = stbi.version(),
 		stduuid = stduuid.version(),
 		uws = uws.version(),
+		wgpu = webgpu.version(),
 		webview = webview.version(),
 		zlib = format("%d.%d.%d", zlib.version()),
 		-- Since the ordering of pairs isn't well-defined, enforce alphabetic order for the CLI output
@@ -182,6 +184,7 @@ function evo.getVersionText()
 		"stduuid",
 		"uws",
 		"webview",
+		"wgpu",
 		"zlib",
 	}
 	versionText = versionText .. "Embedded libraries:\n\n"

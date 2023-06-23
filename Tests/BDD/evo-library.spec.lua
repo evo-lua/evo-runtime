@@ -28,6 +28,7 @@ describe("evo", function()
 				stbi = (capturedOutput:match("stbi" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				stduuid = (capturedOutput:match("stduuid" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				uws = (capturedOutput:match("uws" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
+				wgpu = (capturedOutput:match("wgpu" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				webview = (capturedOutput:match("webview" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 				zlib = (capturedOutput:match("zlib" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
 			}
@@ -44,6 +45,7 @@ describe("evo", function()
 			assertTrue(hasEmbeddedLibraryVersions.stbi)
 			assertTrue(hasEmbeddedLibraryVersions.stduuid)
 			assertTrue(hasEmbeddedLibraryVersions.uws)
+			assertTrue(hasEmbeddedLibraryVersions.wgpu)
 			assertTrue(hasEmbeddedLibraryVersions.webview)
 			assertTrue(hasEmbeddedLibraryVersions.zlib)
 			assertTrue(hasDocumentationLink)
