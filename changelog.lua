@@ -1,4 +1,10 @@
 local changelog = {
+	["v0.0.6"] = {
+		newFeatures = {
+			"Added partial bindings for the `glfw` library to help manage native windows and events",
+			"Experimental FFI bindings for Mozilla's WebGPU implementation (exposed via the `webgpu` package)",
+		},
+	},
 	["v0.0.5"] = {
 		newFeatures = {
 			"The runtime now includes bindings to the `miniz` library as a complimentary API to the existing `zlib` bindings",
