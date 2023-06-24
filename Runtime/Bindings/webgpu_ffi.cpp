@@ -70,7 +70,7 @@ namespace webgpu_ffi {
 		webgpu_exports_table.wgpu_device_create_render_pipeline_async = wgpuDeviceCreateRenderPipelineAsync;
 		webgpu_exports_table.wgpu_device_create_sampler = wgpuDeviceCreateSampler;
 		webgpu_exports_table.wgpu_device_create_shader_module = wgpuDeviceCreateShaderModule;
-		webgpu_exports_table.wgpu_device_create_swap_chain = wgpuDeviceCreateSwapChain;
+		webgpu_exports_table.wgpu_device_create_swapchain = wgpuDeviceCreateSwapChain;
 		webgpu_exports_table.wgpu_device_create_texture = wgpuDeviceCreateTexture;
 		webgpu_exports_table.wgpu_device_destroy = wgpuDeviceDestroy;
 		webgpu_exports_table.wgpu_device_enumerate_features = wgpuDeviceEnumerateFeatures;
@@ -136,8 +136,8 @@ namespace webgpu_ffi {
 		webgpu_exports_table.wgpu_shader_module_get_compilation_info = wgpuShaderModuleGetCompilationInfo;
 		webgpu_exports_table.wgpu_shader_module_set_label = wgpuShaderModuleSetLabel;
 		webgpu_exports_table.wgpu_surface_get_preferred_format = wgpuSurfaceGetPreferredFormat;
-		webgpu_exports_table.wgpu_swap_chain_get_current_texture_view = wgpuSwapChainGetCurrentTextureView;
-		webgpu_exports_table.wgpu_swap_chain_present = wgpuSwapChainPresent;
+		webgpu_exports_table.wgpu_swapchain_get_current_texture_view = wgpuSwapChainGetCurrentTextureView;
+		webgpu_exports_table.wgpu_swapchain_present = wgpuSwapChainPresent;
 		webgpu_exports_table.wgpu_texture_create_view = wgpuTextureCreateView;
 		webgpu_exports_table.wgpu_texture_destroy = wgpuTextureDestroy;
 		webgpu_exports_table.wgpu_texture_get_depth_or_array_layers = wgpuTextureGetDepthOrArrayLayers;
