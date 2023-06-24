@@ -40,6 +40,9 @@ struct static_glfw_exports_table {
 	void (*glfw_destroy_window)(GLFWwindow* window);
 	int (*glfw_window_should_close)(GLFWwindow* window);
 	void (*glfw_window_hint)(int hint, int value);
+	void (*glfw_set_window_pos)(GLFWwindow* window, int xpos, int ypos);
+	void (*glfw_get_framebuffer_size)(GLFWwindow* window, int* width, int* height);
+	void (*glfw_get_window_size)(GLFWwindow* window, int* width, int* height);
 
 	void (*glfw_register_events)(GLFWwindow* window, deferred_event_queue_t queue);
 
