@@ -65,7 +65,7 @@ function gpu.create_swap_chain_for_window_surface(instance, window, device, adap
 	descriptor.usage = ffi.C.WGPUTextureUsage_RenderAttachment
 	descriptor.presentMode = ffi.C.WGPUPresentMode_Fifo
 
-	local swapChain = webgpu.bindings.wgpu_device_create_swap_chain(device, surface, descriptor)
+	local swapChain = webgpu.bindings.wgpu_device_create_swapchain(device, surface, descriptor)
 	return swapChain
 end
 
@@ -131,10 +131,10 @@ function gpu.create_command_encoder_for_device(device)
 	local descriptor = ffi.new("WGPUCommandEncoderDescriptor")
 	descriptor.label = "My command encoder"
 
-	local encoder = webgpu.wgpuDeviceCreateCommandEncoder(device, descriptor)
+	local encoder = webgpu.bindings.wgpu_device_create_command_encoder(device, descriptor)
 
-	webgpu.wgpuCommandEncoderInsertDebugMarker(encoder, "First debug marker")
-	webgpu.wgpuCommandEncoderInsertDebugMarker(encoder, "Second debug marker")
+	webgpu.bindings.wgpu_command_encoder_insert_debug_marker(encoder, "First debug marker")
+	webgpu.bindings.wgpu_command_encoder_insert_debug_marker(encoder, "Second debug marker")
 
 	return encoder
 end
@@ -148,18 +148,18 @@ function gpu.create_command_buffer_from_encoder(encoder)
 	local descriptor = ffi.new("WGPUCommandBufferDescriptor")
 	descriptor.label = "My command buffer"
 
-	local commandBuffer = webgpu.wgpuCommandEncoderFinish(encoder, descriptor)
+	local commandBuffer = webgpu.bindings.wgpu_command_encoder_finish(encoder, descriptor)
 	return commandBuffer
 end
 
 function gpu.submit_work_to_device_queue(device, commandBuffer)
-	local queue = webgpu.wgpuDeviceGetQueue(device)
+	local queue = webgpu.bindings.wgpu_device_get_queue(device)
 
 	-- webgpu.wgpuQueueOnSubmittedWorkDone(queue, onWorkDone, nil) -- Exhausts FFI callback slots, needs a better approach
 
 	-- The WebGPU API expects an array here, but we only submit a single buffer) to keep things simple)
 	local commandBuffers = ffi.new("WGPUCommandBuffer[1]", commandBuffer)
-	webgpu.wgpuQueueSubmit(queue, 1, commandBuffers)
+	webgpu.bindings.wgpu_queue_submit(queue, 1, commandBuffers)
 end
 
 function gpu.request_device_for_adapter(adapter, options)
@@ -259,15 +259,15 @@ function gpu.encode_render_pass(encoder, nextTexture)
 
 	descriptor.timestampWriteCount = 0 -- TBD: Do we want that?
 
-	local renderPass = webgpu.wgpuCommandEncoderBeginRenderPass(encoder, descriptor)
+	local renderPass = webgpu.bindings.wgpu_command_encoder_begin_render_pass(encoder, descriptor)
 
 	-- HACK, obviously
 	if _G.TRIANGLE_RENDERING_PIPELINE then
-		webgpu.wgpuRenderPassEncoderSetPipeline(renderPass, _G.TRIANGLE_RENDERING_PIPELINE) -- Select which render pipeline to use
-		webgpu.wgpuRenderPassEncoderDraw(renderPass, 3, 1, 0, 0) -- Draw 1 instance of a 3-vertices shape
+		webgpu.bindings.wgpu_render_pass_encoder_set_pipeline(renderPass, _G.TRIANGLE_RENDERING_PIPELINE) -- Select which render pipeline to use
+		webgpu.bindings.wgpu_render_pass_encoder_draw(renderPass, 3, 1, 0, 0) -- Draw 1 instance of a 3-vertices shape
 	end
 
-	webgpu.wgpuRenderPassEncoderEnd(renderPass)
+	webgpu.bindings.wgpu_render_pass_encoder_end(renderPass)
 end
 
 local bit = require("bit")
