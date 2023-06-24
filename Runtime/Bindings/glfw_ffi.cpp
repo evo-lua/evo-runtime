@@ -241,6 +241,9 @@ namespace glfw_ffi {
 		glfw_exports_table.glfw_destroy_window = glfwDestroyWindow;
 		glfw_exports_table.glfw_window_should_close = glfwWindowShouldClose;
 		glfw_exports_table.glfw_window_hint = glfwWindowHint;
+		glfw_exports_table.glfw_set_window_pos = glfwSetWindowPos;
+		glfw_exports_table.glfw_get_framebuffer_size = glfwGetFramebufferSize;
+		glfw_exports_table.glfw_get_window_size = glfwGetWindowSize;
 
 		glfw_exports_table.glfw_register_events = glfw_register_events;
 
