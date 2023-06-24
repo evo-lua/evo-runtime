@@ -63,7 +63,7 @@ struct static_webgpu_exports_table {
 	void (*wgpu_device_create_render_pipeline_async)(WGPUDevice device, WGPURenderPipelineDescriptor const* descriptor, WGPUCreateRenderPipelineAsyncCallback callback, void* userdata);
 	WGPUSampler (*wgpu_device_create_sampler)(WGPUDevice device, WGPUSamplerDescriptor const* descriptor /* nullable */);
 	WGPUShaderModule (*wgpu_device_create_shader_module)(WGPUDevice device, WGPUShaderModuleDescriptor const* descriptor);
-	WGPUSwapChain (*wgpu_device_create_swap_chain)(WGPUDevice device, WGPUSurface surface, WGPUSwapChainDescriptor const* descriptor);
+	WGPUSwapChain (*wgpu_device_create_swapchain)(WGPUDevice device, WGPUSurface surface, WGPUSwapChainDescriptor const* descriptor);
 	WGPUTexture (*wgpu_device_create_texture)(WGPUDevice device, WGPUTextureDescriptor const* descriptor);
 	void (*wgpu_device_destroy)(WGPUDevice device);
 	size_t (*wgpu_device_enumerate_features)(WGPUDevice device, WGPUFeatureName* features);
@@ -129,8 +129,8 @@ struct static_webgpu_exports_table {
 	void (*wgpu_shader_module_get_compilation_info)(WGPUShaderModule shaderModule, WGPUCompilationInfoCallback callback, void* userdata);
 	void (*wgpu_shader_module_set_label)(WGPUShaderModule shaderModule, char const* label);
 	WGPUTextureFormat (*wgpu_surface_get_preferred_format)(WGPUSurface surface, WGPUAdapter adapter);
-	WGPUTextureView (*wgpu_swap_chain_get_current_texture_view)(WGPUSwapChain swapChain);
-	void (*wgpu_swap_chain_present)(WGPUSwapChain swapChain);
+	WGPUTextureView (*wgpu_swapchain_get_current_texture_view)(WGPUSwapChain swapChain);
+	void (*wgpu_swapchain_present)(WGPUSwapChain swapChain);
 	WGPUTextureView (*wgpu_texture_create_view)(WGPUTexture texture, WGPUTextureViewDescriptor const* descriptor /* nullable */);
 	void (*wgpu_texture_destroy)(WGPUTexture texture);
 	uint32_t (*wgpu_texture_get_depth_or_array_layers)(WGPUTexture texture);
