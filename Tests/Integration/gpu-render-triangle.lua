@@ -20,6 +20,16 @@ function gpu.createInstance()
 	}
 end
 
+local Device = {}
+
+function Device:Construct()
+	local instance = {}
+	setmetatable(instance, { __index = Device })
+	return instance
+end
+
+setmetatable(Device, { __call = Device.Construct })
+
 local Adapter = {}
 
 function Adapter:Construct()
@@ -29,7 +39,7 @@ function Adapter:Construct()
 end
 
 function Adapter:RequestLogicalDevice()
-
+	return Device()
 end
 
 setmetatable(Adapter, { __call = Adapter.Construct })
