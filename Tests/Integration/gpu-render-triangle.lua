@@ -1,3 +1,56 @@
+-- TODO move to gpu library
+
+local ffi = require("ffi")
+local glfw = require("glfw")
+local validation = require("validation")
+local webgpu = require("webgpu")
+
+local gpu = {}
+
+function gpu.createInstance()
+	local instanceDescriptor = ffi.new("WGPUInstanceDescriptor")
+	local instance = webgpu.bindings.wgpu_create_instance(instanceDescriptor)
+	if not instance then
+		error("Could not initialize WebGPU",0)
+	end
+
+	return {
+		handle = instance,
+		descriptor = instanceDescriptor,
+	}
+end
+
+function gpu.requestAdapter(gpuInstance, glfwWindowHandle)
+	validation.validateTable(gpuInstance, "gpuInstance")
+	validation.validateStruct(gpuInstance.handle, "gpuInstance.handle")
+	validation.validateStruct(gpuInstance.descriptor, "gpuInstance.descriptor")
+	validation.validateStruct(glfwWindowHandle, "glfwWindowHandle")
+
+	local surface = glfw.bindings.glfw_get_wgpu_surface(gpuInstance.handle, glfwWindowHandle)
+
+	local adapterOptions = ffi.new("WGPURequestAdapterOptions")
+	adapterOptions.compatibleSurface = surface
+
+	local requestedAdapter
+	local function onAdapterRequested(status, adapter, message, userdata)
+		assert(status == ffi.C.WGPURequestAdapterStatus_Success, "Failed to request WebGPU adapter")
+		requestedAdapter = adapter
+	end
+	webgpu.bindings.wgpu_instance_request_adapter(gpuInstance.handle, adapterOptions, onAdapterRequested, nil)
+
+	-- This call is blocking (in the wgpu-native implementation), but that might change in the future...
+	assert(requestedAdapter, "onAdapterRequested did not trigger, but it should have")
+
+	return requestedAdapter
+end
+
+local isWindows = (ffi.os == "Windows")
+if not isWindows then
+	local transform = require("transform")
+	print(transform.yellow("Skipping GPU triangle test (currently only works on Windows runners)"))
+	return
+end
+
 local clearColor = { red =  0.0, green = 0.5, blue = 1.0, alpha = 1.0 }
 
 -- // Each vertex has 8 values representing position and color: X Y Z W R G B A
@@ -34,21 +87,30 @@ local clearColor = { red =  0.0, green = 0.5, blue = 1.0, alpha = 1.0 }
 
 -- // Main function
 
+-- local gpu = require("gpu")
+
 local function init()
---   // 1: request adapter and device
---   if (!navigator.gpu) {
---     throw Error('WebGPU not supported.');
---   }
+	-- 0. Create window and WebGPU context (this isn't needed in JS, but here we can create multiple contexts and windows)
+	if not glfw.bindings.glfw_init() then
+		error("Could not initialize GLFW")
+	end
 
---   const adapter = await navigator.gpu.requestAdapter();
---   if (!adapter) {
---     throw Error('Couldn\'t request WebGPU adapter.');
---   }
+	local GLFW_CLIENT_API = glfw.bindings.glfw_find_constant("GLFW_CLIENT_API")
+	local GLFW_NO_API = glfw.bindings.glfw_find_constant("GLFW_NO_API")
+	glfw.bindings.glfw_window_hint(GLFW_CLIENT_API, GLFW_NO_API)
+	local window = glfw.bindings.glfw_create_window(640, 480, "WebGPU Triangle Rendering Test", nil, nil)
+	local instance = gpu.createInstance()
 
---   let device = await adapter.requestDevice();
+	--   1: request adapter and device
+	local adapter = gpu.requestAdapter(instance, window)
+	if not adapter then
+			error('Couldn\'t request WebGPU adapter.')
+	end
+
+	local device = adapter.requestDevice()
 
 --   // 2: Create a shader module from the shaders template literal
---   const shaderModule = device.createShaderModule({
+--   local shaderModule = device.createShaderModule({
 --     code: shaders
 --   });
 
