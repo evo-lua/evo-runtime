@@ -11,7 +11,7 @@ function gpu.createInstance()
 	local instanceDescriptor = ffi.new("WGPUInstanceDescriptor")
 	local instance = webgpu.bindings.wgpu_create_instance(instanceDescriptor)
 	if not instance then
-		error("Could not initialize WebGPU",0)
+		error("Could not initialize WebGPU", 0)
 	end
 
 	return {
@@ -58,7 +58,7 @@ function gpu.requestAdapter(gpuInstance, glfwWindowHandle)
 	local requestedAdapter = Adapter()
 	local function onAdapterRequested(status, adapter, message, userdata)
 		assert(status == ffi.C.WGPURequestAdapterStatus_Success, "Failed to request WebGPU adapter")
-		requestedAdapter.handle =  adapter
+		requestedAdapter.handle = adapter
 	end
 	webgpu.bindings.wgpu_instance_request_adapter(gpuInstance.handle, adapterOptions, onAdapterRequested, nil)
 
@@ -75,7 +75,7 @@ if not isWindows then
 	return
 end
 
-local clearColor = { red =  0.0, green = 0.5, blue = 1.0, alpha = 1.0 }
+local clearColor = { red = 0.0, green = 0.5, blue = 1.0, alpha = 1.0 }
 
 -- // Each vertex has 8 values representing position and color: X Y Z W R G B A
 -- const vertices = new Float32Array([
@@ -128,101 +128,101 @@ local function init()
 	--   1: request adapter and device
 	local adapter = gpu.requestAdapter(instance, window)
 	if not adapter then
-			error('Couldn\'t request WebGPU adapter.')
+		error("Couldn't request WebGPU adapter.")
 	end
 
 	local device = adapter:RequestLogicalDevice()
 
---   // 2: Create a shader module from the shaders template literal
---   local shaderModule = device.createShaderModule({
---     code: shaders
---   });
+	--   // 2: Create a shader module from the shaders template literal
+	--   local shaderModule = device.createShaderModule({
+	--     code: shaders
+	--   });
 
---   // 3: Get reference to the canvas to render on
---   const canvas = document.querySelector('#gpuCanvas');
---   const context = canvas.getContext('webgpu');
+	--   // 3: Get reference to the canvas to render on
+	--   const canvas = document.querySelector('#gpuCanvas');
+	--   const context = canvas.getContext('webgpu');
 
---   context.configure({
---     device: device,
---     format: navigator.gpu.getPreferredCanvasFormat(),
---     alphaMode: 'premultiplied'
---   });
+	--   context.configure({
+	--     device: device,
+	--     format: navigator.gpu.getPreferredCanvasFormat(),
+	--     alphaMode: 'premultiplied'
+	--   });
 
---   // 4: Create vertex buffer to contain vertex data
---   const vertexBuffer = device.createBuffer({
---     size: vertices.byteLength, // make it big enough to store vertices in
---     usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
---   });
+	--   // 4: Create vertex buffer to contain vertex data
+	--   const vertexBuffer = device.createBuffer({
+	--     size: vertices.byteLength, // make it big enough to store vertices in
+	--     usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+	--   });
 
---   // Copy the vertex data over to the GPUBuffer using the writeBuffer() utility function
---   device.queue.writeBuffer(vertexBuffer, 0, vertices, 0, vertices.length);
+	--   // Copy the vertex data over to the GPUBuffer using the writeBuffer() utility function
+	--   device.queue.writeBuffer(vertexBuffer, 0, vertices, 0, vertices.length);
 
---   // 5: Create a GPUVertexBufferLayout and GPURenderPipelineDescriptor to provide a definition of our render pipline
---   const vertexBuffers = [{
---     attributes: [{
---       shaderLocation: 0, // position
---       offset: 0,
---       format: 'float32x4'
---     }, {
---       shaderLocation: 1, // color
---       offset: 16,
---       format: 'float32x4'
---     }],
---     arrayStride: 32,
---     stepMode: 'vertex'
---   }];
+	--   // 5: Create a GPUVertexBufferLayout and GPURenderPipelineDescriptor to provide a definition of our render pipline
+	--   const vertexBuffers = [{
+	--     attributes: [{
+	--       shaderLocation: 0, // position
+	--       offset: 0,
+	--       format: 'float32x4'
+	--     }, {
+	--       shaderLocation: 1, // color
+	--       offset: 16,
+	--       format: 'float32x4'
+	--     }],
+	--     arrayStride: 32,
+	--     stepMode: 'vertex'
+	--   }];
 
---   const pipelineDescriptor = {
---     vertex: {
---       module: shaderModule,
---       entryPoint: 'vertex_main',
---       buffers: vertexBuffers
---     },
---     fragment: {
---       module: shaderModule,
---       entryPoint: 'fragment_main',
---       targets: [{
---         format: navigator.gpu.getPreferredCanvasFormat()
---       }]
---     },
---     primitive: {
---       topology: 'triangle-list'
---     },
---     layout: 'auto'
---   };
+	--   const pipelineDescriptor = {
+	--     vertex: {
+	--       module: shaderModule,
+	--       entryPoint: 'vertex_main',
+	--       buffers: vertexBuffers
+	--     },
+	--     fragment: {
+	--       module: shaderModule,
+	--       entryPoint: 'fragment_main',
+	--       targets: [{
+	--         format: navigator.gpu.getPreferredCanvasFormat()
+	--       }]
+	--     },
+	--     primitive: {
+	--       topology: 'triangle-list'
+	--     },
+	--     layout: 'auto'
+	--   };
 
---   // 6: Create the actual render pipeline
+	--   // 6: Create the actual render pipeline
 
---   const renderPipeline = device.createRenderPipeline(pipelineDescriptor);
-    
---   // 7: Create GPUCommandEncoder to issue commands to the GPU
---   // Note: render pass descriptor, command encoder, etc. are destroyed after use, fresh one needed for each frame.
---   const commandEncoder = device.createCommandEncoder();
+	--   const renderPipeline = device.createRenderPipeline(pipelineDescriptor);
 
---   // 8: Create GPURenderPassDescriptor to tell WebGPU which texture to draw into, then initiate render pass
+	--   // 7: Create GPUCommandEncoder to issue commands to the GPU
+	--   // Note: render pass descriptor, command encoder, etc. are destroyed after use, fresh one needed for each frame.
+	--   const commandEncoder = device.createCommandEncoder();
 
---   const renderPassDescriptor = {
---     colorAttachments: [{
---       clearValue: clearColor,
---       loadOp: 'clear',
---       storeOp: 'store',
---       view: context.getCurrentTexture().createView()
---     }]
---   };
+	--   // 8: Create GPURenderPassDescriptor to tell WebGPU which texture to draw into, then initiate render pass
 
---   const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
-    
---   // 9: Draw the triangle
+	--   const renderPassDescriptor = {
+	--     colorAttachments: [{
+	--       clearValue: clearColor,
+	--       loadOp: 'clear',
+	--       storeOp: 'store',
+	--       view: context.getCurrentTexture().createView()
+	--     }]
+	--   };
 
---   passEncoder.setPipeline(renderPipeline);
---   passEncoder.setVertexBuffer(0, vertexBuffer);
---   passEncoder.draw(3);
+	--   const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
 
---   // End the render pass
---   passEncoder.end();
+	--   // 9: Draw the triangle
 
---   // 10: End frame by passing array of command buffers to command queue for execution
---   device.queue.submit([commandEncoder.finish()]);
+	--   passEncoder.setPipeline(renderPipeline);
+	--   passEncoder.setVertexBuffer(0, vertexBuffer);
+	--   passEncoder.draw(3);
+
+	--   // End the render pass
+	--   passEncoder.end();
+
+	--   // 10: End frame by passing array of command buffers to command queue for execution
+	--   device.queue.submit([commandEncoder.finish()]);
 end
 
 init()
