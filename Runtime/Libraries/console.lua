@@ -1,6 +1,12 @@
+local validation = require("validation")
+local validateString = validation.validateString
+
+local uv = require("uv")
+
 local console = {
 	buffer = buffer.new(),
 	backup = {},
+	timers = {},
 }
 
 function console.capture()
@@ -33,6 +39,37 @@ function console.release()
 	local capturedOutput = tostring(console.buffer)
 	console.buffer:reset()
 	return capturedOutput
+end
+
+function console.startTimer(label)
+	validateString(label, "label")
+
+	local timerExists = (console.timers[label] ~= nil)
+	if timerExists then
+		error(format("A console timer with label '%s' already exists", label), 0)
+	end
+
+	console.timers[label] = uv.hrtime()
+end
+
+function console.stopTimer(label)
+	validateString(label, "label")
+
+	local startTimeInNanoseconds = console.timers[label]
+	local timerExists = (startTimeInNanoseconds ~= nil)
+	if not timerExists then
+		error(format("No console timer with label '%s' currently exists", label), 0)
+	end
+
+	console.timers[label] = nil
+
+	local endTimeInNanoseconds = uv.hrtime()
+	local elapsedTimeInNanoseconds = endTimeInNanoseconds - startTimeInNanoseconds
+	local elapsedTimeInMilliseconds = elapsedTimeInNanoseconds * 1E-6
+
+	printf("%s: %.0f ms", label, elapsedTimeInMilliseconds)
+
+	return elapsedTimeInMilliseconds
 end
 
 return console
