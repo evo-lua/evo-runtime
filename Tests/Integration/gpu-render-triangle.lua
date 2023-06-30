@@ -20,6 +20,20 @@ function gpu.createInstance()
 	}
 end
 
+local Adapter = {}
+
+function Adapter:Construct()
+	local instance = {}
+	setmetatable(instance, { __index = Adapter })
+	return instance
+end
+
+function Adapter:RequestLogicalDevice()
+
+end
+
+setmetatable(Adapter, { __call = Adapter.Construct })
+
 function gpu.requestAdapter(gpuInstance, glfwWindowHandle)
 	validation.validateTable(gpuInstance, "gpuInstance")
 	validation.validateStruct(gpuInstance.handle, "gpuInstance.handle")
@@ -31,15 +45,15 @@ function gpu.requestAdapter(gpuInstance, glfwWindowHandle)
 	local adapterOptions = ffi.new("WGPURequestAdapterOptions")
 	adapterOptions.compatibleSurface = surface
 
-	local requestedAdapter
+	local requestedAdapter = Adapter()
 	local function onAdapterRequested(status, adapter, message, userdata)
 		assert(status == ffi.C.WGPURequestAdapterStatus_Success, "Failed to request WebGPU adapter")
-		requestedAdapter = adapter
+		requestedAdapter.handle =  adapter
 	end
 	webgpu.bindings.wgpu_instance_request_adapter(gpuInstance.handle, adapterOptions, onAdapterRequested, nil)
 
 	-- This call is blocking (in the wgpu-native implementation), but that might change in the future...
-	assert(requestedAdapter, "onAdapterRequested did not trigger, but it should have")
+	assert(requestedAdapter.handle, "onAdapterRequested did not trigger, but it should have")
 
 	return requestedAdapter
 end
@@ -107,7 +121,7 @@ local function init()
 			error('Couldn\'t request WebGPU adapter.')
 	end
 
-	local device = adapter.requestDevice()
+	local device = adapter:RequestLogicalDevice()
 
 --   // 2: Create a shader module from the shaders template literal
 --   local shaderModule = device.createShaderModule({
