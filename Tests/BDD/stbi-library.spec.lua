@@ -19,6 +19,7 @@ describe("stbi", function()
 				"stbi_encode_png",
 				"stbi_encode_jpg",
 				"stbi_encode_tga",
+				"stbi_flip_vertically_on_write",
 			}
 
 			for _, functionName in ipairs(exportedApiSurface) do
@@ -116,6 +117,56 @@ describe("stbi", function()
 			it("should return false if the buffer size given was negative", function()
 				local result = stbi.bindings.stbi_load_image(fileContents, -1, nil)
 				assertFalse(result)
+			end)
+		end)
+
+		describe("stbi_flip_vertically_on_write", function()
+			it("should flip images on the Y axis when encoding them", function()
+				local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+				local image = ffi.new("stbi_image_t")
+				local result = buffer.new()
+				stbi.bindings.stbi_load_image(fileContents, #fileContents, image)
+
+				stbi.bindings.stbi_flip_vertically_on_write(true)
+
+				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local startPointer, length = result:reserve(maxFileSize)
+				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, length)
+				result:commit(numBytesWritten)
+
+				stbi.bindings.stbi_flip_vertically_on_write(false)
+
+				-- It should just have set the verticalDirection to -1 inside the BMP header
+				-- Since that's a bit difficult to test here, just make sure that the image can still be decoded properly
+				local encodedFileContents = tostring(result)
+				stbi.bindings.stbi_load_image(encodedFileContents, #encodedFileContents, image)
+
+				local expectedPixels = {
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+					0,
+					0,
+					255,
+				}
+
+				for i = 0, image.width * image.height * image.channels - 1 do
+					assertEquals(image.data[i], expectedPixels[i + 1])
+				end
+
+				stbi.bindings.stbi_image_free(image)
 			end)
 		end)
 
