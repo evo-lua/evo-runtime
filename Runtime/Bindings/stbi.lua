@@ -45,6 +45,8 @@ stbi.cdefs = [[
 		size_t (*stbi_encode_png)(stbi_image_t* image, uint8_t* buffer, const size_t buffer_size, const int stride);
 		size_t (*stbi_encode_jpg)(stbi_image_t* image, uint8_t* buffer, const size_t buffer_size, int quality);
 		size_t (*stbi_encode_tga)(stbi_image_t* image, uint8_t* buffer, const size_t buffer_size);
+
+		void (*stbi_flip_vertically_on_write)(int flag);
 	};
 
 	// This may be moved to C later if needed, but for now it's Lua only
