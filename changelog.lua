@@ -1,4 +1,13 @@
 local changelog = {
+	["v0.0.7"] = {
+		newFeatures = {
+			"Added a new FFI binding for `stbi_flip_vertically_on_write` to more easily invert textures in memory",
+			"Shorthands for measuring the execution time have been added as `console.startTimer` and `console.stopTimer`",
+		},
+		breakingChanges = {
+			"All swapchain-related `webgpu` APIs have been renamed (to consistently use `swapchain` instead of `swap_chain`)",
+		},
+	},
 	["v0.0.6"] = {
 		newFeatures = {
 			"Added partial bindings for the `glfw` library to help manage native windows and events",
