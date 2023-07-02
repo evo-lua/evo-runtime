@@ -148,6 +148,8 @@ namespace stbi_ffi {
 		stbi_exports_table.stbi_load_monochrome = stbi_load_monochrome;
 		stbi_exports_table.stbi_load_monochrome_with_alpha = stbi_load_monochrome_with_alpha;
 
+		stbi_exports_table.stbi_flip_vertically_on_write = stbi_flip_vertically_on_write;
+
 		return &stbi_exports_table;
 	}
 
