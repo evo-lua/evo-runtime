@@ -47,6 +47,7 @@ glfw.cdefs = [[
 		void (*glfw_set_window_monitor)(GLFWwindow* window, GLFWmonitor* monitor, int xpos, int ypos, int width, int height, int refreshRate);
 		const GLFWvidmode* (*glfw_get_video_mode)(GLFWmonitor* monitor);
 
+		void (*glfw_get_cursor_pos)(GLFWwindow* window, double* xpos, double* ypos);
 	};
 ]]
 
@@ -63,6 +64,13 @@ function glfw.getWindowSize(window)
 	local height = ffi.new("int[1]")
 	glfw.bindings.glfw_get_window_size(window, width, height)
 	return width[0], height[0]
+end
+
+function glfw.getCursorPosition(window)
+	local cursorPositionX = ffi.new("double[1]")
+	local cursorPositionY = ffi.new("double[1]")
+	glfw.bindings.glfw_get_cursor_pos(window, cursorPositionX, cursorPositionY)
+	return cursorPositionX[0], cursorPositionY[0]
 end
 
 return glfw
