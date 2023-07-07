@@ -58,4 +58,11 @@ function glfw.version()
 	return ffi.string(glfw.bindings.glfw_version())
 end
 
+function glfw.getWindowSize(window)
+	local width = ffi.new("int[1]")
+	local height = ffi.new("int[1]")
+	glfw.bindings.glfw_get_window_size(window, width, height)
+	return width[0], height[0]
+end
+
 return glfw
