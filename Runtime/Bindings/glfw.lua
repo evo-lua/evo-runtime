@@ -66,4 +66,11 @@ function glfw.getWindowSize(window)
 	return width[0], height[0]
 end
 
+function glfw.getCursorPosition(window)
+	local cursorPositionX = ffi.new("double[1]")
+	local cursorPositionY = ffi.new("double[1]")
+	glfw.bindings.glfw_get_cursor_pos(window, cursorPositionX, cursorPositionY)
+	return cursorPositionX[0], cursorPositionY[0]
+end
+
 return glfw
