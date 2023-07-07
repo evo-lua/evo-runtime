@@ -93,47 +93,45 @@ function Test:CreateClient(method)
 end
 
 function Test:Run()
-	C_Timer.After(100, function()
-		C_Timer.After(100, function()
-			self.server:StopListening()
+	self.ticker = C_Timer.NewTicker(100, function()
+		print("Checking receive buffers...")
 
-			for method, client in pairs(self.clients) do
-				client:shutdown()
-				client:close()
+		local receivedLines = {
+			GET = string.explode(tostring(self.receivedChunks.GET), "\r\n"),
+			POST = string.explode(tostring(self.receivedChunks.POST), "\r\n"),
+			OPTIONS = string.explode(tostring(self.receivedChunks.OPTIONS), "\r\n"),
+			DELETE = string.explode(tostring(self.receivedChunks.DELETE), "\r\n"),
+			PATCH = string.explode(tostring(self.receivedChunks.PATCH), "\r\n"),
+			PUT = string.explode(tostring(self.receivedChunks.PUT), "\r\n"),
+			HEAD = string.explode(tostring(self.receivedChunks.HEAD), "\r\n"),
+		}
+
+		for httpMethod, exampleRequest in pairs(self.exampleRequests) do
+			local hasReceivedResponseBody = table.contains(receivedLines[httpMethod], httpMethod .. " response body")
+			printf("Received %d bytes for method %s", #self.receivedChunks[httpMethod], httpMethod)
+			if not hasReceivedResponseBody then
+				printf("Missing chunks for method %s", httpMethod)
+				return
 			end
+		end
 
-			C_Timer.After(100, function()
-				uv.stop()
-			end)
-		end)
+		print("All chunks received - shutting down...")
+		Test:Teardown()
 	end)
+
 	uv.run()
 end
 
 function Test:Teardown()
-	self:AssertClientsReceivedResponses()
-end
+	self.server:StopListening()
 
-function Test:AssertClientsReceivedResponses()
-	local receivedLines = {
-		GET = string.explode(tostring(self.receivedChunks.GET), "\r\n"),
-		POST = string.explode(tostring(self.receivedChunks.POST), "\r\n"),
-		OPTIONS = string.explode(tostring(self.receivedChunks.OPTIONS), "\r\n"),
-		DELETE = string.explode(tostring(self.receivedChunks.DELETE), "\r\n"),
-		PATCH = string.explode(tostring(self.receivedChunks.PATCH), "\r\n"),
-		PUT = string.explode(tostring(self.receivedChunks.PUT), "\r\n"),
-		HEAD = string.explode(tostring(self.receivedChunks.HEAD), "\r\n"),
-	}
-
-	assertTrue(table.contains(receivedLines.GET, "GET response body"))
-	assertTrue(table.contains(receivedLines.POST, "POST response body"))
-	assertTrue(table.contains(receivedLines.OPTIONS, "OPTIONS response body"))
-	assertTrue(table.contains(receivedLines.DELETE, "DELETE response body"))
-	assertTrue(table.contains(receivedLines.PATCH, "PATCH response body"))
-	assertTrue(table.contains(receivedLines.PUT, "PUT response body"))
-	assertTrue(table.contains(receivedLines.HEAD, "HEAD response body"))
+	self.ticker:stop()
+	for method, client in pairs(self.clients) do
+		client:shutdown()
+		client:close()
+	end
+	uv.stop()
 end
 
 Test:Setup()
 Test:Run()
-Test:Teardown()
