@@ -3,6 +3,12 @@ local ffi = require("ffi")
 local glfw = {}
 
 glfw.cdefs = [[
+	typedef struct GLFWimage {
+		int width;
+		int height;
+		unsigned char* pixels;
+	} GLFWimage;
+
 	typedef struct GLFWvidmode {
 		int width;
 		int height;
@@ -13,6 +19,7 @@ glfw.cdefs = [[
 	} GLFWvidmode;
 
 	// Opaque pointer types don't need to be defined as they're only ever handled by glfw internals
+	typedef struct GLFWcursor GLFWcursor;
 	typedef struct GLFWwindow GLFWwindow;
 	typedef struct GLFWmonitor GLFWmonitor;
 	typedef void* deferred_event_queue_t;
@@ -48,6 +55,9 @@ glfw.cdefs = [[
 		const GLFWvidmode* (*glfw_get_video_mode)(GLFWmonitor* monitor);
 
 		void (*glfw_get_cursor_pos)(GLFWwindow* window, double* xpos, double* ypos);
+		GLFWcursor* (*glfw_create_cursor)(const GLFWimage* image, int xhot, int yhot);
+		void (*glfw_destroy_cursor)(GLFWcursor* cursor);
+		void (*glfw_set_cursor)(GLFWwindow* window, GLFWcursor* cursor);
 	};
 ]]
 

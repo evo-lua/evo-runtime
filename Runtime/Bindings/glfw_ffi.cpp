@@ -254,6 +254,9 @@ namespace glfw_ffi {
 		glfw_exports_table.glfw_get_video_mode = glfwGetVideoMode;
 
 		glfw_exports_table.glfw_get_cursor_pos = glfwGetCursorPos;
+		glfw_exports_table.glfw_create_cursor = glfwCreateCursor;
+		glfw_exports_table.glfw_set_cursor = glfwSetCursor;
+		glfw_exports_table.glfw_destroy_cursor = glfwDestroyCursor;
 
 		return &glfw_exports_table;
 	}
