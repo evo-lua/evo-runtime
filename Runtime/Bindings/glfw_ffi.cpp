@@ -253,6 +253,8 @@ namespace glfw_ffi {
 		glfw_exports_table.glfw_set_window_monitor = glfwSetWindowMonitor;
 		glfw_exports_table.glfw_get_video_mode = glfwGetVideoMode;
 
+		glfw_exports_table.glfw_get_cursor_pos = glfwGetCursorPos;
+
 		return &glfw_exports_table;
 	}
 

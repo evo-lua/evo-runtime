@@ -47,6 +47,7 @@ glfw.cdefs = [[
 		void (*glfw_set_window_monitor)(GLFWwindow* window, GLFWmonitor* monitor, int xpos, int ypos, int width, int height, int refreshRate);
 		const GLFWvidmode* (*glfw_get_video_mode)(GLFWmonitor* monitor);
 
+		void (*glfw_get_cursor_pos)(GLFWwindow* window, double* xpos, double* ypos);
 	};
 ]]
 
