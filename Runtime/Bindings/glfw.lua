@@ -59,6 +59,9 @@ glfw.cdefs = [[
 		GLFWcursor* (*glfw_create_cursor)(const GLFWimage* image, int xhot, int yhot);
 		void (*glfw_destroy_cursor)(GLFWcursor* cursor);
 		void (*glfw_set_cursor)(GLFWwindow* window, GLFWcursor* cursor);
+
+		int (*glfw_get_key)(GLFWwindow* window, int key);
+		int (*glfw_get_mouse_button)(GLFWwindow* window, int button);
 	};
 ]]
 

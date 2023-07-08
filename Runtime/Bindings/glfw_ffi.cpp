@@ -258,6 +258,9 @@ namespace glfw_ffi {
 		glfw_exports_table.glfw_set_cursor = glfwSetCursor;
 		glfw_exports_table.glfw_destroy_cursor = glfwDestroyCursor;
 
+		glfw_exports_table.glfw_get_key = glfwGetKey;
+		glfw_exports_table.glfw_get_mouse_button = glfwGetMouseButton;
+
 		return &glfw_exports_table;
 	}
 
