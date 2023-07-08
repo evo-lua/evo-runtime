@@ -6,6 +6,7 @@ local testFiles = {
 	"Tests/Integration/websocket-messaging.lua",
 	"Tests/Integration/glfw-cursor-image.lua",
 	"Tests/Integration/glfw-cursor-position.lua",
+	"Tests/Integration/glfw-poll-button-state.lua",
 	"Tests/Integration/glfw-webgpu-surface.lua",
 	"Tests/Integration/glfw-window-events.lua",
 	"Tests/Integration/glfw-window-size.lua",
