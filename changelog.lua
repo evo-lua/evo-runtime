@@ -1,4 +1,9 @@
 local changelog = {
+	["v0.0.8"] = {
+		newFeatures = {
+			"Added FFI bindings for several missing GLFW functions",
+		},
+	},
 	["v0.0.7"] = {
 		newFeatures = {
 			"Added a new FFI binding for `stbi_flip_vertically_on_write` to more easily invert textures in memory",
