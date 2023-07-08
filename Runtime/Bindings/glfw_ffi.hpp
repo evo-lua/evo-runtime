@@ -53,6 +53,9 @@ struct static_glfw_exports_table {
 	const GLFWvidmode* (*glfw_get_video_mode)(GLFWmonitor* monitor);
 
 	void (*glfw_get_cursor_pos)(GLFWwindow* window, double* xpos, double* ypos);
+	GLFWcursor* (*glfw_create_cursor)(const GLFWimage* image, int xhot, int yhot);
+	void (*glfw_destroy_cursor)(GLFWcursor* cursor);
+	void (*glfw_set_cursor)(GLFWwindow* window, GLFWcursor* cursor);
 };
 
 namespace glfw_ffi {

@@ -4,6 +4,7 @@ local testFiles = {
 	"Tests/Integration/websocket-echo-server.lua",
 	"Tests/Integration/websocket-event-queue.lua",
 	"Tests/Integration/websocket-messaging.lua",
+	"Tests/Integration/glfw-cursor-image.lua",
 	"Tests/Integration/glfw-cursor-position.lua",
 	"Tests/Integration/glfw-webgpu-surface.lua",
 	"Tests/Integration/glfw-window-events.lua",
