@@ -83,6 +83,13 @@ function evo.registerGlobalAliases()
 
 	_G.printf = evo.printf
 	_G.extend = evo.extend
+
+	_G.cdef = ffi.cdef
+	_G.define = ffi.cdef
+	_G.cast = ffi.cast
+	_G.new = ffi.new
+	_G.sizeof = ffi.sizeof
+	_G.typeof = ffi.typeof
 end
 
 function evo.initializeGlobalNamespaces()

@@ -1,4 +1,5 @@
 local evo = require("evo")
+local ffi = require("ffi")
 local bdd = require("bdd")
 
 local globalAliases = {
@@ -10,6 +11,12 @@ local globalAliases = {
 	["it"] = bdd.it,
 	["path"] = require("path"),
 	["printf"] = evo.printf,
+	["cast"] = ffi.cast,
+	["cdef"] = ffi.cdef,
+	["define"] = ffi.cdef,
+	["new"] = ffi.new,
+	["sizeof"] = ffi.sizeof,
+	["typeof"] = ffi.typeof,
 }
 
 local globalNamespaces = {
