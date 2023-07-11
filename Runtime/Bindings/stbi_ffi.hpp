@@ -46,6 +46,11 @@ struct static_stbi_exports_table {
 	size_t (*stbi_encode_tga)(stbi_image_t* image, uint8_t* buffer, const size_t buffer_size);
 
 	void (*stbi_flip_vertically_on_write)(int flag);
+
+	size_t (*stbi_get_required_bmp_size)(stbi_image_t* image);
+	size_t (*stbi_get_required_png_size)(stbi_image_t* image, const int stride);
+	size_t (*stbi_get_required_jpg_size)(stbi_image_t* image, const int quality);
+	size_t (*stbi_get_required_tga_size)(stbi_image_t* image);
 };
 
 namespace stbi_ffi {

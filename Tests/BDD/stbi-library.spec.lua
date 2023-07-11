@@ -20,6 +20,10 @@ describe("stbi", function()
 				"stbi_encode_jpg",
 				"stbi_encode_tga",
 				"stbi_flip_vertically_on_write",
+				"stbi_get_required_bmp_size",
+				"stbi_get_required_png_size",
+				"stbi_get_required_jpg_size",
+				"stbi_get_required_tga_size",
 			}
 
 			for _, functionName in ipairs(exportedApiSurface) do
@@ -129,7 +133,7 @@ describe("stbi", function()
 
 				stbi.bindings.stbi_flip_vertically_on_write(true)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, length)
 				result:commit(numBytesWritten)
@@ -179,7 +183,7 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, length)
 
@@ -269,7 +273,7 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_tga_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, startPointer, length)
 
@@ -359,7 +363,8 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_jpg_size(image, 100))
+
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, startPointer, length, 100)
 
@@ -453,7 +458,7 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_png(image, startPointer, length, 0)
 
@@ -766,17 +771,65 @@ describe("stbi", function()
 				assertFalse(result)
 			end)
 		end)
-	end)
 
-	describe("max_bitmap_size", function()
-		it("should return the maximum bitmap size for a simple BMP file", function()
-			local maxBitmapSize = stbi.max_bitmap_size(256, 256, 3)
-			assertEquals(maxBitmapSize, 196662)
+		local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+		local imageBuffer = buffer.new(#fileContents):put(fileContents)
+		local image = ffi.new("stbi_image_t")
+		image.width = 2
+		image.height = 3
+		image.data = imageBuffer
+		image.channels = 4
+
+		describe("stbi_get_required_bmp_size", function()
+			it("should return the required BMP size for the given image", function()
+				local requiredBufferSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
+
+				local outputBuffer = buffer.new()
+				local ptr, len = outputBuffer:reserve(requiredBufferSize)
+				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, ptr, len)
+				outputBuffer:commit(numBytesWritten)
+
+				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
+			end)
 		end)
 
-		it("should reserve enough space for JPG section overhead if the image is small", function()
-			local maxBitmapSize = stbi.max_bitmap_size(2, 3, 3)
-			assertEquals(maxBitmapSize, 1024)
+		describe("stbi_get_required_png_size", function()
+			it("should return the required PNG size for the given image", function()
+				local requiredBufferSize = stbi.bindings.stbi_get_required_png_size(image, 0)
+
+				local outputBuffer = buffer.new()
+				local ptr, len = outputBuffer:reserve(requiredBufferSize)
+				local numBytesWritten = stbi.bindings.stbi_encode_png(image, ptr, len, 0)
+				outputBuffer:commit(numBytesWritten)
+
+				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
+			end)
+		end)
+
+		describe("stbi_get_required_jpg_size", function()
+			it("should return the required JPG size for the given image", function()
+				local requiredBufferSize = stbi.bindings.stbi_get_required_jpg_size(image, 100)
+
+				local outputBuffer = buffer.new()
+				local ptr, len = outputBuffer:reserve(requiredBufferSize)
+				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, ptr, len, 100)
+				outputBuffer:commit(numBytesWritten)
+
+				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
+			end)
+		end)
+
+		describe("stbi_get_required_tga_size", function()
+			it("should return the required TGA size for the given image", function()
+				local requiredBufferSize = stbi.bindings.stbi_get_required_tga_size(image)
+
+				local outputBuffer = buffer.new()
+				local ptr, len = outputBuffer:reserve(requiredBufferSize)
+				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, ptr, len)
+				outputBuffer:commit(numBytesWritten)
+
+				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
+			end)
 		end)
 	end)
 
