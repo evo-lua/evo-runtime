@@ -22,7 +22,7 @@ stbi.cdefs = [[
 	typedef unsigned char* stbi_pixelbuffer_t;
 	typedef unsigned char const* stbi_readonly_file_contents_t;
 
-	typedef struct {
+	typedef struct stbi_image {
 		int width;
 		int height;
 		stbi_pixelbuffer_t data;
@@ -50,7 +50,7 @@ stbi.cdefs = [[
 	};
 
 	// This may be moved to C later if needed, but for now it's Lua only
-	typedef struct {
+	typedef struct stbi_color {
 		uint8_t red;
 		uint8_t green;
 		uint8_t blue;
