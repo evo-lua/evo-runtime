@@ -1,7 +1,5 @@
 local ffi = require("ffi")
 
-local math_max = math.max
-
 local stbi = {
 	COLOR_DEPTHS = {
 		[0] = "NO_CONVERSION",
@@ -69,25 +67,6 @@ end
 
 function stbi.version()
 	return ffi.string(stbi.bindings.stbi_version())
-end
-
-local BMP_HEADER_SIZE = 54
-local JPEG_OVERHEAD_BUFFER_SIZE = 1024
--- Somewhat sketchy, but should be large enough for all formats
-function stbi.max_bitmap_size(width, height, channels)
-	local headerSizeInBytes = BMP_HEADER_SIZE
-	local pixelSizeInBytes = channels
-	local rowSizeInBytes = width * pixelSizeInBytes
-
-	-- Rows are aligned to 4 bytes in BMP format
-	local padding = (4 - (rowSizeInBytes % 4)) % 4
-	rowSizeInBytes = rowSizeInBytes + padding
-
-	-- This should cover most regular-sized images in all of the supported formats
-	local estimatedWorstCaseBitmapFileSize = (headerSizeInBytes + height * rowSizeInBytes)
-
-	-- JPEG-encoded sections add significant overhead if the image is small, so let's account for that
-	return math_max(estimatedWorstCaseBitmapFileSize, JPEG_OVERHEAD_BUFFER_SIZE)
 end
 
 function stbi.replace_pixel_color_rgba(image, sourceColor, replacementColor)

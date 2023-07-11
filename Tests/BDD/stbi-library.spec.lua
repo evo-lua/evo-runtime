@@ -133,7 +133,7 @@ describe("stbi", function()
 
 				stbi.bindings.stbi_flip_vertically_on_write(true)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, length)
 				result:commit(numBytesWritten)
@@ -183,7 +183,7 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, length)
 
@@ -273,7 +273,7 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_tga_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, startPointer, length)
 
@@ -363,7 +363,8 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_jpg_size(image, 100))
+
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, startPointer, length, 100)
 
@@ -457,7 +458,7 @@ describe("stbi", function()
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = stbi.max_bitmap_size(image.width, image.height, image.channels)
+				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
 				local numBytesWritten = stbi.bindings.stbi_encode_png(image, startPointer, length, 0)
 
@@ -781,7 +782,7 @@ describe("stbi", function()
 
 		describe("stbi_get_required_bmp_size", function()
 			it("should return the required BMP size for the given image", function()
-				local requiredBufferSize = stbi.bindings.stbi_get_required_bmp_size(image)
+				local requiredBufferSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
 
 				local outputBuffer = buffer.new()
 				local ptr, len = outputBuffer:reserve(requiredBufferSize)
@@ -807,11 +808,11 @@ describe("stbi", function()
 
 		describe("stbi_get_required_jpg_size", function()
 			it("should return the required JPG size for the given image", function()
-				local requiredBufferSize = stbi.bindings.stbi_get_required_jpg_size(image, 10)
+				local requiredBufferSize = stbi.bindings.stbi_get_required_jpg_size(image, 100)
 
 				local outputBuffer = buffer.new()
 				local ptr, len = outputBuffer:reserve(requiredBufferSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, ptr, len, 10)
+				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, ptr, len, 100)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
@@ -829,18 +830,6 @@ describe("stbi", function()
 
 				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
 			end)
-		end)
-	end)
-
-	describe("max_bitmap_size", function()
-		it("should return the maximum bitmap size for a simple BMP file", function()
-			local maxBitmapSize = stbi.max_bitmap_size(256, 256, 3)
-			assertEquals(maxBitmapSize, 196662)
-		end)
-
-		it("should reserve enough space for JPG section overhead if the image is small", function()
-			local maxBitmapSize = stbi.max_bitmap_size(2, 3, 3)
-			assertEquals(maxBitmapSize, 1024)
 		end)
 	end)
 
