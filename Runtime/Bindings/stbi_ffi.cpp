@@ -127,6 +127,60 @@ size_t stbi_encode_tga(stbi_image_t* image, uint8_t* buffer, const size_t buffer
 	return result.num_bytes_used;
 }
 
+// There's no more reliable way to get the required buffer size AFAICT
+static void count_bytes(void* context, void* data, int size) {
+	size_t* byte_counter = static_cast<size_t*>(context);
+	*byte_counter += size;
+}
+
+size_t stbi_get_required_bmp_size(stbi_image_t* image) {
+	if(!image) return 0;
+	if(!image->data) return 0;
+
+	size_t byte_counter = 0;
+
+	int success = stbi_write_bmp_to_func(count_bytes, &byte_counter, image->width, image->height, image->channels, image->data);
+	if(!success) return 0;
+
+	return byte_counter;
+}
+
+size_t stbi_get_required_png_size(stbi_image_t* image, const int stride) {
+	if(!image) return 0;
+	if(!image->data) return 0;
+
+	size_t byte_counter = 0;
+
+	int success = stbi_write_png_to_func(count_bytes, &byte_counter, image->width, image->height, image->channels, image->data, stride);
+	if(!success) return 0;
+
+	return byte_counter;
+}
+
+size_t stbi_get_required_jpg_size(stbi_image_t* image, int quality) {
+	if(!image) return 0;
+	if(!image->data) return 0;
+
+	size_t byte_counter = 0;
+
+	int success = stbi_write_jpg_to_func(count_bytes, &byte_counter, image->width, image->height, image->channels, image->data, quality);
+	if(!success) return 0;
+
+	return byte_counter;
+}
+
+size_t stbi_get_required_tga_size(stbi_image_t* image) {
+	if(!image) return 0;
+	if(!image->data) return 0;
+
+	size_t byte_counter = 0;
+
+	int success = stbi_write_tga_to_func(count_bytes, &byte_counter, image->width, image->height, image->channels, image->data);
+	if(!success) return 0;
+
+	return byte_counter;
+}
+
 namespace stbi_ffi {
 
 	void* getExportsTable() {
@@ -149,6 +203,11 @@ namespace stbi_ffi {
 		stbi_exports_table.stbi_load_monochrome_with_alpha = stbi_load_monochrome_with_alpha;
 
 		stbi_exports_table.stbi_flip_vertically_on_write = stbi_flip_vertically_on_write;
+
+		stbi_exports_table.stbi_get_required_bmp_size = stbi_get_required_bmp_size;
+		stbi_exports_table.stbi_get_required_png_size = stbi_get_required_png_size;
+		stbi_exports_table.stbi_get_required_jpg_size = stbi_get_required_jpg_size;
+		stbi_exports_table.stbi_get_required_tga_size = stbi_get_required_tga_size;
 
 		return &stbi_exports_table;
 	}
