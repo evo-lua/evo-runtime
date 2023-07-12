@@ -95,6 +95,7 @@ end
 function evo.initializeGlobalNamespaces()
 	_G.C_CommandLine = require("C_CommandLine")
 	_G.C_FileSystem = require("C_FileSystem")
+	_G.C_ImageProcessing = require("C_ImageProcessing")
 	require("C_Runtime")
 	_G.C_Timer = require("C_Timer")
 	_G.C_WebView = require("C_WebView")

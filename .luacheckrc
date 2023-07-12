@@ -50,6 +50,7 @@ globals = {
 	-- API namespaces
 	"C_CommandLine",
 	"C_FileSystem",
+	"C_ImageProcessing",
 	"C_Runtime",
 	"C_Timer",
 	"C_WebView",
