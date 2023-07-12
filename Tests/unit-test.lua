@@ -22,6 +22,7 @@ local specFiles = {
 	"Tests/BDD/zlib-library.spec.lua",
 	"Tests/BDD/commandline-namespace.spec.lua",
 	"Tests/BDD/filesystem-namespace.spec.lua",
+	"Tests/BDD/imageprocessing-namespace.spec.lua",
 	"Tests/BDD/runtime-namespace.spec.lua",
 	"Tests/BDD/timer-namespace.spec.lua",
 }
