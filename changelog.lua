@@ -1,7 +1,7 @@
 local changelog = {
 	["v0.0.9"] = {
 		newFeatures = {
-			"Added a new `C_ImageProcessing` API namespace (higher-level convenience layer above the `stbi` library)",
+			"Added a new `C_ImageProcessing` API namespace (higher-level convenience layer on top of the `stbi` library)",
 		},
 		breakingChanges = {
 			"Replaced `stbi.maxBitmapSize` with format-specific functions that return more reliable results",
