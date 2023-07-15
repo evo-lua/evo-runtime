@@ -121,4 +121,32 @@ function C_ImageProcessing.EncodeJPG(rgbaPixelArray, imageWidthInPixels, imageHe
 	return tostring(outputBuffer)
 end
 
+function C_ImageProcessing.EncodeTGA(rgbaPixelArray, imageWidthInPixels, imageHeightInPixels)
+	if type(rgbaPixelArray) == "userdata" then
+		rgbaPixelArray = tostring(rgbaPixelArray)
+	end
+
+	validateString(rgbaPixelArray, "rgbaPixelArray")
+	validateNumber(imageWidthInPixels, "imageWidthInPixels")
+	validateNumber(imageHeightInPixels, "imageHeightInPixels")
+
+	local rgbaPixelBuffer = buffer.new(#rgbaPixelArray):put(rgbaPixelArray)
+
+	local image = ffi_new("stbi_image_t")
+	image.width = imageWidthInPixels
+	image.height = imageHeightInPixels
+	image.data = rgbaPixelBuffer
+	image.channels = 4
+
+	local requiredBufferSize = stbi.bindings.stbi_get_required_tga_size(image)
+	local outputBuffer = buffer.new()
+	local startPointer, reservedBufferSize = outputBuffer:reserve(requiredBufferSize)
+
+	local numBytesWritten = stbi.bindings.stbi_encode_tga(image, startPointer, reservedBufferSize)
+	assert(numBytesWritten > 0, "Failed to encode TGA image (preallocated buffer too small?)")
+	outputBuffer:commit(numBytesWritten)
+
+	return tostring(outputBuffer)
+end
+
 return C_ImageProcessing

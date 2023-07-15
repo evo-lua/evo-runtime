@@ -3,9 +3,11 @@ local EXAMPLE_IMAGE_BUFFER = buffer.new():put(EXAMPLE_IMAGE_DATA)
 local EXAMPLE_BMP_BYTES = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "rgba-pixels.bmp"))
 local EXAMPLE_PNG_BYTES = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "rgba-pixels.png"))
 local EXAMPLE_JPG_BYTES = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "rgba-pixels.jpg"))
+local EXAMPLE_TGA_BYTES = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "rgba-pixels.tga"))
 local EXAMPLE_BMP_BUFFER = buffer.new():put(EXAMPLE_BMP_BYTES)
 local EXAMPLE_PNG_BUFFER = buffer.new():put(EXAMPLE_PNG_BYTES)
 local EXAMPLE_JPG_BUFFER = buffer.new():put(EXAMPLE_JPG_BYTES)
+local EXAMPLE_TGA_BUFFER = buffer.new():put(EXAMPLE_TGA_BYTES)
 
 describe("C_ImageProcessing", function()
 	describe("DecodeFileContents", function()
@@ -89,6 +91,22 @@ describe("C_ImageProcessing", function()
 			assertTrue(isFirstColorApproximatelyRed)
 			assertTrue(isSecondColorApproximatelyGreen)
 			assertTrue(isThirdColorApproximatelyBlue)
+			assertEquals(imageWidthInPixels, 2)
+			assertEquals(imageHeightInPixels, 2)
+		end)
+
+		it("should be able to decode TGA file contents from a string", function()
+			local rgbaPixelArray, imageWidthInPixels, imageHeightInPixels =
+				C_ImageProcessing.DecodeFileContents(EXAMPLE_TGA_BYTES)
+			assertEquals(rgbaPixelArray, EXAMPLE_IMAGE_DATA)
+			assertEquals(imageWidthInPixels, 2)
+			assertEquals(imageHeightInPixels, 2)
+		end)
+
+		it("should be able to decode TGA file contents from a string buffer", function()
+			local rgbaPixelArray, imageWidthInPixels, imageHeightInPixels =
+				C_ImageProcessing.DecodeFileContents(EXAMPLE_TGA_BUFFER)
+			assertEquals(rgbaPixelArray, EXAMPLE_IMAGE_DATA)
 			assertEquals(imageWidthInPixels, 2)
 			assertEquals(imageHeightInPixels, 2)
 		end)
@@ -221,6 +239,45 @@ describe("C_ImageProcessing", function()
 		it("should throw if a non-number type was passed as the image height", function()
 			local function attemptToEncodeInvalidFile()
 				C_ImageProcessing.EncodeJPG(EXAMPLE_IMAGE_DATA, 2, "2")
+			end
+			local expectedErrorMessage =
+				"Expected argument imageHeightInPixels to be a number value, but received a string value instead"
+			assertThrows(attemptToEncodeInvalidFile, expectedErrorMessage)
+		end)
+	end)
+
+	describe("EncodeTGA", function()
+		it("should be able to encode pixel data given as a string", function()
+			local bmpFileContents = C_ImageProcessing.EncodeTGA(EXAMPLE_IMAGE_DATA, 2, 2)
+			assertEquals(bmpFileContents, EXAMPLE_TGA_BYTES)
+		end)
+
+		it("should be able to encode pixel data given as a string buffer", function()
+			local bmpFileContents = C_ImageProcessing.EncodeTGA(EXAMPLE_IMAGE_BUFFER, 2, 2)
+			assertEquals(bmpFileContents, EXAMPLE_TGA_BYTES)
+		end)
+
+		it("should throw if a non-string type was passed as the pixel buffer", function()
+			local function attemptToEncodeInvalidFile()
+				C_ImageProcessing.EncodeTGA(123, 2, 2)
+			end
+			local expectedErrorMessage =
+				"Expected argument rgbaPixelArray to be a string value, but received a number value instead"
+			assertThrows(attemptToEncodeInvalidFile, expectedErrorMessage)
+		end)
+
+		it("should throw if a non-number type was passed as the image width", function()
+			local function attemptToEncodeInvalidFile()
+				C_ImageProcessing.EncodeTGA(EXAMPLE_IMAGE_DATA, "2", 2)
+			end
+			local expectedErrorMessage =
+				"Expected argument imageWidthInPixels to be a number value, but received a string value instead"
+			assertThrows(attemptToEncodeInvalidFile, expectedErrorMessage)
+		end)
+
+		it("should throw if a non-number type was passed as the image height", function()
+			local function attemptToEncodeInvalidFile()
+				C_ImageProcessing.EncodeTGA(EXAMPLE_IMAGE_DATA, 2, "2")
 			end
 			local expectedErrorMessage =
 				"Expected argument imageHeightInPixels to be a number value, but received a string value instead"
