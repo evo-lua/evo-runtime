@@ -95,6 +95,22 @@ describe("C_ImageProcessing", function()
 			assertEquals(imageHeightInPixels, 2)
 		end)
 
+		it("should be able to decode TGA file contents from a string", function()
+			local rgbaPixelArray, imageWidthInPixels, imageHeightInPixels =
+				C_ImageProcessing.DecodeFileContents(EXAMPLE_TGA_BYTES)
+			assertEquals(rgbaPixelArray, EXAMPLE_IMAGE_DATA)
+			assertEquals(imageWidthInPixels, 2)
+			assertEquals(imageHeightInPixels, 2)
+		end)
+
+		it("should be able to decode TGA file contents from a string buffer", function()
+			local rgbaPixelArray, imageWidthInPixels, imageHeightInPixels =
+				C_ImageProcessing.DecodeFileContents(EXAMPLE_TGA_BUFFER)
+			assertEquals(rgbaPixelArray, EXAMPLE_IMAGE_DATA)
+			assertEquals(imageWidthInPixels, 2)
+			assertEquals(imageHeightInPixels, 2)
+		end)
+
 		it("should throw if garbage bytes are passed as the file contents", function()
 			local function attemptToDecodeInvalidFile()
 				C_ImageProcessing.DecodeFileContents("Not a valid image file")
