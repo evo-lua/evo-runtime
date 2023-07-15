@@ -51,6 +51,8 @@ struct static_stbi_exports_table {
 	size_t (*stbi_get_required_png_size)(stbi_image_t* image, const int stride);
 	size_t (*stbi_get_required_jpg_size)(stbi_image_t* image, const int quality);
 	size_t (*stbi_get_required_tga_size)(stbi_image_t* image);
+
+	void (*stbi_abgr_to_rgba)(stbi_image_t* image);
 };
 
 namespace stbi_ffi {

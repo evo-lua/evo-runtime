@@ -50,6 +50,8 @@ stbi.cdefs = [[
 		size_t (*stbi_get_required_png_size)(stbi_image_t* image, const int stride);
 		size_t (*stbi_get_required_jpg_size)(stbi_image_t* image, const int quality);
 		size_t (*stbi_get_required_tga_size)(stbi_image_t* image);
+
+		void (*stbi_abgr_to_rgba)(stbi_image_t* image);
 	};
 
 	// This may be moved to C later if needed, but for now it's Lua only

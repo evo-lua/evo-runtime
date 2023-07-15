@@ -7,6 +7,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+#include <utility>
+
 const char* stbi_version() {
 	// There's no versioned releases or semver here, so this is as good as it gets
 	return TOSTRING(STBI_VERSION) ".0.0";
@@ -181,6 +183,23 @@ size_t stbi_get_required_tga_size(stbi_image_t* image) {
 	return byte_counter;
 }
 
+const size_t ABGR_RED_INDEX = 3;
+const size_t ABGR_GREEN_INDEX = 2;
+const size_t ABGR_BLUE_INDEX = 1;
+const size_t ABGR_ALPHA_INDEX = 0;
+
+void stbi_abgr_to_rgba(stbi_image_t* image) {
+	if(!image) return;
+	if(!image->data) return;
+
+	const size_t num_pixels = image->width * image->height;
+	for(size_t i = 0; i < num_pixels; i++) {
+		uint8_t* pixel = image->data + i * 4;
+		std::swap(pixel[ABGR_ALPHA_INDEX], pixel[ABGR_RED_INDEX]);
+		std::swap(pixel[ABGR_BLUE_INDEX], pixel[ABGR_GREEN_INDEX]);
+	}
+}
+
 namespace stbi_ffi {
 
 	void* getExportsTable() {
@@ -208,6 +227,8 @@ namespace stbi_ffi {
 		stbi_exports_table.stbi_get_required_png_size = stbi_get_required_png_size;
 		stbi_exports_table.stbi_get_required_jpg_size = stbi_get_required_jpg_size;
 		stbi_exports_table.stbi_get_required_tga_size = stbi_get_required_tga_size;
+
+		stbi_exports_table.stbi_abgr_to_rgba = stbi_abgr_to_rgba;
 
 		return &stbi_exports_table;
 	}
