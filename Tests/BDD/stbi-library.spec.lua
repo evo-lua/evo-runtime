@@ -836,8 +836,9 @@ describe("stbi", function()
 	describe("replace_pixel_color_rgba", function()
 		it("should replace all pixels of the given color", function()
 			local image = ffi.new("stbi_image_t")
-			local originaBitmapContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
-			stbi.bindings.stbi_load_rgba(originaBitmapContents, #originaBitmapContents, image)
+			local originalBitmapContents =
+				C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+			stbi.bindings.stbi_load_rgba(originalBitmapContents, #originalBitmapContents, image)
 
 			local sourceColor = ffi.new("stbi_color_t", { 0, 0, 255, 255 })
 			local replacementColor = ffi.new("stbi_color_t", { 255, 0, 0, 255 })
