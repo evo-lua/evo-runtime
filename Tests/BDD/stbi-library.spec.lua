@@ -831,6 +831,39 @@ describe("stbi", function()
 				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
 			end)
 		end)
+
+		describe("stbi_abgr_to_rgba", function()
+			it("should swap the pixel format of a given image from ABGR to RGBA", function()
+				local imageBytes = "\1\2\3\4\5\6\7\8"
+				local image = ffi.new("stbi_image_t")
+				image.width = 2
+				image.height = 1
+				image.data = buffer.new(#imageBytes):put(imageBytes)
+				image.channels = 4
+
+				stbi.bindings.stbi_abgr_to_rgba(image)
+
+				assertEquals(image.data[0], 4)
+				assertEquals(image.data[1], 3)
+				assertEquals(image.data[2], 2)
+				assertEquals(image.data[3], 1)
+				assertEquals(image.data[4], 8)
+				assertEquals(image.data[5], 7)
+				assertEquals(image.data[6], 6)
+				assertEquals(image.data[7], 5)
+
+				stbi.bindings.stbi_abgr_to_rgba(image)
+
+				assertEquals(image.data[0], 1)
+				assertEquals(image.data[1], 2)
+				assertEquals(image.data[2], 3)
+				assertEquals(image.data[3], 4)
+				assertEquals(image.data[4], 5)
+				assertEquals(image.data[5], 6)
+				assertEquals(image.data[6], 7)
+				assertEquals(image.data[7], 8)
+			end)
+		end)
 	end)
 
 	describe("replace_pixel_color_rgba", function()
