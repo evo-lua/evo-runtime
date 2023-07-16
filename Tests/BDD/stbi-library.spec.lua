@@ -835,10 +835,12 @@ describe("stbi", function()
 		describe("stbi_abgr_to_rgba", function()
 			it("should swap the pixel format of a given image from ABGR to RGBA", function()
 				local imageBytes = "\1\2\3\4\5\6\7\8"
+				local imageBuffer = buffer.new(#imageBytes):put(imageBytes)
+				local ptr, _ = imageBuffer:ref()
 				local image = ffi.new("stbi_image_t")
 				image.width = 2
 				image.height = 1
-				image.data = buffer.new(#imageBytes):put(imageBytes)
+				image.data = ptr
 				image.channels = 4
 
 				stbi.bindings.stbi_abgr_to_rgba(image)
@@ -862,6 +864,42 @@ describe("stbi", function()
 				assertEquals(image.data[5], 6)
 				assertEquals(image.data[6], 7)
 				assertEquals(image.data[7], 8)
+			end)
+		end)
+
+		describe("stbi_resize_image", function()
+			it("should resize the given image to fit the provided dimensions", function()
+				local imageBuffer = buffer.new(2 * 2 * 4):put("\1\2\3\4\5\6\7\8\9\10\11\12\13\14\15\16")
+				local ptr, _ = imageBuffer:ref()
+				local originalImage = ffi.new("stbi_image_t")
+				originalImage.data = ptr
+				originalImage.width = 2
+				originalImage.height = 2
+				originalImage.channels = 4
+
+				local resizedImage = ffi.new("stbi_image_t")
+				resizedImage.width = 4
+				resizedImage.height = 4
+				resizedImage.channels = 4
+				resizedImage.data = buffer.new(4 * 4 * 4)
+				stbi.bindings.stbi_resize_image(originalImage, resizedImage)
+
+				assertEquals(resizedImage.data[0], 1)
+				assertEquals(resizedImage.data[1], 2)
+				assertEquals(resizedImage.data[2], 3)
+				assertEquals(resizedImage.data[3], 4)
+				assertEquals(resizedImage.data[4], 1)
+				assertEquals(resizedImage.data[5], 2)
+				assertEquals(resizedImage.data[6], 3)
+				assertEquals(resizedImage.data[7], 4)
+				assertEquals(resizedImage.data[8], 5)
+				assertEquals(resizedImage.data[9], 6)
+				assertEquals(resizedImage.data[10], 7)
+				assertEquals(resizedImage.data[11], 8)
+				assertEquals(resizedImage.data[12], 5)
+				assertEquals(resizedImage.data[13], 6)
+				assertEquals(resizedImage.data[14], 7)
+				assertEquals(resizedImage.data[15], 8)
 			end)
 		end)
 	end)

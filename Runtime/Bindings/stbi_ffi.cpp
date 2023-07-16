@@ -3,7 +3,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "stb_image_resize.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
@@ -200,6 +201,82 @@ void stbi_abgr_to_rgba(stbi_image_t* image) {
 	}
 }
 
+void stbi_resize_image(stbi_image_t* original_image, stbi_image_t* resized_image) {
+	if(!original_image) return;
+	if(!resized_image) return;
+	if(!original_image->data) return;
+	if(!resized_image->data) return;
+
+	constexpr int stride = 0;
+	stbir_resize_uint8(original_image->data, original_image->width, original_image->height, stride, resized_image->data, resized_image->width, resized_image->height, stride, original_image->channels);
+}
+
+#include <iostream>
+
+// void stbi_nearest_neighbor_resize(stbi_image_t* original_image, stbi_image_t* resized_image) {
+// 	if(!original_image || !resized_image) return;
+// 	if(!original_image->data || !resized_image->data) return;
+
+// 	int scale_factor_x = resized_image->width / original_image->width;
+// 	int scale_factor_y = resized_image->height / original_image->height;
+
+// 	for(int y = 0; y < original_image->height; y++) {
+// 		for(int x = 0; x < original_image->width; x++) {
+// 			// Copy each pixel of the original image to a block of the new image
+// 			for(int sy = 0; sy < scale_factor_y; sy++) {
+// 				for(int sx = 0; sx < scale_factor_x; sx++) {
+// 					// The address of the pixel in the original image
+// 					uint8_t* source_pixel = original_image->data + (y * original_image->width + x) * original_image->channels;
+
+// 					// The address of the pixel in the new image
+// 					uint8_t* dest_pixel = resized_image->data + ((y * scale_factor_y + sy) * resized_image->width + (x * scale_factor_x + sx)) * resized_image->channels;
+
+// 					// Copy the pixel
+// 					for(int c = 0; c < original_image->channels; c++) {
+// 						std::cout << "Filling channel " << c << " with " << (int)source_pixel[c] << " for pixel " << x << ", " << y << "\n";
+// 						dest_pixel[c] = source_pixel[c];
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+const size_t RGBA_RED_INDEX = 0;
+const size_t RGBA_GREEN_INDEX = 1;
+const size_t RGBA_BLUE_INDEX = 2;
+const size_t RGBA_ALPHA_INDEX = 3;
+
+void stbi_nearest_neighbor_resize(stbi_image_t* original_image, stbi_image_t* resized_image) {
+	if(!original_image || !resized_image) return;
+	if(!original_image->data || !resized_image->data) return;
+
+	int scale_factor_x = resized_image->width / original_image->width;
+	int scale_factor_y = resized_image->height / original_image->height;
+
+	for(int y = 0; y < resized_image->height; y++) {
+		for(int x = 0; x < resized_image->width; x++) {
+
+			const size_t source_index = floor(y / scale_factor_y * original_image->width + x / scale_factor_x) * original_image->channels;
+			stbi_unsigned_char_t* source_pixel = &original_image->data[source_index];
+			const uint8_t source_red = *(source_pixel + RGBA_RED_INDEX);
+			const uint8_t source_green = *(source_pixel + RGBA_GREEN_INDEX);
+			const uint8_t source_blue = *(source_pixel + RGBA_BLUE_INDEX);
+			const uint8_t source_alpha = *(source_pixel + RGBA_ALPHA_INDEX);
+
+			const size_t dest_index = (y * resized_image->width + x) * original_image->channels;
+			stbi_unsigned_char_t* dest_pixel = &resized_image->data[dest_index];
+			*(dest_pixel + RGBA_RED_INDEX) = source_red;
+			*(dest_pixel + RGBA_GREEN_INDEX) = source_green;
+			*(dest_pixel + RGBA_BLUE_INDEX) = source_blue;
+			*(dest_pixel + RGBA_ALPHA_INDEX) = source_alpha;
+
+			// std::cout << "Filling pixel " << dest_index << " -> " << x << ", " << y << " with "
+					//   << "(RGBA: " << (int)source_red << ", " << (int)source_green << ", " << (int)source_blue << ", " << (int)source_alpha << ")\n";
+		}
+	}
+}
+
 namespace stbi_ffi {
 
 	void* getExportsTable() {
@@ -229,6 +306,9 @@ namespace stbi_ffi {
 		stbi_exports_table.stbi_get_required_tga_size = stbi_get_required_tga_size;
 
 		stbi_exports_table.stbi_abgr_to_rgba = stbi_abgr_to_rgba;
+
+		stbi_exports_table.stbi_resize_image = stbi_resize_image;
+		stbi_exports_table.stbi_nearest_neighbor_resize = stbi_nearest_neighbor_resize;
 
 		return &stbi_exports_table;
 	}
