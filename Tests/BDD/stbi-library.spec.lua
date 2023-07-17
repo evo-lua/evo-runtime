@@ -951,149 +951,162 @@ describe("stbi", function()
 			end)
 
 			it("should magnify the input image if the output image dimensions are larger", function()
-					local originalImage = ffi.new("stbi_image_t")
-					originalImage.width = 2
-					originalImage.height = 2
-					originalImage.channels = 4
+				local originalImage = ffi.new("stbi_image_t")
+				originalImage.width = 2
+				originalImage.height = 2
+				originalImage.channels = 4
 
-					local inputPixelArray = buffer.new(2 * 2 * 4):put(RED_PIXEL .. GREEN_PIXEL .. BLUE_PIXEL .. BLACK_PIXEL)
-					local ptr, _ = inputPixelArray:ref()
-					originalImage.data = ptr
-	
-					local resizedImage = ffi.new("stbi_image_t")
-					resizedImage.width = 4
-					resizedImage.height = 4
-					resizedImage.channels = 4
-					local outputPixelArray = buffer.new(4 * 4 * 4)
-					ptr, _ = outputPixelArray:ref()
-					resizedImage.data = ptr
-	
-					stbi.bindings.stbi_resize_unfiltered(originalImage, resizedImage)
-	
-					assertEquals(resizedImage.data[0], 255)
-					assertEquals(resizedImage.data[1], 0)
-					assertEquals(resizedImage.data[2], 0)
-					assertEquals(resizedImage.data[3], 0)
+				local inputPixelArray = buffer.new(2 * 2 * 4):put(RED_PIXEL .. GREEN_PIXEL .. BLUE_PIXEL .. BLACK_PIXEL)
+				local ptr, _ = inputPixelArray:ref()
+				originalImage.data = ptr
 
-					assertEquals(resizedImage.data[4], 255)
-					assertEquals(resizedImage.data[5], 0)
-					assertEquals(resizedImage.data[6], 0)
-					assertEquals(resizedImage.data[7], 0)
+				local resizedImage = ffi.new("stbi_image_t")
+				resizedImage.width = 4
+				resizedImage.height = 4
+				resizedImage.channels = 4
+				local outputPixelArray = buffer.new(4 * 4 * 4)
+				ptr, _ = outputPixelArray:ref()
+				resizedImage.data = ptr
 
-					assertEquals(resizedImage.data[8], 0)
-					assertEquals(resizedImage.data[9], 255)
-					assertEquals(resizedImage.data[10], 0)
-					assertEquals(resizedImage.data[11], 0)
+				stbi.bindings.stbi_resize_unfiltered(originalImage, resizedImage)
 
-					assertEquals(resizedImage.data[12], 0)
-					assertEquals(resizedImage.data[13], 255)
-					assertEquals(resizedImage.data[14], 0)
-					assertEquals(resizedImage.data[15], 0)
+				assertEquals(resizedImage.data[0], 255)
+				assertEquals(resizedImage.data[1], 0)
+				assertEquals(resizedImage.data[2], 0)
+				assertEquals(resizedImage.data[3], 0)
 
-					assertEquals(resizedImage.data[16], 255)
-					assertEquals(resizedImage.data[17], 0)
-					assertEquals(resizedImage.data[18], 0)
-					assertEquals(resizedImage.data[19], 0)
+				assertEquals(resizedImage.data[4], 255)
+				assertEquals(resizedImage.data[5], 0)
+				assertEquals(resizedImage.data[6], 0)
+				assertEquals(resizedImage.data[7], 0)
 
-					assertEquals(resizedImage.data[20], 255)
-					assertEquals(resizedImage.data[21], 0)
-					assertEquals(resizedImage.data[22], 0)
-					assertEquals(resizedImage.data[23], 0)
+				assertEquals(resizedImage.data[8], 0)
+				assertEquals(resizedImage.data[9], 255)
+				assertEquals(resizedImage.data[10], 0)
+				assertEquals(resizedImage.data[11], 0)
 
-					assertEquals(resizedImage.data[24], 0)
-					assertEquals(resizedImage.data[25], 255)
-					assertEquals(resizedImage.data[26], 0)
-					assertEquals(resizedImage.data[27], 0)
+				assertEquals(resizedImage.data[12], 0)
+				assertEquals(resizedImage.data[13], 255)
+				assertEquals(resizedImage.data[14], 0)
+				assertEquals(resizedImage.data[15], 0)
 
-					assertEquals(resizedImage.data[28], 0)
-					assertEquals(resizedImage.data[29], 255)
-					assertEquals(resizedImage.data[30], 0)
-					assertEquals(resizedImage.data[31], 0)
+				assertEquals(resizedImage.data[16], 255)
+				assertEquals(resizedImage.data[17], 0)
+				assertEquals(resizedImage.data[18], 0)
+				assertEquals(resizedImage.data[19], 0)
 
-					assertEquals(resizedImage.data[32], 0)
-					assertEquals(resizedImage.data[33], 0)
-					assertEquals(resizedImage.data[34], 255)
-					assertEquals(resizedImage.data[35], 0)
+				assertEquals(resizedImage.data[20], 255)
+				assertEquals(resizedImage.data[21], 0)
+				assertEquals(resizedImage.data[22], 0)
+				assertEquals(resizedImage.data[23], 0)
 
-					assertEquals(resizedImage.data[36], 0)
-					assertEquals(resizedImage.data[37], 0)
-					assertEquals(resizedImage.data[38], 255)
-					assertEquals(resizedImage.data[39], 0)
+				assertEquals(resizedImage.data[24], 0)
+				assertEquals(resizedImage.data[25], 255)
+				assertEquals(resizedImage.data[26], 0)
+				assertEquals(resizedImage.data[27], 0)
 
-					assertEquals(resizedImage.data[40], 0)
-					assertEquals(resizedImage.data[41], 0)
-					assertEquals(resizedImage.data[42], 0)
-					assertEquals(resizedImage.data[43], 0)
+				assertEquals(resizedImage.data[28], 0)
+				assertEquals(resizedImage.data[29], 255)
+				assertEquals(resizedImage.data[30], 0)
+				assertEquals(resizedImage.data[31], 0)
 
-					assertEquals(resizedImage.data[44], 0)
-					assertEquals(resizedImage.data[45], 0)
-					assertEquals(resizedImage.data[46], 0)
-					assertEquals(resizedImage.data[47], 0)
+				assertEquals(resizedImage.data[32], 0)
+				assertEquals(resizedImage.data[33], 0)
+				assertEquals(resizedImage.data[34], 255)
+				assertEquals(resizedImage.data[35], 0)
 
-					assertEquals(resizedImage.data[48], 0)
-					assertEquals(resizedImage.data[49], 0)
-					assertEquals(resizedImage.data[50], 255)
-					assertEquals(resizedImage.data[51], 0)
+				assertEquals(resizedImage.data[36], 0)
+				assertEquals(resizedImage.data[37], 0)
+				assertEquals(resizedImage.data[38], 255)
+				assertEquals(resizedImage.data[39], 0)
 
-					assertEquals(resizedImage.data[52], 0)
-					assertEquals(resizedImage.data[53], 0)
-					assertEquals(resizedImage.data[54], 255)
-					assertEquals(resizedImage.data[55], 0)
+				assertEquals(resizedImage.data[40], 0)
+				assertEquals(resizedImage.data[41], 0)
+				assertEquals(resizedImage.data[42], 0)
+				assertEquals(resizedImage.data[43], 0)
 
-					assertEquals(resizedImage.data[56], 0)
-					assertEquals(resizedImage.data[57], 0)
-					assertEquals(resizedImage.data[58], 0)
-					assertEquals(resizedImage.data[59], 0)
+				assertEquals(resizedImage.data[44], 0)
+				assertEquals(resizedImage.data[45], 0)
+				assertEquals(resizedImage.data[46], 0)
+				assertEquals(resizedImage.data[47], 0)
 
-					assertEquals(resizedImage.data[60], 0)
-					assertEquals(resizedImage.data[61], 0)
-					assertEquals(resizedImage.data[62], 0)
-					assertEquals(resizedImage.data[63], 0)
+				assertEquals(resizedImage.data[48], 0)
+				assertEquals(resizedImage.data[49], 0)
+				assertEquals(resizedImage.data[50], 255)
+				assertEquals(resizedImage.data[51], 0)
+
+				assertEquals(resizedImage.data[52], 0)
+				assertEquals(resizedImage.data[53], 0)
+				assertEquals(resizedImage.data[54], 255)
+				assertEquals(resizedImage.data[55], 0)
+
+				assertEquals(resizedImage.data[56], 0)
+				assertEquals(resizedImage.data[57], 0)
+				assertEquals(resizedImage.data[58], 0)
+				assertEquals(resizedImage.data[59], 0)
+
+				assertEquals(resizedImage.data[60], 0)
+				assertEquals(resizedImage.data[61], 0)
+				assertEquals(resizedImage.data[62], 0)
+				assertEquals(resizedImage.data[63], 0)
 			end)
 
-			-- it("should shrink the input image if the output image dimensions are smaller", function()
-			-- 	local originalImage = ffi.new("stbi_image_t")
-			-- 	originalImage.width = 4
-			-- 	originalImage.height = 4
-			-- 	originalImage.channels = 4
-			-- 	local RED_PIXEL = "\255\0\0\0"
-			-- 	local GREEN_PIXEL = "\0\255\0\0"
-			-- 	local BLUE_PIXEL = "\0\0\255\0"
-			-- 	local BLACK_PIXEL = "\0\0\0\0"
-			-- 	local inputPixelArray = buffer.new(4 * 4 * 4):put(RED_PIXEL .. RED_PIXEL .. GREEN_PIXEL .. GREEN_PIXEL .. RED_PIXEL .. RED_PIXEL .. GREEN_PIXEL .. GREEN_PIXEL .. BLUE_PIXEL .. BLUE_PIXEL .. BLACK_PIXEL .. BLACK_PIXEL .. BLUE_PIXEL .. BLUE_PIXEL .. BLACK_PIXEL .. BLACK_PIXEL)
-			-- 	local ptr, _ = inputPixelArray:ref()
-			-- 	originalImage.data = ptr
+			it("should shrink the input image if the output image dimensions are smaller", function()
+				local originalImage = ffi.new("stbi_image_t")
+				originalImage.width = 4
+				originalImage.height = 4
+				originalImage.channels = 4
+				local inputPixelArray = buffer.new(4 * 4 * 4):put(
+					RED_PIXEL
+						.. RED_PIXEL
+						.. GREEN_PIXEL
+						.. GREEN_PIXEL
+						.. RED_PIXEL
+						.. RED_PIXEL
+						.. GREEN_PIXEL
+						.. GREEN_PIXEL
+						.. BLUE_PIXEL
+						.. BLUE_PIXEL
+						.. BLACK_PIXEL
+						.. BLACK_PIXEL
+						.. BLUE_PIXEL
+						.. BLUE_PIXEL
+						.. BLACK_PIXEL
+						.. BLACK_PIXEL
+				)
+				local ptr, _ = inputPixelArray:ref()
+				originalImage.data = ptr
 
-			-- 	local resizedImage = ffi.new("stbi_image_t")
-			-- 	resizedImage.width = 2
-			-- 	resizedImage.height = 2
-			-- 	resizedImage.channels = 4
-			-- 	local outputPixelArray = buffer.new(2 * 2 * 4)
-			-- 	ptr, _ = outputPixelArray:ref()
-			-- 	resizedImage.data = ptr
+				local resizedImage = ffi.new("stbi_image_t")
+				resizedImage.width = 2
+				resizedImage.height = 2
+				resizedImage.channels = 4
+				local outputPixelArray = buffer.new(2 * 2 * 4)
+				ptr, _ = outputPixelArray:ref()
+				resizedImage.data = ptr
 
-			-- 	stbi.bindings.stbi_resize_unfiltered(originalImage, resizedImage)
+				stbi.bindings.stbi_resize_unfiltered(originalImage, resizedImage)
 
-			-- 	assertEquals(resizedImage.data[0], 255)
-			-- 	assertEquals(resizedImage.data[1], 0)
-			-- 	assertEquals(resizedImage.data[2], 0)
-			-- 	assertEquals(resizedImage.data[3], 0)
+				assertEquals(resizedImage.data[0], 255)
+				assertEquals(resizedImage.data[1], 0)
+				assertEquals(resizedImage.data[2], 0)
+				assertEquals(resizedImage.data[3], 0)
 
-			-- 	assertEquals(resizedImage.data[4], 0)
-			-- 	assertEquals(resizedImage.data[5], 255)
-			-- 	assertEquals(resizedImage.data[6], 0)
-			-- 	assertEquals(resizedImage.data[7], 0)
+				assertEquals(resizedImage.data[4], 0)
+				assertEquals(resizedImage.data[5], 255)
+				assertEquals(resizedImage.data[6], 0)
+				assertEquals(resizedImage.data[7], 0)
 
-			-- 	assertEquals(resizedImage.data[8], 0)
-			-- 	assertEquals(resizedImage.data[9], 0)
-			-- 	assertEquals(resizedImage.data[10], 255)
-			-- 	assertEquals(resizedImage.data[11], 0)
+				assertEquals(resizedImage.data[8], 0)
+				assertEquals(resizedImage.data[9], 0)
+				assertEquals(resizedImage.data[10], 255)
+				assertEquals(resizedImage.data[11], 0)
 
-			-- 	assertEquals(resizedImage.data[12], 0)
-			-- 	assertEquals(resizedImage.data[13], 0)
-			-- 	assertEquals(resizedImage.data[14], 0)
-			-- 	assertEquals(resizedImage.data[15], 0)
-			-- end)
+				assertEquals(resizedImage.data[12], 0)
+				assertEquals(resizedImage.data[13], 0)
+				assertEquals(resizedImage.data[14], 0)
+				assertEquals(resizedImage.data[15], 0)
+			end)
 		end)
 	end)
 
