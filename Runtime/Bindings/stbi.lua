@@ -53,8 +53,8 @@ stbi.cdefs = [[
 
 		void (*stbi_abgr_to_rgba)(stbi_image_t* image);
 
-		void (*stbi_resize_image)(stbi_image_t* original_image, stbi_image_t* resized_image);
-		void (*stbi_nearest_neighbor_resize)(stbi_image_t* original_image, stbi_image_t* resized_image);
+		void (*stbi_resize_filtered)(stbi_image_t* original_image, stbi_image_t* resized_image);
+		void (*stbi_resize_unfiltered)(stbi_image_t* original_image, stbi_image_t* resized_image);
 	};
 
 	// This may be moved to C later if needed, but for now it's Lua only
