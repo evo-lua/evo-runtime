@@ -201,7 +201,7 @@ void stbi_abgr_to_rgba(stbi_image_t* image) {
 	}
 }
 
-void stbi_resize_image(stbi_image_t* original_image, stbi_image_t* resized_image) {
+void stbi_resize_filtered(stbi_image_t* original_image, stbi_image_t* resized_image) {
 	if(!original_image) return;
 	if(!resized_image) return;
 	if(!original_image->data) return;
@@ -213,7 +213,7 @@ void stbi_resize_image(stbi_image_t* original_image, stbi_image_t* resized_image
 
 #include <iostream>
 
-// void stbi_nearest_neighbor_resize(stbi_image_t* original_image, stbi_image_t* resized_image) {
+// void stbi_resize_unfiltered(stbi_image_t* original_image, stbi_image_t* resized_image) {
 // 	if(!original_image || !resized_image) return;
 // 	if(!original_image->data || !resized_image->data) return;
 
@@ -247,7 +247,7 @@ const size_t RGBA_GREEN_INDEX = 1;
 const size_t RGBA_BLUE_INDEX = 2;
 const size_t RGBA_ALPHA_INDEX = 3;
 
-void stbi_nearest_neighbor_resize(stbi_image_t* original_image, stbi_image_t* resized_image) {
+void stbi_resize_unfiltered(stbi_image_t* original_image, stbi_image_t* resized_image) {
 	if(!original_image || !resized_image) return;
 	if(!original_image->data || !resized_image->data) return;
 
@@ -307,8 +307,8 @@ namespace stbi_ffi {
 
 		stbi_exports_table.stbi_abgr_to_rgba = stbi_abgr_to_rgba;
 
-		stbi_exports_table.stbi_resize_image = stbi_resize_image;
-		stbi_exports_table.stbi_nearest_neighbor_resize = stbi_nearest_neighbor_resize;
+		stbi_exports_table.stbi_resize_filtered = stbi_resize_filtered;
+		stbi_exports_table.stbi_resize_unfiltered = stbi_resize_unfiltered;
 
 		return &stbi_exports_table;
 	}
