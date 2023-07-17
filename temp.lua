@@ -16,9 +16,9 @@ resizedImage.height = resizeFactor
 resizedImage.channels = 4
 resizedImage.data = buffer.new(resizeFactor * resizeFactor * 4)
 
-console.startTimer("stbi_resize_image")
-stbi.bindings.stbi_resize_image(originalImage, resizedImage)
-console.stopTimer("stbi_resize_image")
+console.startTimer("stbi_resize_filtered")
+stbi.bindings.stbi_resize_filtered(originalImage, resizedImage)
+console.stopTimer("stbi_resize_filtered")
 
 C_FileSystem.WriteFile("original.bmp", C_ImageProcessing.EncodeBMP(ffi.string(originalImage.data, 2 * 2 * 4), 2, 2))
 C_FileSystem.WriteFile("resized.bmp", C_ImageProcessing.EncodeBMP(ffi.string(resizedImage.data, resizeFactor * resizeFactor * 4), resizeFactor, resizeFactor))
