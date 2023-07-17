@@ -251,28 +251,28 @@ void stbi_resize_unfiltered(stbi_image_t* original_image, stbi_image_t* resized_
 	if(!original_image || !resized_image) return;
 	if(!original_image->data || !resized_image->data) return;
 
-	int scale_factor_x = resized_image->width / original_image->width;
-	int scale_factor_y = resized_image->height / original_image->height;
+	double scale_factor_x = (double)original_image->width / resized_image->width;
+	double scale_factor_y = (double)original_image->height / resized_image->height;
 
 	for(int y = 0; y < resized_image->height; y++) {
 		for(int x = 0; x < resized_image->width; x++) {
 
-			const size_t source_index = floor(y / scale_factor_y * original_image->width + x / scale_factor_x) * original_image->channels;
+			const size_t source_x = floor(x * scale_factor_x);
+			const size_t source_y = floor(y * scale_factor_y);
+			const size_t source_index = (source_y * original_image->width + source_x) * original_image->channels;
 			stbi_unsigned_char_t* source_pixel = &original_image->data[source_index];
+
 			const uint8_t source_red = *(source_pixel + RGBA_RED_INDEX);
 			const uint8_t source_green = *(source_pixel + RGBA_GREEN_INDEX);
 			const uint8_t source_blue = *(source_pixel + RGBA_BLUE_INDEX);
 			const uint8_t source_alpha = *(source_pixel + RGBA_ALPHA_INDEX);
 
-			const size_t dest_index = (y * resized_image->width + x) * original_image->channels;
+			const size_t dest_index = (y * resized_image->width + x) * resized_image->channels;
 			stbi_unsigned_char_t* dest_pixel = &resized_image->data[dest_index];
 			*(dest_pixel + RGBA_RED_INDEX) = source_red;
 			*(dest_pixel + RGBA_GREEN_INDEX) = source_green;
 			*(dest_pixel + RGBA_BLUE_INDEX) = source_blue;
 			*(dest_pixel + RGBA_ALPHA_INDEX) = source_alpha;
-
-			// std::cout << "Filling pixel " << dest_index << " -> " << x << ", " << y << " with "
-					//   << "(RGBA: " << (int)source_red << ", " << (int)source_green << ", " << (int)source_blue << ", " << (int)source_alpha << ")\n";
 		}
 	}
 }
