@@ -867,7 +867,7 @@ describe("stbi", function()
 			end)
 		end)
 
-		describe("stbi_resize_image", function()
+		describe("stbi_resize_filtered", function()
 			it("should resize the given image to fit the provided dimensions", function()
 				local imageBuffer = buffer.new(2 * 2 * 4):put("\1\2\3\4\5\6\7\8\9\10\11\12\13\14\15\16")
 				local ptr, _ = imageBuffer:ref()
@@ -882,7 +882,7 @@ describe("stbi", function()
 				resizedImage.height = 4
 				resizedImage.channels = 4
 				resizedImage.data = buffer.new(4 * 4 * 4)
-				stbi.bindings.stbi_resize_image(originalImage, resizedImage)
+				stbi.bindings.stbi_resize_filtered(originalImage, resizedImage)
 
 				assertEquals(resizedImage.data[0], 1)
 				assertEquals(resizedImage.data[1], 2)
@@ -900,6 +900,60 @@ describe("stbi", function()
 				assertEquals(resizedImage.data[13], 6)
 				assertEquals(resizedImage.data[14], 7)
 				assertEquals(resizedImage.data[15], 8)
+			end)
+		end)
+
+		describe("stbi_resize_unfiltered", function()
+			it("should have no effect if the image sizes are identical", function()
+			
+			end)
+
+			it("should magnify the input image if the output image dimensions are larger", function()
+			
+			end)
+
+			it("should shrink the input image if the output image dimensions are smaller", function()
+				local originalImage = ffi.new("stbi_image_t")
+				originalImage.width = 4
+				originalImage.height = 4
+				originalImage.channels = 4
+				local RED_PIXEL = "\255\0\0\0"
+				local GREEN_PIXEL = "\0\255\0\0"
+				local BLUE_PIXEL = "\0\0\255\0"
+				local BLACK_PIXEL = "\0\0\0\0"
+				local inputPixelArray = buffer.new(4 * 4 * 4):put(RED_PIXEL .. RED_PIXEL .. GREEN_PIXEL .. GREEN_PIXEL .. RED_PIXEL .. RED_PIXEL .. GREEN_PIXEL .. GREEN_PIXEL .. BLUE_PIXEL .. BLUE_PIXEL .. BLACK_PIXEL .. BLACK_PIXEL .. BLUE_PIXEL .. BLUE_PIXEL .. BLACK_PIXEL .. BLACK_PIXEL)
+				local ptr, _ = inputPixelArray:ref()
+				originalImage.data = ptr
+
+				local resizedImage = ffi.new("stbi_image_t")
+				resizedImage.width = 2
+				resizedImage.height = 2
+				resizedImage.channels = 4
+				local outputPixelArray = buffer.new(2 * 2 * 4)
+				ptr, _ = outputPixelArray:ref()
+				resizedImage.data = ptr
+
+				stbi.bindings.stbi_resize_unfiltered(originalImage, resizedImage)
+
+				assertEquals(resizedImage.data[0], 255)
+				assertEquals(resizedImage.data[1], 0)
+				assertEquals(resizedImage.data[2], 0)
+				assertEquals(resizedImage.data[3], 0)
+
+				assertEquals(resizedImage.data[4], 0)
+				assertEquals(resizedImage.data[5], 255)
+				assertEquals(resizedImage.data[6], 0)
+				assertEquals(resizedImage.data[7], 0)
+
+				assertEquals(resizedImage.data[8], 0)
+				assertEquals(resizedImage.data[9], 0)
+				assertEquals(resizedImage.data[10], 255)
+				assertEquals(resizedImage.data[11], 0)
+
+				assertEquals(resizedImage.data[12], 0)
+				assertEquals(resizedImage.data[13], 0)
+				assertEquals(resizedImage.data[14], 0)
+				assertEquals(resizedImage.data[15], 0)
 			end)
 		end)
 	end)
