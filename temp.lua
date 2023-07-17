@@ -21,7 +21,14 @@ stbi.bindings.stbi_resize_filtered(originalImage, resizedImage)
 console.stopTimer("stbi_resize_filtered")
 
 C_FileSystem.WriteFile("original.bmp", C_ImageProcessing.EncodeBMP(ffi.string(originalImage.data, 2 * 2 * 4), 2, 2))
-C_FileSystem.WriteFile("resized.bmp", C_ImageProcessing.EncodeBMP(ffi.string(resizedImage.data, resizeFactor * resizeFactor * 4), resizeFactor, resizeFactor))
+C_FileSystem.WriteFile(
+	"resized.bmp",
+	C_ImageProcessing.EncodeBMP(
+		ffi.string(resizedImage.data, resizeFactor * resizeFactor * 4),
+		resizeFactor,
+		resizeFactor
+	)
+)
 
 -- assertEquals(resizedImage.data[0], 1)
 -- assertEquals(resizedImage.data[1], 2)
