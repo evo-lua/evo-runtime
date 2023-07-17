@@ -29,7 +29,7 @@ upscaledImage.channels = image.channels
 upscaledImage.data = ptr2
 
 console.startTimer("Neared neighbor resize")
-stbi.bindings.stbi_nearest_neighbor_resize(image, upscaledImage)
+stbi.bindings.stbi_resize_unfiltered(image, upscaledImage)
 console.stopTimer("Neared neighbor resize")
 
 upscaledImageBuffer:commit(len)
