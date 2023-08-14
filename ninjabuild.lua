@@ -124,6 +124,7 @@ local EvoBuildTarget = {
 			"uuid",
 			"bcrypt",
 			"d3dcompiler",
+			"ntdll",
 		},
 		OSX = {
 			"m",
