@@ -1,4 +1,10 @@
 local changelog = {
+	["v0.0.10"] = {
+		newFeatures = {
+			"Add a function to encode TGA images to the `C_ImageProcessing` API namespace",
+			"Add a function to swap pixel formats to the stbi FFI bindings",
+		},
+	},
 	["v0.0.9"] = {
 		newFeatures = {
 			"Added a new `C_ImageProcessing` API namespace (higher-level convenience layer on top of the `stbi` library)",
