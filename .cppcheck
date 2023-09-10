@@ -6,6 +6,7 @@ unusedFunction:Runtime/LuaVirtualMachine.cpp
 
 // FFI exports used from Lua, which cppcheck can't see
 unusedStructMember:Runtime/Bindings/glfw_ffi.hpp
+unusedStructMember:Runtime/Bindings/iconv_ffi.hpp
 unusedStructMember:Runtime/Bindings/interop_ffi.hpp
 unusedStructMember:Runtime/Bindings/stbi_ffi.hpp
 unusedStructMember:Runtime/Bindings/stduuid_ffi.hpp
