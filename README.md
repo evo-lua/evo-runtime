@@ -1,37 +1,22 @@
 # evo-runtime
 
-``evo`` is an experimental Lua runtime built on LuaJIT and libuv (inspired by [luvit](https://github.com/luvit/luvit)).
-
-In this repository, work continues to build on the earlier prototypes, which are [evo-luvi](https://github.com/evo-lua/evo-luvi) and [evo-legacy](https://github.com/evo-lua/evo-legacy).
+``evo`` is an experimental Lua runtime built on LuaJIT and libuv, with batteries included.
 
 ## Status
 
-This is an early prototype, focusing more on native code compared to the previous iterations.
+Functional, but not feature complete. See issues and milestones for future plans.
 
-Features generally work to the extent that they're tested, which is [as comprehensively as seems practical](https://blog.izs.me/2022/11/technical-debt-is-a-choice/).
+## Features
 
-## Goals
-
-Ever since I discovered [luvit](https://github.com/luvit/luvit) I was enamoured with the idea of a fully-featured Lua runtime that was capable enough for general-purpose programming tasks. I know there's JavaScript and Python, but they aren't the same.
-
-And while the Luvit contributors have done an amazing job at keeping the project alive in the absence of its creator, they can't make radical changes, experiment wildly and risk breaking things left and right for their users... *but I can*.
-
-![https://i.imgur.com/N1TuRcc.png](https://i.imgur.com/N1TuRcc.png)
-
-That said, this project is heavily inspired by their great work, reframed in a slightly different context. Based on the lessons learned by working with luvi (and luvit), here's my general philosopy:
-
-* Focus on rapid iteration and "just trying things" to find what works faster - and abandon what doesn't
-* Eliminate non-essential features to reduce the maintenance burden
-* Strong emphasis on testing and documentation
-
-In terms of features, this is what I have in mind:
+Here's a selection of things you can do when running Lua scripts with Evo:
 
 * Networking via UDP, TCP, HTTP/S, and WebSockets
 * File system access, process I/O, and other system-level tasks
-* Tooling for automated testing, documentation generation, and build utilities
-* Optionally: Native/web-based UIs and 3D rendering (specifics are TBD)
+* Make use of the builtin test runner (including assertions library)
+* Create native or web-based UIs and 3D software
+* Data compression, encryption, and basic image processing
 
-This is a basic outline, but the roadmap obviously isn't set in stone.
+Not all of the included APIs are as user-friendly as I'd like, but that'll change.
 
 ## System Requirements
 
