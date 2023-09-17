@@ -44,55 +44,125 @@ describe("C_ImageProcessing", function()
 		end)
 
 		it("should be able to decode JPG file contents from a string", function()
-			local rgbPixelArray, imageWidthInPixels, imageHeightInPixels =
+			local rgbaPixelArray, imageWidthInPixels, imageHeightInPixels =
 				C_ImageProcessing.DecodeFileContents(EXAMPLE_JPG_BYTES)
-			-- JPG compression and lack of alpha channel makes a direct comparison impossible
-			local isFirstColorApproximatelyRed = (
-				rgbPixelArray:byte(1) > 250
-				and rgbPixelArray:byte(2) < 5
-				and rgbPixelArray:byte(3) < 5
-			)
-			local isSecondColorApproximatelyGreen = (
-				rgbPixelArray:byte(5) > 250
-				and rgbPixelArray:byte(6) < 5
-				and rgbPixelArray:byte(7) < 5
-			)
-			local isThirdColorApproximatelyBlue = (
-				rgbPixelArray:byte(9) > 250
-				and rgbPixelArray:byte(10) < 5
-				and rgbPixelArray:byte(11) < 5
-			)
-			assertTrue(isFirstColorApproximatelyRed)
-			assertTrue(isSecondColorApproximatelyGreen)
-			assertTrue(isThirdColorApproximatelyBlue)
+
+			local expectedPixelCount = 4
+			local bytesPerPixel = 4 -- RGBA
+			assertEquals(#rgbaPixelArray, expectedPixelCount * bytesPerPixel)
+
 			assertEquals(imageWidthInPixels, 2)
 			assertEquals(imageHeightInPixels, 2)
+
+			local firstPixel = {
+				red = rgbaPixelArray:byte(1),
+				green = rgbaPixelArray:byte(2),
+				blue = rgbaPixelArray:byte(3),
+				alpha = rgbaPixelArray:byte(4),
+			}
+
+			local secondPixel = {
+				red = rgbaPixelArray:byte(5),
+				green = rgbaPixelArray:byte(6),
+				blue = rgbaPixelArray:byte(7),
+				alpha = rgbaPixelArray:byte(8),
+			}
+
+			local thirdPixel = {
+				red = rgbaPixelArray:byte(9),
+				green = rgbaPixelArray:byte(10),
+				blue = rgbaPixelArray:byte(11),
+				alpha = rgbaPixelArray:byte(12),
+			}
+
+			local fourthPixel = {
+				red = rgbaPixelArray:byte(13),
+				green = rgbaPixelArray:byte(14),
+				blue = rgbaPixelArray:byte(15),
+				alpha = rgbaPixelArray:byte(16),
+			}
+
+			-- 1 pixel tolerance should hopefully account for JPG compression artifacts
+			assertEqualNumbers(firstPixel.red, 255, 1)
+			assertEqualNumbers(firstPixel.green, 0, 1)
+			assertEqualNumbers(firstPixel.blue, 0, 1)
+			assertEqualNumbers(firstPixel.alpha, 255, 1)
+
+			assertEqualNumbers(secondPixel.red, 0, 1)
+			assertEqualNumbers(secondPixel.green, 255, 1)
+			assertEqualNumbers(secondPixel.blue, 0, 1)
+			assertEqualNumbers(secondPixel.alpha, 255, 1)
+
+			assertEqualNumbers(thirdPixel.red, 0, 1)
+			assertEqualNumbers(thirdPixel.green, 0, 1)
+			assertEqualNumbers(thirdPixel.blue, 255, 1)
+			assertEqualNumbers(thirdPixel.alpha, 255, 1)
+
+			assertEqualNumbers(fourthPixel.red, 0, 1)
+			assertEqualNumbers(fourthPixel.green, 0, 1)
+			assertEqualNumbers(fourthPixel.blue, 0, 1)
+			assertEqualNumbers(fourthPixel.alpha, 255, 1)
 		end)
 
 		it("should be able to decode JPG file contents from a string buffer", function()
 			local rgbaPixelArray, imageWidthInPixels, imageHeightInPixels =
 				C_ImageProcessing.DecodeFileContents(EXAMPLE_JPG_BUFFER)
-			-- JPG compression and lack of alpha channel makes a direct comparison impossible
-			local isFirstColorApproximatelyRed = (
-				rgbaPixelArray:byte(1) > 250
-				and rgbaPixelArray:byte(2) < 5
-				and rgbaPixelArray:byte(3) < 5
-			)
-			local isSecondColorApproximatelyGreen = (
-				rgbaPixelArray:byte(5) > 250
-				and rgbaPixelArray:byte(6) < 5
-				and rgbaPixelArray:byte(7) < 5
-			)
-			local isThirdColorApproximatelyBlue = (
-				rgbaPixelArray:byte(9) > 250
-				and rgbaPixelArray:byte(10) < 5
-				and rgbaPixelArray:byte(11) < 5
-			)
-			assertTrue(isFirstColorApproximatelyRed)
-			assertTrue(isSecondColorApproximatelyGreen)
-			assertTrue(isThirdColorApproximatelyBlue)
+
+			local expectedPixelCount = 4
+			local bytesPerPixel = 4 -- RGBA
+			assertEquals(#rgbaPixelArray, expectedPixelCount * bytesPerPixel)
+
 			assertEquals(imageWidthInPixels, 2)
 			assertEquals(imageHeightInPixels, 2)
+
+			local firstPixel = {
+				red = rgbaPixelArray:byte(1),
+				green = rgbaPixelArray:byte(2),
+				blue = rgbaPixelArray:byte(3),
+				alpha = rgbaPixelArray:byte(4),
+			}
+
+			local secondPixel = {
+				red = rgbaPixelArray:byte(5),
+				green = rgbaPixelArray:byte(6),
+				blue = rgbaPixelArray:byte(7),
+				alpha = rgbaPixelArray:byte(8),
+			}
+
+			local thirdPixel = {
+				red = rgbaPixelArray:byte(9),
+				green = rgbaPixelArray:byte(10),
+				blue = rgbaPixelArray:byte(11),
+				alpha = rgbaPixelArray:byte(12),
+			}
+
+			local fourthPixel = {
+				red = rgbaPixelArray:byte(13),
+				green = rgbaPixelArray:byte(14),
+				blue = rgbaPixelArray:byte(15),
+				alpha = rgbaPixelArray:byte(16),
+			}
+
+			-- 1 pixel tolerance should hopefully account for JPG compression artifacts
+			assertEqualNumbers(firstPixel.red, 255, 1)
+			assertEqualNumbers(firstPixel.green, 0, 1)
+			assertEqualNumbers(firstPixel.blue, 0, 1)
+			assertEqualNumbers(firstPixel.alpha, 255, 1)
+
+			assertEqualNumbers(secondPixel.red, 0, 1)
+			assertEqualNumbers(secondPixel.green, 255, 1)
+			assertEqualNumbers(secondPixel.blue, 0, 1)
+			assertEqualNumbers(secondPixel.alpha, 255, 1)
+
+			assertEqualNumbers(thirdPixel.red, 0, 1)
+			assertEqualNumbers(thirdPixel.green, 0, 1)
+			assertEqualNumbers(thirdPixel.blue, 255, 1)
+			assertEqualNumbers(thirdPixel.alpha, 255, 1)
+
+			assertEqualNumbers(fourthPixel.red, 0, 1)
+			assertEqualNumbers(fourthPixel.green, 0, 1)
+			assertEqualNumbers(fourthPixel.blue, 0, 1)
+			assertEqualNumbers(fourthPixel.alpha, 255, 1)
 		end)
 
 		it("should be able to decode TGA file contents from a string", function()
@@ -115,7 +185,7 @@ describe("C_ImageProcessing", function()
 			local function attemptToDecodeInvalidFile()
 				C_ImageProcessing.DecodeFileContents("Not a valid image file")
 			end
-			local expectedErrorMessage = "Failed to decode image data (stbi_load_image returned NULL)"
+			local expectedErrorMessage = "Failed to decode image data (stbi_load_rgba returned NULL)"
 			assertThrows(attemptToDecodeInvalidFile, expectedErrorMessage)
 		end)
 
