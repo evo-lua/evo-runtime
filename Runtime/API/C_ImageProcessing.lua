@@ -21,13 +21,12 @@ function C_ImageProcessing.DecodeFileContents(imageFileContents)
 	validateString(imageFileContents, "imageFileContents")
 
 	local image = ffi_new("stbi_image_t")
-	image.channels = 4
-	local success = stbi.bindings.stbi_load_image(imageFileContents, #imageFileContents, image)
+	local success = stbi.bindings.stbi_load_rgba(imageFileContents, #imageFileContents, image)
 	if not success then
-		error("Failed to decode image data (stbi_load_image returned NULL)", 0)
+		error("Failed to decode image data (stbi_load_rgba returned NULL)", 0)
 	end
 
-	local pixelArray = ffi_string(image.data, image.width * image.height * image.channels)
+	local pixelArray = ffi_string(image.data, image.width * image.height * 4)
 	stbi.bindings.stbi_image_free(image)
 
 	return pixelArray, tonumber(image.width), tonumber(image.height)
