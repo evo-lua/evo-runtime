@@ -6,8 +6,7 @@ SRC_DIR=deps/zhaog/lua-openssl
 BUILD_DIR=$SRC_DIR/cmakebuild-unix
 OUT_DIR=ninjabuild-unix
 
-# Include paths must be relative to the lua-openssl directory (NOT the project root)
-LUAJIT_SRC_DIR=../../LuaJIT/LuaJIT/src
+LUAJIT_SRC_DIR=$(pwd)/deps/LuaJIT/LuaJIT/src
 
 # Need to pass the full path for Mac OS builds?
 OPENSSL_DIR=$(pwd)/$BUILD_DIR
