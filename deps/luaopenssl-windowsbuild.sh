@@ -6,8 +6,7 @@ SRC_DIR=deps/zhaog/lua-openssl
 BUILD_DIR=$SRC_DIR/cmakebuild-windows
 OUT_DIR=ninjabuild-windows
 
-# Include paths must be relative to the lua-openssl directory (NOT the project root)
-LUAJIT_SRC_DIR=../../LuaJIT/LuaJIT/src
+LUAJIT_SRC_DIR=$(pwd)/deps/LuaJIT/LuaJIT/src
 
 OPENSSL_DIR=$BUILD_DIR
 OPENSSL_INCLUDE_DIR=deps/openssl/openssl/include

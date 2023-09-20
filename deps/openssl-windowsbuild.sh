@@ -10,7 +10,7 @@ OPENSSL_DIR=deps/openssl/openssl
 
 cd $OPENSSL_DIR
 
-perl Configure mingw64 no-tests no-shared
+perl Configure mingw64 no-tests no-shared no-dso
 
 make clean
 make -j $NUM_PARALLEL_JOBS

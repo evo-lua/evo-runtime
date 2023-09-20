@@ -9,7 +9,7 @@ OPENSSL_DIR=deps/openssl/openssl
 
 cd $OPENSSL_DIR
 
-./config no-tests no-shared
+./config no-tests no-shared no-dso
 
 make clean
 make -j $NUM_PARALLEL_JOBS
