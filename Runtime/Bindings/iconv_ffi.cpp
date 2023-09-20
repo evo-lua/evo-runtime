@@ -12,14 +12,20 @@ size_t iconv_convert(char* input, const char* input_encoding, const char* output
 
 	iconv_t conversion_descriptor = iconv_open(output_encoding, input_encoding);
 	if(conversion_descriptor == (iconv_t)-1) {
-		std::cout << "iconv_open failed: " << errno << std::endl;
-		throw std::runtime_error("iconv_open failed");
+		std::cout << "WARNING: iconv_open failed with error code " << errno << " (" << strerror(errno) << ")" << std::endl;
+		std::cout << "Input: " << input << std::endl;
+		std::cout << "Input Encoding: " << input_encoding << std::endl;
+		std::cout << "Output Encoding: " << output_encoding << std::endl;
+		return 0;
 	}
 
 	size_t num_output_bytes_left = output_size;
 	if(iconv(conversion_descriptor, &input, &num_input_bytes_left, &output, &num_output_bytes_left) == (size_t)-1) {
-		std::cout << "iconv failed: " << errno << std::endl;
-		throw std::runtime_error("iconv failed");
+		std::cout << "WARNING: iconv_open failed with error code " << errno << " (" << strerror(errno) << ")" << std::endl;
+		std::cout << "Input: " << input << std::endl;
+		std::cout << "Input Encoding: " << input_encoding << std::endl;
+		std::cout << "Output Encoding: " << output_encoding << std::endl;
+		return 0;
 	}
 	iconv_close(conversion_descriptor);
 	*output = '\0'; // Null-terminate the output buffer
