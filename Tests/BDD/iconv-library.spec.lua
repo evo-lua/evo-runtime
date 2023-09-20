@@ -3,7 +3,7 @@ local iconv = require("iconv")
 
 describe("iconv", function()
 	describe("bindings", function()
-		describe("decode_multibyte_string", function()
+		describe("iconv_convert", function()
 			it("should return zero if the conversation failed with an error", function()
 				local inputBuffer = buffer.new()
 				local outputBuffer = buffer.new(1024)
