@@ -44,5 +44,29 @@ describe("iconv", function()
 			assertEquals(output, "")
 			assertEquals(numBytesWritten, 0)
 		end)
+
+		it("should fail gracefully if given the wrong input encoding", function()
+			local input = "유저인터페이스"
+			local output, numBytesWritten = iconv.convert(input, "CP949", "UTF-8")
+
+			assertEquals(output, "")
+			assertEquals(numBytesWritten, 0)
+		end)
+
+		it("should fail gracefully if given an invalid input encoding", function()
+			local input = "유저인터페이스"
+			local output, numBytesWritten = iconv.convert(input, "INVALID_ENCODING", "UTF-8")
+
+			assertEquals(output, "")
+			assertEquals(numBytesWritten, 0)
+		end)
+
+		it("should fail gracefully if given an invalid output encoding", function()
+			local input = "유저인터페이스"
+			local output, numBytesWritten = iconv.convert(input, "UTF-8", "INVALID_ENCODING")
+
+			assertEquals(output, "")
+			assertEquals(numBytesWritten, 0)
+		end)
 	end)
 end)
