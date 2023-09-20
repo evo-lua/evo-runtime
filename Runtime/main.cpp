@@ -9,6 +9,7 @@ extern "C" {
 #include "rapidjson.hpp"
 
 #include "macros.hpp"
+#include "crypto_ffi.hpp"
 #include "glfw_ffi.hpp"
 #include "iconv_ffi.hpp"
 #include "interop_ffi.hpp"
@@ -35,6 +36,7 @@ int main(int argc, char* argv[]) {
 	luaVM->PreloadPackage("zlib", luaopen_zlib);
 
 	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
+	luaVM->BindStaticLibraryExports("crypto", crypto_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("iconv", iconv_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("interop", interop_ffi::getExportsTable());
