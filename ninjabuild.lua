@@ -21,7 +21,12 @@ local EvoBuildTarget = {
 	-- Can't easily discover sources or resolve paths with only Lua APIs. Listing them explicitly is probably safer anyway
 	-- Note that ninja doesn't care about path separators and the mingw toolchain supports forward slashes; no \ required
 	luaSources = {
+		-- Integrated third-party code (no build system required)
 		"deps/kikito/inspect.lua/inspect.lua",
+		-- These modules may need some streamlining, so for now they're undocumented
+		"BuildTools/NinjaBuildTools.lua",
+		"BuildTools/NinjaFile.lua",
+		-- Standard libraries
 		"Runtime/evo.lua",
 		"Runtime/API/C_CommandLine.lua",
 		"Runtime/API/C_FileSystem.lua",
