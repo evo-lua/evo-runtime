@@ -4,9 +4,6 @@ local changelog = {
 			"Integrated FFI bindings to `iconv` that allow converting between different character encodings",
 			"A number of additional console colors are now supported by the `transform` library",
 		},
-		fixes = {
-			"Fixed an issue in the C_ImageProcessing API that could lead to images being decoded as RGB (instead of RGBA))",
-		},
 	},
 	["v0.0.10"] = {
 		newFeatures = {
