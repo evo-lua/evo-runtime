@@ -2,6 +2,8 @@ local changelog = {
 	["v0.0.11"] = {
 		newFeatures = {
 			"Integrated FFI bindings to `iconv` that allow converting between different character encodings",
+		},
+		improvements = {
 			"A number of additional console colors are now supported by the `transform` library",
 		},
 	},
