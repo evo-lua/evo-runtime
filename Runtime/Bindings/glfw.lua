@@ -1,5 +1,9 @@
 local ffi = require("ffi")
 local stbi = require("stbi")
+local validation = require("validation")
+
+local validateStruct = validation.validateStruct
+local validateTable = validation.validateTable
 
 local glfw = {}
 
@@ -137,6 +141,39 @@ function glfw.setCursorImage(window, imageFileContents, hotspotX, hotspotY)
 	swapAllocatedCursor(cursor)
 
 	return cursor
+end
+
+function glfw.setWindowIcon(window, icons)
+	validateStruct(window, "nativeWindowHandle")
+
+	if not icons then
+		glfw.bindings.glfw_set_window_icon(window, 0, nil)
+		return
+	end
+	validateTable(icons, "icons")
+
+	local glfwImages = ffi.new("GLFWimage[?]", #icons)
+	local stbImages = {}
+	for index, icon in ipairs(icons) do
+		local imageInfo = ffi.new("stbi_image_t")
+		local result = stbi.bindings.stbi_load_rgba(icon, #icon, imageInfo)
+		assert(result ~= nil, "Failed to load icon image data (stbi_load_rgba returned NULL)")
+
+		local cIndex = index - 1
+		local glfwImage = ffi.new("GLFWimage", {
+			width = imageInfo.width,
+			height = imageInfo.height,
+			pixels = imageInfo.data,
+		})
+		glfwImages[cIndex] = glfwImage -- GLFW wants this format
+		stbImages[index] = imageInfo -- Need to free the pixel array later
+	end
+	glfw.bindings.glfw_set_window_icon(window, #icons, glfwImages)
+
+	for index, _ in ipairs(icons) do
+		local stbImage = stbImages[index]
+		stbi.bindings.stbi_image_free(stbImage)
+	end
 end
 
 return glfw
