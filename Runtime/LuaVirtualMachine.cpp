@@ -68,7 +68,13 @@ bool LuaVirtualMachine::DoFile(std::string filePath) {
 
 bool LuaVirtualMachine::DoString(std::string chunk, std::string chunkName) {
 	this->CompileChunk(chunk, chunkName);
-	this->RunCompiledChunk();
+	int success = this->RunCompiledChunk();
+
+	if(!success) {
+		std::cerr << "\t" << FROM_HERE << ": in function 'DoString'"
+				  << std::endl;
+		return false;
+	}
 
 	return this->CheckStack();
 }
@@ -89,7 +95,8 @@ bool LuaVirtualMachine::CompileChunk(std::string chunk, std::string chunkName) {
 bool LuaVirtualMachine::RunCompiledChunk() {
 	if(lua_pcall(m_luaState, 0, m_numExpectedArgsFromLuaMain, m_onLuaErrorIndex)) {
 		fprintf(stderr, "%s\n", lua_tostring(m_luaState, -1));
-		std::cout << "[C] Error in lua_pcall at " << FROM_HERE << std::endl;
+		std::cerr << "\t[C]: in function 'lua_pcall'" << std::endl;
+		std::cerr << "\t" << FROM_HERE << ": in function 'RunCompiledChunk'" << std::endl;
 		return false;
 	}
 	m_relativeStackOffset--; // Lua's pcall removes the compiled chunk
