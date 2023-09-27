@@ -8,7 +8,6 @@ extern "C" {
 
 #include "rapidjson.hpp"
 
-#include "evo.hpp"
 #include "macros.hpp"
 #include "glfw_ffi.hpp"
 #include "iconv_ffi.hpp"
