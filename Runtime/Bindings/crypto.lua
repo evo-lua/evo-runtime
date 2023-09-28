@@ -1,18 +1,44 @@
 local buffer = require("string.buffer")
 local ffi = require("ffi")
 
+local ffi_new = ffi.new
+local ffi_string = ffi.string
 local math_ceil = math.ceil
 local tostring = tostring
 local math_floor = math.floor
+local math_min = math.min
 
-local crypto = {}
+local crypto = {
+	-- Should match parameters for EVP_KDF_fetch (OpenSSL)
+	KDF_ARGON2D = "ARGON2D",
+	KDF_ARGON2I = "ARGON2I",
+	KDF_ARGON2ID = "ARGON2ID",
+}
 
 crypto.cdefs = [[
-	typedef enum {
-		KDF_ARGON2ID,
-		KDF_ARGON2D,
-		KDF_ARGON2I,
-	} KEY_DERIVATION_FUNCTIONS;
+
+	typedef struct kdf_parameters_t {
+		const char* kdf;
+		uint32_t version;
+		uint32_t kilobytes;
+		uint32_t threads;
+		uint32_t lanes;
+		size_t size;
+		uint32_t iterations;
+	} kdf_parameters_t;
+
+	typedef struct kdf_input_t {
+		const char* password;
+		size_t pw_length;
+		const char *salt;
+		size_t salt_length;
+	} kdf_input_t;
+
+	typedef struct kdf_result_t {
+		bool success;
+		unsigned char* hash;
+		char* message;
+	} kdf_result_t;
 
 	struct static_crypto_exports_table {
 		// OpenSSL (libcrypto) metadata
@@ -24,25 +50,30 @@ crypto.cdefs = [[
 		size_t (*openssl_from_base64)(unsigned char* dst, size_t dst_len, const unsigned char* src, size_t src_len);
 		size_t (*argon2_to_base64)(unsigned char* dst, size_t dst_len, const unsigned char* src, size_t src_len);
 		size_t (*argon2_from_base64)(char *dst, size_t dst_len, const char *src);
+		void (*openssl_kdf_derive)(kdf_input_t inputs, kdf_parameters_t parameters, kdf_result_t* result);
+
+		int (*openssl_crypto_memcmp)(const void *a, const void *b, size_t len);
 	};
 ]]
 
+-- As per https://www.openssl.org/docs/manmaster/man3/ERR_error_string_n.html
+local OPENSSL_MIN_ERROR_STRING_LENGTH = 120
+local preallocatedMessageExchangeBuffer = buffer:new(OPENSSL_MIN_ERROR_STRING_LENGTH)
 local preallocatedConversionBuffer = buffer.new(128)
 
 function crypto.initialize()
 	ffi.cdef(crypto.cdefs)
 
-	crypto.KDF_ARGON2D = ffi.C.KDF_ARGON2D
-	crypto.KDF_ARGON2I = ffi.C.KDF_ARGON2I
-	crypto.KDF_ARGON2ID = ffi.C.KDF_ARGON2ID
-
-	crypto.kdfs = {
-		[ffi.C.KDF_ARGON2D] = "argon2d",
-		[ffi.C.KDF_ARGON2I] = "argon2i",
-		[ffi.C.KDF_ARGON2ID] = "argon2id",
+	-- Based on https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id
+	crypto.DEFAULT_KDF_PARAMETERS = {
+		kdf = crypto.KDF_ARGON2ID,
+		version = 0x13,
+		kilobytes = 47104,
+		threads = 1,
+		lanes = 1,
+		size = 32,
+		iterations = 3,
 	}
-
-	crypto.DEFAULT_ARGON2_VERSION = 0x13
 end
 
 function crypto.version()
@@ -53,9 +84,10 @@ function crypto.version()
 end
 
 function crypto.mcf(hash, salt, parameters)
+	parameters = parameters or crypto.DEFAULT_KDF_PARAMETERS
 	local mcf = string.format(
 		"$%s$v=%d$m=%d,t=%d,p=%d$%s$%s",
-		crypto.kdfs[parameters.kdf],
+		string.lower(parameters.kdf),
 		parameters.version,
 		parameters.kilobytes,
 		parameters.threads,
@@ -138,6 +170,47 @@ function crypto.fromBase64(encodedHash)
 	preallocatedConversionBuffer:commit(numBytesWritten)
 
 	return tostring(preallocatedConversionBuffer)
+end
+
+function crypto.hash(plaintextPassword, salt, kdfParameters)
+	kdfParameters = kdfParameters or crypto.DEFAULT_KDF_PARAMETERS
+
+	local parameters = ffi_new("kdf_parameters_t")
+	parameters.kdf = kdfParameters.kdf or crypto.DEFAULT_KDF_PARAMETERS.kdf
+	parameters.version = kdfParameters.version or crypto.DEFAULT_KDF_PARAMETERS.version
+	parameters.kilobytes = kdfParameters.kilobytes or crypto.DEFAULT_KDF_PARAMETERS.kilobytes
+	parameters.threads = kdfParameters.threads or crypto.DEFAULT_KDF_PARAMETERS.threads
+	parameters.lanes = kdfParameters.lanes or crypto.DEFAULT_KDF_PARAMETERS.lanes
+	parameters.size = kdfParameters.size or crypto.DEFAULT_KDF_PARAMETERS.size
+	parameters.iterations = kdfParameters.iterations or crypto.DEFAULT_KDF_PARAMETERS.iterations
+
+	local inputs = ffi_new("kdf_input_t")
+	inputs.password = plaintextPassword
+	inputs.pw_length = #plaintextPassword
+	inputs.salt = salt
+	inputs.salt_length = #salt
+
+	preallocatedConversionBuffer:reset()
+	preallocatedMessageExchangeBuffer:reset()
+	local result = ffi_new("kdf_result_t")
+	result.hash = preallocatedConversionBuffer:reserve(parameters.size) -- No need to pass the length since we set it in advance
+	result.message = preallocatedMessageExchangeBuffer:reserve(OPENSSL_MIN_ERROR_STRING_LENGTH) -- Ditto
+	crypto.bindings.openssl_kdf_derive(inputs, parameters, result)
+	preallocatedConversionBuffer:commit(parameters.size)
+	preallocatedMessageExchangeBuffer:commit(OPENSSL_MIN_ERROR_STRING_LENGTH)
+
+	if not result.success then
+		return nil, "OpenSSL " .. ffi_string(preallocatedMessageExchangeBuffer)
+	end
+
+	return tostring(preallocatedConversionBuffer)
+end
+
+function crypto.verify(plaintextPassword, salt, hash, kdfParameters)
+	local rehash = crypto.hash(plaintextPassword, salt, kdfParameters)
+	local diff = crypto.bindings.openssl_crypto_memcmp(hash, rehash, math_min(#hash, #rehash))
+	print(diff, tonumber(diff), hash, rehash)
+	return tonumber(diff) == 0
 end
 
 return crypto
