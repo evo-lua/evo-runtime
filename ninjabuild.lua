@@ -37,6 +37,7 @@ local EvoBuildTarget = {
 		"Runtime/API/Networking/HttpServer.lua",
 		"Runtime/API/Networking/WebSocketTestClient.lua",
 		"Runtime/API/Networking/WebSocketServer.lua",
+		"Runtime/Bindings/crypto.lua",
 		"Runtime/Bindings/glfw.lua",
 		"Runtime/Bindings/iconv.lua",
 		"Runtime/Bindings/interop.lua",
@@ -61,6 +62,8 @@ local EvoBuildTarget = {
 	},
 	cppSources = {
 		"Runtime/main.cpp",
+		"Runtime/Bindings/crypto_argon2.cpp",
+		"Runtime/Bindings/crypto_ffi.cpp",
 		"Runtime/Bindings/glfw_ffi.cpp",
 		"Runtime/Bindings/iconv_ffi.cpp",
 		"Runtime/Bindings/interop_ffi.cpp",

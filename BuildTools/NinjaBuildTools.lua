@@ -12,7 +12,7 @@ local C_BuildTools = {
 	GCC_COMPILATION_SETTINGS = {
 		displayName = "GNU Compiler Collection",
 		CPP_COMPILER = "g++",
-		COMPILER_FLAGS = "-O2 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color -Wfatal-errors"
+		COMPILER_FLAGS = "-O3 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color -Wfatal-errors"
 			.. (isMacOS and " -ObjC++" or ""), -- Forced Objc++ should be removed once glfw3webgpu is merged into the GLFW core library... until then, it's a necessary evil
 		CPP_LINKER = "g++",
 		-- Must export the entry point of bytecode objects so that LuaJIT can load them via require()
