@@ -134,7 +134,7 @@ describe("C_CommandLine", function()
 			assertThrows(triggerDefaultHandler, "This is the default command handler: invalid-command")
 
 			-- Cleanup
-			C_CommandLine.SetDefaultHandler(C_CommandLine.FALLBACK_COMMAND_HANDLER)
+			C_CommandLine.SetDefaultHandler(C_CommandLine.DispatchCommand)
 		end)
 
 		it("should trigger the appropriate command handler if one was registered", function()

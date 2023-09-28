@@ -2,7 +2,12 @@ local validation = require("validation")
 local validateString = validation.validateString
 local validateFunction = validation.validateFunction
 
-local fallbackCommandHandler = function(command)
+local C_CommandLine = {
+	PLACEHOLDER_COMMAND_DESCRIPTION = "No description available",
+	registeredCommands = {},
+}
+
+function C_CommandLine.DispatchCommand(command)
 	if command == "" then
 		print(C_CommandLine.GetUsageInfo())
 		return
@@ -12,13 +17,6 @@ local fallbackCommandHandler = function(command)
 	print()
 	print()
 end
-
-local C_CommandLine = {
-	PLACEHOLDER_COMMAND_DESCRIPTION = "No description available",
-	FALLBACK_COMMAND_HANDLER = fallbackCommandHandler,
-	registeredCommands = {},
-	defaultCommandHandler = fallbackCommandHandler,
-}
 
 function C_CommandLine.RegisterCommand(commandName, commandHandler, description)
 	validateString(commandName, "commandName")
@@ -85,7 +83,7 @@ end
 
 function C_CommandLine.SetDefaultHandler(newDefaultHandler)
 	validateFunction(newDefaultHandler, "newDefaultHandler")
-	C_CommandLine.defaultCommandHandler = newDefaultHandler
+	C_CommandLine.DispatchCommand = newDefaultHandler
 end
 
 function C_CommandLine.ProcessArguments(argumentsVector)
@@ -99,7 +97,7 @@ function C_CommandLine.ProcessArguments(argumentsVector)
 		end
 	end
 
-	C_CommandLine.defaultCommandHandler(command)
+	C_CommandLine.DispatchCommand(command)
 end
 
 return C_CommandLine

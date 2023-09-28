@@ -61,7 +61,6 @@ local EvoBuildTarget = {
 	},
 	cppSources = {
 		"Runtime/main.cpp",
-		"Runtime/evo.cpp",
 		"Runtime/Bindings/glfw_ffi.cpp",
 		"Runtime/Bindings/iconv_ffi.cpp",
 		"Runtime/Bindings/interop_ffi.cpp",

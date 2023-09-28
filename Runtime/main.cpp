@@ -8,7 +8,6 @@ extern "C" {
 
 #include "rapidjson.hpp"
 
-#include "evo.hpp"
 #include "macros.hpp"
 #include "glfw_ffi.hpp"
 #include "iconv_ffi.hpp"
@@ -58,7 +57,7 @@ int main(int argc, char* argv[]) {
 
 	int success = luaVM->DoString(mainChunk, chunkName);
 	if(!success) {
-		PrintRuntimeError("Failed to require evo.lua", "Could not load embedded bytecode object", "Please report this problem on GitHub", FROM_HERE);
+		std::cerr << "\t" << FROM_HERE << ": in function 'main'" << std::endl;
 		return EXIT_FAILURE;
 	}
 
