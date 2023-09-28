@@ -6,12 +6,11 @@ extern "C" {
 #include "openssl.h"
 }
 
-#include "rapidjson.hpp"
-
 #include "macros.hpp"
 #include "glfw_ffi.hpp"
 #include "iconv_ffi.hpp"
 #include "interop_ffi.hpp"
+#include "rapidjson.hpp"
 #include "stbi_ffi.hpp"
 #include "stduuid_ffi.hpp"
 #include "uws_ffi.hpp"
