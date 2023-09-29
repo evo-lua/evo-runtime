@@ -21,7 +21,7 @@ size_t iconv_convert(char* input, const char* input_encoding, const char* output
 
 	size_t num_output_bytes_left = output_size;
 	if(iconv(conversion_descriptor, &input, &num_input_bytes_left, &output, &num_output_bytes_left) == (size_t)-1) {
-		std::cout << "WARNING: iconv_open failed with error code " << errno << " (" << strerror(errno) << ")" << std::endl;
+		std::cout << "WARNING: iconv failed with error code " << errno << " (" << strerror(errno) << ")" << std::endl;
 		std::cout << "Input: " << input << std::endl;
 		std::cout << "Input Encoding: " << input_encoding << std::endl;
 		std::cout << "Output Encoding: " << output_encoding << std::endl;
