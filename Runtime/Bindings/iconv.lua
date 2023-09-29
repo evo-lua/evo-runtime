@@ -7,7 +7,7 @@ local iconv = {}
 
 iconv.cdefs = [[
 	struct static_iconv_exports_table {
-		size_t (*iconv_convert)(char* input, const char* input_encoding, const char* output_encoding, char* output, size_t output_size);
+		size_t (*iconv_convert)(char* input, size_t input_size, const char* input_encoding, const char* output_encoding, char* output, size_t output_size);
 	};
 ]]
 
@@ -23,7 +23,8 @@ function iconv.convert(input, inputEncoding, outputEncoding)
 	local outputBuffer = buffer.new(maxOutputBufferSize)
 	local ptr, len = outputBuffer:reserve(maxOutputBufferSize)
 
-	local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, inputEncoding, outputEncoding, ptr, len)
+	local numBytesWritten =
+		iconv.bindings.iconv_convert(inputBuffer, ffi.sizeof(inputBuffer), inputEncoding, outputEncoding, ptr, len)
 	outputBuffer:commit(numBytesWritten)
 
 	return tostring(outputBuffer), tonumber(numBytesWritten)

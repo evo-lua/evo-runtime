@@ -4,11 +4,11 @@
 
 #include <iconv.h>
 
-size_t iconv_convert(char* input, const char* input_encoding, const char* output_encoding, char* output, size_t output_size) {
+size_t iconv_convert(char* input, size_t input_length, const char* input_encoding, const char* output_encoding, char* output, size_t output_size) {
 	if(output == nullptr || input == nullptr) return 0;
 	if(output_size == 0) return 0;
 
-	size_t num_input_bytes_left = strlen(input);
+	size_t num_input_bytes_left = input_length;
 
 	iconv_t conversion_descriptor = iconv_open(output_encoding, input_encoding);
 	if(conversion_descriptor == (iconv_t)-1) {

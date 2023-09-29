@@ -8,7 +8,8 @@ describe("iconv", function()
 				local inputBuffer = buffer.new()
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
-				local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, "CP949", "UTF-8", ptr, len)
+				local numBytesWritten =
+					iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
 
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
@@ -18,7 +19,7 @@ describe("iconv", function()
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
 				assertEquals(len, 1024)
-				local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, "CP949", "UTF-8", ptr, len)
+				local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, 14, "CP949", "UTF-8", ptr, len)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tostring(outputBuffer), "유저인터페이스")
