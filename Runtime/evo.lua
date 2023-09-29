@@ -1,10 +1,10 @@
 local bdd = require("bdd")
+local crypto = require("crypto")
 local ffi = require("ffi")
 local glfw = require("glfw")
 local jit = require("jit")
 local json = require("json")
 local miniz = require("miniz")
-local openssl = require("openssl")
 local regex = require("regex")
 local stbi = require("stbi")
 local stduuid = require("stduuid")
@@ -160,10 +160,6 @@ end
 function evo.getVersionText()
 	local versionText = format("This is Evo.lua %s (powered by %s)", EVO_VERSION, jit.version) .. "\n\n"
 
-	-- Should use OPENSSL_VERSION_* defines here (not currently exposed via lua-openssl)
-	local _, _, opensslVersionString = openssl.version()
-	local sslVersion = opensslVersionString:match("OpenSSL%s(%d+%.%d+%.%d+).*")
-
 	-- The format exposed by PCRE2 is not consistent with the other libraries (no patch version, date suffix)
 	local major, minor = string.match(regex.version(), "^(%d+)%.(%d+)")
 	local semanticPcre2VersionString = major .. "." .. minor .. "." .. 0
@@ -173,7 +169,7 @@ function evo.getVersionText()
 		libuv = uv.version_string(),
 		miniz = miniz.version(),
 		rapidjson = json.version(),
-		openssl = sslVersion,
+		openssl = crypto.version(),
 		pcre2 = semanticPcre2VersionString,
 		stbi = stbi.version(),
 		stduuid = stduuid.version(),
