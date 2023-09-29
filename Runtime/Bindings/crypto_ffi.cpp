@@ -122,12 +122,10 @@ namespace crypto_ffi {
 	}
 
 	const char* getVersionText() {
-		std::cout << OPENSSL_VERSION_TEXT << std::endl;
-		return OPENSSL_VERSION_TEXT;
+		return OPENSSL_VERSION_STR;
 	}
 
 	long int getVersionNumber() {
-		std::cout << OPENSSL_VERSION_NUMBER << std::endl;
 		return OPENSSL_VERSION_NUMBER;
 	}
 }

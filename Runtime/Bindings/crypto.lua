@@ -78,9 +78,8 @@ end
 
 function crypto.version()
 	local versionText = ffi.string(crypto.bindings.version_text())
-	local sslVersion = versionText:match("OpenSSL%s(%d+%.%d+%.%d+).*")
-
-	return sslVersion, tonumber(crypto.bindings.version_number())
+	local incrementalVersionNumber = tonumber(crypto.bindings.version_number())
+	return versionText, incrementalVersionNumber
 end
 
 function crypto.mcf(hash, salt, parameters)
