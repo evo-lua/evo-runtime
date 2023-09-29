@@ -25,6 +25,7 @@ size_t iconv_convert(char* input, size_t input_length, const char* input_encodin
 		std::cout << "Input: " << input << std::endl;
 		std::cout << "Input Encoding: " << input_encoding << std::endl;
 		std::cout << "Output Encoding: " << output_encoding << std::endl;
+		iconv_close(conversion_descriptor);
 		return 0;
 	}
 	iconv_close(conversion_descriptor);
