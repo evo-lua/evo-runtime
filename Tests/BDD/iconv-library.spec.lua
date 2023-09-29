@@ -8,7 +8,8 @@ describe("iconv", function()
 				local inputBuffer = buffer.new()
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
-				local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, "CP949", "UTF-8", ptr, len)
+				local numBytesWritten =
+					iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
 
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
@@ -18,11 +19,28 @@ describe("iconv", function()
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
 				assertEquals(len, 1024)
-				local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, "CP949", "UTF-8", ptr, len)
+				local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, 14, "CP949", "UTF-8", ptr, len)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tostring(outputBuffer), "유저인터페이스")
 				assertEquals(tonumber(numBytesWritten), 21)
+			end)
+
+			it("should be able to deal with unterminated string literals without crashing", function()
+				local badInput = ffi.new("char[5]")
+				badInput[0] = 65 -- 'A'
+				badInput[1] = 66 -- 'B'
+				badInput[2] = 67 -- 'C'
+				badInput[3] = 68 -- 'D'
+				badInput[4] = 69 -- 'E' (Note: No null terminator)
+
+				local outputBuffer = buffer.new(1024)
+				local ptr, len = outputBuffer:reserve(1024)
+
+				local numBytesWritten = iconv.bindings.iconv_convert(badInput, 5, "UTF-8", "UTF-16", ptr, len)
+				outputBuffer:commit(numBytesWritten)
+
+				assertEquals(tonumber(numBytesWritten), 12)
 			end)
 		end)
 	end)
@@ -67,6 +85,12 @@ describe("iconv", function()
 
 			assertEquals(output, "")
 			assertEquals(numBytesWritten, 0)
+		end)
+
+		it("should be able to deal with large inputs", function()
+			local largeInput = string.rep("A", 1000000)
+			local output = iconv.convert(largeInput, "UTF-8", "CP949")
+			assertEquals(largeInput, output)
 		end)
 	end)
 end)
