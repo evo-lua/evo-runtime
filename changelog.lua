@@ -1,4 +1,9 @@
 local changelog = {
+	["v0.0.12"] = {
+		newFeatures = {
+			"Introduced a new `crypto` library to support password hashing and verification (using OpenSSL's Argon2 implementation)",
+		},
+	},
 	["v0.0.11"] = {
 		newFeatures = {
 			"Integrated FFI bindings to `iconv` that allow converting between different character encodings",
