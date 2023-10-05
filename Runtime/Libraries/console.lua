@@ -1,6 +1,7 @@
 local validation = require("validation")
 local validateString = validation.validateString
 
+local ffi = require("ffi")
 local uv = require("uv")
 
 local console = {
@@ -70,6 +71,18 @@ function console.stopTimer(label)
 	printf("%s: %.0f ms", label, elapsedTimeInMilliseconds)
 
 	return elapsedTimeInMilliseconds
+end
+
+function console.clear()
+	local isWindows = ffi.os == "Windows"
+
+	-- A bit hacky, but it will get the job done...
+	if isWindows then
+		os.execute("cls")
+	else
+		io.write("\027[H\027[2J")
+		io.flush()
+	end
 end
 
 return console
