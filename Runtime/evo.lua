@@ -122,7 +122,7 @@ end
 function evo.displayHelpText(commandName, ...)
 	local helpText = format(
 		[[
-Usage: evo [ script.lua | command ... ]
+Usage: evo [ script.lua | command ] ...
 
 Commands:
 
@@ -136,7 +136,7 @@ end
 function evo.getHelpText()
 	local helpText = format(
 		[[
-Usage: evo [ script.lua | command ... ]
+Usage: evo [ script.lua | command ] ...
 
 Commands:
 

@@ -58,10 +58,10 @@ describe("evo", function()
 			evo.displayHelpText()
 			local capturedOutput = console.release()
 
-			local USAGE_PATTERN = "Usage: evo %[ script%.lua %| command %.%.%. %]"
+			local USAGE_PATTERN = "Usage: evo %[ script%.lua %| command %] %.%.%."
 
 			local usageInfoText = capturedOutput:match(USAGE_PATTERN)
-			assertEquals(usageInfoText, "Usage: evo [ script.lua | command ... ]")
+			assertEquals(usageInfoText, "Usage: evo [ script.lua | command ] ...")
 		end)
 
 		it("should display the list of available commands", function()
