@@ -365,18 +365,18 @@ static int ltdefl(lua_State* L) {
 }
 
 static int lmz_adler32(lua_State* L) {
-	mz_ulong adler = luaL_optinteger(L, 1, 0);
+	mz_ulong adler = luaL_optinteger(L, 2, 0);
 	size_t buf_len = 0;
-	const unsigned char* ptr = reinterpret_cast<const unsigned char*>(luaL_optlstring(L, 2, NULL, &buf_len));
+	const unsigned char* ptr = reinterpret_cast<const unsigned char*>(luaL_optlstring(L, 1, NULL, &buf_len));
 	adler = mz_adler32(adler, ptr, buf_len);
 	lua_pushinteger(L, adler);
 	return 1;
 }
 
 static int lmz_crc32(lua_State* L) {
-	mz_ulong crc32 = luaL_optinteger(L, 1, 0);
+	mz_ulong crc32 = luaL_optinteger(L, 2, 0);
 	size_t buf_len = 0;
-	const unsigned char* ptr = reinterpret_cast<const unsigned char*>(luaL_optlstring(L, 2, NULL, &buf_len));
+	const unsigned char* ptr = reinterpret_cast<const unsigned char*>(luaL_optlstring(L, 1, NULL, &buf_len));
 	crc32 = mz_crc32(crc32, ptr, buf_len);
 	lua_pushinteger(L, crc32);
 	return 1;
