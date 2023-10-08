@@ -126,15 +126,7 @@ function evo.setUpCommandLineInterface()
 end
 
 function evo.displayHelpText(commandName, ...)
-	local helpText = format(
-		[[
-Usage: evo [ script.lua | command ] ...
-
-Commands:
-
-%s]],
-		C_CommandLine.GetUsageInfo()
-	)
+	local helpText = evo.getHelpText()
 	print(helpText)
 	evo.showVersionStrings()
 end
