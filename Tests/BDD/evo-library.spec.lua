@@ -53,6 +53,12 @@ describe("evo", function()
 	end)
 
 	describe("displayHelpText", function()
+		before(function()
+			-- Handlers may have been removed by the C_CommandLine tests
+			C_CommandLine.UnregisterAllCommands()
+			evo.setUpCommandLineInterface()
+		end)
+
 		it("should display the usage instructions", function()
 			console.capture()
 			evo.displayHelpText()

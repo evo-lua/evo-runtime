@@ -2,6 +2,66 @@ describe("C_CommandLine", function()
 	-- Remove the runtime handlers (they aren't needed after the tests have started running, anyway)
 	C_CommandLine.UnregisterAllCommands()
 
+	describe("SetAlias", function()
+		after(function()
+			C_CommandLine.UnregisterAllCommands()
+		end)
+
+		it("should throw if no command was given", function()
+			local function setAliasWithNilCommand()
+				C_CommandLine.SetAlias(nil, "-t")
+			end
+			local expectedErrorMessage =
+				"Expected argument commandName to be a string value, but received a nil value instead"
+			assertThrows(setAliasWithNilCommand, expectedErrorMessage)
+		end)
+
+		it("should throw if no shorthand was given", function()
+			local function setNilAlias()
+				C_CommandLine.SetAlias("invalid", nil)
+			end
+			local expectedErrorMessage =
+				"Expected argument alias to be a string value, but received a nil value instead"
+			assertThrows(setNilAlias, expectedErrorMessage)
+		end)
+
+		it("should throw if the shorthand was already registered for another command", function()
+			-- Since aliases are just commands in disguise, registering them twice doesn't make sense
+			C_CommandLine.RegisterCommand("test", function() end, "test")
+			C_CommandLine.RegisterCommand("asdf", function() end, "asdf")
+			local function registerAliasMoreThanOnce()
+				C_CommandLine.SetAlias("test", "-t")
+				C_CommandLine.SetAlias("asdf", "-t")
+			end
+			local expectedErrorMessage = "Cannot set alias -t for command asdf (already used for command test)"
+			assertThrows(registerAliasMoreThanOnce, expectedErrorMessage)
+		end)
+
+		it("should throw if the command doesn't exist", function()
+			local function registerAliasForInvalidCommand()
+				C_CommandLine.SetAlias("invalid", "-t")
+			end
+			local expectedErrorMessage = "Cannot set alias -t for command invalid (no such command was registered)"
+			assertThrows(registerAliasForInvalidCommand, expectedErrorMessage)
+		end)
+
+		it("should register a shorthand for the given command ", function()
+			-- Setup
+			local function onHelloCommandExecuted() end
+			C_CommandLine.RegisterCommand("hello", onHelloCommandExecuted, "hello")
+			local commandsBefore = C_CommandLine.GetCommandList()
+
+			C_CommandLine.SetAlias("hello", "-h")
+			local commandsAfter = C_CommandLine.GetCommandList()
+			assertEquals(commandsBefore, commandsAfter)
+
+			local function executeCommandViaAlias()
+				C_CommandLine.ProcessArguments({ [0] = "-h" })
+			end
+			assertCallsFunction(executeCommandViaAlias, onHelloCommandExecuted)
+		end)
+	end)
+
 	describe("RegisterCommand", function()
 		it("should throw if a command with the same name has already been registered", function()
 			local function registerFooCommand()
@@ -170,6 +230,25 @@ describe("C_CommandLine", function()
 				assertEquals(
 					C_CommandLine.GetUsageInfo(),
 					"\tbar\t\tDoes something\n" .. "\tfoo\t\tDoes something else\n"
+				)
+
+				-- Cleanup
+				C_CommandLine.UnregisterCommand("foo")
+				C_CommandLine.UnregisterCommand("bar")
+			end
+		)
+
+		it(
+			"should return an ordered list of all registered commands  and their aliases if any were registered",
+			function()
+				-- Setup
+				C_CommandLine.RegisterCommand("foo", print, "Does something else")
+				C_CommandLine.RegisterCommand("bar", print, "Does something")
+				C_CommandLine.SetAlias("bar", "-b")
+
+				assertEquals(
+					C_CommandLine.GetUsageInfo(),
+					"\t-b, bar\t\tDoes something\n" .. "\tfoo\t\tDoes something else\n"
 				)
 
 				-- Cleanup
