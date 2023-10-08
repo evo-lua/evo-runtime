@@ -1,6 +1,7 @@
 local evo = require("evo")
 local ffi = require("ffi")
 local bdd = require("bdd")
+local console = require("console")
 
 local globalAliases = {
 	["buffer"] = require("string.buffer"),
@@ -10,7 +11,7 @@ local globalAliases = {
 	["format"] = string.format,
 	["it"] = bdd.it,
 	["path"] = require("path"),
-	["printf"] = evo.printf,
+	["printf"] = console.printf,
 	["cast"] = ffi.cast,
 	["cdef"] = ffi.cdef,
 	["define"] = ffi.cdef,
@@ -51,7 +52,6 @@ describe("_G", function()
 
 	describe("printf", function()
 		it("should output formatted strings to stdout", function()
-			local console = require("console")
 			console.capture()
 			printf("Hello %s", "printf")
 			local capturedOutput = console.release()

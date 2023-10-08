@@ -1,3 +1,4 @@
+local buffer = require("string.buffer")
 local validation = require("validation")
 local validateString = validation.validateString
 
@@ -83,6 +84,10 @@ function console.clear()
 		io.write("\027[H\027[2J")
 		io.flush()
 	end
+end
+
+function console.printf(...)
+	return print(format(...))
 end
 
 return console

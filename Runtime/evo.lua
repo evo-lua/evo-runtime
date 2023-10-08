@@ -1,4 +1,5 @@
 local bdd = require("bdd")
+local console = require("console")
 local crypto = require("crypto")
 local ffi = require("ffi")
 local glfw = require("glfw")
@@ -81,7 +82,7 @@ function evo.registerGlobalAliases()
 	_G.format = string.format
 	_G.it = bdd.it
 
-	_G.printf = evo.printf
+	_G.printf = console.printf
 	_G.extend = evo.extend
 
 	_G.cdef = ffi.cdef
@@ -308,10 +309,6 @@ function evo.onInvalidCommand(command, argv)
 	end
 
 	evo.displayHelpText()
-end
-
-function evo.printf(...)
-	return print(format(...))
 end
 
 function evo.extend(child, parent)
