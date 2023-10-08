@@ -5,6 +5,7 @@ local validateFunction = validation.validateFunction
 local C_CommandLine = {
 	PLACEHOLDER_COMMAND_DESCRIPTION = "No description available",
 	registeredCommands = {},
+	aliases = {},
 }
 
 function C_CommandLine.DispatchCommand(command)
@@ -47,6 +48,7 @@ function C_CommandLine.UnregisterCommand(commandName)
 	end
 
 	C_CommandLine.registeredCommands[commandName] = nil
+	C_CommandLine.aliases[commandName] = nil
 end
 
 function C_CommandLine.GetCommandList()
@@ -71,7 +73,9 @@ function C_CommandLine.GetUsageInfo()
 
 	for index, commandName in ipairs(sortedCommandNames) do
 		local commandInfo = commands[commandName]
-		usageInfoText = usageInfoText .. "\t" .. commandName .. "\t\t" .. commandInfo.description .. "\n"
+		local alias = C_CommandLine.aliases[commandName]
+		local aliasText = alias and (alias .. ", ") or ""
+		usageInfoText = usageInfoText .. "\t" .. aliasText .. commandName .. "\t\t" .. commandInfo.description .. "\n"
 	end
 
 	return usageInfoText
@@ -79,6 +83,7 @@ end
 
 function C_CommandLine.UnregisterAllCommands()
 	C_CommandLine.registeredCommands = {}
+	C_CommandLine.aliases = {}
 end
 
 function C_CommandLine.SetDefaultHandler(newDefaultHandler)
@@ -89,15 +94,52 @@ end
 function C_CommandLine.ProcessArguments(argumentsVector)
 	validation.validateTable(argumentsVector, "argumentsVector")
 
-	local command = argumentsVector[0] or ""
+	local commandOrAlias = argumentsVector[0] or ""
 
 	for commandName, commandInfo in pairs(C_CommandLine.registeredCommands) do
-		if command == commandName then
-			return commandInfo.handler(command, argumentsVector)
+		if commandOrAlias == commandName then
+			return commandInfo.handler(commandOrAlias, argumentsVector)
 		end
 	end
 
-	C_CommandLine.DispatchCommand(command)
+	for commandName, alias in pairs(C_CommandLine.aliases) do
+		if commandOrAlias == alias then
+			local commandInfo = C_CommandLine.registeredCommands[commandName]
+			return commandInfo.handler(commandName, argumentsVector)
+		end
+	end
+
+	C_CommandLine.DispatchCommand(commandOrAlias)
+end
+
+function C_CommandLine.SetAlias(commandName, alias)
+	validateString(commandName, "commandName")
+	validateString(alias, "alias")
+
+	if not C_CommandLine.registeredCommands[commandName] then
+		error(format("Cannot set alias %s for command %s (no such command was registered)", alias, commandName), 0)
+	end
+
+	local aliasedCommand
+	for registeredCommand, registeredAlias in pairs(C_CommandLine.aliases) do
+		if alias == registeredAlias then
+			aliasedCommand = registeredCommand
+		end
+	end
+
+	if aliasedCommand then
+		error(
+			format(
+				"Cannot set alias %s for command %s (already used for command %s)",
+				alias,
+				commandName,
+				aliasedCommand
+			),
+			0
+		)
+	end
+
+	C_CommandLine.aliases[commandName] = alias
 end
 
 return C_CommandLine
