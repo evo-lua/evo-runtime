@@ -50,16 +50,16 @@ describe("miniz", function()
 
 	describe("adler32", function()
 		it("should return a checksum for the given input string", function()
-			local checksum = miniz.adler32(1, "Hello world")
+			local checksum = miniz.adler32("Hello world", 1)
 			assertEquals(checksum, 413860925)
 		end)
 
 		it("should generate the same checksum regardless of how it is computed", function()
-			local checksum1 = miniz.adler32(1, "one two")
+			local checksum1 = miniz.adler32("one two", 1)
 			assertEquals(checksum1, 181797565)
 
-			local checksum2 = miniz.adler32(1, "one")
-			checksum2 = miniz.adler32(checksum2, " two")
+			local checksum2 = miniz.adler32("one", 1)
+			checksum2 = miniz.adler32(" two", checksum2)
 
 			assertEquals(checksum1, checksum2)
 		end)
@@ -67,16 +67,16 @@ describe("miniz", function()
 
 	describe("crc32", function()
 		it("should return a checksum for the given input string", function()
-			local checksum = miniz.crc32(0, "Hello world")
+			local checksum = miniz.crc32("Hello world")
 			assertEquals(checksum, 2346098258)
 		end)
 
 		it("should generate the same checksum regardless of how it is computed", function()
-			local checksum1 = miniz.crc32(0, "one two")
+			local checksum1 = miniz.crc32("one two")
 			assertEquals(checksum1, 3439823151)
 
-			local checksum2 = miniz.crc32(0, "one")
-			checksum2 = miniz.crc32(checksum2, " two")
+			local checksum2 = miniz.crc32("one")
+			checksum2 = miniz.crc32(" two", checksum2)
 
 			assertEquals(checksum1, checksum2)
 		end)
