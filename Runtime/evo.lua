@@ -90,6 +90,13 @@ function evo.registerGlobalAliases()
 	_G.new = ffi.new
 	_G.sizeof = ffi.sizeof
 	_G.typeof = ffi.typeof
+
+	-- TBD cached/preloaded? resolved to? sort list?
+	local require = _G.require
+	_G.require = function(virtualFileName)
+		printf("Required module: %s", virtualFileName)
+		return require(virtualFileName)
+	end
 end
 
 function evo.initializeGlobalNamespaces()
