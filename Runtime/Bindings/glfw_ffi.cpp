@@ -244,6 +244,11 @@ namespace glfw_ffi {
 		glfw_exports_table.glfw_set_window_pos = glfwSetWindowPos;
 		glfw_exports_table.glfw_get_framebuffer_size = glfwGetFramebufferSize;
 		glfw_exports_table.glfw_get_window_size = glfwGetWindowSize;
+		glfw_exports_table.glfw_maximize_window = glfwMaximizeWindow;
+		glfw_exports_table.glfw_restore_window = glfwRestoreWindow;
+		glfw_exports_table.glfw_hide_window = glfwHideWindow;
+		glfw_exports_table.glfw_show_window = glfwShowWindow;
+		glfw_exports_table.glfw_get_window_attrib = glfwGetWindowAttrib;
 
 		glfw_exports_table.glfw_register_events = glfw_register_events;
 
