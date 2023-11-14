@@ -248,7 +248,7 @@ describe("C_CommandLine", function()
 
 				assertEquals(
 					C_CommandLine.GetUsageInfo(),
-					"\t-b, bar\t\tDoes something\n" .. "\tfoo\t\tDoes something else\n"
+					"\t-b\tbar\t\tDoes something\n" .. "\tfoo\t\tDoes something else\n"
 				)
 
 				-- Cleanup

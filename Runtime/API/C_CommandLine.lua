@@ -74,8 +74,8 @@ function C_CommandLine.GetUsageInfo()
 	for index, commandName in ipairs(sortedCommandNames) do
 		local commandInfo = commands[commandName]
 		local alias = C_CommandLine.aliases[commandName]
-		local aliasText = alias and (alias .. ", ") or ""
-		usageInfoText = usageInfoText .. "\t" .. aliasText .. commandName .. "\t\t" .. commandInfo.description .. "\n"
+		local commandText = alias and (alias .. "\t" .. commandName .. "") or commandName
+		usageInfoText = usageInfoText .. "\t" .. commandText .. "\t\t" .. commandInfo.description .. "\n"
 	end
 
 	return usageInfoText
