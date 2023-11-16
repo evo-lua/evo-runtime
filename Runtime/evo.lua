@@ -163,6 +163,10 @@ function evo.getVersionText()
 	local major, minor = string.match(regex.version(), "^(%d+)%.(%d+)")
 	local semanticPcre2VersionString = major .. "." .. minor .. "." .. 0
 
+	-- zlib versions don't include a patch version if it's a clean major/minor release
+	local zlibVersionMajor, zlibVersionMinor, zlibVersionPatch = zlib.version()
+	local semanticZlibVersionString = format("%d.%d.%d", zlibVersionMajor, zlibVersionMinor, zlibVersionPatch or 0)
+
 	local embeddedLibraryVersions = {
 		glfw = glfw.version(),
 		libuv = uv.version_string(),
@@ -175,7 +179,7 @@ function evo.getVersionText()
 		uws = uws.version(),
 		wgpu = webgpu.version(),
 		webview = webview.version(),
-		zlib = format("%d.%d.%d", zlib.version()),
+		zlib = semanticZlibVersionString,
 		-- Since the ordering of pairs isn't well-defined, enforce alphabetic order for the CLI output
 		"glfw",
 		"libuv",

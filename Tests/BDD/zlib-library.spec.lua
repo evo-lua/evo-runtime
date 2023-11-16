@@ -6,7 +6,9 @@ describe("zlib", function()
 			local major, minor, patch = zlib.version()
 			assertEquals(type(major), "number")
 			assertEquals(type(minor), "number")
-			assertEquals(type(patch), "number")
+			if patch then -- May be nil if it's a clean major/minor release
+				assertEquals(type(patch), "number")
+			end
 		end)
 	end)
 
