@@ -5,11 +5,11 @@ local Test = {
 	port = 9002,
 	exampleRequests = {
 		GET = "GET /example HTTP/1.1\r\nHost: example.com\r\n\r\n",
-		POST = "POST /example HTTP/1.1\r\nHost: example.com\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 11\r\n\r\ndata=value\r\n",
+		POST = "POST /example HTTP/1.1\r\nHost: example.com\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 10\r\n\r\ndata=value",
 		OPTIONS = "OPTIONS /example HTTP/1.1\r\nHost: example.com\r\n\r\n",
 		DELETE = "DELETE /example HTTP/1.1\r\nHost: example.com\r\n\r\n",
-		PATCH = 'PATCH /example HTTP/1.1\r\nHost: example.com\r\nContent-Type: application/json\r\nContent-Length: 18\r\n\r\n{"key": "value"}\r\n\r\n',
-		PUT = 'PUT /example HTTP/1.1\r\nHost: example.com\r\nContent-Type: application/json\r\nContent-Length: 18\r\n\r\n{"key": "value"}\r\n',
+		PATCH = 'PATCH /example HTTP/1.1\r\nHost: example.com\r\nContent-Type: application/json\r\nContent-Length: 16\r\n\r\n{"key": "value"}',
+		PUT = 'PUT /example HTTP/1.1\r\nHost: example.com\r\nContent-Type: application/json\r\nContent-Length: 16\r\n\r\n{"key": "value"}',
 		HEAD = "HEAD /example HTTP/1.1\r\nHost: example.com\r\n\r\n",
 	},
 	clients = {},
@@ -54,6 +54,10 @@ function Test:CreateServer()
 
 			local requestID = payload.clientID
 			local requestDetails = server:GetRequestDetails(requestID)
+			if not requestDetails then
+				printf("HTTP_REQUEST_FINISHED event received for unknown request ID %s", requestID)
+				return
+			end
 			local requestMethod = requestDetails.method
 
 			server:SendResponse(requestID, requestMethod .. " response body")
