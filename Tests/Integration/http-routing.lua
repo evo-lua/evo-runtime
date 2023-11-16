@@ -54,6 +54,10 @@ function Test:CreateServer()
 
 			local requestID = payload.clientID
 			local requestDetails = server:GetRequestDetails(requestID)
+			if not requestDetails then
+				printf("HTTP_REQUEST_FINISHED event received for unknown request ID %s", requestID)
+				return
+			end
 			local requestMethod = requestDetails.method
 
 			server:SendResponse(requestID, requestMethod .. " response body")
