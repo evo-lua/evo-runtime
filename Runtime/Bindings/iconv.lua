@@ -19,7 +19,7 @@ local UTF_BYTES_PER_CODEPOINT = 4
 
 function iconv.convert(input, inputEncoding, outputEncoding)
 	local inputBuffer = ffi.new("char[?]", #input, input) -- Wasteful, but iconv modifies the input buffer
-	local maxOutputBufferSize = #input * UTF_BYTES_PER_CODEPOINT -- Worst case scenario (also wasteful)
+	local maxOutputBufferSize = #input * UTF_BYTES_PER_CODEPOINT + 1 -- Worst case scenario (also wasteful)
 	local outputBuffer = buffer.new(maxOutputBufferSize)
 	local ptr, len = outputBuffer:reserve(maxOutputBufferSize)
 
