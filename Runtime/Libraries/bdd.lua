@@ -172,6 +172,8 @@ function bdd.isDetailedReportingMode()
 end
 
 function bdd.report(message)
+	print("[bdd] Reporting message")
+	print(message)
 	bdd.reportBuffer:put(message)
 	bdd.reportBuffer:put("\n") -- For print-like semantics
 end
