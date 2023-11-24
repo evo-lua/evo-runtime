@@ -1,4 +1,13 @@
 local changelog = {
+	["v0.0.13"] = {
+		newFeatures = {
+			"The interpreter CLI now supports shorthands (such as `-e` for `eval`), which enables live debugging in VS Code",
+			"Added FFI bindings for several missing GLFW functions related to window management",
+		},
+		breakingChanges = {
+			"The parameters for certain `miniz` checksum APIs have been reordered to make them easier to use in the common case (no existing state)",
+		},
+	},
 	["v0.0.12"] = {
 		newFeatures = {
 			"Introduced a new `crypto` library to support password hashing and verification (using OpenSSL's Argon2 implementation)",
