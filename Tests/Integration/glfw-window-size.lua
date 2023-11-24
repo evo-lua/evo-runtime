@@ -36,3 +36,23 @@ printf(
 	contentWidthInPixels[0],
 	contentHeightInPixels[0]
 )
+
+-- Should probably create more elaborate scenarios for window management here?
+-- Deferred for now since the bindings need a do-over, anyway (reorganize later)
+local uv = require("uv")
+
+glfw.bindings.glfw_maximize_window(window)
+uv.sleep(1000)
+
+local GLFW_MAXIMIZED = glfw.bindings.glfw_find_constant("GLFW_MAXIMIZED")
+local maximized = glfw.bindings.glfw_get_window_attrib(window, GLFW_MAXIMIZED)
+assert(maximized == 0, "Window should not be maximized (window hints disallow it)")
+
+glfw.bindings.glfw_restore_window(window)
+uv.sleep(1000)
+
+glfw.bindings.glfw_hide_window(window)
+uv.sleep(1000)
+
+glfw.bindings.glfw_show_window(window)
+uv.sleep(1000)
