@@ -61,3 +61,6 @@ jobs:
 
       - name: Run cppcheck
         run: deps/cppcheck.sh
+
+      - name: Run shellcheck
+        run: find . -type f -name "*.sh" -maxdepth 2 -exec shellcheck {} +
