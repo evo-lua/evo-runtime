@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 # Should probably be the same that webview uses
@@ -11,8 +12,8 @@ wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
 echo "Fetching WebView2 $MSWEBVIEW_VERSION"
 
 echo "Installing WebView2 headers"
-./nuget install Microsoft.Web.Webview2 -Version $MSWEBVIEW_VERSION -Source $DEFAULT_NUGET_SOURCE -OutputDirectory ninjabuild-windows
-cp $(find ninjabuild-windows/Microsoft.Web.WebView* -name "WebView2.h") ninjabuild-windows
+./nuget install Microsoft.Web.Webview2 -Version "$MSWEBVIEW_VERSION" -Source "$DEFAULT_NUGET_SOURCE" -OutputDirectory ninjabuild-windows
+cp "$(find ninjabuild-windows/Microsoft.Web.WebView* -name "WebView2.h")" ninjabuild-windows
 
 echo "Cleaning up..."
 rm nuget.exe

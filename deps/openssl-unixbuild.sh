@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 NUM_PARALLEL_JOBS=$(nproc)
@@ -12,7 +13,7 @@ cd $OPENSSL_DIR
 ./config no-tests no-shared no-dso
 
 make clean
-make -j $NUM_PARALLEL_JOBS
+make -j "$NUM_PARALLEL_JOBS"
 
 cd -
 

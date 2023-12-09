@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 deps/luajit-unixbuild.sh
@@ -11,4 +12,3 @@ deps/uws-unixbuild.sh
 deps/zlib-unixbuild.sh
 deps/pcre-unixbuild.sh
 deps/glfw-unixbuild.sh
-

@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 deps/fetch-mswebview2.sh

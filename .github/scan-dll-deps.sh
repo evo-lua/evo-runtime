@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 echo "Scanning for unwanted DLL dependencies ..."

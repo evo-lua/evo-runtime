@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 BUILD_DIR=ninjabuild-unix

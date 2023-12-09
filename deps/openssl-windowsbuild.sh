@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 # Beware, the magic Windows globals... This should work on all relevant systems, though?
@@ -13,7 +14,7 @@ cd $OPENSSL_DIR
 perl Configure mingw64 no-tests no-shared no-dso
 
 make clean
-make -j $NUM_PARALLEL_JOBS
+make -j "$NUM_PARALLEL_JOBS"
 
 cd -
 

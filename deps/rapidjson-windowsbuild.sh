@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 echo "Building target rapidjson"
@@ -28,4 +29,4 @@ do
 done
 
 echo "Creating static library $OUT_DIR/librapidjson.a"
-ar rcs $OUT_DIR/librapidjson.a $BUILD_DIR/*.o
+ar rcs "$OUT_DIR/librapidjson.a" "$BUILD_DIR/*.o"
