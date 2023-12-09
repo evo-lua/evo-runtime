@@ -44,7 +44,7 @@ local availableBenchmarks = {
 	function()
 		console.startTimer("[Base64] Decoding with LuaOpenSSL")
 		for i = 1, SAMPLE_SIZE, 1 do
-			openssl.base64(inputs.luaopenssl[i])
+			openssl.base64(inputs.luaopenssl[i], false)
 		end
 		console.stopTimer("[Base64] Decoding with LuaOpenSSL")
 	end,
@@ -52,7 +52,7 @@ local availableBenchmarks = {
 	function()
 		console.startTimer("[Base64] Decoding with FFI bindings to OpenSSL")
 		for i = 1, SAMPLE_SIZE, 1 do
-			crypto.toBase64(inputs.openssl[i])
+			crypto.fromBase64(inputs.openssl[i])
 		end
 		console.stopTimer("[Base64] Decoding with FFI bindings to OpenSSL")
 	end,
@@ -60,7 +60,7 @@ local availableBenchmarks = {
 	function()
 		console.startTimer("[Base64] Decoding with FFI bindings to Argon2")
 		for i = 1, SAMPLE_SIZE, 1 do
-			crypto.toCompactBase64(inputs.argon2[i])
+			crypto.fromCompactBase64(inputs.argon2[i])
 		end
 		console.stopTimer("[Base64] Decoding with FFI bindings to Argon2")
 	end,
