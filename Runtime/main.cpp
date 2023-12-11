@@ -21,7 +21,7 @@ extern "C" {
 #include "LuaVirtualMachine.hpp"
 
 int main(int argc, char* argv[]) {
-	LuaVirtualMachine* luaVM = new LuaVirtualMachine();
+	std::unique_ptr<LuaVirtualMachine> luaVM = std::make_unique<LuaVirtualMachine>();
 
 	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
 	luaVM->SetGlobalArgs(argc, argv);
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 
 	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
 	uv_loop_t* loop = luv_loop(luaVM->GetState());
-	auto uwsEventLoop = uws_ffi::assignEventLoop(loop); // TBD: 5 handles created here...
+	auto uwsEventLoop = uws_ffi::assignEventLoop(loop);
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
@@ -59,6 +59,8 @@ int main(int argc, char* argv[]) {
 	int success = luaVM->DoString(mainChunk, chunkName);
 	if(!success) {
 		std::cerr << "\t" << FROM_HERE << ": in function 'main'" << std::endl;
+
+		uws_ffi::unassignEventLoop(uwsEventLoop);
 		return EXIT_FAILURE;
 	}
 
