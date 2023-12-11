@@ -65,8 +65,8 @@ int main(int argc, char* argv[]) {
 	}
 
 	uv_run(loop, UV_RUN_DEFAULT);
+
 	uws_ffi::unassignEventLoop(uwsEventLoop);
-	uv_loop_close(loop);
 
 	return EXIT_SUCCESS;
 }
