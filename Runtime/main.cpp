@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 
 	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
 	uv_loop_t* loop = luv_loop(luaVM->GetState());
-	auto uwsEventLoop = uws_ffi::assignEventLoop(loop); // TBD: 5 handles created here...
+	auto uwsEventLoop = uws_ffi::assignEventLoop(loop);
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
