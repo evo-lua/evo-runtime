@@ -9,7 +9,7 @@ local NinjaFile = require("BuildTools.NinjaFile")
 print("Generating build configuration ...")
 local ninjaFile = EvoBuildTarget:GenerateNinjaFile()
 
-print(EvoBuildTarget:ToString()) -- Should probably use __tostring?
+print(EvoBuildTarget)
 
 print("Saving Ninja file: " .. NinjaFile.DEFAULT_BUILD_FILE_NAME)
 ninjaFile:Save()

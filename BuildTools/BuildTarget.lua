@@ -16,8 +16,6 @@ function BuildTarget:Construct(instance)
 	return instance
 end
 
-setmetatable(BuildTarget, { __call = BuildTarget.Construct })
-
 function BuildTarget:GenerateNinjaFile()
 	self.ninjaFile = NinjaFile()
 	self.objectFiles = {}
@@ -192,5 +190,9 @@ Bytecode Generator: %s
 		self.bytecodeGenerator
 	)
 end
+
+BuildTarget.__call = BuildTarget.Construct
+BuildTarget.__tostring = BuildTarget.ToString
+setmetatable(BuildTarget, BuildTarget)
 
 return BuildTarget
