@@ -59,6 +59,8 @@ int main(int argc, char* argv[]) {
 	int success = luaVM->DoString(mainChunk, chunkName);
 	if(!success) {
 		std::cerr << "\t" << FROM_HERE << ": in function 'main'" << std::endl;
+
+		uws_ffi::unassignEventLoop(uwsEventLoop);
 		return EXIT_FAILURE;
 	}
 
