@@ -78,7 +78,8 @@ typedef struct static_uws_exports_table {
 
 namespace uws_ffi {
 	void* getExportsTable();
-	void assignEventLoop(void* existing_native_loop);
+	uWS::Loop* assignEventLoop(void* existing_native_loop);
+	void unassignEventLoop(uWS::Loop* uwsEventLoop);
 	std::string opCodeToString(uWS::OpCode opCode);
 	std::string compressOptionsToString(uWS::CompressOptions compressOption);
 }

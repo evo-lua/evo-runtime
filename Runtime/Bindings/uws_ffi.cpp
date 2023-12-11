@@ -251,8 +251,12 @@ namespace uws_ffi {
 		return &uwebsockets_exports_table;
 	}
 
-	void assignEventLoop(void* existing_native_loop) {
-		uWS::Loop::get(existing_native_loop); // Actually: Assign and then return
+	uWS::Loop* assignEventLoop(void* existing_native_loop) {
+		return uWS::Loop::get(existing_native_loop); // Actually: Assign and then return
+	}
+
+	void unassignEventLoop(uWS::Loop* loop) {
+		loop->free();
 	}
 
 	std::string opCodeToString(uWS::OpCode opCode) {
