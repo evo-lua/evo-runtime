@@ -21,7 +21,7 @@ extern "C" {
 #include "LuaVirtualMachine.hpp"
 
 int main(int argc, char* argv[]) {
-	LuaVirtualMachine* luaVM = new LuaVirtualMachine();
+	std::unique_ptr<LuaVirtualMachine> luaVM = std::make_unique<LuaVirtualMachine>();
 
 	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
 	luaVM->SetGlobalArgs(argc, argv);
@@ -61,14 +61,11 @@ int main(int argc, char* argv[]) {
 		std::cerr << "\t" << FROM_HERE << ": in function 'main'" << std::endl;
 
 		uws_ffi::unassignEventLoop(uwsEventLoop);
-		delete luaVM;
 		return EXIT_FAILURE;
 	}
 
 	uv_run(loop, UV_RUN_DEFAULT);
 
 	uws_ffi::unassignEventLoop(uwsEventLoop);
-	delete luaVM;
-
 	return EXIT_SUCCESS;
 }
