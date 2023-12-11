@@ -61,11 +61,14 @@ int main(int argc, char* argv[]) {
 		std::cerr << "\t" << FROM_HERE << ": in function 'main'" << std::endl;
 
 		uws_ffi::unassignEventLoop(uwsEventLoop);
+		delete luaVM;
 		return EXIT_FAILURE;
 	}
 
 	uv_run(loop, UV_RUN_DEFAULT);
 
 	uws_ffi::unassignEventLoop(uwsEventLoop);
+	delete luaVM;
+
 	return EXIT_SUCCESS;
 }
