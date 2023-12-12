@@ -93,6 +93,13 @@ describe("miniz", function()
 			local uncompressed = assert(miniz.uncompress(compressed, #original))
 			assertEquals(uncompressed, original)
 		end)
+
+		it("should automatically resize the compression buffer if no initial size was passed", function()
+			local original = string.rep(MINIZ_EXAMPLE_TEXT, 1000)
+			local compressed = assert(miniz.compress(original))
+			local uncompressed = assert(miniz.uncompress(compressed))
+			assertEquals(uncompressed, original)
+		end)
 	end)
 
 	describe("new_inflator", function()
