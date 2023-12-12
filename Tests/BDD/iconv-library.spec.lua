@@ -86,5 +86,32 @@ describe("iconv", function()
 			assertEquals(output, "")
 			assertEquals(numBytesWritten, 0)
 		end)
+
+		it("should throw if a non-string input was passed", function()
+			local function convertWithInvalidInput()
+				iconv.convert(42, "CP949", "UTF-8")
+			end
+			local expectedErrorMessage =
+				"Expected argument input to be a string value, but received a number value instead"
+			assertThrows(convertWithInvalidInput, expectedErrorMessage)
+		end)
+
+		it("should throw if a non-string input encoding was passed", function()
+			local function convertWithInvalidInputEncoding()
+				iconv.convert("Hey!", 42, "UTF-8")
+			end
+			local expectedErrorMessage =
+				"Expected argument inputEncoding to be a string value, but received a number value instead"
+			assertThrows(convertWithInvalidInputEncoding, expectedErrorMessage)
+		end)
+
+		it("should throw if a non-string output encoding was passed", function()
+			local function convertWithInvalidOutputEncoding()
+				iconv.convert("Hello!", "CP949", 42)
+			end
+			local expectedErrorMessage =
+				"Expected argument outputEncoding to be a string value, but received a number value instead"
+			assertThrows(convertWithInvalidOutputEncoding, expectedErrorMessage)
+		end)
 	end)
 end)
