@@ -18,6 +18,12 @@ end
 local UTF_BYTES_PER_CODEPOINT = 4
 
 function iconv.convert(input, inputEncoding, outputEncoding)
+
+	if #input == 0 then
+		-- Prevents LuaJIT from trying to collect a NULL buffer (= crash)
+		return "", 0
+	end
+
 	local inputBuffer = ffi.new("char[?]", #input, input) -- Wasteful, but iconv modifies the input buffer
 	local maxOutputBufferSize = #input * UTF_BYTES_PER_CODEPOINT -- Worst case scenario (also wasteful)
 	local outputBuffer = buffer.new(maxOutputBufferSize)
