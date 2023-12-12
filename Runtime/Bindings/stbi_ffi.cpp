@@ -192,7 +192,7 @@ void stbi_abgr_to_rgba(stbi_image_t* image) {
 	if(!image) return;
 	if(!image->data) return;
 
-	const size_t num_pixels = image->width * image->height;
+	const size_t num_pixels = static_cast<size_t>(image->width) * static_cast<size_t>(image->height);
 	for(size_t i = 0; i < num_pixels; i++) {
 		uint8_t* pixel = image->data + i * 4;
 		std::swap(pixel[ABGR_ALPHA_INDEX], pixel[ABGR_RED_INDEX]);
