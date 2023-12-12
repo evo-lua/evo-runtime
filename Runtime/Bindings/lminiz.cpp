@@ -1,7 +1,9 @@
 #include "lminiz.hpp"
 
-#include <unordered_map>
+#include <climits>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 extern "C" {
 #include "luv.h"
@@ -419,26 +421,30 @@ static int lmz_uncompress(lua_State* L) {
 	size_t in_len;
 	mz_ulong out_len;
 	const unsigned char* inb;
-	unsigned char* outb;
+	std::vector<unsigned char> outb;
+
 	in_len = 0;
 	inb = reinterpret_cast<const unsigned char*>(luaL_checklstring(L, 1, &in_len));
 	out_len = luaL_optinteger(L, 2, in_len * 2);
+
 	if(out_len < 1 || out_len > INT_MAX) {
 		luaL_error(L, "Initial buffer size must be between 1 and %d", INT_MAX);
 	}
+
+	outb.resize(out_len);
 	do {
-		outb = static_cast<unsigned char*>(malloc(out_len));
-		ret = mz_uncompress(outb, &out_len, inb, in_len);
+		ret = mz_uncompress(outb.data(), &out_len, inb, in_len);
 		if(ret == MZ_BUF_ERROR) {
-			out_len *= 2;
-			free(outb);
+			out_len = outb.size() * 2;
+			outb.resize(out_len);
 		} else {
 			break;
 		}
 	} while(out_len > 1 && out_len < INT_MAX);
+
 	switch(ret) {
 	case MZ_OK:
-		lua_pushlstring(L, reinterpret_cast<const char*>(outb), out_len);
+		lua_pushlstring(L, reinterpret_cast<const char*>(outb.data()), out_len);
 		ret = 1;
 		break;
 	default:
@@ -447,7 +453,7 @@ static int lmz_uncompress(lua_State* L) {
 		ret = 2;
 		break;
 	}
-	free(outb);
+
 	return ret;
 }
 
