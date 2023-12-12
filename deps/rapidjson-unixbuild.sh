@@ -1,32 +1,29 @@
 #!/bin/sh
 set -e
 
-echo "Building target rapidjson"
+echo "Building target lua-rapidjson"
 
 SRC_DIR=$(pwd)/deps/xpol/lua-rapidjson
+BUILD_DIR="$SRC_DIR/cmakebuild-unix"
 OUT_DIR=$(pwd)/ninjabuild-unix
-BUILD_DIR=$OUT_DIR/deps/xpol/lua-rapidjson
 LUAJIT_DIR=$(pwd)/deps/LuaJIT/LuaJIT
-LUAJIT_SOURCE_DIR=$LUAJIT_DIR/src
-RAPIDJSON_INCLUDE_DIR=$SRC_DIR/rapidjson/include
+LUAJIT_SOURCE_DIR="$LUAJIT_DIR/src"
 
-mkdir -p $BUILD_DIR
+cleanup() {
+    echo "Reverting CMakeLists patch (to make sure the build is idempotent)"
+    cd "$SRC_DIR"
+    git apply -R ../cmakebuild-static.diff
+    cd -
+}
 
-# Replicated version detection from CMakeLists.txt
-cd $SRC_DIR
-DISCOVERED_VERSION_TAG=$(git describe --tags --abbrev=0)
-echo "Discovered lua-rapidjson version: $DISCOVERED_VERSION_TAG"
+trap cleanup EXIT
+
+echo "Applying CMakeLists patch (this should hopefully be temporary)"
+cd "$SRC_DIR"
+git apply ../cmakebuild-static.diff
 cd -
 
-# The CMakeLists.txt file doesn't support static builds, so homebrew it is...
-echo "Compiling sources from $SRC_DIR"
-echo "Using rapidjson from $RAPIDJSON_INCLUDE_DIR"
+cmake -S "$SRC_DIR" -B "$BUILD_DIR" -G Ninja -DLUA_INCLUDE_DIR="$LUAJIT_SOURCE_DIR" -DCMAKE_C_COMPILER=gcc
+cmake --build "$BUILD_DIR" --clean-first
 
-for file in $(find $SRC_DIR -name "*.cpp")
-do
-    file_name=$(basename $file .cpp)
-    g++ -c -o $BUILD_DIR/${file_name}.o $file -I $LUAJIT_SOURCE_DIR -I $RAPIDJSON_INCLUDE_DIR -DLUA_RAPIDJSON_VERSION=\"$DISCOVERED_VERSION_TAG\" -std=c++11
-done
-
-echo "Creating static library $OUT_DIR/librapidjson.a"
-ar rcs $OUT_DIR/librapidjson.a $BUILD_DIR/*.o
+cp "$BUILD_DIR/rapidjson.a" "$OUT_DIR/librapidjson.a"
