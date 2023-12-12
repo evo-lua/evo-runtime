@@ -1,4 +1,12 @@
 local changelog = {
+	["v0.0.14"] = {
+		newFeatures = {
+			"Added table.count as a convenient shorthand for counting all elements in a table",
+		},
+		breakingChanges = {
+			"Improved error handling in the iconv FFI bindings (some return values have changed)",
+		},
+	},
 	["v0.0.13"] = {
 		newFeatures = {
 			"The interpreter CLI now supports shorthands (such as `-e` for `eval`), which enables live debugging in VS Code",
