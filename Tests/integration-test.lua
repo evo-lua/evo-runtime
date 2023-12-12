@@ -23,4 +23,4 @@ local testFiles = {
 }
 
 local numFailedTests = C_Runtime.RunBasicTests(testFiles)
-os.exit(numFailedTests)
+os.exit(numFailedTests, true)

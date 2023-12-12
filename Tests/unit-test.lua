@@ -32,4 +32,4 @@ local specFiles = {
 
 local numFailedSections = C_Runtime.RunDetailedTests(#arg > 0 and arg or specFiles)
 
-os.exit(numFailedSections)
+os.exit(numFailedSections, true)

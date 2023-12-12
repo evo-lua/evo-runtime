@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "macros.hpp"
+#include "uws_ffi.hpp"
 
 #include "LuaVirtualMachine.hpp"
 
@@ -20,6 +21,32 @@ int onLuaError(lua_State* m_luaState) {
 	return EXIT_FAILURE; // It's an error, after all
 }
 
+void unregister_uws_handles(lua_State* m_luaState) {
+	lua_getglobal(m_luaState, "UWS_EVENT_LOOP");
+	void* userdataPointer = lua_touserdata(m_luaState, -1);
+
+	if(userdataPointer != nullptr) {
+		auto uwsEventLoop = static_cast<uWS::Loop*>(userdataPointer);
+		uws_ffi::unassignEventLoop(uwsEventLoop);
+
+		lua_pushnil(m_luaState);
+		lua_setglobal(m_luaState, "UWS_EVENT_LOOP");
+	}
+	lua_pop(m_luaState, 1);
+}
+
+int modified_os_exit(lua_State* m_luaState) {
+	// Should probably check for close=true here, but it seems uws can deal with it just fine
+	unregister_uws_handles(m_luaState);
+
+	// Have to move the original function before the arguments before calling it
+	lua_getfield(m_luaState, LUA_REGISTRYINDEX, "default_os_exit");
+	lua_insert(m_luaState, 1);
+	lua_call(m_luaState, lua_gettop(m_luaState) - 1, LUA_MULTRET);
+
+	return lua_gettop(m_luaState);
+}
+
 LuaVirtualMachine::LuaVirtualMachine() {
 	m_relativeStackOffset = 0;
 
@@ -36,6 +63,15 @@ LuaVirtualMachine::LuaVirtualMachine() {
 	// This global table simply exports the static APIs embedded within the runtime for the FFI to call into
 	lua_newtable(m_luaState);
 	lua_setglobal(m_luaState, "STATIC_FFI_EXPORTS");
+
+	// Not pretty, but os.exit doesn't unassign the uws loop (which crashes the runtime if close=true)
+	lua_getglobal(m_luaState, "os");
+	lua_getfield(m_luaState, -1, "exit");
+	lua_setfield(m_luaState, LUA_REGISTRYINDEX, "default_os_exit");
+
+	lua_pushcfunction(m_luaState, modified_os_exit);
+	lua_setfield(m_luaState, -2, "exit");
+	lua_pop(m_luaState, 1);
 
 	this->CheckStack();
 }
@@ -133,6 +169,11 @@ void LuaVirtualMachine::CreateGlobalNamespace(std::string name) {
 
 void LuaVirtualMachine::AssignGlobalVariable(std::string key, std::string value) {
 	lua_pushstring(m_luaState, value.c_str());
+	lua_setglobal(m_luaState, key.c_str());
+}
+
+void LuaVirtualMachine::AssignGlobalVariable(std::string key, void* lightUserdataPointer) {
+	lua_pushlightuserdata(m_luaState, lightUserdataPointer);
 	lua_setglobal(m_luaState, key.c_str());
 }
 
