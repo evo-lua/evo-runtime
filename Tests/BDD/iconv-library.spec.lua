@@ -113,5 +113,11 @@ describe("iconv", function()
 				"Expected argument outputEncoding to be a string value, but received a number value instead"
 			assertThrows(convertWithInvalidOutputEncoding, expectedErrorMessage)
 		end)
+
+		it("should be able to deal with large inputs", function()
+			local largeInput = string.rep("A", 1000000)
+			local output = iconv.convert(largeInput, "UTF-8", "CP949")
+			assertEquals(largeInput, output)
+		end)
 	end)
 end)
