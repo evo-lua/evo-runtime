@@ -4,35 +4,45 @@
 
 #include <iconv.h>
 
-size_t iconv_convert(char* input, size_t input_length, const char* input_encoding, const char* output_encoding, char* output, size_t output_size) {
-	if(output == nullptr || input == nullptr) return 0;
-	if(output_size == 0) return 0;
+iconv_result_t iconv_convert(char* input, size_t input_length, const char* input_encoding, const char* output_encoding, char* output, size_t output_size) {
+
+	iconv_result_t result {
+		.status_code = EINVAL,
+		.num_bytes_written = 0,
+		.message = strerror(EINVAL),
+	};
+
+	if(output == nullptr || input == nullptr) return result;
+	if(output_size == 0) return result;
 
 	size_t num_input_bytes_left = input_length;
 
 	iconv_t conversion_descriptor = iconv_open(output_encoding, input_encoding);
 	if(conversion_descriptor == (iconv_t)-1) {
-		std::cout << "WARNING: iconv_open failed with error code " << errno << " (" << strerror(errno) << ")" << std::endl;
-		std::cout << "Input: " << input << std::endl;
-		std::cout << "Input Encoding: " << input_encoding << std::endl;
-		std::cout << "Output Encoding: " << output_encoding << std::endl;
-		return 0;
+		result.message = strerror(errno);
+		result.status_code = errno;
+		result.num_bytes_written = 0;
+		return result;
 	}
 
 	size_t num_output_bytes_left = output_size;
 	if(iconv(conversion_descriptor, &input, &num_input_bytes_left, &output, &num_output_bytes_left) == (size_t)-1) {
-		std::cout << "WARNING: iconv failed with error code " << errno << " (" << strerror(errno) << ")" << std::endl;
-		std::cout << "Input: " << input << std::endl;
-		std::cout << "Input Encoding: " << input_encoding << std::endl;
-		std::cout << "Output Encoding: " << output_encoding << std::endl;
 		iconv_close(conversion_descriptor);
-		return 0;
+		result.message = strerror(errno);
+		result.status_code = errno;
+		result.num_bytes_written = output_size - num_output_bytes_left;
+		return result;
 	}
 	iconv_close(conversion_descriptor);
 	*output = '\0'; // Null-terminate the output buffer
 
 	const size_t num_processed_bytes = output_size - num_output_bytes_left;
-	return num_processed_bytes;
+
+	result.message = strerror(0);
+	result.status_code = 0;
+	result.num_bytes_written = num_processed_bytes;
+
+	return result;
 }
 
 namespace iconv_ffi {

@@ -1,6 +1,28 @@
 local ffi = require("ffi")
 local iconv = require("iconv")
 
+local function ffi_strerror(errno)
+	return ffi.string(ffi.C.strerror(errno))
+end
+
+local platformSpecificErrorCodes = {
+	OSX = {
+		EINVAL = 22,
+		EILSEQ = 92,
+	},
+	Linux = {
+		EINVAL = 22,
+		EILSEQ = 84,
+	},
+	Windows = {
+		EINVAL = 22,
+		EILSEQ = 42,
+	},
+}
+local SUCCESS = 0
+local EINVAL = platformSpecificErrorCodes[ffi.os].EINVAL
+local EILSEQ = platformSpecificErrorCodes[ffi.os].EILSEQ
+
 describe("iconv", function()
 	describe("bindings", function()
 		describe("iconv_convert", function()
@@ -8,10 +30,10 @@ describe("iconv", function()
 				local inputBuffer = buffer.new()
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
-				local numBytesWritten =
-					iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
-
-				assertEquals(tonumber(numBytesWritten), 0)
+				local result = iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
+				assertEquals(tonumber(result.status_code), EINVAL)
+				assertEquals(ffi.string(result.message), ffi_strerror(EINVAL))
+				assertEquals(tonumber(result.num_bytes_written), 0)
 			end)
 
 			it("should be able to convert Windows encodings to UTF-8", function()
@@ -19,11 +41,14 @@ describe("iconv", function()
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
 				assertEquals(len, 1024)
-				local numBytesWritten = iconv.bindings.iconv_convert(inputBuffer, 14, "CP949", "UTF-8", ptr, len)
+				local result = iconv.bindings.iconv_convert(inputBuffer, 14, "CP949", "UTF-8", ptr, len)
+				local numBytesWritten = tonumber(result.num_bytes_written)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tostring(outputBuffer), "유저인터페이스")
-				assertEquals(tonumber(numBytesWritten), 21)
+				assertEquals(tonumber(result.status_code), SUCCESS)
+				assertEquals(ffi.string(result.message), ffi_strerror(SUCCESS))
+				assertEquals(numBytesWritten, 21)
 			end)
 
 			it("should be able to deal with unterminated string literals without crashing", function()
@@ -37,10 +62,13 @@ describe("iconv", function()
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
 
-				local numBytesWritten = iconv.bindings.iconv_convert(badInput, 5, "UTF-8", "UTF-16", ptr, len)
+				local result = iconv.bindings.iconv_convert(badInput, 5, "UTF-8", "UTF-16", ptr, len)
+				local numBytesWritten = tonumber(result.num_bytes_written)
 				outputBuffer:commit(numBytesWritten)
 
-				assertEquals(tonumber(numBytesWritten), 12)
+				assertEquals(tonumber(result.status_code), SUCCESS)
+				assertEquals(ffi.string(result.message), ffi_strerror(SUCCESS))
+				assertEquals(numBytesWritten, 12)
 			end)
 		end)
 	end)
@@ -48,43 +76,37 @@ describe("iconv", function()
 	describe("convert", function()
 		it("should be able to convert Windows encodings to UTF-8", function()
 			local input = "\xC0\xAF\xC0\xFA\xC0\xCE\xC5\xCD\xC6\xE4\xC0\xCC\xBD\xBA"
-			local output, numBytesWritten = iconv.convert(input, "CP949", "UTF-8")
-
+			local output, message = iconv.convert(input, "CP949", "UTF-8")
 			assertEquals(output, "유저인터페이스")
-			assertEquals(numBytesWritten, 21)
+			assertEquals(message, ffi_strerror(SUCCESS))
 		end)
 
 		it("should fail gracefully if an empty string was passed", function()
-			-- Bare minimum: Must not segfault here
 			local input = ""
-			local output, numBytesWritten = iconv.convert(input, "CP949", "UTF-8")
-
-			assertEquals(output, "")
-			assertEquals(numBytesWritten, 0)
+			assertFailure(function()
+				return iconv.convert(input, "CP949", "UTF-8")
+			end, ffi_strerror(EINVAL))
 		end)
 
 		it("should fail gracefully if given the wrong input encoding", function()
 			local input = "유저인터페이스"
-			local output, numBytesWritten = iconv.convert(input, "CP949", "UTF-8")
-
-			assertEquals(output, "")
-			assertEquals(numBytesWritten, 0)
+			assertFailure(function()
+				return iconv.convert(input, "CP949", "UTF-8")
+			end, ffi_strerror(EILSEQ))
 		end)
 
 		it("should fail gracefully if given an invalid input encoding", function()
 			local input = "유저인터페이스"
-			local output, numBytesWritten = iconv.convert(input, "INVALID_ENCODING", "UTF-8")
-
-			assertEquals(output, "")
-			assertEquals(numBytesWritten, 0)
+			assertFailure(function()
+				return iconv.convert(input, "INVALID_ENCODING", "UTF-8")
+			end, ffi_strerror(EINVAL))
 		end)
 
 		it("should fail gracefully if given an invalid output encoding", function()
 			local input = "유저인터페이스"
-			local output, numBytesWritten = iconv.convert(input, "UTF-8", "INVALID_ENCODING")
-
-			assertEquals(output, "")
-			assertEquals(numBytesWritten, 0)
+			assertFailure(function()
+				return iconv.convert(input, "UTF-8", "INVALID_ENCODING")
+			end, ffi_strerror(EINVAL))
 		end)
 
 		it("should throw if a non-string input was passed", function()
@@ -116,8 +138,9 @@ describe("iconv", function()
 
 		it("should be able to deal with large inputs", function()
 			local largeInput = string.rep("A", 1000000)
-			local output = iconv.convert(largeInput, "UTF-8", "CP949")
+			local output, message = iconv.convert(largeInput, "UTF-8", "CP949")
 			assertEquals(largeInput, output)
+			assertEquals(message, ffi_strerror(SUCCESS))
 		end)
 	end)
 end)
