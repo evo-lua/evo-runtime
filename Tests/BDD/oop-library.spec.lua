@@ -29,33 +29,29 @@ describe("oop", function()
 		it("should store the given class name in the class object", function()
 			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
 
-			assertEquals(FerociousKillerRabbit.name, "FerociousKillerRabbit")
+			local instance = FerociousKillerRabbit()
+
+
 			instance = FerociousKillerRabbit:new()
 			assertEquals(instance.class.name, "FerociousKillerRabbit")
 			instance = oop.new(FerociousKillerRabbit)
 			assertEquals(instance.class.name, "FerociousKillerRabbit")
 			instance = FerociousKillerRabbit()
 			assertEquals(instance.class.name, "FerociousKillerRabbit")
-			-- assertEquals(FerociousKillerRabbit().name, ">")
-			-- local didCallConstructor = false
-			-- function FerociousKillerRabbit:Construct()
-			-- 	didCallConstructor = true
-			-- 	local instance = {}
-			-- 	setmetatable(instance, self)
-			-- 	return instance
-			-- end
-			
+		end)
+	end)
+	describe("new", function()
+	
+		it("should execute the constructor if one was created", function()
+			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+			function FerociousKillerRabbit:initialize()
+				self.foo = 42
+			end
 
-			-- local didCallInheritedMethod = false
-			-- function FerociousKillerRabbit:DoSomething()
-			-- 	didCallInheritedMethod = true
-			-- end
+			instance = oop.new(FerociousKillerRabbit)
 
-			-- local someObject = FerociousKillerRabbit()
-			-- dump(someObject)
-			-- someObject:DoSomething()
-			-- assertTrue(didCallConstructor)
-			-- assertTrue(didCallInheritedMethod)
+
+			assertEquals(instance.foo, 42)
 		end)
 	end)
 end)
