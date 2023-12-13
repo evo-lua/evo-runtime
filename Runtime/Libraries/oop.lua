@@ -8,7 +8,12 @@ end
 
 function oop.class(className)
 	-- TODO validate string
-	return middleclass.class(className)
+	local class = middleclass.class(className)
+	-- local mt = getmetatable(class)
+	-- mt.__call = function(self, ...)
+	-- 	return self:Construct(...)
+	-- end
+	return class
 end
 
 function oop.new(class)
