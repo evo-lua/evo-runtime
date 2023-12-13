@@ -30,17 +30,15 @@ describe("oop", function()
 			local TestClass2 = oop.class("TestClass2")
 
 			local instance = TestClass2()
-
+			assertEquals(instance.class.name, "TestClass2")
 			instance = TestClass2:new()
 			assertEquals(instance.class.name, "TestClass2")
 			instance = oop.new(TestClass2)
 			assertEquals(instance.class.name, "TestClass2")
-			instance = TestClass2()
-			assertEquals(instance.class.name, "TestClass2")
 		end)
 
 		it("should throw if a class with the given name has already been registered", function()
-			local TestClass3 = oop.class("TestClass3")
+			oop.class("TestClass3")
 			assertThrows(function()
 				oop.class("TestClass3")
 			end, "Failed to register class TestClass3 (a class with this name already exists)")
@@ -79,7 +77,7 @@ describe("oop", function()
 			-- 	self.foo = 44
 			-- end
 
-			instance = oop.new(TestClass6)
+			local instance = oop.new(TestClass6)
 
 			-- assertEquals(FerociousKillerRabbit.foo, 42)
 			assertEquals(instance.foo, 42)
