@@ -11,4 +11,19 @@ describe("oop", function()
 			assertEquals(type(patch), "string")
 		end)
 	end)
+
+	describe("class", function()
+		it("should return ", function()
+			local MyClass = oop.class("MyClass")
+
+			local didCallInheritedMethod = false
+			function MyClass:DoSomething()
+				didCallInheritedMethod = true
+			end
+
+			local someObject = oop.new(MyClass) -- MyClass.Construct
+			someObject:DoSomething()
+			assertTrue(didCallInheritedMethod)
+		end)
+	end)
 end)
