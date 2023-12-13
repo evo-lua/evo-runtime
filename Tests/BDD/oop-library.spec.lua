@@ -13,55 +13,55 @@ describe("oop", function()
 	end)
 
 	describe("class", function()
-		it("should return ", function()
-			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+		it("should return a class definitiont that can be used to instantiate objects", function()
+			local TestClass1 = oop.class("TestClass1")
 
 			local didCallInheritedMethod = false
-			function FerociousKillerRabbit:DoSomething()
+			function TestClass1:DoSomething()
 				didCallInheritedMethod = true
 			end
 
-			local someObject = oop.new(FerociousKillerRabbit) -- FerociousKillerRabbit.Construct
+			local someObject = oop.new(TestClass1)
 			someObject:DoSomething()
 			assertTrue(didCallInheritedMethod)
 		end)
 		
 		it("should store the given class name in the class object", function()
-			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+			local TestClass2 = oop.class("TestClass2")
 
-			local instance = FerociousKillerRabbit()
+			local instance = TestClass2()
 
-
-			instance = FerociousKillerRabbit:new()
-			assertEquals(instance.class.name, "FerociousKillerRabbit")
-			instance = oop.new(FerociousKillerRabbit)
-			assertEquals(instance.class.name, "FerociousKillerRabbit")
-			instance = FerociousKillerRabbit()
-			assertEquals(instance.class.name, "FerociousKillerRabbit")
+			instance = TestClass2:new()
+			assertEquals(instance.class.name, "TestClass2")
+			instance = oop.new(TestClass2)
+			assertEquals(instance.class.name, "TestClass2")
+			instance = TestClass2()
+			assertEquals(instance.class.name, "TestClass2")
 		end)
 
 		it("should throw if a class with the given name has already been registered", function()
-			local MyClass = oop.class("MyClass")
+			local TestClass3 = oop.class("TestClass3")
 			assertThrows(function()
-				oop.class("MyClass")
-			end, "Failed to register class MyClass (a class with this name already exists")
+				oop.class("TestClass3")
+			end, "Failed to register class TestClass3 (a class with this name already exists)")
 		end)
 	end)
+
 	describe("new", function()
 		it("should allow each created instance to access class variables", function()
-			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
-			FerociousKillerRabbit.SOME_CONSTANT_VALUE = 1234
-			local 			instance = oop.new(FerociousKillerRabbit)
+			local TestClass4 = oop.class("TestClass4")
+			TestClass4.SOME_CONSTANT_VALUE = 1234
+			local 			instance = oop.new(TestClass4)
 
 			assertEquals(instance.SOME_CONSTANT_VALUE, 1234)
 		end)
 
 		it("should allow each created instance to access instance variables independently", function()
-			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+			local TestClass5 = oop.class("TestClass5")
 			
-			local instanceA = oop.new(FerociousKillerRabbit)
+			local instanceA = oop.new(TestClass5)
 			instanceA.foo = 12345
-			local instanceB = oop.new(FerociousKillerRabbit)
+			local instanceB = oop.new(TestClass5)
 			instanceB.foo = 54321
 
 			assertEquals(instanceA.foo, 12345)
@@ -69,9 +69,9 @@ describe("oop", function()
 		end)
 
 		it("should invoke the constructor if one was created", function()
-			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+			local TestClass6 = oop.class("TestClass6")
 
-			function FerociousKillerRabbit:initialize()
+			function TestClass6:initialize()
 				self.foo = 42
 			end
 
@@ -79,7 +79,7 @@ describe("oop", function()
 			-- 	self.foo = 44
 			-- end
 
-			instance = oop.new(FerociousKillerRabbit)
+			instance = oop.new(TestClass6)
 
 
 			-- assertEquals(FerociousKillerRabbit.foo, 42)
@@ -88,18 +88,18 @@ describe("oop", function()
 		end)
 
 		it("should invoke the constructor if one was created", function()
-			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+			local TestClass7 = oop.class("TestClass7")
 
 			-- function FerociousKillerRabbit:initialize()
 			-- 	self.foo = 42
 			-- end
 
-			function FerociousKillerRabbit:Construct()
+			function TestClass7:Construct()
 				self.foo = 44
 			end
 
 			-- instance = oop.new(FerociousKillerRabbit)
-			instance = FerociousKillerRabbit()
+			instance = TestClass7()
 
 
 			-- assertEquals(FerociousKillerRabbit.foo, 42)
