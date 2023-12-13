@@ -14,31 +14,31 @@ describe("oop", function()
 
 	describe("class", function()
 		it("should return ", function()
-			local AttackHelicopter = oop.class("AttackHelicopter")
+			local FlyingSpaghettiMonster = oop.class("FlyingSpaghettiMonster")
 
 			local didCallInheritedMethod = false
-			function AttackHelicopter:DoSomething()
+			function FlyingSpaghettiMonster:DoSomething()
 				didCallInheritedMethod = true
 			end
 
-			local someObject = oop.new(AttackHelicopter) -- AttackHelicopter.Construct
+			local someObject = oop.new(FlyingSpaghettiMonster) -- FlyingSpaghettiMonster.Construct
 			someObject:DoSomething()
 			assertTrue(didCallInheritedMethod)
 		end)
 		
 		it("should store the given class name in the class object", function()
-			local AttackHelicopter = oop.class("AttackHelicopter")
+			local FlyingSpaghettiMonster = oop.class("FlyingSpaghettiMonster")
 
-			assertEquals(AttackHelicopter.name, "AttackHelicopter")
-			instance = AttackHelicopter:new()
-			assertEquals(instance.class.name, "AttackHelicopter")
-			instance = oop.new(AttackHelicopter)
-			assertEquals(instance.class.name, "AttackHelicopter")
-			instance = AttackHelicopter()
-			assertEquals(instance.class.name, "AttackHelicopter")
-			-- assertEquals(AttackHelicopter().name, ">")
+			assertEquals(FlyingSpaghettiMonster.name, "FlyingSpaghettiMonster")
+			instance = FlyingSpaghettiMonster:new()
+			assertEquals(instance.class.name, "FlyingSpaghettiMonster")
+			instance = oop.new(FlyingSpaghettiMonster)
+			assertEquals(instance.class.name, "FlyingSpaghettiMonster")
+			instance = FlyingSpaghettiMonster()
+			assertEquals(instance.class.name, "FlyingSpaghettiMonster")
+			-- assertEquals(FlyingSpaghettiMonster().name, ">")
 			-- local didCallConstructor = false
-			-- function AttackHelicopter:Construct()
+			-- function FlyingSpaghettiMonster:Construct()
 			-- 	didCallConstructor = true
 			-- 	local instance = {}
 			-- 	setmetatable(instance, self)
@@ -47,11 +47,11 @@ describe("oop", function()
 			
 
 			-- local didCallInheritedMethod = false
-			-- function AttackHelicopter:DoSomething()
+			-- function FlyingSpaghettiMonster:DoSomething()
 			-- 	didCallInheritedMethod = true
 			-- end
 
-			-- local someObject = AttackHelicopter()
+			-- local someObject = FlyingSpaghettiMonster()
 			-- dump(someObject)
 			-- someObject:DoSomething()
 			-- assertTrue(didCallConstructor)
