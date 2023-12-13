@@ -14,16 +14,48 @@ describe("oop", function()
 
 	describe("class", function()
 		it("should return ", function()
-			local MyClass = oop.class("MyClass")
+			local AttackHelicopter = oop.class("AttackHelicopter")
 
 			local didCallInheritedMethod = false
-			function MyClass:DoSomething()
+			function AttackHelicopter:DoSomething()
 				didCallInheritedMethod = true
 			end
 
-			local someObject = oop.new(MyClass) -- MyClass.Construct
+			local someObject = oop.new(AttackHelicopter) -- AttackHelicopter.Construct
 			someObject:DoSomething()
 			assertTrue(didCallInheritedMethod)
+		end)
+		
+		it("should store the given class name in the class object", function()
+			local AttackHelicopter = oop.class("AttackHelicopter")
+
+			assertEquals(AttackHelicopter.name, "AttackHelicopter")
+			instance = AttackHelicopter:new()
+			assertEquals(instance.class.name, "AttackHelicopter")
+			instance = oop.new(AttackHelicopter)
+			assertEquals(instance.class.name, "AttackHelicopter")
+			instance = AttackHelicopter()
+			assertEquals(instance.class.name, "AttackHelicopter")
+			-- assertEquals(AttackHelicopter().name, ">")
+			-- local didCallConstructor = false
+			-- function AttackHelicopter:Construct()
+			-- 	didCallConstructor = true
+			-- 	local instance = {}
+			-- 	setmetatable(instance, self)
+			-- 	return instance
+			-- end
+			
+
+			-- local didCallInheritedMethod = false
+			-- function AttackHelicopter:DoSomething()
+			-- 	didCallInheritedMethod = true
+			-- end
+
+			-- local someObject = AttackHelicopter()
+			-- dump(someObject)
+			-- someObject:DoSomething()
+			-- assertTrue(didCallConstructor)
+			-- assertTrue(didCallInheritedMethod)
 		end)
 	end)
 end)
