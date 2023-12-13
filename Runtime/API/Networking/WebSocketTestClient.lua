@@ -1,6 +1,7 @@
+local oop = require("oop")
 local uv = require("uv")
 
-local WebSocketTestClient = {}
+local WebSocketTestClient = oop.registerClass("WebSocketTestClient")
 
 function WebSocketTestClient:Construct()
 	local instance = {

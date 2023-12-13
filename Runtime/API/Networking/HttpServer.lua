@@ -1,4 +1,5 @@
 local ffi = require("ffi")
+local oop = require("oop")
 local uv = require("uv")
 local uws = require("uws")
 
@@ -8,18 +9,17 @@ local validateString = validation.validateString
 
 local tonumber = tonumber
 
-local HttpServer = {
-	DEFAULT_PORT = 9001,
-	UWS_ROUTING_APIS = {
-		GET = uws.bindings.uws_webserver_add_get_route,
-		POST = uws.bindings.uws_webserver_add_post_route,
-		OPTIONS = uws.bindings.uws_webserver_add_options_route,
-		DELETE = uws.bindings.uws_webserver_add_delete_route,
-		PATCH = uws.bindings.uws_webserver_add_patch_route,
-		PUT = uws.bindings.uws_webserver_add_put_route,
-		HEAD = uws.bindings.uws_webserver_add_head_route,
-		ANY = uws.bindings.uws_webserver_add_any_route, -- Wildcard (default handler)
-	},
+local HttpServer = oop.class("HttpServer")
+HttpServer.DEFAULT_PORT = 9001
+HttpServer.UWS_ROUTING_APIS = {
+	GET = uws.bindings.uws_webserver_add_get_route,
+	POST = uws.bindings.uws_webserver_add_post_route,
+	OPTIONS = uws.bindings.uws_webserver_add_options_route,
+	DELETE = uws.bindings.uws_webserver_add_delete_route,
+	PATCH = uws.bindings.uws_webserver_add_patch_route,
+	PUT = uws.bindings.uws_webserver_add_put_route,
+	HEAD = uws.bindings.uws_webserver_add_head_route,
+	ANY = uws.bindings.uws_webserver_add_any_route, -- Wildcard (default handler)
 }
 
 function HttpServer:Construct()
@@ -58,13 +58,13 @@ function HttpServer:Construct()
 	return instance
 end
 
-HttpServer.__index = HttpServer
-HttpServer.__call = HttpServer.Construct
-HttpServer.__gc = function(self)
-	uws.bindings.uws_webserver_delete(self.nativeHandle)
-end
+-- HttpServer.__index = HttpServer
+-- HttpServer.__call = HttpServer.Construct
+-- HttpServer.__gc = function(self)
+-- uws.bindings.uws_webserver_delete(self.nativeHandle)
+-- end
 
-setmetatable(HttpServer, HttpServer)
+-- setmetatable(HttpServer, HttpServer)
 
 function HttpServer:StartListening(port)
 	port = port or HttpServer.DEFAULT_PORT

@@ -1,11 +1,11 @@
 local ffi = require("ffi")
+local oop = require("oop")
 local uv = require("uv")
 local uws = require("uws")
 local validation = require("validation")
 
-local WebSocketServer = {
-	DEFAULT_PORT = 9001,
-}
+local WebSocketServer = oop.class("WebSocketServer")
+WebSocketServer.DEFAULT_PORT = 9001
 
 local tonumber = tonumber
 
@@ -35,13 +35,13 @@ function WebSocketServer:Construct()
 	return instance
 end
 
-WebSocketServer.__index = WebSocketServer
-WebSocketServer.__call = WebSocketServer.Construct
-WebSocketServer.__gc = function(self)
-	uws.bindings.uws_webserver_delete(self.nativeHandle)
-end
+-- WebSocketServer.__index = WebSocketServer
+-- WebSocketServer.__call = WebSocketServer.Construct
+-- WebSocketServer.__gc = function(self)
+-- 	uws.bindings.uws_webserver_delete(self.nativeHandle)
+-- end
 
-setmetatable(WebSocketServer, WebSocketServer)
+-- setmetatable(WebSocketServer, WebSocketServer)
 
 function WebSocketServer:StartListening(port)
 	port = port or WebSocketServer.DEFAULT_PORT
