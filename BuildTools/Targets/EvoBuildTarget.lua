@@ -10,6 +10,7 @@ local EvoBuildTarget = {
 	luaSources = {
 		-- Integrated third-party code (no build system required)
 		"deps/kikito/inspect.lua/inspect.lua",
+		"deps/kikito/middleclass/middleclass.lua",
 		-- These modules may need some streamlining, so for now they're undocumented
 		"BuildTools/NinjaBuildTools.lua",
 		"BuildTools/NinjaFile.lua",
