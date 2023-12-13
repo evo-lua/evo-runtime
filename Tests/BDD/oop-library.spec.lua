@@ -14,31 +14,31 @@ describe("oop", function()
 
 	describe("class", function()
 		it("should return ", function()
-			local FlyingSpaghettiMonster = oop.class("FlyingSpaghettiMonster")
+			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
 
 			local didCallInheritedMethod = false
-			function FlyingSpaghettiMonster:DoSomething()
+			function FerociousKillerRabbit:DoSomething()
 				didCallInheritedMethod = true
 			end
 
-			local someObject = oop.new(FlyingSpaghettiMonster) -- FlyingSpaghettiMonster.Construct
+			local someObject = oop.new(FerociousKillerRabbit) -- FerociousKillerRabbit.Construct
 			someObject:DoSomething()
 			assertTrue(didCallInheritedMethod)
 		end)
 		
 		it("should store the given class name in the class object", function()
-			local FlyingSpaghettiMonster = oop.class("FlyingSpaghettiMonster")
+			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
 
-			assertEquals(FlyingSpaghettiMonster.name, "FlyingSpaghettiMonster")
-			instance = FlyingSpaghettiMonster:new()
-			assertEquals(instance.class.name, "FlyingSpaghettiMonster")
-			instance = oop.new(FlyingSpaghettiMonster)
-			assertEquals(instance.class.name, "FlyingSpaghettiMonster")
-			instance = FlyingSpaghettiMonster()
-			assertEquals(instance.class.name, "FlyingSpaghettiMonster")
-			-- assertEquals(FlyingSpaghettiMonster().name, ">")
+			assertEquals(FerociousKillerRabbit.name, "FerociousKillerRabbit")
+			instance = FerociousKillerRabbit:new()
+			assertEquals(instance.class.name, "FerociousKillerRabbit")
+			instance = oop.new(FerociousKillerRabbit)
+			assertEquals(instance.class.name, "FerociousKillerRabbit")
+			instance = FerociousKillerRabbit()
+			assertEquals(instance.class.name, "FerociousKillerRabbit")
+			-- assertEquals(FerociousKillerRabbit().name, ">")
 			-- local didCallConstructor = false
-			-- function FlyingSpaghettiMonster:Construct()
+			-- function FerociousKillerRabbit:Construct()
 			-- 	didCallConstructor = true
 			-- 	local instance = {}
 			-- 	setmetatable(instance, self)
@@ -47,11 +47,11 @@ describe("oop", function()
 			
 
 			-- local didCallInheritedMethod = false
-			-- function FlyingSpaghettiMonster:DoSomething()
+			-- function FerociousKillerRabbit:DoSomething()
 			-- 	didCallInheritedMethod = true
 			-- end
 
-			-- local someObject = FlyingSpaghettiMonster()
+			-- local someObject = FerociousKillerRabbit()
 			-- dump(someObject)
 			-- someObject:DoSomething()
 			-- assertTrue(didCallConstructor)
