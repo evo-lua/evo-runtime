@@ -90,7 +90,8 @@ describe("oop", function()
 			end
 
 			local instance = oop.new(TestClass7)
-
+			assertEquals(instance.foo, 44)
+			local instance = TestClass7()
 			assertEquals(instance.foo, 44)
 		end)
 
