@@ -70,3 +70,6 @@
 	path = deps/gfx-rs/wgpu-native
 	url = https://github.com/gfx-rs/wgpu-native.git
 	ignore = dirty
+[submodule "deps/kikito/middleclass"]
+	path = deps/kikito/middleclass
+	url = https://github.com/kikito/middleclass
