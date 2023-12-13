@@ -106,14 +106,5 @@ describe("oop", function()
 
 			assertEquals(instance.foo, 42)
 		end)
-
-		-- it("should set up the instance metatable so that accessing nonexistent fields throws", function()
-		-- 	local TestClass8 = oop.class("TestClass8")
-		-- 	local instance = TestClass8()
-		-- 	assertThrows(function()
-		-- 		instance.foo = 42
-		-- 		local foo = instance.bar
-		-- 	end, "???")
-		-- end)
 	end)
 end)
