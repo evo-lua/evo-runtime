@@ -2,7 +2,7 @@ local oop = require("oop")
 
 describe("oop", function()
 	describe("version", function()
-		it("hould return a semantic version string", function()
+		it("should return a semantic version string", function()
 			local versionString = oop.version()
 			local major, minor, patch = string.match(versionString, "(%d+).(%d+).(%d+)")
 
@@ -66,29 +66,23 @@ describe("oop", function()
 			assertEquals(instanceB.foo, 54321)
 		end)
 
-		it("should invoke the constructor if one was created", function()
+		it("should invoke the fallback constructor if one was created", function()
 			local TestClass6 = oop.class("TestClass6")
 
 			function TestClass6:initialize()
 				self.foo = 42
 			end
 
-			-- function FerociousKillerRabbit:Construct()
-			-- 	self.foo = 44
-			-- end
-
 			local instance = oop.new(TestClass6)
 
-			-- assertEquals(FerociousKillerRabbit.foo, 42)
 			assertEquals(instance.foo, 42)
-			-- assertEquals(instance.foo, 44)
 		end)
 
-		it("should invoke the standard constructor if one was created", function()
+		it("should invoke the custom constructor if one was created", function()
 			local TestClass7 = oop.class("TestClass7")
 
 			function TestClass7:initialize()
-				self.foo = 42
+				self.foo = 42 -- Fallback, should be ignored
 			end
 
 			function TestClass7:Construct()
@@ -96,10 +90,7 @@ describe("oop", function()
 			end
 
 			local instance = oop.new(TestClass7)
-			-- instance = TestClass7()
 
-			-- assertEquals(FerociousKillerRabbit.foo, 42)
-			-- assertEquals(instance.foo, 42)
 			assertEquals(instance.foo, 44)
 		end)
 
@@ -110,16 +101,9 @@ describe("oop", function()
 				self.foo = 42
 			end
 
-			-- function TestClass7:Construct()
-			-- 	self.foo = 44
-			-- end
-
 			local instance = oop.new(TestClass8)
-			-- instance = TestClass7()
 
-			-- assertEquals(FerociousKillerRabbit.foo, 42)
 			assertEquals(instance.foo, 42)
-			-- assertEquals(instance.foo, 44)
 		end)
 
 		-- it("should set up the instance metatable so that accessing nonexistent fields throws", function()
