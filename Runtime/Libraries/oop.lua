@@ -28,10 +28,11 @@ function oop.class(className)
 end
 
 function oop.new(class)
-	local instance = class.new(class)
-	function instance:initialize(...)
-		return instance:Construct(...)
-	end
+	class.initialize = class.Construct or class.initialize
+	local instance = class:new()
+	-- function instance:initialize(...)
+	-- 	return class:Construct(...)
+	-- end
 	return instance
 end
 
