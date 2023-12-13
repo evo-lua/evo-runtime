@@ -42,8 +42,17 @@ describe("oop", function()
 	end)
 	describe("new", function()
 	
-		it("should execute the constructor if one was created", function()
+		it("should allow each created instance to access class variables", function()
 			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+			FerociousKillerRabbit.SOME_CONSTANT_VALUE = 1234
+			local 			instance = oop.new(FerociousKillerRabbit)
+
+			assertEquals(instance.SOME_CONSTANT_VALUE, 1234)
+		end)
+
+		it("should invoke the constructor if one was created", function()
+			local FerociousKillerRabbit = oop.class("FerociousKillerRabbit")
+
 			function FerociousKillerRabbit:initialize()
 				self.foo = 42
 			end
@@ -51,6 +60,7 @@ describe("oop", function()
 			instance = oop.new(FerociousKillerRabbit)
 
 
+			-- assertEquals(FerociousKillerRabbit.foo, 42)
 			assertEquals(instance.foo, 42)
 		end)
 	end)
