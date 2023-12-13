@@ -22,12 +22,15 @@ HttpServer.UWS_ROUTING_APIS = {
 	ANY = uws.bindings.uws_webserver_add_any_route, -- Wildcard (default handler)
 }
 
+dump(HttpServer)
+
 function HttpServer:Construct()
-	local instance = {
-		pollingUpdateTimeInMilliseconds = 16,
-		pollingUpdateTimer = uv.new_timer(),
-		nativeHandle = uws.bindings.uws_webserver_create(),
-		registeredRoutes = {
+	local instance = oop.new(HttpServer)  -- HttpServer()
+	
+	instance.pollingUpdateTimeInMilliseconds = 16
+	instance.pollingUpdateTimer = uv.new_timer()
+	instance.nativeHandle = uws.bindings.uws_webserver_create()
+	instance.registeredRoutes = {
 			GET = {},
 			POST = {},
 			OPTIONS = {},
@@ -36,8 +39,8 @@ function HttpServer:Construct()
 			PUT = {},
 			HEAD = {},
 			ANY = {},
-		},
-	}
+		}
+	
 
 	local maxPayloadSize = uws.bindings.uws_webserver_payload_size(instance.nativeHandle)
 	instance.maxPayloadSize = tonumber(maxPayloadSize)
@@ -53,7 +56,7 @@ function HttpServer:Construct()
 	instance.preallocatedPayloadBuffer = payload
 	instance.preallocatedEventBuffer = preallocatedEventBuffer
 
-	setmetatable(instance, self)
+	-- setmetatable(instance, self)
 
 	return instance
 end
@@ -68,7 +71,7 @@ end
 
 function HttpServer:StartListening(port)
 	port = port or HttpServer.DEFAULT_PORT
-
+	printf("Starting HTTP server on port %d", port)
 	uws.bindings.uws_webserver_listen(self.nativeHandle, port)
 
 	self.pollingUpdateTimer:start(0, self.pollingUpdateTimeInMilliseconds, function()
