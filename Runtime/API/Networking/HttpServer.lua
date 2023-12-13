@@ -25,7 +25,7 @@ HttpServer.UWS_ROUTING_APIS = {
 dump(HttpServer)
 
 function HttpServer:Construct()
-	local instance = oop.new(HttpServer)  -- HttpServer()
+	local instance = self -- oop.new(HttpServer)  -- HttpServer()
 	
 	instance.pollingUpdateTimeInMilliseconds = 16
 	instance.pollingUpdateTimer = uv.new_timer()
@@ -71,7 +71,7 @@ end
 
 function HttpServer:StartListening(port)
 	port = port or HttpServer.DEFAULT_PORT
-	printf("Starting HTTP server on port %d", port)
+	printf("Starting HTTP server on port %d (handle: %s)", port, self.nativeHandle)
 	uws.bindings.uws_webserver_listen(self.nativeHandle, port)
 
 	self.pollingUpdateTimer:start(0, self.pollingUpdateTimeInMilliseconds, function()
