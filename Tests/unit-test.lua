@@ -9,6 +9,7 @@ local specFiles = {
 	"Tests/BDD/interop-library.spec.lua",
 	"Tests/BDD/json-library.spec.lua",
 	"Tests/BDD/miniz-library.spec.lua",
+	"Tests/BDD/oop-library.spec.lua",
 	"Tests/BDD/openssl-library.spec.lua",
 	"Tests/BDD/path-library.spec.lua",
 	"Tests/BDD/regex-library.spec.lua",
