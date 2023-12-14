@@ -3,6 +3,7 @@ max_line_length = false
 exclude_files = {
 	"luacheckrc",
 	"deps/",
+	"ninjabuild-*/",
 }
 ignore = {
 	"142", -- setting undefined field of global (likely a nonstandard extension)
