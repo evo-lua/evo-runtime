@@ -122,6 +122,7 @@ local EvoBuildTarget = {
 			"d3dcompiler",
 			"ntdll",
 			"iconv",
+			"opengl32",
 		},
 		OSX = {
 			"m",
