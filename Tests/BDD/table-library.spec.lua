@@ -61,4 +61,44 @@ describe("table", function()
 			assertEquals(table.count({ hi = 42, nil, 43, nil, meep = 44 }), 3)
 		end)
 	end)
+
+	describe("copy", function()
+		it("should create a deep copy if the given table contains another table", function()
+			local tableWithNestedSubtables = {
+				subtable = { 42 },
+				12345,
+			}
+			local deepCopy = table.copy(tableWithNestedSubtables)
+			local expectedResult = {
+				subtable = { 42 },
+				12345,
+			}
+
+			assertEquals(#deepCopy, #expectedResult)
+			assertEquals(table.count(deepCopy), table.count(expectedResult))
+			assertEquals(deepCopy[1], expectedResult[1])
+			assertEquals(deepCopy.subtable[1], expectedResult.subtable[1])
+			assert(deepCopy.subtable ~= expectedResult.subtable, "Both tables should not be identical")
+		end)
+	end)
+
+	describe("scopy", function()
+		it("should create a shallow copy if the given table contains another table", function()
+			local tableWithNestedSubtables = {
+				subtable = { 42 },
+				12345,
+			}
+			local shallowCopy = table.scopy(tableWithNestedSubtables)
+			local expectedResult = {
+				subtable = tableWithNestedSubtables.subtable,
+				12345,
+			}
+
+			assertEquals(#shallowCopy, #expectedResult)
+			assertEquals(table.count(shallowCopy), table.count(expectedResult))
+			assertEquals(shallowCopy[1], expectedResult[1])
+			assertEquals(shallowCopy.subtable[1], expectedResult.subtable[1])
+			assert(shallowCopy.subtable == expectedResult.subtable, "Both tables should be identical")
+		end)
+	end)
 end)
