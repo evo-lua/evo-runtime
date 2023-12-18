@@ -127,9 +127,9 @@ function etrace.status(event)
 	return etrace.registeredEvents[event]
 end
 
-function etrace.create(event, payload)
+function etrace.record(event, payload)
 	if etrace.registeredEvents[event] == nil then
-		error(format("Cannot create entry for unknown event %s", event), 0)
+		error(format("Cannot record unknown event %s", event), 0)
 	end
 
 	if etrace.registeredEvents[event] == false then
