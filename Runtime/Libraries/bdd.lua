@@ -22,8 +22,8 @@ local table_insert = table.insert
 
 local bdd = {
 	lastExecutedSpecFile = nil,
-	lastRegisteredSetupFunction = nil,
-	lastRegisteredTeardownFunction = nil,
+	registeredSetupFunctions = {},
+	registeredTeardownFunctions = {},
 	startTime = 0,
 	endTime = 0,
 	numCompletedTests = 0,
@@ -195,18 +195,18 @@ function bdd.describe(label, testFunction)
 	end
 
 	bdd.reportSection(label)
+	local setupStackSnapshot = { unpack(bdd.registeredSetupFunctions) }
+	local teardownStackSnapshot = { unpack(bdd.registeredTeardownFunctions) }
+
+	bdd.registeredSetupFunctions = {}
+	bdd.registeredTeardownFunctions = {}
 
 	bdd.reportIndentationLevel = bdd.reportIndentationLevel + 1
 
 	testFunction()
 
-	if bdd.lastRegisteredSetupFunction then
-		bdd.lastRegisteredSetupFunction = nil
-	end
-
-	if bdd.lastRegisteredTeardownFunction then
-		bdd.lastRegisteredTeardownFunction = nil
-	end
+	bdd.registeredSetupFunctions = setupStackSnapshot
+	bdd.registeredTeardownFunctions = teardownStackSnapshot
 
 	bdd.reportIndentationLevel = bdd.reportIndentationLevel - 1
 end
@@ -225,14 +225,14 @@ function bdd.it(label, testFunction)
 		return
 	end
 
-	if bdd.lastRegisteredSetupFunction then
-		bdd.lastRegisteredSetupFunction()
+	for _, setupFunction in ipairs(bdd.registeredSetupFunctions) do
+		setupFunction()
 	end
 
 	local success, errorDetails = xpcall(testFunction, errorHandler)
 
-	if bdd.lastRegisteredTeardownFunction then
-		bdd.lastRegisteredTeardownFunction()
+	for _, teardownFunction in ipairs(bdd.registeredTeardownFunctions) do
+		teardownFunction()
 	end
 
 	if success then
@@ -323,12 +323,12 @@ end
 
 function bdd.before(setupFunction)
 	validateFunction(setupFunction, "setupFunction")
-	bdd.lastRegisteredSetupFunction = setupFunction
+	table_insert(bdd.registeredSetupFunctions, setupFunction)
 end
 
 function bdd.after(teardownFunction)
 	validateFunction(teardownFunction, "teardownFunction")
-	bdd.lastRegisteredTeardownFunction = teardownFunction
+	table_insert(bdd.registeredTeardownFunctions, teardownFunction)
 end
 
 return bdd
