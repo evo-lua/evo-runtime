@@ -171,80 +171,91 @@ local function computeDiffString(firstValue, secondValue)
 end
 
 function assertions.assertEqualTables(firstValue, secondValue)
-    -- Custom comparison for mixed types
-    local function compare(a, b)
-        local typeA, typeB = type(a), type(b)
-        if typeA == typeB then
-            return a < b
-        else
-            return typeA < typeB
-        end
-    end
+	-- Custom comparison for mixed types
+	local function compare(a, b)
+		local typeA, typeB = type(a), type(b)
+		if typeA == typeB then
+			return a < b
+		else
+			return typeA < typeB
+		end
+	end
 
-    -- Function to generate diff string
-    local function computeDiffString(tableA, tableB)
-        local diffString = ""
-        for key, value in pairs(tableA) do
-            if type(value) == "table" then
-                if not tableB[key] or type(tableB[key]) ~= "table" then
-                    diffString = diffString .. "Key " .. tostring(key) .. " is a table in firstValue, but not in secondValue.\n"
-                end
-            else
-                if tableB[key] ~= value then
-                    diffString = diffString .. "Key " .. tostring(key) .. ": firstValue is " .. tostring(value) .. ", secondValue is " .. tostring(tableB[key]) .. "\n"
-                end
-            end
-        end
-        return diffString
-    end
+	-- Function to generate diff string
+	local function computeDiffString(tableA, tableB)
+		local diffString = ""
+		for key, value in pairs(tableA) do
+			if type(value) == "table" then
+				if not tableB[key] or type(tableB[key]) ~= "table" then
+					diffString = diffString
+						.. "Key "
+						.. tostring(key)
+						.. " is a table in firstValue, but not in secondValue.\n"
+				end
+			else
+				if tableB[key] ~= value then
+					diffString = diffString
+						.. "Key "
+						.. tostring(key)
+						.. ": firstValue is "
+						.. tostring(value)
+						.. ", secondValue is "
+						.. tostring(tableB[key])
+						.. "\n"
+				end
+			end
+		end
+		return diffString
+	end
 
-    -- Check for table type
-    if type(firstValue) ~= "table" or type(secondValue) ~= "table" then
-        error("Values are not tables")
-        return
-    end
+	-- Check for table type
+	if type(firstValue) ~= "table" or type(secondValue) ~= "table" then
+		error("Values are not tables")
+		return
+	end
 
-    -- Sorting and comparing keys
-    local function sortAndCompareKeys(tableA, tableB)
-        local keysA, keysB = {}, {}
-        for key in pairs(tableA) do
-            table.insert(keysA, key)
-        end
-        for key in pairs(tableB) do
-            table.insert(keysB, key)
-        end
-        table.sort(keysA, compare)
-        table.sort(keysB, compare)
+	-- Sorting and comparing keys
+	local function sortAndCompareKeys(tableA, tableB)
+		local keysA, keysB = {}, {}
+		for key in pairs(tableA) do
+			table.insert(keysA, key)
+		end
+		for key in pairs(tableB) do
+			table.insert(keysB, key)
+		end
+		table.sort(keysA, compare)
+		table.sort(keysB, compare)
 
-        if #keysA ~= #keysB then
-            return false
-        end
+		if #keysA ~= #keysB then
+			return false
+		end
 
-        for i = 1, #keysA do
-            if keysA[i] ~= keysB[i] then
-                return false
-            end
-        end
-        return true
-    end
+		for i = 1, #keysA do
+			if keysA[i] ~= keysB[i] then
+				return false
+			end
+		end
+		return true
+	end
 
-    -- Checking if keys are the same
-    if not sortAndCompareKeys(firstValue, secondValue) then
-        error("Keys do not match: \n" .. computeDiffString(firstValue, secondValue))
-        return
-    end
+	-- Checking if keys are the same
+	if not sortAndCompareKeys(firstValue, secondValue) then
+		error("Keys do not match: \n" .. computeDiffString(firstValue, secondValue))
+		return
+	end
 
-    -- Checking if values are the same
-    for key, value in pairs(firstValue) do
-        if type(value) == "table" and type(secondValue[key]) == "table" then
-            assertions.assertEqualTables(value, secondValue[key])
-        elseif value ~= secondValue[key] then
-            error("Values do not match for key " .. tostring(key) .. ": \n" .. computeDiffString(firstValue, secondValue))
-            return
-        end
-    end
+	-- Checking if values are the same
+	for key, value in pairs(firstValue) do
+		if type(value) == "table" and type(secondValue[key]) == "table" then
+			assertions.assertEqualTables(value, secondValue[key])
+		elseif value ~= secondValue[key] then
+			error(
+				"Values do not match for key " .. tostring(key) .. ": \n" .. computeDiffString(firstValue, secondValue)
+			)
+			return
+		end
+	end
 end
-
 
 function assertions.assertEqualBooleans(firstValue, secondValue)
 	if type(firstValue) ~= "boolean" or type(secondValue) ~= "boolean" then
