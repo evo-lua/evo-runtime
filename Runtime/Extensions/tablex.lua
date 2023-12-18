@@ -28,3 +28,27 @@ function table.count(object)
 
 	return count
 end
+
+function table.copy(source)
+	local deepCopy = {}
+
+	for key, value in pairs(source) do
+		if type(value) == "table" then
+			deepCopy[key] = table.copy(value)
+		else
+			deepCopy[key] = value
+		end
+	end
+
+	return deepCopy
+end
+
+function table.scopy(source)
+	local shallowCopy = {}
+
+	for key, value in pairs(source) do
+		shallowCopy[key] = value
+	end
+
+	return shallowCopy
+end
