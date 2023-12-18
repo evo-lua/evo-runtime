@@ -181,6 +181,23 @@ function assertions.assertEqualTables(firstValue, secondValue)
         end
     end
 
+    -- Function to generate diff string
+    local function computeDiffString(tableA, tableB)
+        local diffString = ""
+        for key, value in pairs(tableA) do
+            if type(value) == "table" then
+                if not tableB[key] or type(tableB[key]) ~= "table" then
+                    diffString = diffString .. "Key " .. tostring(key) .. " is a table in firstValue, but not in secondValue.\n"
+                end
+            else
+                if tableB[key] ~= value then
+                    diffString = diffString .. "Key " .. tostring(key) .. ": firstValue is " .. tostring(value) .. ", secondValue is " .. tostring(tableB[key]) .. "\n"
+                end
+            end
+        end
+        return diffString
+    end
+
     -- Check for table type
     if type(firstValue) ~= "table" or type(secondValue) ~= "table" then
         error("Values are not tables")
@@ -213,7 +230,7 @@ function assertions.assertEqualTables(firstValue, secondValue)
 
     -- Checking if keys are the same
     if not sortAndCompareKeys(firstValue, secondValue) then
-        error("Keys do not match")
+        error("Keys do not match: \n" .. computeDiffString(firstValue, secondValue))
         return
     end
 
@@ -222,11 +239,12 @@ function assertions.assertEqualTables(firstValue, secondValue)
         if type(value) == "table" and type(secondValue[key]) == "table" then
             assertions.assertEqualTables(value, secondValue[key])
         elseif value ~= secondValue[key] then
-            error("Values do not match for key " .. tostring(key))
+            error("Values do not match for key " .. tostring(key) .. ": \n" .. computeDiffString(firstValue, secondValue))
             return
         end
     end
 end
+
 
 function assertions.assertEqualBooleans(firstValue, secondValue)
 	if type(firstValue) ~= "boolean" or type(secondValue) ~= "boolean" then
