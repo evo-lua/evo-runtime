@@ -296,6 +296,85 @@ local function testDetailedFailingSectionsCase()
 	assertEquals(type(errorDetails[3].stackTrace), "string")
 end
 
+local function testSetupTeardownHookNestingCase()
+	_G.CALLSTACK = {} -- Yeah, yeah...
+
+	bdd.startTestRunner({ "Tests/Fixtures/before-after.spec.lua" })
+
+	local expectedCallStack = {
+		"start main chunk",
+		"continue main chunk",
+		"start section 1",
+		"setup subsection (section 1)",
+		"start subsection 1.1 (section 1)",
+		"teardown subsection (section 1)",
+		"setup subsection (section 1)",
+		"start subsection 1.2 (section 1)",
+		"teardown subsection (section 1)",
+		"continue section 1",
+		"start section 2 (section 1)",
+		"continue section 2 (section 1)",
+		"setup subsection (section 2)",
+		"start subsection 2.1 (section 2)",
+		"teardown subsection (section 2)",
+		"setup subsection (section 2)",
+		"start subsection 2.1 (section 2)",
+		"teardown subsection (section 2)",
+		"end of section 2 reached (section 1)",
+		"continue section 1",
+		"start section 3 (section 1)",
+		"start section 4",
+		"start subsection 3.1 (section 3)",
+		"start subsection 3.2 (section 3)",
+		"end of section 3 reached (section 1)",
+		"end of section 1 reached",
+		"continue with main chunk",
+		"start section 5",
+		"start subsection 5.1 (section 5)",
+		"EOF reached in main chunk",
+	}
+
+	for index, event in ipairs(expectedCallStack) do
+		local status = (event == _G.CALLSTACK[index]) and "OK" or "FAIL"
+		print(format("%s\t%s\tExpected: %s -- Found: %s", status, index, event, _G.CALLSTACK[index]))
+	end
+
+	assertEquals(#_G.CALLSTACK, #expectedCallStack)
+
+	assertEquals(_G.CALLSTACK[1], expectedCallStack[1])
+	assertEquals(_G.CALLSTACK[2], expectedCallStack[2])
+	assertEquals(_G.CALLSTACK[3], expectedCallStack[3])
+	assertEquals(_G.CALLSTACK[4], expectedCallStack[4])
+	assertEquals(_G.CALLSTACK[5], expectedCallStack[5])
+	assertEquals(_G.CALLSTACK[6], expectedCallStack[6])
+	assertEquals(_G.CALLSTACK[7], expectedCallStack[7])
+	assertEquals(_G.CALLSTACK[8], expectedCallStack[8])
+	assertEquals(_G.CALLSTACK[9], expectedCallStack[9])
+	assertEquals(_G.CALLSTACK[10], expectedCallStack[10])
+	assertEquals(_G.CALLSTACK[11], expectedCallStack[11])
+	assertEquals(_G.CALLSTACK[12], expectedCallStack[12])
+	assertEquals(_G.CALLSTACK[13], expectedCallStack[13])
+	assertEquals(_G.CALLSTACK[14], expectedCallStack[14])
+	assertEquals(_G.CALLSTACK[15], expectedCallStack[15])
+	assertEquals(_G.CALLSTACK[16], expectedCallStack[16])
+	assertEquals(_G.CALLSTACK[17], expectedCallStack[17])
+	assertEquals(_G.CALLSTACK[18], expectedCallStack[18])
+	assertEquals(_G.CALLSTACK[19], expectedCallStack[19])
+	assertEquals(_G.CALLSTACK[20], expectedCallStack[20])
+	assertEquals(_G.CALLSTACK[21], expectedCallStack[21])
+	assertEquals(_G.CALLSTACK[22], expectedCallStack[22])
+	assertEquals(_G.CALLSTACK[23], expectedCallStack[23])
+	assertEquals(_G.CALLSTACK[24], expectedCallStack[24])
+	assertEquals(_G.CALLSTACK[25], expectedCallStack[25])
+	assertEquals(_G.CALLSTACK[26], expectedCallStack[26])
+	assertEquals(_G.CALLSTACK[27], expectedCallStack[27])
+	assertEquals(_G.CALLSTACK[28], expectedCallStack[28])
+	assertEquals(_G.CALLSTACK[29], expectedCallStack[29])
+	assertEquals(_G.CALLSTACK[30], expectedCallStack[30])
+
+	_G.CALLSTACK = nil -- Is it a crime if there aren't any witnesses?
+end
+
 local function testStartTestRunner()
 	testNoFilesCase()
 	testInvalidFileCase()
@@ -313,6 +392,7 @@ local function testStartTestRunner()
 	testDetailedEmptyTestCase()
 	testDetailedPassingTestCase()
 	testDetailedFailingTestCase()
+	testSetupTeardownHookNestingCase()
 end
 
 testStartTestRunner()

@@ -4,6 +4,8 @@ local bdd = require("bdd")
 local console = require("console")
 
 local globalAliases = {
+	["after"] = bdd.after,
+	["before"] = bdd.before,
 	["buffer"] = require("string.buffer"),
 	["describe"] = bdd.describe,
 	["dump"] = debug.dump,
