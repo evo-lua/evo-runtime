@@ -180,7 +180,7 @@ function bdd.getReport()
 	return tostring(bdd.reportBuffer)
 end
 
-function bdd.describe(label, testFunction)
+function bdd.startSection(label, testFunction)
 	validateString(label, "label")
 	validateFunction(testFunction, "testFunction")
 
@@ -211,7 +211,7 @@ function bdd.describe(label, testFunction)
 	bdd.reportIndentationLevel = bdd.reportIndentationLevel - 1
 end
 
-function bdd.it(label, testFunction)
+function bdd.startSubsection(label, testFunction)
 	validateString(label, "label")
 	validateFunction(testFunction, "testFunction")
 
@@ -330,5 +330,8 @@ function bdd.after(teardownFunction)
 	validateFunction(teardownFunction, "teardownFunction")
 	table_insert(bdd.registeredTeardownFunctions, teardownFunction)
 end
+
+bdd.describe = bdd.startSection
+bdd.it = bdd.startSubsection
 
 return bdd
