@@ -47,13 +47,12 @@ function iconv.convert(input, inputEncoding, outputEncoding)
 		return nil, ffi_strerror(22) -- EINVAL
 	end
 
-	local inputBuffer = ffi.new("char[?]", #input, input) -- Wasteful, but iconv modifies the input buffer
+	local inputBuffer = ffi.new("char[?]", #input + 1, input) -- Wasteful, but iconv modifies the input buffer
 	local maxOutputBufferSize = #input * UTF_BYTES_PER_CODEPOINT -- Worst case scenario (also wasteful)
 	local outputBuffer = buffer.new(maxOutputBufferSize)
 	local ptr, len = outputBuffer:reserve(maxOutputBufferSize)
 
-	local result =
-		iconv.bindings.iconv_convert(inputBuffer, ffi.sizeof(inputBuffer), inputEncoding, outputEncoding, ptr, len)
+	local result = iconv.bindings.iconv_convert(inputBuffer, #input, inputEncoding, outputEncoding, ptr, len)
 
 	local numBytesWritten = tonumber(result.num_bytes_written)
 	outputBuffer:commit(numBytesWritten)
