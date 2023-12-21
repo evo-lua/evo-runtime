@@ -12,6 +12,7 @@ on:
       - main
     paths-ignore:
       - '**.md'
+      - 'changelog.lua'
   create:
     # Any branch or tag
 concurrency:
