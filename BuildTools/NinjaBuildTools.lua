@@ -3,6 +3,10 @@ local ffi = require("ffi")
 local isWindows = (ffi.os == "Windows")
 local isMacOS = (ffi.os == "OSX")
 
+local ENABLE_ASAN = false
+local ASAN_COMPILER_FLAGS = ENABLE_ASAN and " -fno-omit-frame-pointer -fsanitize=address" or ""
+local ASAN_LINKER_FLAGS = ENABLE_ASAN and " -fsanitize=address" or ""
+
 local C_BuildTools = {
 	OBJECT_FILE_EXTENSION = (isWindows and "obj" or "o"),
 	STATIC_LIBRARY_EXTENSION = (isWindows and ".lib" or ".a"),
@@ -12,11 +16,11 @@ local C_BuildTools = {
 	GCC_COMPILATION_SETTINGS = {
 		displayName = "GNU Compiler Collection",
 		CPP_COMPILER = "g++",
-		COMPILER_FLAGS = "-O3 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color -Wfatal-errors"
+		COMPILER_FLAGS = "-g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color -Wfatal-errors" .. ASAN_COMPILER_FLAGS
 			.. (isMacOS and " -ObjC++" or ""), -- Forced Objc++ should be removed once glfw3webgpu is merged into the GLFW core library... until then, it's a necessary evil
 		CPP_LINKER = "g++",
 		-- Must export the entry point of bytecode objects so that LuaJIT can load them via require()
-		LINKER_FLAGS = isWindows and "-Wl,--export-all-symbols" or "-rdynamic",
+		LINKER_FLAGS = isWindows and "-Wl,--export-all-symbols" or "-rdynamic" .. ASAN_LINKER_FLAGS,
 		CPP_ARCHIVER = "ar",
 		ARCHIVER_FLAGS = "-rcs",
 	},
