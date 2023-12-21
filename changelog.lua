@@ -1,4 +1,10 @@
 local changelog = {
+	["v0.0.15"] = {
+		newFeatures = {
+			"Introduced a new `etrace` library for realtime event tracing",
+			"Added `table.copy` (deep copy) and `table.scopy` (shallow copy) as extensions ",
+		},
+	},
 	["v0.0.14"] = {
 		newFeatures = {
 			"Added table.count as a convenient shorthand for counting all elements in a table",
