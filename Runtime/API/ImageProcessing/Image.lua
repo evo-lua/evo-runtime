@@ -26,7 +26,7 @@ local Image = {}
 -- 	return format("%s\n%s", transform_bold("cdata<Image>:"), firstRow)
 -- end
 
-Image.__call = function(_, width, height)
+Image.__call = function(_, pixelArray, width, height)
 	local image = ffi_new("stbi_image_t")
 	-- ffi_gc(image, stbi.bindings.stbi_image_free(image))
 -- 	vector.x, vector.y, vector.z = x or 0, y or 0, z or 0
