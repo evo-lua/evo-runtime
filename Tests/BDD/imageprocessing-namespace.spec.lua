@@ -9,6 +9,63 @@ local EXAMPLE_PNG_BUFFER = buffer.new():put(EXAMPLE_PNG_BYTES)
 local EXAMPLE_JPG_BUFFER = buffer.new():put(EXAMPLE_JPG_BYTES)
 local EXAMPLE_TGA_BUFFER = buffer.new():put(EXAMPLE_TGA_BYTES)
 
+
+-- local Image = require("Image")
+local Image = require("Runtime.API.ImageProcessing.Image")
+
+describe("Image", function()
+	dump(Image)
+	it("should export the stbi channel bit sizes as standardized pixel formats", function()
+		-- They probably won't ever change, but better safe than sorry
+		assertEquals(Image.PIXEL_FORMAT_MONOCHROME, 1)
+		assertEquals(Image.PIXEL_FORMAT_MONOCHROME_WITH_ALPHA, 2)
+		assertEquals(Image.PIXEL_FORMAT_RGB, 3)
+		assertEquals(Image.PIXEL_FORMAT_RGBA, 4)
+	end)
+
+	it("should default to using RGBA as the pixel format", function()
+		assertEquals(Image.DEFAULT_PIXEL_FORMAT, Image.PIXEL_FORMAT_RGBA)
+	end)
+
+	describe("Construct", function()
+		-- TBD pass invalid width, height
+		-- TBD truncate pixel array if size mismatch
+		it("should create an stbi image if a Lua string was given as the pixel array", function()
+			
+			local pixels = {
+				"\255\001\002\255",
+				"\254\003\004\255",
+				"\253\005\006\255",
+				"\252\007\008\255",
+				"\251\009\010\255",
+				"\250\011\012\255",
+			}
+			local pixelArray = table.concat(pixels, "")
+			local image = Image(2, 3, pixelArray, 4)
+
+			
+			assertEquals(image.width, 2)
+			assertEquals(image.height, 3)
+			assertEquals(image.pixels, "")
+			-- assertEquals(image.pixels, 3)
+			assertEquals(image.format, Image.PIXEL_FORMAT_RGBA)
+		end)
+
+		it("should default to generating a 256x256 pixel array if no dimensions were given", function()
+		
+		end)
+
+		it("should store the pixel data in RGBA format", function() 
+		
+		end)
+		
+		it("should add a finalizer that automatically frees the stbi image data", function()
+			
+		end)
+	end)
+	end)
+
+
 describe("C_ImageProcessing", function()
 	describe("DecodeFileContents", function()
 		it("should be able to decode BMP file contents from a string", function()
@@ -352,45 +409,6 @@ describe("C_ImageProcessing", function()
 			local expectedErrorMessage =
 				"Expected argument imageHeightInPixels to be a number value, but received a string value instead"
 			assertThrows(attemptToEncodeInvalidFile, expectedErrorMessage)
-		end)
-	end)
-
-	local Image = require("Image")
-
-	describe("Image", function()
-		describe("Construct", function()
-			-- TBD pass invalid width, height
-			-- TBD truncate pixel array if size mismatch
-			it("should create an stbi image if a Lua string was given as the pixel array", function()
-				
-				local pixels = {
-					"\255\001\002\255",
-					"\254\003\004\255",
-					"\253\005\006\255",
-					"\252\007\008\255",
-					"\251\009\010\255",
-					"\250\011\012\255",
-				}
-				local pixelArray = table.concat(pixels, "")
-				local image = Image(pixelArray, 2, 3)
-
-				assertEquals(image.width, 2)
-				assertEquals(image.height, 3)
-				assertEquals(image.pixels, 3)
-				assertEquals(image.format, Image.PIXEL_FORMAT_RGBA)
-			end)
-
-			it("should default to generating a 256x256 pixel array if no dimensions were given", function()
-			
-			end)
-
-			it("should store the pixel data in RGBA format", function() 
-			
-			end)
-			
-			it("should add a finalizer that automatically frees the stbi image data", function()
-				
-			end)
 		end)
 	end)
 end)
