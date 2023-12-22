@@ -359,9 +359,25 @@ describe("C_ImageProcessing", function()
 
 	describe("Image", function()
 		describe("Construct", function()
-			it("should allocate an stbi image of the given dimensions", function()
-			
-				local image = Image(32, 32)
+			-- TBD pass invalid width, height
+			-- TBD truncate pixel array if size mismatch
+			it("should create an stbi image if a Lua string was given as the pixel array", function()
+				
+				local pixels = {
+					"\255\001\002\255",
+					"\254\003\004\255",
+					"\253\005\006\255",
+					"\252\007\008\255",
+					"\251\009\010\255",
+					"\250\011\012\255",
+				}
+				local pixelArray = table.concat(pixels, "")
+				local image = Image(pixelArray, 2, 3)
+
+				assertEquals(image.width, 2)
+				assertEquals(image.height, 3)
+				assertEquals(image.pixels, 3)
+				assertEquals(image.format, Image.PIXEL_FORMAT_RGBA)
 			end)
 
 			it("should default to generating a 256x256 pixel array if no dimensions were given", function()
