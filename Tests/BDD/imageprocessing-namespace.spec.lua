@@ -27,6 +27,14 @@ describe("Image", function()
 		assertEquals(Image.DEFAULT_PIXEL_FORMAT, Image.PIXEL_FORMAT_RGBA)
 	end)
 
+	it("should export human-readable names for the pixel format values", function()
+		assertEquals(Image.PIXEL_FORMAT_NAMES[0], "Unknown (use source format)")
+		assertEquals(Image.PIXEL_FORMAT_NAMES[1], "Monochrome (no alpha channel)")
+		assertEquals(Image.PIXEL_FORMAT_NAMES[2], "Monochrome (with alpha channel)")
+		assertEquals(Image.PIXEL_FORMAT_NAMES[3], "RGB")
+		assertEquals(Image.PIXEL_FORMAT_NAMES[4], "RGBA")
+	end)
+
 	describe("Construct", function()
 		-- TBD pass invalid width, height
 		-- TBD truncate pixel array if size mismatch
