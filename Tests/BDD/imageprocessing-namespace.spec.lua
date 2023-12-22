@@ -355,6 +355,8 @@ describe("C_ImageProcessing", function()
 		end)
 	end)
 
+	local Image = require("Image")
+
 	describe("Image", function()
 		describe("Construct", function()
 			it("should allocate an stbi image of the given dimensions", function()
