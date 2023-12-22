@@ -21,21 +21,48 @@ local Image = {
 		[2]="Monochrome (with alpha channel)",
 		[3]="RGB",
 		[4]="RGBA",
-	}
+	},
 }
+
+-- TBD oop library?
+function transform.COLORIZE_CLASS_NAME(...)
+	return transform.magenta(...)
+end
+
+function transform.COLORIZE_CLASS_PROPERTY(...)
+
+end
+
+function transform.COLORIZE_PROPERTY_NAME(...)
+
+end
+
+-- TBD global aliases? (COLORIZE_CLASS_NAME)
 
 Image.DEFAULT_PIXEL_FORMAT = Image.PIXEL_FORMAT_RGBA
 
+
+-- TODO js console colors (class, instance)
+-- grey = prototype (class) name
+-- purple: class name
+-- blue/cyan?: instance name, property name
+-- magenta: string value
+-- green: bool
+-- others tbd
+-- needs updated transform library, support for RGB colors
 function Image:__tostring()
-	local pixelArraySizeInBytes = self.width * self.height * self.colorDepthBitsPerPixel
+	if getmetatable(self) == self then return transform.COLORIZE_CLASS_NAME("Image") end
+
+	local pixelArraySizeInBytes = self.width * self.height * self.pixelFormat
 	local formatted = {
-		width = format("%df", self.width),
+		width = format("%d", self.width),
 		height = format("%d", self.height),
-		bitsPerPixel = format("%d", self.colorDepthBitsPerPixel),
+		pixelFormat = format("%d", self.pixelFormat),
 		fileSize = format("%d", pixelArraySizeInBytes),
 	}
-	local firstRow = format("%10s %10s %10s", formatted.x, formatted.y, formatted.z)
-	return format("%s\n%s", transform_bold("cdata<Image>:"), firstRow)
+	-- local firstRow = format("%10s %10s %10s", formatted.x, formatted.y, formatted.z)
+	local firstRow = format("width: %10s", formatted.width)
+	return format("%s\n%s", transform_bold("<Image>:"), firstRow)
 end
 
 function Image:Construct(width, height, pixelArray, pixelFormat)
@@ -44,8 +71,10 @@ function Image:Construct(width, height, pixelArray, pixelFormat)
 		width = width,
 		height = height,
 		-- TODO GC anchor pixelArray
-		pixelFormat = pixelFormat or Image.DEFAULT_PIXEL_FORMAT, -- TODO assert default is RGBA
+		pixelFormat = pixelFormat or Image.DEFAULT_PIXEL_FORMAT,
 	}
+
+	setmetatable(instance, self)
 -- 	error("Called Construct")
 -- 	local image = ffi_new("stbi_image_t")
 -- 	image.width = width
