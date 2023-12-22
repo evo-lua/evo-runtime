@@ -15,19 +15,28 @@ local Image = {
 	PIXEL_FORMAT_MONOCHROME_WITH_ALPHA = stbi.COLOR_DEPTHS.CONVERT_TO_GREYSCALE_WITH_ALPHA,
 	PIXEL_FORMAT_RGB = stbi.COLOR_DEPTHS.CONVERT_TO_RGB,
 	PIXEL_FORMAT_RGBA = stbi.COLOR_DEPTHS.CONVERT_TO_RGB_WITH_ALPHA,
+	PIXEL_FORMAT_NAMES = {
+		[0]="Unknown (use source format)",
+		[1]="Monochrome (no alpha channel)",
+		[2]="Monochrome (with alpha channel)",
+		[3]="RGB",
+		[4]="RGBA",
+	}
 }
 
 Image.DEFAULT_PIXEL_FORMAT = Image.PIXEL_FORMAT_RGBA
 
--- function Image.__tostring(self)
--- 	local formatted = {
--- 		x = format("%.3f", self.x),
--- 		y = format("%.3f", self.y),
--- 		z = format("%.3f", self.z),
--- 	}
--- 	local firstRow = format("%10s %10s %10s", formatted.x, formatted.y, formatted.z)
--- 	return format("%s\n%s", transform_bold("cdata<Image>:"), firstRow)
--- end
+function Image:__tostring()
+	local pixelArraySizeInBytes = self.width * self.height * self.colorDepthBitsPerPixel
+	local formatted = {
+		width = format("%df", self.width),
+		height = format("%d", self.height),
+		bitsPerPixel = format("%d", self.colorDepthBitsPerPixel),
+		fileSize = format("%d", pixelArraySizeInBytes),
+	}
+	local firstRow = format("%10s %10s %10s", formatted.x, formatted.y, formatted.z)
+	return format("%s\n%s", transform_bold("cdata<Image>:"), firstRow)
+end
 
 function Image:Construct(width, height, pixelArray, pixelFormat)
 
