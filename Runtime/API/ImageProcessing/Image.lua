@@ -2,16 +2,19 @@ local ffi = require("ffi")
 local transform = require("transform")
 
 local format = format
+local ffi_copy =  ffi.copy
+local ffi_gc = ffi.gc
 local ffi_new = ffi.new
 local math_sqrt = math.sqrt
 local transform_bold = transform.bold
 
 ffi.cdef([[
-	typedef struct Image {
-		float x;
-		float y;
-		float z;
-	} Image;
+	typedef struct wtf_t {
+		int width;
+		int height;
+		//stbi_pixelbuffer_t data;
+		int channels;
+	} wtf_t;
 ]])
 
 local Image = {}
@@ -26,10 +29,41 @@ local Image = {}
 -- 	return format("%s\n%s", transform_bold("cdata<Image>:"), firstRow)
 -- end
 
-Image.__call = function(_, pixelArray, width, height)
+function Image.__call(_, width, height, pixelArray, pixelFormat)
+	error("Called Construct")
 	local image = ffi_new("stbi_image_t")
+	image.width = width
+	image.height = height
+	image.channels = pixelFormat or 4
+
+
+	if type(pixelArray) == "string" then
+
+		error("WOOT?", 0)
+		-- No way around this allocation?
+			   local dataSize = width * height * pixelFormat
+			   local buffer = ffi_new("stbi_unsigned_char_t[?]", dataSize)
+	   
+			   ffi_copy(buffer, pixelArray, #pixelArray)
+	   
+			   image.data = buffer
+	   
+			   ffi_gc(image, function(img)
+				print("[Image] Finalizer called")
+				   ffi.free(img.data) -- TBD stbi_image_free?
+			   end)
+		
+		
+		-- pixelArray = buffer.new(#pixelArray):put(pixelArray):ref()
+		-- TODO GC anchor?
+
+			else
+				error("Unsupported pixel array type", 0)
+				image.data = pixelArray
+
+	end
+
 	-- ffi_gc(image, stbi.bindings.stbi_image_free(image))
--- 	vector.x, vector.y, vector.z = x or 0, y or 0, z or 0
 	return image
 end
 
@@ -95,5 +129,16 @@ end
 -- end
 
 Image.__index = Image
+Image.__call = Image.Construct
 
-return ffi.metatype("Image", Image)
+-- local ct =  ffi.metatype(ffi.typeof("wtf_t"), {
+-- 	__call = function()
+-- 		error("???")
+-- 	end
+-- })
+-- dump(getmetatable(ct))
+-- print(ct, type(ct), ffi.typeof(ct))
+
+-- return ct
+
+return ffi.metatype("wtf_t", Image)
