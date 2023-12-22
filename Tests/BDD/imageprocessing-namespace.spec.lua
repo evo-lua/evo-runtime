@@ -354,4 +354,25 @@ describe("C_ImageProcessing", function()
 			assertThrows(attemptToEncodeInvalidFile, expectedErrorMessage)
 		end)
 	end)
+
+	describe("Image", function()
+		describe("Construct", function()
+			it("should allocate an stbi image of the given dimensions", function()
+			
+				local image = Image(32, 32)
+			end)
+
+			it("should default to generating a 256x256 pixel array if no dimensions were given", function()
+			
+			end)
+
+			it("should store the pixel data in RGBA format", function() 
+			
+			end)
+			
+			it("should add a finalizer that automatically frees the stbi image data", function()
+				
+			end)
+		end)
+	end)
 end)
