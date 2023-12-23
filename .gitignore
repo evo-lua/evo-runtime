@@ -40,3 +40,4 @@ ninjabuild-*/
 .ninja_log
 build.ninja
 CHANGELOG.MD
+.DS_Store
