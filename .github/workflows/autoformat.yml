@@ -10,6 +10,7 @@ on:
       - main
     paths-ignore:
       - "README.MD"
+      - '.gitignore'
 
 jobs:
   check-format:
