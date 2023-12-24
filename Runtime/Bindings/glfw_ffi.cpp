@@ -249,6 +249,7 @@ namespace glfw_ffi {
 		glfw_exports_table.glfw_hide_window = glfwHideWindow;
 		glfw_exports_table.glfw_show_window = glfwShowWindow;
 		glfw_exports_table.glfw_get_window_attrib = glfwGetWindowAttrib;
+		glfw_exports_table.glfw_set_window_icon = glfwSetWindowIcon;
 
 		glfw_exports_table.glfw_register_events = glfw_register_events;
 
