@@ -2,8 +2,9 @@ local ffi = require("ffi")
 local glfw = require("glfw")
 local stbi = require("stbi")
 
-local isWindows = (ffi.os == "Windows")
-if not isWindows then
+local isMacOS = (ffi.os == "OSX")
+if isMacOS then
+	-- CI runner gets stuck after the window closes. See https://github.com/glfw/glfw/issues/1766
 	return
 end
 
