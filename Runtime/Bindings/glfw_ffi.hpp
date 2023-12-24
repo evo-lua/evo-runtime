@@ -48,6 +48,7 @@ struct static_glfw_exports_table {
 	void (*glfw_hide_window)(GLFWwindow* window);
 	void (*glfw_show_window)(GLFWwindow* window);
 	int (*glfw_get_window_attrib)(GLFWwindow* window, int attrib);
+	void (*glfw_set_window_icon)(GLFWwindow* window, int count, const GLFWimage* images);
 
 	void (*glfw_register_events)(GLFWwindow* window, deferred_event_queue_t queue);
 
