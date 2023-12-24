@@ -2,12 +2,9 @@ local ffi = require("ffi")
 local glfw = require("glfw")
 local webgpu = require("webgpu")
 
-local isWindows = (ffi.os == "Windows")
-if not isWindows then
-	local transform = require("transform")
-	-- GitHub's Unix runners can't request adapters (might not have a "real" GPU or at least it isn't exposed)
-	-- On OSX, the issue is, presumably, that WebView and GLFW both try to manage the shared app delegate
-	print(transform.yellow("Skipping WebGPU/GLFW surface test (currently only works on Windows runners)"))
+local isMacOS = (ffi.os == "OSX")
+if isMacOS then
+	-- CI runner gets stuck after the window closes. See https://github.com/glfw/glfw/issues/1766
 	return
 end
 
