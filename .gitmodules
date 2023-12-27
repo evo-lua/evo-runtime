@@ -70,3 +70,7 @@
 	path = deps/gfx-rs/wgpu-native
 	url = https://github.com/gfx-rs/wgpu-native.git
 	ignore = dirty
+[submodule "deps/mikke89/RmlUi"]
+	path = deps/mikke89/RmlUi
+	url = https://github.com/mikke89/RmlUi.git
+	ignore = dirty
