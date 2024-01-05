@@ -2,6 +2,7 @@
 
 #include <RmlUi/Core.h>
 #include <RmlUi_Platform_GLFW.h>
+#include <RmlUi_Renderer_WebGPU.hpp>
 
 // Workaround for RMLUI_STATIC_LIB not being propagated on Windows (revisit later, maybe)
 #include <RmlUi_Platform_GLFW.cpp>
@@ -33,6 +34,23 @@ void rml_destroy_glfw_system_interface(SystemInterface_GLFW* glfw_system_interfa
 void rml_set_system_interface(SystemInterface_GLFW* glfw_system_interface) {
 	if(!glfw_system_interface) return;
 	Rml::SetSystemInterface(glfw_system_interface);
+}
+
+RenderInterface_WebGPU* rml_create_wgpu_render_interface(WGPUDevice wgpuDevice, deferred_event_queue_t queue) {
+	if(!wgpuDevice) return nullptr;
+	if(!queue) return nullptr;
+
+	return new RenderInterface_WebGPU(wgpuDevice, queue);
+}
+
+void rml_destroy_wgpu_render_interface(RenderInterface_WebGPU* wgpu_render_interface) {
+	delete wgpu_render_interface;
+}
+
+void rml_set_render_interface(RenderInterface_WebGPU* wgpu_render_interface) {
+	if(!wgpu_render_interface) return;
+
+	Rml::SetRenderInterface(wgpu_render_interface);
 }
 
 bool rml_load_font_face(const char* file_path, bool is_fallback_face) {
@@ -83,6 +101,10 @@ void rml_context_remove(const char* name) {
 	Rml::RemoveContext(name);
 }
 
+void rml_release_compiled_geometry(rml_geometry_info_t* geometry) {
+	delete geometry;
+}
+
 namespace rml_ffi {
 
 	void* getExportsTable() {
@@ -93,7 +115,11 @@ namespace rml_ffi {
 		exports_table.rml_shutdown = &rml_shutdown;
 		exports_table.rml_create_glfw_system_interface = &rml_create_glfw_system_interface;
 		exports_table.rml_destroy_glfw_system_interface = &rml_destroy_glfw_system_interface;
+		exports_table.rml_create_wgpu_render_interface = &rml_create_wgpu_render_interface;
+		exports_table.rml_destroy_wgpu_render_interface = &rml_destroy_wgpu_render_interface;
+		exports_table.rml_release_compiled_geometry = &rml_release_compiled_geometry;
 		exports_table.rml_set_system_interface = &rml_set_system_interface;
+		exports_table.rml_set_render_interface = &rml_set_render_interface;
 		exports_table.rml_context_create = &rml_context_create;
 		exports_table.rml_context_load_document = &rml_context_load_document;
 		exports_table.rml_document_show = &rml_document_show;
