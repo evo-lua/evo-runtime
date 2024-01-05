@@ -7,6 +7,7 @@ local jit = require("jit")
 local json = require("json")
 local miniz = require("miniz")
 local regex = require("regex")
+local rml = require("rml")
 local stbi = require("stbi")
 local stduuid = require("stduuid")
 local uv = require("uv")
@@ -174,6 +175,7 @@ function evo.getVersionText()
 		rapidjson = json.version(),
 		openssl = crypto.version(),
 		pcre2 = semanticPcre2VersionString,
+		rml = rml.version(),
 		stbi = stbi.version(),
 		stduuid = stduuid.version(),
 		uws = uws.version(),
@@ -187,6 +189,7 @@ function evo.getVersionText()
 		"openssl",
 		"pcre2",
 		"rapidjson",
+		"rml",
 		"stbi",
 		"stduuid",
 		"uws",

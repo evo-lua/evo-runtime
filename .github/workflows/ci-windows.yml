@@ -91,6 +91,9 @@ jobs:
       - name: Build uwebsockets
         run: deps/uws-windowsbuild.sh && ls ninjabuild-windows
 
+      - name: Build RmlUI with FreeType
+        run: deps/rml-windowsbuild.sh && ls ninjabuild-windows
+
       - name: Build runtime
         run: ls && ./windowsbuild.cmd && ls ninjabuild-windows && cp ninjabuild-windows/evo.exe . && ls
 

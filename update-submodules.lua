@@ -137,6 +137,18 @@ local submodules = {
 		abbreviatedName = "lpeg",
 		displayName = "LPEG",
 	},
+	rml = {
+		path = "deps/mikke89/RmlUi",
+		branch = "master",
+		abbreviatedName = "rml",
+		displayName = "RML",
+	},
+	freetype = {
+		path = "deps/freetype/freetype",
+		branch = "master",
+		abbreviatedName = "freetype",
+		displayName = "FreeType",
+	},
 }
 
 local SubmoduleUpdater = {}

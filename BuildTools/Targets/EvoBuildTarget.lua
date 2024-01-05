@@ -28,6 +28,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/glfw.lua",
 		"Runtime/Bindings/iconv.lua",
 		"Runtime/Bindings/interop.lua",
+		"Runtime/Bindings/rml.lua",
 		"Runtime/Bindings/stbi.lua",
 		"Runtime/Bindings/stduuid.lua",
 		"Runtime/Bindings/uws.lua",
@@ -56,6 +57,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/iconv_ffi.cpp",
 		"Runtime/Bindings/interop_ffi.cpp",
 		"Runtime/Bindings/lminiz.cpp",
+		"Runtime/Bindings/rml_ffi.cpp",
 		"Runtime/Bindings/stbi_ffi.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",
@@ -87,6 +89,8 @@ local EvoBuildTarget = {
 		"deps/uNetworking/uWebSockets/uSockets/src",
 		"deps/xpol/lua-rapidjson/src",
 		"deps/xpol/lua-rapidjson/rapidjson/include",
+		"deps/mikke89/RmlUi/Backends",
+		"deps/mikke89/RmlUi/Include",
 	},
 	staticLibraries = {
 		"libluajit.a",
@@ -102,6 +106,8 @@ local EvoBuildTarget = {
 		"libwgpu_native.a",
 		"uSockets.a",
 		"zlibstatic.a",
+		"libRmlCore.a",
+		"libfreetype.a",
 	},
 	sharedLibraries = {
 		Windows = {

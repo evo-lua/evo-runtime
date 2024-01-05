@@ -12,6 +12,7 @@ extern "C" {
 #include "iconv_ffi.hpp"
 #include "interop_ffi.hpp"
 #include "rapidjson.hpp"
+#include "rml_ffi.hpp"
 #include "stbi_ffi.hpp"
 #include "stduuid_ffi.hpp"
 #include "uws_ffi.hpp"
@@ -41,6 +42,7 @@ int main(int argc, char* argv[]) {
 	luaVM->BindStaticLibraryExports("interop", interop_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("uws", uws_ffi::getExportsTable());
+	luaVM->BindStaticLibraryExports("rml", rml_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("stbi", stbi_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("stduuid", stduuid_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("webgpu", webgpu_ffi::getExportsTable());
