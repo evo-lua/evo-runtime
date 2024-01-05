@@ -105,6 +105,62 @@ void rml_release_compiled_geometry(rml_geometry_info_t* geometry) {
 	delete geometry;
 }
 
+bool rml_process_key_callback(rml_context_t context_pointer, int key, int action, int mods) {
+	if(!context_pointer) return true;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	return RmlGLFW::ProcessKeyCallback(context, key, action, mods);
+}
+
+bool rml_process_char_callback(rml_context_t context_pointer, unsigned int codepoint) {
+	if(!context_pointer) return true;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	return RmlGLFW::ProcessCharCallback(context, codepoint);
+}
+
+bool rml_process_cursor_enter_callback(rml_context_t context_pointer, int entered) {
+	if(!context_pointer) return true;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	return RmlGLFW::ProcessCursorEnterCallback(context, entered);
+}
+
+bool rml_process_cursor_pos_callback(rml_context_t context_pointer, double xpos, double ypos, int mods) {
+	if(!context_pointer) return true;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	return RmlGLFW::ProcessCursorPosCallback(context, xpos, ypos, mods);
+}
+
+bool rml_process_mouse_button_callback(rml_context_t context_pointer, int button, int action, int mods) {
+	if(!context_pointer) return true;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	return RmlGLFW::ProcessMouseButtonCallback(context, button, action, mods);
+}
+
+bool rml_process_scroll_callback(rml_context_t context_pointer, double yoffset, int mods) {
+	if(!context_pointer) return true;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	return RmlGLFW::ProcessScrollCallback(context, yoffset, mods);
+}
+
+void rml_process_framebuffer_size_callback(rml_context_t context_pointer, int width, int height) {
+	if(!context_pointer) return;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	RmlGLFW::ProcessFramebufferSizeCallback(context, width, height);
+}
+
+void rml_process_content_scale_callback(rml_context_t context_pointer, float xscale) {
+	if(!context_pointer) return;
+
+	auto context = static_cast<Rml::Context*>(context_pointer);
+	RmlGLFW::ProcessContentScaleCallback(context, xscale);
+}
+
 namespace rml_ffi {
 
 	void* getExportsTable() {
@@ -127,6 +183,14 @@ namespace rml_ffi {
 		exports_table.rml_context_render = &rml_context_render;
 		exports_table.rml_context_remove = &rml_context_remove;
 		exports_table.rml_load_font_face = &rml_load_font_face;
+		exports_table.rml_process_key_callback = &rml_process_key_callback;
+		exports_table.rml_process_char_callback = &rml_process_char_callback;
+		exports_table.rml_process_cursor_enter_callback = &rml_process_cursor_enter_callback;
+		exports_table.rml_process_cursor_pos_callback = &rml_process_cursor_pos_callback;
+		exports_table.rml_process_mouse_button_callback = &rml_process_mouse_button_callback;
+		exports_table.rml_process_scroll_callback = &rml_process_scroll_callback;
+		exports_table.rml_process_framebuffer_size_callback = &rml_process_framebuffer_size_callback;
+		exports_table.rml_process_content_scale_callback = &rml_process_content_scale_callback;
 
 		return &exports_table;
 	}
