@@ -3,6 +3,8 @@ passedByValue
 
 // Debug functions left in on purpose
 unusedFunction:Runtime/LuaVirtualMachine.cpp
+// Callback-based interface (hooks that will be called by RML)
+unusedFunction:Runtime/Bindings/RmlUi_Renderer_WebGPU.cpp
 
 // FFI exports used from Lua, which cppcheck can't see
 unusedStructMember:Runtime/Bindings/crypto_ffi.hpp

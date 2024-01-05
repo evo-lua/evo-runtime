@@ -1,0 +1,16 @@
+<rml>
+	<head>
+		<title>Demo</title>
+		<style>
+			body {
+				width: 300dp;
+				height: 225dp;
+				margin: auto;
+                font-family: Roboto;
+			}
+		</style>
+	</head>
+	<body>
+		This is a sample.
+	</body>
+</rml>

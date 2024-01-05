@@ -57,6 +57,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/iconv_ffi.cpp",
 		"Runtime/Bindings/interop_ffi.cpp",
 		"Runtime/Bindings/lminiz.cpp",
+		"Runtime/Bindings/RmlUi_Renderer_WebGPU.cpp",
 		"Runtime/Bindings/rml_ffi.cpp",
 		"Runtime/Bindings/stbi_ffi.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
