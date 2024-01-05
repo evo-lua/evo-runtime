@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RmlUi_Platform_GLFW.h>
+
 #include <webgpu.h>
 
 typedef WGPUDevice wgpu_device_t;
@@ -10,6 +12,11 @@ struct static_rml_exports_table {
 	const char* (*rml_version)(void);
 	bool (*rml_initialise)(void);
 	void (*rml_shutdown)(void);
+
+	// GLFW integration
+	SystemInterface_GLFW* (*rml_create_glfw_system_interface)(void);
+	void (*rml_destroy_glfw_system_interface)(SystemInterface_GLFW* glfw_system_interface);
+	void (*rml_set_system_interface)(SystemInterface_GLFW* glfw_system_interface);
 
 	// Rml::Document APIs
 	void (*rml_document_show)(rml_document_t document);
