@@ -108,6 +108,7 @@ local EvoBuildTarget = {
 		"uSockets.a",
 		"zlibstatic.a",
 		"libRmlCore.a",
+		"libRmlLua.a",
 		"libfreetype.a",
 	},
 	sharedLibraries = {

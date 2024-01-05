@@ -1,5 +1,6 @@
 #pragma once
 
+#include <RmlUi/Lua.h>
 #include <RmlUi_Platform_GLFW.h>
 #include <RmlUi_Renderer_WebGPU.hpp>
 
@@ -49,5 +50,7 @@ struct static_rml_exports_table {
 };
 
 namespace rml_ffi {
+	void assignLuaState(lua_State* L);
+	lua_State* getAssignedLuaState();
 	void* getExportsTable();
 }
