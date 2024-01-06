@@ -78,3 +78,7 @@
 	path = deps/freetype/freetype
 	url = https://github.com/freetype/freetype.git
 	ignore = dirty
+[submodule "deps/LabSound/LabSound"]
+	path = deps/LabSound/LabSound
+	url = https://github.com/LabSound/LabSound.git
+	ignore = dirty
