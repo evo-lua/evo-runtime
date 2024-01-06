@@ -51,6 +51,8 @@ int main(int argc, char* argv[]) {
 	luaVM->CreateGlobalNamespace("C_Runtime");
 	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
 
+	rml_ffi::assignLuaState(luaVM->GetState());
+
 	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
 	uv_loop_t* loop = luv_loop(luaVM->GetState());
 	auto uwsEventLoop = uws_ffi::assignEventLoop(loop);

@@ -1,6 +1,7 @@
 #define RMLUI_STATIC_LIB
 
 #include <RmlUi/Core.h>
+#include <RmlUi/Lua.h>
 #include <RmlUi_Platform_GLFW.h>
 #include <RmlUi_Renderer_WebGPU.hpp>
 
@@ -16,7 +17,22 @@ const char* rml_version() {
 }
 
 bool rml_initialise() {
-	return Rml::Initialise();
+	bool success = Rml::Initialise();
+	lua_State* assignedLuaState = rml_ffi::getAssignedLuaState();
+
+	// RML overwrites the builtin print function, which is arguably undesirable in this context
+	lua_getglobal(assignedLuaState, "print");
+	lua_setfield(assignedLuaState, LUA_REGISTRYINDEX, "original_print");
+
+	Rml::Lua::Initialise(assignedLuaState);
+
+	lua_getfield(assignedLuaState, LUA_REGISTRYINDEX, "original_print");
+	lua_setglobal(assignedLuaState, "print");
+
+	lua_pushnil(assignedLuaState);
+	lua_setfield(assignedLuaState, LUA_REGISTRYINDEX, "original_print");
+
+	return success;
 }
 
 void rml_shutdown() {
@@ -162,6 +178,14 @@ void rml_process_content_scale_callback(rml_context_t context_pointer, float xsc
 }
 
 namespace rml_ffi {
+	lua_State* assignedLuaState;
+	void assignLuaState(lua_State* L) {
+		assignedLuaState = L;
+	}
+
+	lua_State* getAssignedLuaState() {
+		return rml_ffi::assignedLuaState;
+	}
 
 	void* getExportsTable() {
 		static struct static_rml_exports_table exports_table;
