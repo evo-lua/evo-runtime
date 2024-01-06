@@ -1,5 +1,4 @@
 local inspect = require("inspect")
-local transform = require("transform")
 
 local print = print
 local format = string.format
@@ -30,13 +29,17 @@ end
 function debug.sbuf(sbuf)
 	local hexBytes = {}
 	local ptr, len = sbuf:ref()
-	for i = 1, len do
-		tinsert(hexBytes, string.format("%02x", ptr[i - 1])) -- 0-based C index
+	for index = 1, len do
+		local cIndex = index - 1
+		local hexByte = format("%02X", ptr[cIndex])
+		local isLastByte = (index == len)
+		local optionalComma = isLastByte and "" or ","
+		tinsert(hexBytes, hexByte .. optionalComma)
 	end
 
 	local isEmpty = (#sbuf == 0)
 	local bytes = isEmpty and "" or table.concat(hexBytes, " ")
-	return format("%s %s", transform.bold("userdata<Buffer>:"), bytes)
+	return format("%s [%s]", "Buffer", bytes)
 end
 
 debug.dump = dump
