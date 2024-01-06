@@ -13,3 +13,4 @@ deps/zlib-windowsbuild.sh
 deps/pcre-windowsbuild.sh
 deps/glfw-windowsbuild.sh
 deps/rml-windowsbuild.sh
+deps/labsound-windowsbuild.sh
