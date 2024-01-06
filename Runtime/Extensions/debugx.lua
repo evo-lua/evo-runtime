@@ -27,6 +27,11 @@ local function dump(object, options)
 end
 
 function debug.sbuf(sbuf)
+	if type(sbuf.ref) ~= "function" then
+		-- Not a LuaJIT string buffer
+		return tostring(sbuf)
+	end
+
 	local hexBytes = {}
 	local ptr, len = sbuf:ref()
 	for index = 1, len do
