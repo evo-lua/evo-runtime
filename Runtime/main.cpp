@@ -11,6 +11,7 @@ extern "C" {
 #include "glfw_ffi.hpp"
 #include "iconv_ffi.hpp"
 #include "interop_ffi.hpp"
+#include "labsound_ffi.hpp"
 #include "rapidjson.hpp"
 #include "rml_ffi.hpp"
 #include "stbi_ffi.hpp"
@@ -40,6 +41,7 @@ int main(int argc, char* argv[]) {
 	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("iconv", iconv_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("interop", interop_ffi::getExportsTable());
+	luaVM->BindStaticLibraryExports("labsound", labsound_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("uws", uws_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("rml", rml_ffi::getExportsTable());

@@ -5,6 +5,7 @@ local ffi = require("ffi")
 local glfw = require("glfw")
 local jit = require("jit")
 local json = require("json")
+local labsound = require("labsound")
 local miniz = require("miniz")
 local regex = require("regex")
 local rml = require("rml")
@@ -170,6 +171,7 @@ function evo.getVersionText()
 
 	local embeddedLibraryVersions = {
 		glfw = glfw.version(),
+		labsound = labsound.version(),
 		libuv = uv.version_string(),
 		miniz = miniz.version(),
 		rapidjson = json.version(),
@@ -184,6 +186,7 @@ function evo.getVersionText()
 		zlib = semanticZlibVersionString,
 		-- Since the ordering of pairs isn't well-defined, enforce alphabetic order for the CLI output
 		"glfw",
+		"labsound",
 		"libuv",
 		"miniz",
 		"openssl",

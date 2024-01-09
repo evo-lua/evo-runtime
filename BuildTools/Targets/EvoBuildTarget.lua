@@ -28,6 +28,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/glfw.lua",
 		"Runtime/Bindings/iconv.lua",
 		"Runtime/Bindings/interop.lua",
+		"Runtime/Bindings/labsound.lua",
 		"Runtime/Bindings/rml.lua",
 		"Runtime/Bindings/stbi.lua",
 		"Runtime/Bindings/stduuid.lua",
@@ -56,6 +57,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/glfw_ffi.cpp",
 		"Runtime/Bindings/iconv_ffi.cpp",
 		"Runtime/Bindings/interop_ffi.cpp",
+		"Runtime/Bindings/labsound_ffi.cpp",
 		"Runtime/Bindings/lminiz.cpp",
 		"Runtime/Bindings/RmlUi_Renderer_WebGPU.cpp",
 		"Runtime/Bindings/rml_ffi.cpp",
@@ -76,6 +78,7 @@ local EvoBuildTarget = {
 		"deps",
 		"deps/eliemichel/glfw3webgpu",
 		"deps/glfw/glfw/include",
+		"deps/LabSound/LabSound/include",
 		"deps/LuaJIT/LuaJIT/src",
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
@@ -110,6 +113,9 @@ local EvoBuildTarget = {
 		"libRmlCore.a",
 		"libRmlLua.a",
 		"libfreetype.a",
+		"libLabSound.a",
+		"libLabSoundRtAudio.a",
+		"libnyquist.a",
 	},
 	sharedLibraries = {
 		Windows = {
@@ -132,6 +138,10 @@ local EvoBuildTarget = {
 			"ntdll",
 			"iconv",
 			"opengl32",
+			"mfplat",
+			"wmcodecdspuuid",
+			"mfuuid",
+			"ksuser",
 		},
 		OSX = {
 			"m",
@@ -143,6 +153,8 @@ local EvoBuildTarget = {
 			"QuartzCore",
 			"Metal",
 			"WebKit",
+			"Accelerate",
+			"CoreAudio",
 		},
 		Linux = {
 			"m",
@@ -167,6 +179,8 @@ local EvoBuildTarget = {
 			"javascriptcoregtk-4.0",
 			"gobject-2.0",
 			"glib-2.0",
+			"pulse",
+			"pulse-simple",
 		},
 	},
 	staticallyLinkStandardLibraries = {

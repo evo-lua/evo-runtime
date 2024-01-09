@@ -86,6 +86,9 @@ jobs:
       - name: Build RmlUI with FreeType
         run: deps/rml-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build LabSound
+        run: deps/labsound-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build runtime
         run: ls && ./unixbuild.sh && ls ninjabuild-unix && cp ninjabuild-unix/evo . && ls
 

@@ -12,6 +12,7 @@ local testFiles = {
 	"Tests/Integration/glfw-window-events.lua",
 	"Tests/Integration/glfw-window-size.lua",
 	"Tests/Integration/http-routing.lua",
+	"Tests/Integration/labsound-playback-ffi.lua",
 	"Tests/Integration/http-event-queue.lua",
 	"Tests/Integration/http-shutdown-with-503.lua",
 	"Tests/Integration/http-response-status.lua",

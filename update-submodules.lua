@@ -149,6 +149,12 @@ local submodules = {
 		abbreviatedName = "freetype",
 		displayName = "FreeType",
 	},
+	labsound = {
+		path = "deps/LabSound/LabSound",
+		branch = "main",
+		abbreviatedName = "labsound",
+		displayName = "LabSound",
+	},
 }
 
 local SubmoduleUpdater = {}
