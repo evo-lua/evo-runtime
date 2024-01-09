@@ -38,11 +38,16 @@
 #define WGPU_TARGET_LINUX_X11 2
 #define WGPU_TARGET_WINDOWS 3
 #define WGPU_TARGET_LINUX_WAYLAND 4
+#define WGPU_TARGET_EMSCRIPTEN 5
 
-#if defined(_WIN32)
+#if defined(__EMSCRIPTEN__)
+#define WGPU_TARGET WGPU_TARGET_EMSCRIPTEN
+#elif defined(_WIN32)
 #define WGPU_TARGET WGPU_TARGET_WINDOWS
 #elif defined(__APPLE__)
 #define WGPU_TARGET WGPU_TARGET_MACOS
+#elif defined(_GLFW_WAYLAND)
+#define WGPU_TARGET WGPU_TARGET_LINUX_WAYLAND
 #else
 #define WGPU_TARGET WGPU_TARGET_LINUX_X11
 #endif
@@ -62,86 +67,94 @@
 #elif WGPU_TARGET == WGPU_TARGET_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
 #endif
+
+#if !defined(__EMSCRIPTEN__)
 #include <GLFW/glfw3native.h>
+#endif
 
 WGPUSurface glfwGetWGPUSurface(WGPUInstance instance, GLFWwindow* window) {
 #if WGPU_TARGET == WGPU_TARGET_MACOS
-{
-    id metal_layer = NULL;
-    NSWindow* ns_window = glfwGetCocoaWindow(window);
-    [ns_window.contentView setWantsLayer:YES];
-    metal_layer = [CAMetalLayer layer];
-    [ns_window.contentView setLayer:metal_layer];
+    {
+        id metal_layer = [CAMetalLayer layer];
+        NSWindow* ns_window = glfwGetCocoaWindow(window);
+        [ns_window.contentView setWantsLayer : YES] ;
+        [ns_window.contentView setLayer : metal_layer] ;
 
-    WGPUSurfaceDescriptorFromMetalLayer metal_layer_descriptor = {
-        .chain = {
-            .next = NULL,
-            .sType = WGPUSType_SurfaceDescriptorFromMetalLayer,
-        },
-        .layer = metal_layer,
-    };
-    WGPUSurfaceDescriptor surface_descriptor = {
-        .nextInChain = (const WGPUChainedStruct*)&metal_layer_descriptor,
-        .label = NULL,
-    };
+        WGPUSurfaceDescriptorFromMetalLayer fromMetalLayer;
+        fromMetalLayer.chain.next = NULL;
+        fromMetalLayer.chain.sType = WGPUSType_SurfaceDescriptorFromMetalLayer;
+        fromMetalLayer.layer = metal_layer;
 
-    return wgpuInstanceCreateSurface(instance, &surface_descriptor);
-}
+        WGPUSurfaceDescriptor surfaceDescriptor;
+        surfaceDescriptor.nextInChain = &fromMetalLayer.chain;
+        surfaceDescriptor.label = NULL;
+
+        return wgpuInstanceCreateSurface(instance, &surfaceDescriptor);
+    }
 #elif WGPU_TARGET == WGPU_TARGET_LINUX_X11
-{
-    Display* x11_display = glfwGetX11Display();
-    Window x11_window = glfwGetX11Window(window);
-    WGPUSurfaceDescriptorFromXlibWindow xlib_descriptor = {
-        .chain = {
-            .next = NULL,
-            .sType = WGPUSType_SurfaceDescriptorFromXlibWindow,
-        },
-        .display = x11_display,
-        .window = (uint32_t)x11_window, // X window system uses 32bit IDs so it should be safe to cast
-    };
-    WGPUSurfaceDescriptor surface_descriptor = {
-        .nextInChain = (const WGPUChainedStruct*)&xlib_descriptor,
-        .label = NULL,
-    };
-    return wgpuInstanceCreateSurface(instance, &surface_descriptor);
-}
-#elif WGPU_TARGET == WGPU_TARGET_LINUX_WAYLAND
-{
-    struct wl_display* wayland_display = glfwGetWaylandDisplay();
-    struct wl_surface* wayland_surface = glfwGetWaylandWindow(window);
-    WGPUSurfaceDescriptorFromWaylandSurface wayland_descriptor = {
-        .chain = {
-            .next = NULL,
-            .sType = WGPUSType_SurfaceDescriptorFromWaylandSurface,
-        },
-        .display = wayland_display,
-        .surface = wayland_surface,
-    };
-    WGPUSurfaceDescriptor surface_descriptor = {
-        .nextInChain = (const WGPUChainedStruct*)&wayland_descriptor,
-        .label = NULL,
-    };
-    return wgpuInstanceCreateSurface(instance, &surface_descriptor);
-}
-#elif WGPU_TARGET == WGPU_TARGET_WINDOWS
-{
-    HWND hwnd = glfwGetWin32Window(window);
-    HINSTANCE hinstance = GetModuleHandle(NULL);
-    WGPUSurfaceDescriptorFromWindowsHWND win32_descriptor = {
-        .chain = {
-            .next = NULL,
-            .sType = WGPUSType_SurfaceDescriptorFromWindowsHWND,
-        },
-        .hinstance = hinstance,
-        .hwnd = hwnd,
-    };
-    WGPUSurfaceDescriptor surface_descriptor = {
-        .nextInChain = (const WGPUChainedStruct*)&win32_descriptor,
-        .label = NULL,
-    };
-    return wgpuInstanceCreateSurface(instance, &surface_descriptor);
-}
+    {
+        Display* x11_display = glfwGetX11Display();
+        Window x11_window = glfwGetX11Window(window);
 
+        WGPUSurfaceDescriptorFromXlibWindow fromXlibWindow;
+        fromXlibWindow.chain.next = NULL;
+        fromXlibWindow.chain.sType = WGPUSType_SurfaceDescriptorFromXlibWindow;
+        fromXlibWindow.display = x11_display;
+        fromXlibWindow.window = x11_window;
+
+        WGPUSurfaceDescriptor surfaceDescriptor;
+        surfaceDescriptor.nextInChain = &fromXlibWindow.chain;
+        surfaceDescriptor.label = NULL;
+
+        return wgpuInstanceCreateSurface(instance, &surfaceDescriptor);
+    }
+#elif WGPU_TARGET == WGPU_TARGET_LINUX_WAYLAND
+    {
+        struct wl_display* wayland_display = glfwGetWaylandDisplay();
+        struct wl_surface* wayland_surface = glfwGetWaylandWindow(window);
+
+        WGPUSurfaceDescriptorFromWaylandSurface fromWaylandSurface;
+        fromWaylandSurface.chain.next = NULL;
+        fromWaylandSurface.chain.sType = WGPUSType_SurfaceDescriptorFromWaylandSurface;
+        fromWaylandSurface.display = wayland_display;
+        fromWaylandSurface.surface = wayland_surface;
+
+        WGPUSurfaceDescriptor surfaceDescriptor;
+        surfaceDescriptor.nextInChain = &fromWaylandSurface.chain;
+        surfaceDescriptor.label = NULL;
+
+        return wgpuInstanceCreateSurface(instance, &surfaceDescriptor);
+  }
+#elif WGPU_TARGET == WGPU_TARGET_WINDOWS
+    {
+        HWND hwnd = glfwGetWin32Window(window);
+        HINSTANCE hinstance = GetModuleHandle(NULL);
+
+        WGPUSurfaceDescriptorFromWindowsHWND fromWindowsHWND;
+        fromWindowsHWND.chain.next = NULL;
+        fromWindowsHWND.chain.sType = WGPUSType_SurfaceDescriptorFromWindowsHWND;
+        fromWindowsHWND.hinstance = hinstance;
+        fromWindowsHWND.hwnd = hwnd;
+
+        WGPUSurfaceDescriptor surfaceDescriptor;
+        surfaceDescriptor.nextInChain = &fromWindowsHWND.chain;
+        surfaceDescriptor.label = NULL;
+
+        return wgpuInstanceCreateSurface(instance, &surfaceDescriptor);
+    }
+#elif WGPU_TARGET == WGPU_TARGET_EMSCRIPTEN
+    {
+        WGPUSurfaceDescriptorFromCanvasHTMLSelector fromCanvasHTMLSelector;
+        fromCanvasHTMLSelector.chain.next = NULL;
+        fromCanvasHTMLSelector.chain.sType = WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector;
+        fromCanvasHTMLSelector.selector = "canvas";
+
+        WGPUSurfaceDescriptor surfaceDescriptor;
+        surfaceDescriptor.nextInChain = &fromCanvasHTMLSelector.chain;
+        surfaceDescriptor.label = NULL;
+
+        return wgpuInstanceCreateSurface(instance, &surfaceDescriptor);
+    }
 #else
 #error "Unsupported WGPU_TARGET"
 #endif
