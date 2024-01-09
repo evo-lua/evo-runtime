@@ -58,6 +58,12 @@ jobs:
           echo "CC=${SCCACHE_UNIX_PATH} gcc" >> $GITHUB_ENV
           echo "CXX=${SCCACHE_UNIX_PATH} g++" >> $GITHUB_ENV
 
+      - name: Start Windows Audio engine # Required for LabSound tests
+        run: net start audiosrv
+
+      - name: Set up virtual audio device # Required for LabSound tests
+        uses: LABSN/sound-ci-helpers@v1
+
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
@@ -93,6 +99,9 @@ jobs:
 
       - name: Build RmlUI with FreeType
         run: deps/rml-windowsbuild.sh && ls ninjabuild-windows
+
+      - name: Build LabSound
+        run: deps/labsound-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build runtime
         run: ls && ./windowsbuild.cmd && ls ninjabuild-windows && cp ninjabuild-windows/evo.exe . && ls

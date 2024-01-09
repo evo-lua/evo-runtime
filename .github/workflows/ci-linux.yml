@@ -46,6 +46,12 @@ jobs:
       - name: Install WebKitGTK
         run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
 
+      - name: Install PulseAudio
+        run: sudo apt-get install pulseaudio libpulse-dev --yes
+
+      - name: Set up virtual audio device # Required for LabSound tests
+        run:  pulseaudio --start --load="module-null-sink" --exit-idle-time=-1
+
       - name: Configure environment
         run: |
             export PATH="/usr/lib/ccache:$PATH"
@@ -87,6 +93,9 @@ jobs:
 
       - name: Build RmlUI with FreeType
         run: deps/rml-unixbuild.sh && ls ninjabuild-unix
+
+      - name: Build LabSound
+        run: deps/labsound-unixbuild.sh && ls ninjabuild-unix
 
       - name: Build runtime
         run: ls && ./unixbuild.sh && ls ninjabuild-unix && cp ninjabuild-unix/evo . && ls
