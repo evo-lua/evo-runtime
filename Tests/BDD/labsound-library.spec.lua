@@ -2,6 +2,18 @@ local ffi = require("ffi")
 local labsound = require("labsound")
 
 describe("labsound", function()
+	describe("version", function()
+		it("should return the embedded LabSound version in semver format", function()
+			local embeddedLibraryVersion = labsound.version()
+			local firstMatchedCharacterIndex, lastMatchedCharacterIndex =
+				string.find(embeddedLibraryVersion, "%d+.%d+.%d+")
+
+			assertEquals(firstMatchedCharacterIndex, 1)
+			assertEquals(lastMatchedCharacterIndex, string.len(embeddedLibraryVersion))
+			assertEquals(type(string.match(embeddedLibraryVersion, "%d+.%d+.%d+")), "string")
+		end)
+	end)
+
 	describe("bindings", function()
 		describe("labsound_get_default_device_config", function()
 			it("should return false if nullptr values are passed", function()

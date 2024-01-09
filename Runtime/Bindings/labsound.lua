@@ -31,6 +31,8 @@ labsound.cdefs = [[
 
 	struct static_labsound_exports_table {
 
+		const char* (*labsound_version)();
+
 		// AudioDevice
 		size_t (*labsound_get_device_count)(void);
 		bool (*labsound_get_device_info)(size_t device_index, labsound_audio_device_info_t* device_info);
@@ -69,6 +71,10 @@ labsound.cdefs = [[
 
 function labsound.initialize()
 	ffi.cdef(labsound.cdefs)
+end
+
+function labsound.version()
+	return ffi.string(labsound.bindings.labsound_version())
 end
 
 return labsound

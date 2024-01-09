@@ -39,6 +39,8 @@ typedef lab::AudioNode* labsound_audio_node_t;
 
 struct static_labsound_exports_table {
 
+	const char* (*labsound_version)();
+
 	// AudioDevice
 	size_t (*labsound_get_device_count)(void);
 	bool (*labsound_get_device_info)(size_t device_index, labsound_audio_device_info_t* device_info);

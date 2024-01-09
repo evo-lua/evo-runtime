@@ -10,6 +10,10 @@
 
 using namespace lab;
 
+const char* labsound_version() {
+	return LABSOUND_VERSION;
+}
+
 bool labsound_get_default_device_config(labsound_audio_stream_config_t* input_config, labsound_audio_stream_config_t* output_config, bool with_input) {
 	if(!input_config) return false;
 	if(!output_config) return false;
@@ -273,6 +277,8 @@ namespace labsound_ffi {
 
 	void* getExportsTable() {
 		static struct static_labsound_exports_table exports_table;
+
+		exports_table.labsound_version = &labsound_version;
 
 		// AudioDevice
 		exports_table.labsound_get_device_count = &labsound_get_device_count;
