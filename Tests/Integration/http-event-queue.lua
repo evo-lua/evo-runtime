@@ -56,14 +56,14 @@ function Test:CreateServer()
 end
 
 function Test:Run()
-	C_Timer.After(100, function()
+	C_Timer.After(1000, function()
 		self.client:shutdown()
 		self.client:close()
 
-		C_Timer.After(100, function()
+		C_Timer.After(1000, function()
 			self.server:StopListening()
 
-			C_Timer.After(100, function()
+			C_Timer.After(1000, function()
 				uv.stop()
 			end)
 		end)
