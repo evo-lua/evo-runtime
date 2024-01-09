@@ -1,4 +1,11 @@
 local changelog = {
+	["v0.0.16"] = {
+		newFeatures = {
+			"Added FFI bindings for RmlUI (including a WebGPU render interface)",
+			"Added FFI bindings for LabSound ",
+			"glfwSetWindowIcon is now exposed via the GLFW FFI bindings",
+		},
+	},
 	["v0.0.15"] = {
 		newFeatures = {
 			"Introduced a new `etrace` library for realtime event tracing",
