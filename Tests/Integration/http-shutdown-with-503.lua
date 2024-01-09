@@ -51,9 +51,9 @@ function Test:CreateClient()
 end
 
 function Test:Run()
-	C_Timer.After(100, function()
+	C_Timer.After(1000, function()
 		self.server:StopListening() -- Should force shutdown with 503 response code since the client is still connected
-		C_Timer.After(100, function()
+		C_Timer.After(1000, function()
 			uv.stop() -- Client should have received the 503 response by now
 		end)
 	end)
