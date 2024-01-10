@@ -10,6 +10,7 @@ typedef WGPUDevice wgpu_device_t;
 typedef void* rml_context_t;
 typedef void* rml_document_t;
 typedef rml_geometry_info_t* rml_compiled_geometry_t;
+typedef GLFWwindow* glfw_window_t;
 
 struct static_rml_exports_table {
 	const char* (*rml_version)(void);
@@ -23,7 +24,7 @@ struct static_rml_exports_table {
 	bool (*rml_process_key_callback)(rml_context_t context_pointer, int key, int action, int mods);
 	bool (*rml_process_char_callback)(rml_context_t context_pointer, unsigned int codepoint);
 	bool (*rml_process_cursor_enter_callback)(rml_context_t context_pointer, int entered);
-	bool (*rml_process_cursor_pos_callback)(rml_context_t context_pointer, double xpos, double ypos, int mods);
+	bool (*rml_process_cursor_pos_callback)(rml_context_t context_pointer, glfw_window_t window, double xpos, double ypos, int mods);
 	bool (*rml_process_mouse_button_callback)(rml_context_t context_pointer, int button, int action, int mods);
 	bool (*rml_process_scroll_callback)(rml_context_t context_pointer, double yoffset, int mods);
 	void (*rml_process_framebuffer_size_callback)(rml_context_t context_pointer, int width, int height);
