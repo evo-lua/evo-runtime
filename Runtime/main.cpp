@@ -1,4 +1,5 @@
 extern "C" {
+#include "lpeg.hpp"
 #include "luv.h"
 #include "lminiz.hpp"
 #include "lrexlib.hpp"
@@ -30,6 +31,7 @@ int main(int argc, char* argv[]) {
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
 	luaVM->PreloadPackage("uv", luaopen_luv);
+	luaVM->PreloadPackage("lpeg", luaopen_lpeg);
 	luaVM->PreloadPackage("miniz", luaopen_miniz);
 	luaVM->PreloadPackage("openssl", luaopen_openssl);
 	luaVM->PreloadPackage("regex", luaopen_rex_pcre2);
