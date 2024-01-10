@@ -10,6 +10,7 @@ local EvoBuildTarget = {
 	luaSources = {
 		-- Integrated third-party code (no build system required)
 		"deps/kikito/inspect.lua/inspect.lua",
+		"deps/roberto-ieru/LPeg/re.lua",
 		-- These modules may need some streamlining, so for now they're undocumented
 		"BuildTools/NinjaBuildTools.lua",
 		"BuildTools/NinjaFile.lua",
@@ -58,6 +59,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/iconv_ffi.cpp",
 		"Runtime/Bindings/interop_ffi.cpp",
 		"Runtime/Bindings/labsound_ffi.cpp",
+		"Runtime/Bindings/lpeg.cpp",
 		"Runtime/Bindings/lminiz.cpp",
 		"Runtime/Bindings/RmlUi_Renderer_WebGPU.cpp",
 		"Runtime/Bindings/rml_ffi.cpp",
