@@ -19,7 +19,6 @@ local yellow = transform.yellow
 local nonstandardBranches = {
 	["deps/LuaJIT/LuaJIT"] = "v2.1",
 	["deps/gfx-rs/wgpu-native"] = "trunk",
-	["deps/evo-lua/lpeg-compat-52"] = "luajit-compat-52",
 	["deps/LabSound/LabSound"] = "main",
 }
 

@@ -132,8 +132,8 @@ local submodules = {
 		displayName = "inspect.lua",
 	},
 	lpeg = {
-		path = "deps/evo-lua/lpeg-compat-52",
-		branch = "luajit-compat-52",
+		path = "deps/roberto-ieru/LPeg",
+		branch = "master",
 		abbreviatedName = "lpeg",
 		displayName = "LPEG",
 	},

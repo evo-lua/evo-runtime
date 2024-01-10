@@ -14,10 +14,6 @@
 	path = deps/openssl/openssl
 	url = https://github.com/openssl/openssl
 	ignore = dirty
-[submodule "deps/evo-lua/lpeg-compat-52"]
-	path = deps/evo-lua/lpeg-compat-52
-	url = https://github.com/evo-lua/lpeg-compat-52
-	ignore = dirty
 [submodule "deps/richgel999/miniz"]
 	path = deps/richgel999/miniz
 	url = https://github.com/richgel999/miniz
@@ -81,4 +77,8 @@
 [submodule "deps/LabSound/LabSound"]
 	path = deps/LabSound/LabSound
 	url = https://github.com/LabSound/LabSound.git
+	ignore = dirty
+[submodule "deps/roberto-ieru/LPeg"]
+	path = deps/roberto-ieru/LPeg
+	url = https://github.com/roberto-ieru/LPeg
 	ignore = dirty
