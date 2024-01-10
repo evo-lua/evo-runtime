@@ -6,6 +6,7 @@ local glfw = require("glfw")
 local jit = require("jit")
 local json = require("json")
 local labsound = require("labsound")
+local lpeg = require("lpeg")
 local miniz = require("miniz")
 local regex = require("regex")
 local rml = require("rml")
@@ -169,10 +170,14 @@ function evo.getVersionText()
 	local zlibVersionMajor, zlibVersionMinor, zlibVersionPatch = zlib.version()
 	local semanticZlibVersionString = format("%d.%d.%d", zlibVersionMajor, zlibVersionMinor, zlibVersionPatch or 0)
 
+	-- LPEG adds its name to the version, as well
+	local semanticLpegVersionString = string.match(lpeg.version, "LPeg%s([%d%.]+)")
+
 	local embeddedLibraryVersions = {
 		glfw = glfw.version(),
 		labsound = labsound.version(),
 		libuv = uv.version_string(),
+		lpeg = semanticLpegVersionString,
 		miniz = miniz.version(),
 		rapidjson = json.version(),
 		openssl = crypto.version(),
@@ -188,6 +193,7 @@ function evo.getVersionText()
 		"glfw",
 		"labsound",
 		"libuv",
+		"lpeg",
 		"miniz",
 		"openssl",
 		"pcre2",
