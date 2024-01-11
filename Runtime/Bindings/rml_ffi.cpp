@@ -142,11 +142,11 @@ bool rml_process_cursor_enter_callback(rml_context_t context_pointer, int entere
 	return RmlGLFW::ProcessCursorEnterCallback(context, entered);
 }
 
-bool rml_process_cursor_pos_callback(rml_context_t context_pointer, double xpos, double ypos, int mods) {
+bool rml_process_cursor_pos_callback(rml_context_t context_pointer, glfw_window_t window, double xpos, double ypos, int mods) {
 	if(!context_pointer) return true;
 
 	auto context = static_cast<Rml::Context*>(context_pointer);
-	return RmlGLFW::ProcessCursorPosCallback(context, xpos, ypos, mods);
+	return RmlGLFW::ProcessCursorPosCallback(context, window, xpos, ypos, mods);
 }
 
 bool rml_process_mouse_button_callback(rml_context_t context_pointer, int button, int action, int mods) {
