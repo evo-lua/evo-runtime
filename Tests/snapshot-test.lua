@@ -22,6 +22,14 @@ local testCases = {
 			assertEquals(observedOutput, helpText .. "\n" .. versionText .. "\n" .. documentationLinkText .. "\n")
 		end,
 	},
+	["cli-run-script"] = {
+		humanReadableDescription = "Invoking the CLI with a Lua script path should execute the script",
+		programToRun = "evo Tests/Fixtures/hello-world-app/main.lua",
+		onExit = function(observedOutput)
+			local expectedOutput = "Hello world!\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
 	["cli-help-text"] = {
 		humanReadableDescription = "Invoking the CLI help command should print the help text",
 		programToRun = "evo help",
@@ -149,9 +157,23 @@ testCases = {
 			assertEquals(observedOutput, "Hello world!\n")
 		end,
 	},
+	["cli-run-cwd"] = {
+		humanReadableDescription = "Invoking the CLI with a single dot should execute main.lua",
+		programToRun = "evo .",
+		-- Assumes the entry point has been created prior to running the test suite, which it should have
+		onExit = function(observedOutput)
+			local expectedOutput = "Hello from main.lua\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
 }
+
+-- Setup for test case cli-run-cwd
+local temporaryTestScript = "print('Hello from main.lua')"
+C_FileSystem.WriteFile("main.lua", temporaryTestScript)
 
 C_Runtime.RunSnapshotTests(testCases)
 
 C_FileSystem.Delete("hello-world-app.zip")
 C_FileSystem.Delete("hello-world-app" .. EXECUTABLE_SUFFIX)
+C_FileSystem.Delete("main.lua")
