@@ -26,6 +26,7 @@ local pairs = pairs
 local type = type
 
 local evo = {
+	DEFAULT_ENTRY_POINT = "main.lua",
 	signals = {},
 }
 
@@ -312,6 +313,11 @@ function evo.onInvalidCommand(command, argv)
 	local isLuaScript = string.match(string.lower(command), ".*%.lua")
 	if isLuaScript then
 		return dofile(command)
+	end
+
+	local isStartCommand = (command == ".")
+	if isStartCommand then
+		return dofile(evo.DEFAULT_ENTRY_POINT)
 	end
 
 	if command ~= "" then
