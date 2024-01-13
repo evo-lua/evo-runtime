@@ -1,3 +1,4 @@
+local assertions = require("assertions")
 local bdd = require("bdd")
 local console = require("console")
 local crypto = require("crypto")
@@ -12,6 +13,7 @@ local regex = require("regex")
 local rml = require("rml")
 local stbi = require("stbi")
 local stduuid = require("stduuid")
+local transform = require("transform")
 local uv = require("uv")
 local uws = require("uws")
 local vfs = require("vfs")
@@ -26,9 +28,40 @@ local setmetatable = setmetatable
 local pairs = pairs
 local type = type
 
+local EXIT_FAILURE = 1
+local EXPECTED_TEST_RUNNER_ENTRY_POINT = "test.lua"
+
 local evo = {
-	DEFAULT_ENTRY_POINT = "main.lua",
 	signals = {},
+	-- Interpreter CLI
+	DEFAULT_ENTRY_POINT = "main.lua",
+	DEFAULT_TEST_SCRIPT = EXPECTED_TEST_RUNNER_ENTRY_POINT,
+	errorStrings = {
+		TEST_RUNNER_ENTRY_POINT_MISSING = format(
+			"Cannot start test runner in the current directory (entry point %s not found)",
+			EXPECTED_TEST_RUNNER_ENTRY_POINT
+		),
+		TEST_RUNNER_CANNOT_OPEN = "Cannot open %s: No such file or directory",
+		TEST_RUNNER_CANNOT_LOAD = "Cannot load %s: Not a .lua script (wrong file extension?)",
+	},
+	messageStrings = {
+		TEST_COMMAND_USAGE_INFO = format(
+			[[To run automated tests with this command, you can:
+
+* Provide %s files that should be run as tests: %s
+* Provide directory paths that include %s test files to run: %s
+* Provide a %s file that starts your test suite in any way you see fit: %s (no arguments)
+
+All scripts loaded in this mode will have global access to functions in the %s library.]],
+			".lua",
+			transform.green("evo test testFile1.lua testFile2.lua ... testFileN.lua"),
+			".lua",
+			transform.green("evo test testDir1 testDir2 ... testDirN"),
+			EXPECTED_TEST_RUNNER_ENTRY_POINT,
+			transform.green("evo test"),
+			transform.cyan("assertions")
+		),
+	},
 }
 
 function evo.run()
@@ -40,7 +73,7 @@ function evo.run()
 
 	local zipApp = evo.readEmbeddedZipApp()
 	if zipApp then
-		return vfs.dofile(zipApp, "main.lua")
+		return vfs.dofile(zipApp, evo.DEFAULT_ENTRY_POINT)
 	end
 
 	evo.setUpCommandLineInterface()
@@ -121,11 +154,13 @@ function evo.setUpCommandLineInterface()
 	C_CommandLine.RegisterCommand("version", evo.displayRuntimeVersion, "Show versioning information only")
 	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate the next token as a Lua chunk")
 	C_CommandLine.RegisterCommand("build", evo.buildZipApp, "Create a self-contained executable")
+	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from file or directory")
 
 	C_CommandLine.SetAlias("help", "-h")
 	C_CommandLine.SetAlias("version", "-v")
 	C_CommandLine.SetAlias("eval", "-e")
 	C_CommandLine.SetAlias("build", "-b")
+	C_CommandLine.SetAlias("test", "-t")
 
 	C_CommandLine.SetDefaultHandler(evo.onInvalidCommand)
 end
@@ -240,7 +275,7 @@ function evo.buildZipApp(commandName, argv)
 	if not C_FileSystem.Exists(inputDirectory) or not C_FileSystem.IsDirectory(inputDirectory) then
 		printf("Cannot create self-contained executable: %s", outputFileName)
 		printf("Not a directory: %s", inputDirectory)
-		print("Please make sure a directory with this name exists (and contains main.lua)")
+		printf("Please make sure a directory with this name exists (and contains %s)", evo.DEFAULT_ENTRY_POINT)
 		return
 	end
 
@@ -250,11 +285,11 @@ function evo.buildZipApp(commandName, argv)
 		print("Building from " .. path.resolve(inputDirectory))
 	end
 
-	local expectedEntryPoint = path.join(inputDirectory, "main.lua")
+	local expectedEntryPoint = path.join(inputDirectory, evo.DEFAULT_ENTRY_POINT)
 	local hasEntryPoint = C_FileSystem.Exists(expectedEntryPoint)
 	if not hasEntryPoint then
 		printf("Cannot create self-contained executable: %s", outputFileName)
-		print("main.lua not found - without an entry point, your app won't be able to run!")
+		printf("%s not found - without an entry point, your app won't be able to run!", evo.DEFAULT_ENTRY_POINT)
 		return
 	end
 
@@ -313,6 +348,58 @@ function evo.buildZipApp(commandName, argv)
 		.. ffi.string(signature, ffi.sizeof(signature))
 	C_FileSystem.WriteFile(outputFileName, standaloneExecutableBytes)
 	printf("Created self-contained executable: %s", outputFileName)
+end
+
+function evo.discoverAndRunTests(command, argv)
+	if #argv == 0 then
+		-- Ran test command without any inputs -> Fall back to custom test runner initialization (test.lua hook)
+		local hasDefaultEntryPoint = C_FileSystem.Exists(evo.DEFAULT_TEST_SCRIPT)
+		if not hasDefaultEntryPoint then
+			print(transform.red(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING))
+			print()
+			print(evo.messageStrings.TEST_COMMAND_USAGE_INFO)
+			return
+		end
+
+		assertions.export()
+		return dofile(evo.DEFAULT_TEST_SCRIPT)
+	end
+
+	-- Ran test command with files or directories as input -> Recursive test discovery mode
+	local specFiles = {}
+	for index, specFileOrFolder in ipairs(argv) do
+		if C_FileSystem.IsDirectory(specFileOrFolder) then
+			local directoryTree = C_FileSystem.ReadDirectoryTree(specFileOrFolder)
+
+			local specFilePaths = {}
+			-- The order should be well-defined (for predictability/testing purposes), but pairs is not
+			for filePath, isFileEntry in pairs(directoryTree) do
+				local isLuaScript = (path.extname(filePath) == ".lua")
+				if isLuaScript then
+					table_insert(specFilePaths, filePath)
+				end
+			end
+
+			table.sort(specFilePaths)
+			for _, filePath in ipairs(specFilePaths) do
+				table_insert(specFiles, filePath)
+			end
+		elseif C_FileSystem.IsFile(specFileOrFolder) then
+			local isLuaScript = (path.extname(specFileOrFolder) == ".lua")
+			if not isLuaScript then
+				print(transform.red(format(evo.errorStrings.TEST_RUNNER_CANNOT_LOAD, specFileOrFolder)))
+				os.exit(EXIT_FAILURE)
+			end
+
+			table_insert(specFiles, specFileOrFolder)
+		else
+			print(transform.red(format(evo.errorStrings.TEST_RUNNER_CANNOT_OPEN, specFileOrFolder)))
+			os.exit(EXIT_FAILURE)
+		end
+	end
+
+	local numFailedSections = C_Runtime.RunDetailedTests(specFiles)
+	os.exit(numFailedSections, true)
 end
 
 function evo.onInvalidCommand(command, argv)

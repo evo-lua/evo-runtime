@@ -1,7 +1,9 @@
 local assertions = require("assertions")
+local bdd = require("bdd")
 local evo = require("evo")
 local ffi = require("ffi")
 local uv = require("uv")
+local transform = require("transform")
 local vfs = require("vfs")
 
 local assertEquals = assertions.assertEquals
@@ -9,6 +11,22 @@ local assertTrue = assertions.assertTrue
 
 local isWindows = ffi.os == "Windows"
 local EXECUTABLE_SUFFIX = isWindows and ".exe" or ""
+
+local function simulateDetailedTestRunWithInputs(specFiles)
+	-- Since the test itself is executed in another process, mirror it here to create a matching report
+	bdd.setDetailedReportMode()
+	local numFailedTests = bdd.startTestRunner(specFiles)
+	-- Failing tests aren't used here as the stack traces would make matching report strings difficult
+	assertEquals(numFailedTests, 0)
+	local reportString = bdd.getReport()
+
+	reportString:gsub("complete %((%d*) ms%)", 0) -- Timings are unreliable and will cause flakiness
+
+	-- The bdd test runner may be started multiple times as part of the snapshot test suite
+	bdd.reset()
+
+	return reportString
+end
 
 local testCases = {
 	["cli-no-args"] = {
@@ -144,12 +162,96 @@ local testCases = {
 			)
 		end,
 	},
+	["cli-test-noargs-error"] = {
+		humanReadableDescription = "Invoking the test command without args should print an error if test.lua doesn't exist",
+		programToRun = "evo test",
+		onExit = function(observedOutput)
+			local expectedOutput = transform.red(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING)
+				.. "\n\n"
+				.. evo.messageStrings.TEST_COMMAND_USAGE_INFO
+				.. "\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
+	["cli-test-multiple-existing-files"] = {
+		humanReadableDescription = "Invoking the test command with existing file paths should load them as tests",
+		programToRun = "evo test Tests/Fixtures/test-dir/subdir/lua-test-file.lua Tests/Fixtures/test-dir/lua-spec-file.spec.lua",
+		onExit = function(observedOutput)
+			local specFiles = {
+				"Tests/Fixtures/test-dir/subdir/lua-test-file.lua",
+				"Tests/Fixtures/test-dir/lua-spec-file.spec.lua",
+			}
+			local expectedReportString = simulateDetailedTestRunWithInputs(specFiles)
+			local expectedOutputLines = {
+				"OK: Loading test file from subdirectory",
+				"OK: Loading spec file from directory",
+				"OK: section ran",
+				"OK: subsection ran",
+			}
+			local expectedOutput = table.concat(expectedOutputLines, "\n") .. "\n" .. expectedReportString .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
+	["cli-test-existing-files-and-dirs"] = {
+		humanReadableDescription = "Invoking the test command with existing file and directory paths should load all included .lua files as tests",
+		programToRun = "evo test Tests/Fixtures/test-dir/lua-spec-file.spec.lua Tests/Fixtures/test-dir",
+		onExit = function(observedOutput)
+			local specFiles = {
+				"Tests/Fixtures/test-dir/lua-spec-file.spec.lua",
+				"Tests/Fixtures/test-dir/lua-spec-file.spec.lua",
+				"Tests/Fixtures/test-dir/subdir/lua-test-file.lua",
+			}
+			local expectedReportString = simulateDetailedTestRunWithInputs(specFiles)
+			local expectedOutputLines = {
+				"OK: Loading spec file from directory",
+				"OK: section ran",
+				"OK: subsection ran",
+				"OK: Loading spec file from directory",
+				"OK: section ran",
+				"OK: subsection ran",
+				"OK: Loading test file from subdirectory",
+			}
+			local expectedOutput = table.concat(expectedOutputLines, "\n") .. "\n" .. expectedReportString .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
+
+	["cli-test-cannot-load-file"] = {
+		humanReadableDescription = "Invoking the test command with non-Lua script files should fail with an error",
+		programToRun = "evo test Tests/Fixtures/test-dir/lua-spec-file.spec.lua Tests/Fixtures/test-dir/not-a-lua-file.txt",
+		onExit = function(observedOutput)
+			local expectedOutput = transform.red(
+				format(evo.errorStrings.TEST_RUNNER_CANNOT_LOAD, "Tests/Fixtures/test-dir/not-a-lua-file.txt")
+			) .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
+	["cli-test-cannot-open-file"] = {
+		humanReadableDescription = "Invoking the test command with invalid file paths should fail with an error",
+		programToRun = "evo test Tests/Fixtures/test-dir/lua-spec-file.spec.lua Tests/Fixtures/test-dir/does-not-exist.lua",
+		onExit = function(observedOutput)
+			local expectedOutput = transform.red(
+				format(evo.errorStrings.TEST_RUNNER_CANNOT_OPEN, "Tests/Fixtures/test-dir/does-not-exist.lua")
+			) .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
+	["cli-test-cannot-open-dir"] = {
+		humanReadableDescription = "Invoking the test command with invalid directory paths should fail with an error",
+		programToRun = "evo test Tests/Fixtures/test-dir/lua-spec-file.spec.lua Tests/Fixtures/test-dir/does-not-exist",
+		onExit = function(observedOutput)
+			local expectedOutput = transform.red(
+				format(evo.errorStrings.TEST_RUNNER_CANNOT_OPEN, "Tests/Fixtures/test-dir/does-not-exist")
+			) .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
 }
 
 C_Runtime.RunSnapshotTests(testCases)
 
--- This relies on the hello-world-app being built first, but the order is not guaranteed
 testCases = {
+	-- This relies on the hello-world-app being built first, but the order is not guaranteed
 	["cli-hello-world-app"] = {
 		humanReadableDescription = "Invoking the hello world app should execute the bundled app instead of the runtime CLI",
 		programToRun = ffi.os ~= "Windows" and "chmod +x hello-world-app && ./hello-world-app" or "hello-world-app.exe",
@@ -157,6 +259,7 @@ testCases = {
 			assertEquals(observedOutput, "Hello world!\n")
 		end,
 	},
+	-- This one interferes with the build tests as it requires creating temporary files
 	["cli-run-cwd"] = {
 		humanReadableDescription = "Invoking the CLI with a single dot should execute main.lua",
 		programToRun = "evo .",
@@ -166,14 +269,22 @@ testCases = {
 			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
+	["cli-test-noargs"] = {
+		humanReadableDescription = "Invoking the test command without args should run test.lua if it exists",
+		programToRun = "evo test",
+		onExit = function(observedOutput)
+			local expectedOutput = "Hello from test.lua\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
 }
 
--- Setup for test case cli-run-cwd
-local temporaryTestScript = "print('Hello from main.lua')"
-C_FileSystem.WriteFile("main.lua", temporaryTestScript)
+C_FileSystem.WriteFile("main.lua", "print('Hello from main.lua')")
+C_FileSystem.WriteFile("test.lua", "assertEquals(42, 42); print('Hello from test.lua')")
 
 C_Runtime.RunSnapshotTests(testCases)
 
 C_FileSystem.Delete("hello-world-app.zip")
 C_FileSystem.Delete("hello-world-app" .. EXECUTABLE_SUFFIX)
 C_FileSystem.Delete("main.lua")
+C_FileSystem.Delete("test.lua")

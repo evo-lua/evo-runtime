@@ -1,5 +1,7 @@
+local evo = require("evo")
+local miniz = require("miniz")
+
 describe("miniz", function()
-	local miniz = require("miniz")
 	local exportedFunctions = {
 		"version",
 		"new_reader",
@@ -168,7 +170,7 @@ describe("miniz", function()
 			writer:add("README.md", "# A Readme\n\nThis is ~~neat?~~ Sparta!", 9)
 			writer:add("data.json", '{"name":"Not Tim","age":32}\n', 9)
 			writer:add("a/big/file.dat", string.rep("12345\n", 10000), 9)
-			writer:add("main.lua", 'print("Hello world!")', 9)
+			writer:add(evo.DEFAULT_ENTRY_POINT, 'print("Hello world!")', 9)
 
 			local zipFileContents = writer:finalize()
 			assertEquals(#zipFileContents, 681)
