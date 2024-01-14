@@ -351,7 +351,19 @@ function evo.buildZipApp(commandName, argv)
 end
 
 function evo.discoverAndRunTests(command, argv)
-	if #argv == 0 then
+	local appArgs = {}
+	local preprocessedArgs = {}
+	-- Application-specific args (delimited by --) should be passed as-is to allow customizing test.lua runners
+	for index, argument in ipairs(argv) do
+		local appArg = argument:match("^%-%-(.*)$")
+		if appArg then
+			table_insert(appArgs, appArg)
+		else
+			table_insert(preprocessedArgs, argument)
+		end
+	end
+
+	if #preprocessedArgs == 0 then
 		-- Ran test command without any inputs -> Fall back to custom test runner initialization (test.lua hook)
 		local hasDefaultEntryPoint = C_FileSystem.Exists(evo.DEFAULT_TEST_SCRIPT)
 		if not hasDefaultEntryPoint then
@@ -361,13 +373,14 @@ function evo.discoverAndRunTests(command, argv)
 			return
 		end
 
+		_G.arg = appArgs
 		assertions.export()
 		return dofile(evo.DEFAULT_TEST_SCRIPT)
 	end
 
 	-- Ran test command with files or directories as input -> Recursive test discovery mode
 	local specFiles = {}
-	for index, specFileOrFolder in ipairs(argv) do
+	for index, specFileOrFolder in ipairs(preprocessedArgs) do
 		if C_FileSystem.IsDirectory(specFileOrFolder) then
 			local directoryTree = C_FileSystem.ReadDirectoryTree(specFileOrFolder)
 

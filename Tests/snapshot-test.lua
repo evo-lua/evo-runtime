@@ -12,6 +12,11 @@ local assertTrue = assertions.assertTrue
 local isWindows = ffi.os == "Windows"
 local EXECUTABLE_SUFFIX = isWindows and ".exe" or ""
 
+local function fixUpReportString(reportString)
+	-- Relying on timings to be identical will only cause flakiness
+	return reportString:gsub("complete %(%d* ms%)", "complete (0 ms)")
+end
+
 local function simulateDetailedTestRunWithInputs(specFiles)
 	-- Since the test itself is executed in another process, mirror it here to create a matching report
 	bdd.setDetailedReportMode()
@@ -19,8 +24,7 @@ local function simulateDetailedTestRunWithInputs(specFiles)
 	-- Failing tests aren't used here as the stack traces would make matching report strings difficult
 	assertEquals(numFailedTests, 0)
 	local reportString = bdd.getReport()
-
-	reportString:gsub("complete %((%d*) ms%)", 0) -- Timings are unreliable and will cause flakiness
+	reportString = fixUpReportString(reportString)
 
 	-- The bdd test runner may be started multiple times as part of the snapshot test suite
 	bdd.reset()
@@ -173,6 +177,17 @@ local testCases = {
 			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
+	["cli-test-noargs-error-with-app-args"] = {
+		humanReadableDescription = "Invoking the test command without args but with app args should print an error if test.lua doesn't exist",
+		programToRun = "evo test --integration",
+		onExit = function(observedOutput)
+			local expectedOutput = transform.red(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING)
+				.. "\n\n"
+				.. evo.messageStrings.TEST_COMMAND_USAGE_INFO
+				.. "\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
 	["cli-test-multiple-existing-files"] = {
 		humanReadableDescription = "Invoking the test command with existing file paths should load them as tests",
 		programToRun = "evo test Tests/Fixtures/test-dir/subdir/lua-test-file.lua Tests/Fixtures/test-dir/lua-spec-file.spec.lua",
@@ -189,6 +204,8 @@ local testCases = {
 				"OK: subsection ran",
 			}
 			local expectedOutput = table.concat(expectedOutputLines, "\n") .. "\n" .. expectedReportString .. "\n"
+
+			observedOutput = fixUpReportString(observedOutput)
 			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
@@ -212,6 +229,8 @@ local testCases = {
 				"OK: Loading test file from subdirectory",
 			}
 			local expectedOutput = table.concat(expectedOutputLines, "\n") .. "\n" .. expectedReportString .. "\n"
+
+			observedOutput = fixUpReportString(observedOutput)
 			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
@@ -273,14 +292,25 @@ testCases = {
 		humanReadableDescription = "Invoking the test command without args should run test.lua if it exists",
 		programToRun = "evo test",
 		onExit = function(observedOutput)
-			local expectedOutput = "Hello from test.lua\n"
+			local expectedOutput = "Hello from test.lua (app args: 0, nil)\n"
+			assertEquals(observedOutput, expectedOutput)
+		end,
+	},
+	["cli-test-noargs-forward"] = {
+		humanReadableDescription = "Invoking the test command without args but with app args should run test.lua and forward the app args",
+		programToRun = "evo test --integration",
+		onExit = function(observedOutput)
+			local expectedOutput = "Hello from test.lua (app args: 1, integration)\n"
 			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
 }
 
 C_FileSystem.WriteFile("main.lua", "print('Hello from main.lua')")
-C_FileSystem.WriteFile("test.lua", "assertEquals(42, 42); print('Hello from test.lua')")
+C_FileSystem.WriteFile(
+	"test.lua",
+	"assertEquals(42, 42); printf('Hello from test.lua (app args: %d, %s)', #arg, tostring(arg[1]))"
+)
 
 C_Runtime.RunSnapshotTests(testCases)
 
