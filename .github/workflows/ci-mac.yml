@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
     paths-ignore:
       - '**.md'
   pull_request:
@@ -14,8 +16,6 @@ on:
       - '**.md'
       - 'changelog.lua'
       - '.gitignore'
-  create:
-    # Any branch or tag
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
