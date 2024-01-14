@@ -1,6 +1,6 @@
 echo "Formatting Lua sources ..."
 
-stylua .
+stylua . --verbose
 
 echo "Discovering C/C++ sources ..."
 
