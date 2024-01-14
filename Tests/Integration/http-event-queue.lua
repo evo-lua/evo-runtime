@@ -1,9 +1,19 @@
+local assertions = require("assertions")
 local uv = require("uv")
 local HttpServer = require("HttpServer")
+
+local assertEquals = assertions.assertEquals
 
 local Test = {
 	port = 9003,
 	observedEvents = {},
+	expectedEvents = {
+		"SERVER_STARTED_LISTENING",
+		"HTTP_REQUEST_STARTED",
+		"HTTP_REQUEST_FINISHED",
+		"SERVER_STOPPED_LISTENING",
+	},
+	didClientReceiveResponse = false,
 }
 
 function Test:Setup()
@@ -13,11 +23,27 @@ end
 
 function Test:CreateClient()
 	local client = uv.new_tcp()
+	local receivedBytes = buffer.new()
 
 	client:connect("127.0.0.1", self.port, function()
 		client:read_start(function(err, chunk)
 			if err then
 				error(err, 0)
+			end
+
+			if not chunk then
+				print("[Client] Received EOF from server, dropping TCP connection ...")
+				return
+			end
+
+			printf("[Client] Received chunk of size %d: %s", #chunk, chunk)
+			receivedBytes:put(chunk)
+			if tostring(receivedBytes):match("This is the response body") then
+				printf("[Client] Received response body from server, going away ...")
+				client:shutdown()
+				client:close()
+				self.didClientReceiveResponse = true
+				self.server:StopListening()
 			end
 		end)
 
@@ -38,7 +64,7 @@ function Test:CreateServer()
 		local originalEventHandler = server.OnEvent
 		local function storeObservedEvent(_, eventName, payload)
 			originalEventHandler(server, eventName, payload)
-
+			printf("[HttpServer] Observed event %s (client ID: %s)", eventName, payload.clientID)
 			self.observedEvents[#self.observedEvents + 1] = { event = eventName, payload = payload }
 		end
 
@@ -56,18 +82,14 @@ function Test:CreateServer()
 end
 
 function Test:Run()
-	C_Timer.After(1000, function()
-		self.client:shutdown()
-		self.client:close()
-
-		C_Timer.After(1000, function()
-			self.server:StopListening()
-
-			C_Timer.After(1000, function()
-				uv.stop()
-			end)
-		end)
+	self.statusUpdateTicker = C_Timer.NewTicker(1000, function()
+		printf("Events observed so far: %d/%d", #self.observedEvents, #self.expectedEvents)
+		if #self.observedEvents == #self.expectedEvents then
+			self.statusUpdateTicker:stop()
+			uv.stop()
+		end
 	end)
+
 	uv.run()
 end
 
@@ -76,16 +98,9 @@ function Test:Teardown()
 end
 
 function Test:AssertDeferredEventsAreStored()
-	local expectedEvents = {
-		"SERVER_STARTED_LISTENING",
-		"HTTP_REQUEST_STARTED",
-		"HTTP_REQUEST_FINISHED",
-		"SERVER_STOPPED_LISTENING",
-	}
-
-	assertEquals(#self.observedEvents, #expectedEvents)
-	for i = 1, #expectedEvents do
-		assertEquals(self.observedEvents[i].event, expectedEvents[i])
+	assertEquals(#self.observedEvents, #self.expectedEvents)
+	for i = 1, #self.expectedEvents do
+		assertEquals(self.observedEvents[i].event, self.expectedEvents[i])
 	end
 end
 
