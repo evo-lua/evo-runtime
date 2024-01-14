@@ -158,16 +158,13 @@ function assertions.assertEqualNumbers(firstValue, secondValue, delta)
 	return true
 end
 
-local diff = string.diff
-local dump = debug.dump
-
 local diffOptions = {
 	silent = true,
 	separator = "\t",
 }
 
 local function computeDiffString(firstValue, secondValue)
-	return diff(dump(firstValue, diffOptions), dump(secondValue, diffOptions))
+	return string.diff(dump(firstValue, diffOptions), dump(secondValue, diffOptions))
 end
 
 function assertions.assertEqualTables(firstValue, secondValue)
