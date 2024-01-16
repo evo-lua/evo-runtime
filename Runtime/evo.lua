@@ -154,7 +154,7 @@ function evo.setUpCommandLineInterface()
 	C_CommandLine.RegisterCommand("version", evo.displayRuntimeVersion, "Show versioning information only")
 	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate the next token as a Lua chunk")
 	C_CommandLine.RegisterCommand("build", evo.buildZipApp, "Create a self-contained executable")
-	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from file or directory")
+	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from files or directories")
 
 	C_CommandLine.SetAlias("help", "-h")
 	C_CommandLine.SetAlias("version", "-v")
