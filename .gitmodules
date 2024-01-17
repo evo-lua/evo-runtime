@@ -82,3 +82,7 @@
 	path = deps/roberto-ieru/LPeg
 	url = https://github.com/roberto-ieru/LPeg
 	ignore = dirty
+[submodule "deps/starwing/luautf8"]
+	path = deps/starwing/luautf8
+	url = https://github.com/starwing/luautf8
+	ignore = dirty
