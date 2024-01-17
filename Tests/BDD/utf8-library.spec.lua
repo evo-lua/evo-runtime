@@ -1,4 +1,32 @@
-local utf8 = require 'lua-utf8'
+-- Adapted on Jan 18, 2024 from the lua-tf8 test suite, with minor alterations to fix Lua errors
+-- Due to maintainability concerns, the modified lines have been tagged with [MOD: Reason]
+
+-- MIT License
+
+-- Copyright (c) 2018 Xavier Wang
+
+-- Permission is hereby granted, free of charge, to any person obtaining a copy
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
+-- furnished to do so, subject to the following conditions:
+
+-- The above copyright notice and this permission notice shall be included in all
+-- copies or substantial portions of the Software.
+
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-- SOFTWARE.
+
+---
+
+
+local utf8 = require("utf8") -- [MOD: Package is preloaded as utf8 in Evo's environment]
 local unpack = unpack or table.unpack
 local E = utf8.escape
 
@@ -371,7 +399,7 @@ end
 -- This is an official set of test cases for Unicode normalization
 -- Provided by the Unicode Consortium
 local normalization_test_cases = {}
-local f = io.open('NormalizationTest.txt', 'r')
+local f = io.open('deps/starwing/luautf8/NormalizationTest.txt', 'r') -- [MOD: Updated file path]
 for line in f:lines() do
    if not line:match("^#") and not line:match("^@") then
       local src, nfc, nfd = line:match "([%w%s]+);([%w%s]+);([%w%s]+)"
@@ -402,7 +430,7 @@ end
 
 -- Official set of test cases for grapheme cluster segmentation, provided by Unicode Consortium
 local grapheme_test_cases = {}
-f = io.open('GraphemeBreakTest.txt', 'r')
+f = io.open('deps/starwing/luautf8/GraphemeBreakTest.txt', 'r') -- [MOD: Updated file path]
 for line in f:lines() do
    if not line:match("^#") and not line:match("^@") then
       line = line:gsub("#.*", "")
@@ -415,7 +443,9 @@ for line in f:lines() do
          elseif str == '÷' then
             table.insert(clusters, "") -- start a new cluster
          else
-            clusters[#clusters] = clusters[#clusters]..utf8.char(tonumber(str, 16))
+			if str ~= "" then -- [MOD: Empty string fails in the line below]
+                clusters[#clusters] = clusters[#clusters]..utf8.char(tonumber(str, 16))
+            end
          end
       end
       table.insert(grapheme_test_cases, { str=table.concat(clusters), clusters=clusters })
