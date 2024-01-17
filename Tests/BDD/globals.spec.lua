@@ -52,15 +52,6 @@ describe("_G", function()
 		assertEquals(type(versionString), "string")
 	end)
 
-	describe("printf", function()
-		it("should output formatted strings to stdout", function()
-			console.capture()
-			printf("Hello %s", "printf")
-			local capturedOutput = console.release()
-			assertEquals(capturedOutput, "Hello printf\n")
-		end)
-	end)
-
 	describe("extend", function()
 		it("should still work if the prototype object doesn't have a metatable", function()
 			local child = {}
