@@ -68,4 +68,7 @@ function uuid.isCanonical(input)
 	return string_match(input, uuid.RFC_STRING_PATTERN) ~= nil
 end
 
+-- Shorthand (alias) for the most likely default choice
+uuid.create = uuid.createMersenneTwistedUUID
+
 return uuid
