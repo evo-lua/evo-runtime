@@ -47,8 +47,8 @@ describe("utf8", function()
 		-- test offset
 
 		local function assert_error(f, msg)
-			local s, e = pcall(f)
-			return assert(not s and e:match(msg))
+			local s1, e = pcall(f)
+			return assert(not s1 and e:match(msg))
 		end
 
 		assert(utf8.offset("中国", 0) == 1)
@@ -125,29 +125,29 @@ describe("utf8", function()
 		assert(utf8.remove("abcdef", 200, 100) == "abcdef")
 
 		do
-			local s = E("a%255bc")
-			assert(utf8.len(s, 4))
-			assert(string.len(s, 6))
-			assert(utf8.charpos(s) == 1)
-			assert(utf8.charpos(s, 0) == 1)
-			assert(utf8.charpos(s, 1) == 1)
-			assert(utf8.charpos(s, 2) == 2)
-			assert(utf8.charpos(s, 3) == 4)
-			assert(utf8.charpos(s, 4) == 5)
-			assert(utf8.charpos(s, 5) == nil)
-			assert(utf8.charpos(s, 6) == nil)
-			assert(utf8.charpos(s, -1) == 5)
-			assert(utf8.charpos(s, -2) == 4)
-			assert(utf8.charpos(s, -3) == 2)
-			assert(utf8.charpos(s, -4) == 1)
-			assert(utf8.charpos(s, -5) == nil)
-			assert(utf8.charpos(s, -6) == nil)
-			assert(utf8.charpos(s, 3, -1) == 2)
-			assert(utf8.charpos(s, 3, 0) == 2)
-			assert(utf8.charpos(s, 3, 1) == 4)
-			assert(utf8.charpos(s, 6, -3) == 2)
-			assert(utf8.charpos(s, 6, -4) == 1)
-			assert(utf8.charpos(s, 6, -5) == nil)
+			local s2 = E("a%255bc")
+			assert(utf8.len(s2, 4))
+			assert(string.len(s2, 6))
+			assert(utf8.charpos(s2) == 1)
+			assert(utf8.charpos(s2, 0) == 1)
+			assert(utf8.charpos(s2, 1) == 1)
+			assert(utf8.charpos(s2, 2) == 2)
+			assert(utf8.charpos(s2, 3) == 4)
+			assert(utf8.charpos(s2, 4) == 5)
+			assert(utf8.charpos(s2, 5) == nil)
+			assert(utf8.charpos(s2, 6) == nil)
+			assert(utf8.charpos(s2, -1) == 5)
+			assert(utf8.charpos(s2, -2) == 4)
+			assert(utf8.charpos(s2, -3) == 2)
+			assert(utf8.charpos(s2, -4) == 1)
+			assert(utf8.charpos(s2, -5) == nil)
+			assert(utf8.charpos(s2, -6) == nil)
+			assert(utf8.charpos(s2, 3, -1) == 2)
+			assert(utf8.charpos(s2, 3, 0) == 2)
+			assert(utf8.charpos(s2, 3, 1) == 4)
+			assert(utf8.charpos(s2, 6, -3) == 2)
+			assert(utf8.charpos(s2, 6, -4) == 1)
+			assert(utf8.charpos(s2, 6, -5) == nil)
 		end
 
 		local idx = 1
@@ -169,13 +169,13 @@ describe("utf8", function()
 
 		-- 1110-1010 10-000000 0110-0001
 		do
-			local s = "\234\128\97"
-			assert(utf8.len(s, nil, nil, true) == 2)
-			assert_table_equal({ utf8.len(s) }, { nil, 1 }, 1, 2)
+			local s3 = "\234\128\97"
+			assert(utf8.len(s3, nil, nil, true) == 2)
+			assert_table_equal({ utf8.len(s3) }, { nil, 1 }, 1, 2)
 
 			-- 1111-0000 10-000000 10-000000 ...
-			s = "\240\128\128\128\128"
-			assert_table_equal({ utf8.len(s) }, { nil, 1 }, 1, 2)
+			s3 = "\240\128\128\128\128"
+			assert_table_equal({ utf8.len(s3) }, { nil, 1 }, 1, 2)
 		end
 
 		-- test compose
@@ -185,11 +185,11 @@ describe("utf8", function()
 			assert(msg:match(patt), msg)
 		end
 		do
-			local s = "नमस्ते"
-			assert(utf8.len(s) == 6)
-			assert(utf8.reverse(s) == "तेस्मन")
-			assert(utf8.reverse(s .. " ", true) == " ेत्समन")
-			assert(utf8.match(s .. "\2", "%g+") == s)
+			local s4 = "नमस्ते"
+			assert(utf8.len(s4) == 6)
+			assert(utf8.reverse(s4) == "तेस्मन")
+			assert(utf8.reverse(s4 .. " ", true) == " ेत्समन")
+			assert(utf8.match(s4 .. "\2", "%g+") == s4)
 			assert_fail(function()
 				utf8.reverse(E("%xD800"))
 			end, "invalid UTF%-8 code")
@@ -394,9 +394,9 @@ describe("utf8", function()
 		assert(utf8.invalidoffset("\237\160\128\237\175\191\237\191\191", 6) == 6)
 		assert(utf8.invalidoffset("\237\160\128\237\175\191\237\191\191", -1) == 9)
 
-		local function parse_codepoints(s)
+		local function parse_codepoints(str)
 			local list = {}
-			for hex in s:gmatch("%w+") do
+			for hex in str:gmatch("%w+") do
 				list[#list + 1] = tonumber(hex, 16)
 			end
 			return utf8.char(unpack(list))
@@ -444,11 +444,9 @@ describe("utf8", function()
 				line = line:gsub("%s*÷%s*$", "")
 				local clusters = { "" }
 				for str in line:gmatch("%S*") do
-					if str == "×" then
-					-- do nothing
-					elseif str == "÷" then
+					if str == "÷" then
 						table.insert(clusters, "") -- start a new cluster
-					else
+					elseif str ~= "×" then
 						if str ~= "" then -- [MOD: Empty string fails in the line below]
 							clusters[#clusters] = clusters[#clusters] .. utf8.char(tonumber(str, 16))
 						end
@@ -476,8 +474,8 @@ describe("utf8", function()
 			table.insert(clusters, a)
 			table.insert(clusters, b)
 		end
-		for idx, value in ipairs({ 4, 6, 7, 9 }) do
-			assert(clusters[idx] == value)
+		for idx2, value in ipairs({ 4, 6, 7, 9 }) do
+			assert(clusters[idx2] == value)
 		end
 
 		-- try private use codepoint followed by a combining character
@@ -486,8 +484,8 @@ describe("utf8", function()
 			table.insert(clusters, a)
 			table.insert(clusters, b)
 		end
-		for idx, value in ipairs({ 1, 5 }) do
-			assert(clusters[idx] == value)
+		for idx3, value in ipairs({ 1, 5 }) do
+			assert(clusters[idx3] == value)
 		end
 	end)
 
@@ -503,7 +501,7 @@ describe("utf8", function()
 		assert(utf8.sub("123456789", -1) == "9")
 		assert(utf8.sub("123456789", -4) == "6789")
 		assert(utf8.sub("123456789", -6, -4) == "456")
-		if not _no32 then
+		if not _G._no32 then
 			assert(utf8.sub("123456789", -2 ^ 31, -4) == "123456")
 			assert(utf8.sub("123456789", -2 ^ 31, 2 ^ 31 - 1) == "123456789")
 			assert(utf8.sub("123456789", -2 ^ 31, -2 ^ 31) == "")
@@ -512,7 +510,7 @@ describe("utf8", function()
 		assert(utf8.sub("\000123456789", 8) == "789")
 
 		assert(utf8.find("123456789", "345") == 3)
-		a, b = utf8.find("123456789", "345")
+		local a, b = utf8.find("123456789", "345")
 		assert(utf8.sub("123456789", a, b) == "345")
 		assert(utf8.find("1234567890123456789", "345", 3) == 3)
 		assert(utf8.find("1234567890123456789", "345", 4) == 13)
@@ -529,9 +527,9 @@ describe("utf8", function()
 		assert(utf8.len("\0\0\0") == 3)
 		assert(utf8.len("1234567890") == 10)
 
-		local E = utf8.escape
+		local E2 = utf8.escape
 		assert(utf8.byte("a") == 97)
-		assert(utf8.byte(E("%228")) > 127)
+		assert(utf8.byte(E2("%228")) > 127)
 		assert(utf8.byte(utf8.char(255)) == 255)
 		assert(utf8.byte(utf8.char(0)) == 0)
 		assert(utf8.byte("\0") == 0)
@@ -546,10 +544,10 @@ describe("utf8", function()
 		assert(utf8.byte("hi", 2, 1) == nil)
 		assert(utf8.char() == "")
 		assert(utf8.char(0, 255, 0) == utf8.escape("%0%255%0"))
-		assert(utf8.char(0, utf8.byte(E("%228")), 0) == E("%0%xe4%0"))
-		assert(utf8.char(utf8.byte(E("%228l\0髐"), 1, -1)) == E("%xe4l\0髐"))
-		assert(utf8.char(utf8.byte(E("%228l\0髐"), 1, 0)) == "")
-		assert(utf8.char(utf8.byte(E("%228l\0髐"), -10, 100)) == E("%xe4l\0髐"))
+		assert(utf8.char(0, utf8.byte(E2("%228")), 0) == E2("%0%xe4%0"))
+		assert(utf8.char(utf8.byte(E2("%228l\0髐"), 1, -1)) == E2("%xe4l\0髐"))
+		assert(utf8.char(utf8.byte(E2("%228l\0髐"), 1, 0)) == "")
+		assert(utf8.char(utf8.byte(E2("%228l\0髐"), -10, 100)) == E2("%xe4l\0髐"))
 
 		assert(utf8.upper("ab\0c") == "AB\0C")
 		assert(utf8.lower("\0ABCc%$") == "\0abcc%$")
@@ -564,24 +562,24 @@ describe("utf8", function()
 	end)
 
 	it("should pass the provided pattern matching test suite without errors", function()
-		function f(s, p)
+		local function f(s, p)
 			local i, e = utf8.find(s, p)
 			if i then
 				return utf8.sub(s, i, e)
 			end
 		end
 
-		function f1(s, p)
-			p = utf8.gsub(p, "%%([0-9])", function(s)
-				return "%" .. (tonumber(s) + 1)
+		local function f1(s, p)
+			p = utf8.gsub(p, "%%([0-9])", function(str)
+				return "%" .. (tonumber(str) + 1)
 			end)
 			p = utf8.gsub(p, "^(^?)", "%1()", 1)
 			p = utf8.gsub(p, "($?)$", "()%1", 1)
-			local t = { utf8.match(s, p) }
-			return utf8.sub(s, t[1], t[#t] - 1)
+			local t2 = { utf8.match(s, p) }
+			return utf8.sub(s, t2[1], t2[#t2] - 1)
 		end
 
-		a, b = utf8.find("", "") -- empty patterns are tricky
+		local a, b = utf8.find("", "") -- empty patterns are tricky
 		assert(a == 1 and b == 0)
 		a, b = utf8.find("alo", "")
 		assert(a == 1 and b == 0)
@@ -669,7 +667,7 @@ describe("utf8", function()
 		assert(utf8.len(abc) == 256)
 		assert(string.len(abc) == 384)
 
-		function strset(p)
+		local function strset(p)
 			local res = { s = "" }
 			utf8.gsub(abc, p, function(c)
 				res.s = res.s .. c
@@ -677,8 +675,8 @@ describe("utf8", function()
 			return res.s
 		end
 
-		local E = utf8.escape
-		assert(utf8.len(strset(E("[%200-%210]"))) == 11)
+		local E3 = utf8.escape
+		assert(utf8.len(strset(E3("[%200-%210]"))) == 11)
 
 		assert(strset("[a-z]") == "abcdefghijklmnopqrstuvwxyz")
 		assert(strset("[a-z%d]") == strset("[%da-uu-z]"))
@@ -687,15 +685,16 @@ describe("utf8", function()
 		assert(strset("[]%%]") == "%]")
 		assert(strset("[a%-z]") == "-az")
 		assert(strset("[%^%[%-a%]%-b]") == "-[]^ab")
-		assert(strset("%Z") == strset(E("[%1-%255]")))
-		assert(strset(".") == strset(E("[%1-%255%%z]")))
+		assert(strset("%Z") == strset(E3("[%1-%255]")))
+		assert(strset(".") == strset(E3("[%1-%255%%z]")))
 
 		assert(utf8.match("alo xyzK", "(%w+)K") == "xyz")
 		assert(utf8.match("254 K", "(%d*)K") == "")
 		assert(utf8.match("alo ", "(%w*)$") == "")
 		assert(utf8.match("alo ", "(%w+)$") == nil)
 		assert(utf8.find("(álo)", "%(á") == 1)
-		local a, b, c, d, e = utf8.match("âlo alo", "^(((.).).* (%w*))$")
+		local c, d, e
+		a, b, c, d, e = utf8.match("âlo alo", "^(((.).).* (%w*))$")
 		assert(a == "âlo alo" and b == "âl" and c == "â" and d == "alo" and e == nil)
 		a, b, c, d = utf8.match("0123456789", "(.+(.?)())")
 		assert(a == "0123456789" and b == "" and c == 11 and d == nil)
@@ -727,8 +726,8 @@ describe("utf8", function()
 			assert(_G.a == "roberto" and _G.roberto == "a")
 		end
 
-		function f(a, b)
-			return utf8.gsub(a, ".", b)
+		function f(a2, b2)
+			return utf8.gsub(a2, ".", b2)
 		end
 		assert(
 			utf8.gsub("trocar tudo em |teste|b| é |beleza|al|", "|([^|]*)|([^|]*)|", f)
@@ -740,7 +739,7 @@ describe("utf8", function()
 		end
 		assert(utf8.gsub("alo $a=1$ novamente $return a$", "$([^$]*)%$", dostring) == "alo  novamente 1")
 
-		x = utf8.gsub(
+		local x = utf8.gsub(
 			"$local utf8=require'utf8' x=utf8.gsub('alo', '.', utf8.upper)$ assim vai para $return x$",
 			"$([^$]*)%$",
 			dostring
@@ -748,22 +747,22 @@ describe("utf8", function()
 		assert(x == " assim vai para ALO")
 
 		t = {}
-		s = "a alo jose  joao"
-		r = utf8.gsub(s, "()(%w+)()", function(a, w, b)
-			assert(utf8.len(w) == b - a)
-			t[a] = b - a
+		local s = "a alo jose  joao"
+		local r = utf8.gsub(s, "()(%w+)()", function(a2, w, b2)
+			assert(utf8.len(w) == b2 - a2)
+			t[a2] = b2 - a2
 		end)
 		assert(s == r and t[1] == 1 and t[3] == 3 and t[7] == 4 and t[13] == 4)
 
-		function isbalanced(s)
-			return utf8.find(utf8.gsub(s, "%b()", ""), "[()]") == nil
+		local function isbalanced(str)
+			return utf8.find(utf8.gsub(str, "%b()", ""), "[()]") == nil
 		end
 
 		assert(isbalanced("(9 ((8))(\0) 7) \0\0 a b ()(c)() a"))
 		assert(not isbalanced("(9 ((8) 7) a b (\0 c) a"))
 		assert(utf8.gsub("alo 'oi' alo", "%b''", '"') == 'alo " alo')
 
-		local t = { "apple", "orange", "lime", n = 0 }
+		t = { "apple", "orange", "lime", n = 0 }
 		assert(utf8.gsub("x and x and x", "x", function()
 			t.n = t.n + 1
 			return t[t.n]
@@ -792,20 +791,21 @@ describe("utf8", function()
 
 		-- bug since 2.5 (C-stack overflow)
 		do
-			local function f(size)
-				local s = string.rep("a", size)
+			local function f2(size)
+				s = string.rep("a", size)
 				local p = string.rep(".?", size)
 				return pcall(utf8.match, s, p)
 			end
-			local r, m = f(80)
+			local m
+			r, m = f2(80)
 			assert(r and #m == 80)
-			r, m = f(200000)
+			r, m = f2(200000)
 			assert(not r and utf8.find(m, "too complex"))
 		end
 
-		if not _soft then
+		if not _G._soft then
 			-- big strings
-			local a = string.rep("a", 300000)
+			a = string.rep("a", 300000)
 			assert(utf8.find(a, "^a*.?$"))
 			assert(not utf8.find(a, "^a*.?b$"))
 			assert(utf8.find(a, "^a-.?$"))
@@ -816,13 +816,13 @@ describe("utf8", function()
 		end
 
 		-- recursive nest of gsubs
-		function rev(s)
-			return utf8.gsub(s, "(.)(.+)", function(c, s1)
-				return rev(s1) .. c
+		local function rev(str)
+			return utf8.gsub(str, "(.)(.+)", function(c2, s1)
+				return rev(s1) .. c2
 			end)
 		end
 
-		local x = "abcdef"
+		x = "abcdef"
 		assert(rev(rev(x)) == x)
 
 		-- gsub with tables
@@ -835,14 +835,14 @@ describe("utf8", function()
 
 		t = {}
 		setmetatable(t, {
-			__index = function(t, s)
-				return utf8.upper(s)
+			__index = function(t2, s2)
+				return utf8.upper(s2)
 			end,
 		})
 		assert(utf8.gsub("a alo b hi", "%w%w+", t) == "a ALO b HI")
 
 		-- tests for gmatch
-		local a = 0
+		a = 0
 		for i in utf8.gmatch("abcde", "()") do
 			assert(i == a + 1)
 			a = i
@@ -891,22 +891,23 @@ describe("utf8", function()
 		assert(not utf8.find("aba", "%f[%l%z]"))
 		assert(not utf8.find("aba", "%f[^%l%z]"))
 
-		local i, e = utf8.find(" alo aalo allo", "%f[%S].-%f[%s].-%f[%S]")
+		local i
+		i, e = utf8.find(" alo aalo allo", "%f[%S].-%f[%s].-%f[%S]")
 		assert(i == 2 and e == 5)
 		local k = utf8.match(" alo aalo allo", "%f[%S](.-%f[%s].-%f[%S])")
 		assert(k == "alo ")
 
-		local a = { 1, 5, 9, 14, 17 }
-		for k in utf8.gmatch("alo alo th02 is 1hat", "()%f[%w%d]") do
-			assert(table.remove(a, 1) == k)
+		a = { 1, 5, 9, 14, 17 }
+		for k2 in utf8.gmatch("alo alo th02 is 1hat", "()%f[%w%d]") do
+			assert(table.remove(a, 1) == k2)
 		end
 		assert(#a == 0)
 
 		-- malformed patterns
 		local function malform(p, m)
 			m = m or "malformed"
-			local r, msg = pcall(utf8.find, "a", p)
-			assert(not r and utf8.find(msg, m))
+			local r2, msg = pcall(utf8.find, "a", p)
+			assert(not r2 and utf8.find(msg, m))
 		end
 
 		malform("[a")
