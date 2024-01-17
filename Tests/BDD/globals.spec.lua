@@ -1,4 +1,3 @@
-local evo = require("evo")
 local ffi = require("ffi")
 local bdd = require("bdd")
 local console = require("console")
@@ -9,7 +8,6 @@ local globalAliases = {
 	["buffer"] = require("string.buffer"),
 	["describe"] = bdd.describe,
 	["dump"] = debug.dump,
-	["extend"] = evo.extend,
 	["format"] = string.format,
 	["it"] = bdd.it,
 	["path"] = require("path"),
@@ -50,40 +48,5 @@ describe("_G", function()
 		local versionString = string.match(runtimeVersionDefinedAtBuildTime, expectedVersionStringPattern)
 
 		assertEquals(type(versionString), "string")
-	end)
-
-	describe("extend", function()
-		it("should still work if the prototype object doesn't have a metatable", function()
-			local child = {}
-			local parent = {}
-			function parent:hello() end
-
-			extend(child, parent)
-			assertEquals(child.hello, parent.hello)
-		end)
-
-		it("should set up a metatable such that the child inherits the prototype's functionality", function()
-			local child = {}
-			local parent = {}
-			function parent:thisFunctionShouldBeInherited() end
-
-			extend(child, parent)
-			assertEquals(child.thisFunctionShouldBeInherited, parent.thisFunctionShouldBeInherited)
-		end)
-
-		it("should copy all existing fields from the prototype's metatable", function()
-			local child = {}
-			local parent = {}
-			local grandparent = {}
-			function parent:thisFunctionShouldBeInherited() end
-			function grandparent:thisFunctionShouldAlsoBeInherited() end
-
-			extend(parent, grandparent)
-			extend(child, parent)
-
-			assertEquals(child.thisFunctionShouldBeInherited, parent.thisFunctionShouldBeInherited)
-			assertEquals(child.thisFunctionShouldAlsoBeInherited, grandparent.thisFunctionShouldAlsoBeInherited)
-			assertEquals(parent.thisFunctionShouldAlsoBeInherited, grandparent.thisFunctionShouldAlsoBeInherited)
-		end)
 	end)
 end)

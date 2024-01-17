@@ -23,10 +23,7 @@ local zlib = require("zlib")
 
 local format = string.format
 local table_insert = table.insert
-local getmetatable = getmetatable
-local setmetatable = setmetatable
 local pairs = pairs
-local type = type
 
 local EXIT_FAILURE = 1
 local EXPECTED_TEST_RUNNER_ENTRY_POINT = "test.lua"
@@ -120,7 +117,6 @@ function evo.registerGlobalAliases()
 	_G.it = bdd.it
 
 	_G.printf = console.printf
-	_G.extend = evo.extend
 
 	_G.cdef = ffi.cdef
 	_G.define = ffi.cdef
@@ -431,24 +427,6 @@ function evo.onInvalidCommand(command, argv)
 	end
 
 	evo.displayHelpText()
-end
-
-function evo.extend(child, parent)
-	local parentMetatable = getmetatable(parent)
-
-	if type(parentMetatable) ~= "table" then
-		setmetatable(parent, {})
-		parentMetatable = getmetatable(parent)
-	end
-
-	local childMetatable = {}
-	for key, value in pairs(parentMetatable) do
-		childMetatable[key] = value
-	end
-
-	childMetatable.__index = parent
-
-	setmetatable(child, childMetatable)
 end
 
 return evo
