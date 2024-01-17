@@ -1,15 +1,21 @@
 local ffi = require("ffi")
 local bdd = require("bdd")
 local console = require("console")
+local oop = require("oop")
 
 local globalAliases = {
 	["after"] = bdd.after,
 	["before"] = bdd.before,
 	["buffer"] = require("string.buffer"),
+	["class"] = oop.class,
+	["classname"] = oop.classname,
 	["describe"] = bdd.describe,
 	["dump"] = debug.dump,
+	["extend"] = oop.extend,
+	["instanceof"] = oop.instanceof,
 	["format"] = string.format,
 	["it"] = bdd.it,
+	["mixin"] = oop.mixin,
 	["path"] = require("path"),
 	["printf"] = console.printf,
 	["cast"] = ffi.cast,

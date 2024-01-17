@@ -9,6 +9,7 @@ local json = require("json")
 local labsound = require("labsound")
 local lpeg = require("lpeg")
 local miniz = require("miniz")
+local oop = require("oop")
 local regex = require("regex")
 local rml = require("rml")
 local stbi = require("stbi")
@@ -111,10 +112,15 @@ function evo.registerGlobalAliases()
 
 	_G.after = bdd.after
 	_G.before = bdd.before
+	_G.class = oop.class
+	_G.classname = oop.classname
 	_G.describe = bdd.describe
 	_G.dump = debug.dump
+	_G.extend = oop.extend
 	_G.format = string.format
+	_G.instanceof = oop.instanceof
 	_G.it = bdd.it
+	_G.mixin = oop.mixin
 
 	_G.printf = console.printf
 
