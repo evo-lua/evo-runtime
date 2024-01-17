@@ -9,6 +9,7 @@ local json = require("json")
 local labsound = require("labsound")
 local lpeg = require("lpeg")
 local miniz = require("miniz")
+local oop = require("oop")
 local regex = require("regex")
 local rml = require("rml")
 local stbi = require("stbi")
@@ -23,10 +24,7 @@ local zlib = require("zlib")
 
 local format = string.format
 local table_insert = table.insert
-local getmetatable = getmetatable
-local setmetatable = setmetatable
 local pairs = pairs
-local type = type
 
 local EXIT_FAILURE = 1
 local EXPECTED_TEST_RUNNER_ENTRY_POINT = "test.lua"
@@ -114,13 +112,17 @@ function evo.registerGlobalAliases()
 
 	_G.after = bdd.after
 	_G.before = bdd.before
+	_G.class = oop.class
+	_G.classname = oop.classname
 	_G.describe = bdd.describe
 	_G.dump = debug.dump
+	_G.extend = oop.extend
 	_G.format = string.format
+	_G.instanceof = oop.instanceof
 	_G.it = bdd.it
+	_G.mixin = oop.mixin
 
 	_G.printf = console.printf
-	_G.extend = evo.extend
 
 	_G.cdef = ffi.cdef
 	_G.define = ffi.cdef
@@ -431,24 +433,6 @@ function evo.onInvalidCommand(command, argv)
 	end
 
 	evo.displayHelpText()
-end
-
-function evo.extend(child, parent)
-	local parentMetatable = getmetatable(parent)
-
-	if type(parentMetatable) ~= "table" then
-		setmetatable(parent, {})
-		parentMetatable = getmetatable(parent)
-	end
-
-	local childMetatable = {}
-	for key, value in pairs(parentMetatable) do
-		childMetatable[key] = value
-	end
-
-	childMetatable.__index = parent
-
-	setmetatable(child, childMetatable)
 end
 
 return evo
