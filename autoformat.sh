@@ -1,5 +1,5 @@
 # See deps/install-clang-format.sh for the required version (should always match)
-REQUIRED_CLANG_FORMAT_VERSION="18"
+REQUIRED_CLANG_FORMAT_VERSION="17"
 CLANG_FORMAT="clang-format-$REQUIRED_CLANG_FORMAT_VERSION"
 
 # The MSYS version may lag behind somewhat, so a fallback option is needed
