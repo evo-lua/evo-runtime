@@ -1,3 +1,8 @@
+echo "Installed formatters:\n"
+
+echo "* " $(stylua --version)
+echo "* " $(clang-format --version)
+
 echo "Formatting Lua sources ..."
 
 stylua . --verbose
