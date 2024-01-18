@@ -52,6 +52,9 @@ local EvoBuildTarget = {
 		"Runtime/Libraries/vfs.lua",
 		"Runtime/Libraries/v8.lua",
 	},
+	cSources = {
+		"Runtime/Bindings/lutf8.c",
+	},
 	cppSources = {
 		"Runtime/main.cpp",
 		"Runtime/Bindings/crypto_argon2.cpp",
@@ -87,6 +90,7 @@ local EvoBuildTarget = {
 		"deps/luvit/luv/deps/libuv/include",
 		"deps/mariusbancila/stduuid/include",
 		"deps/nothings/stb",
+		"deps/starwing/luautf8", -- unidata.h
 		"deps/webview/webview",
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
