@@ -2,10 +2,20 @@
 REQUIRED_CLANG_FORMAT_VERSION="18"
 CLANG_FORMAT="clang-format-$REQUIRED_CLANG_FORMAT_VERSION"
 
-echo "Installed formatters:\n"
+# The MSYS version may lag behind somewhat, so a fallback option is needed
+if ! command -v $CLANG_FORMAT &> /dev/null
+then
+    echo "clang-format-$REQUIRED_CLANG_FORMAT_VERSION not found. Using the default clang-format instead"
+	echo
+    CLANG_FORMAT="clang-format"
+fi
+
+echo "Installed formatters:"
+echo
 
 echo "* " $(stylua --version)
 echo "* " $($CLANG_FORMAT --version)
+echo
 
 echo "Formatting Lua sources ..."
 
