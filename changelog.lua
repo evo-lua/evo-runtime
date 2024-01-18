@@ -1,4 +1,21 @@
 local changelog = {
+	["v0.0.17"] = {
+		newFeatures = {
+			"Added a new `utf8` library for unicode string manipulation (powered by lua-utf8)",
+			"Added a new `oop` library that provides some basic object-orientation utilities",
+			"The new `transform.strip` function can be used to undo text transformations",
+			"LPEG has returned to the runtime and is available via the`lpeg` library",
+		},
+		improvements = {
+			"Revamped the interpreter's command-line interface with colors and better failure modes",
+			"The CLI now includes a new `test` command to automatically discover and run test files",
+			"Another CLi shorthand - typing `evo .` will automatically attempt to start the `main.lua` script",
+			"There's now an alias for MT-generated uuids: `uuid.create` helps save some typing",
+		},
+		breakingChanges = {
+			"The global `extend` builtin has been removed in favor of `oop.extend`",
+		},
+	},
 	["v0.0.16"] = {
 		newFeatures = {
 			"Added FFI bindings for RmlUI (including a WebGPU render interface)",
