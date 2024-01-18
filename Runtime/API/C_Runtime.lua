@@ -1,5 +1,6 @@
 local assertions = require("assertions")
 local bdd = require("bdd")
+local ffi = require("ffi")
 local transform = require("transform")
 local validation = require("validation")
 
@@ -75,14 +76,24 @@ function C_Runtime.PrintVersionString()
 	print(EVO_VERSION)
 end
 
-local function shell_exec(shellCommand)
-	local file = assert(io.popen(shellCommand, "r"))
+local function shell_exec(command)
+	local tempFile = os.tmpname()
+	local commandWithRedirection = command .. " > " .. tempFile .. " 2>&1"
 
-	file:flush() -- Required to prevent receiving only partial output
+	-- Somewhat sketchy, but portable enough for this use case?
+	local success, terminationReason, exitCode = os.execute(commandWithRedirection)
+
+	local file = io.open(tempFile, "rb")
 	local output = file:read("*all")
 	file:close()
 
-	return output
+	os.remove(tempFile)
+
+	if ffi.os == "Windows" then
+		-- Have to normalize to get rid of MS idiosyncracies
+		output = output:gsub("%s?\r\n", "\n")
+	end
+	return output, success, terminationReason, exitCode
 end
 
 function C_Runtime.RunSnapshotTests(testCases)
@@ -94,9 +105,12 @@ function C_Runtime.RunSnapshotTests(testCases)
 
 		printf("Running snapshot test %s", transform.bold(descriptor))
 		printf("[SHELL] Executing command: %s", transform.green(testInfo.programToRun))
-		local observedOutput = shell_exec(testInfo.programToRun)
-		testInfo.onExit(observedOutput)
+		local observedOutput, status, terminationReason, exitCodeOrSignalID = shell_exec(testInfo.programToRun)
 		printf("[SHELL] Observed output has %d bytes", #observedOutput)
+		printf("[SHELL] Termination status: %s", status)
+		printf("[SHELL] Termination reason: %s", terminationReason)
+		printf("[SHELL] Return code or signal: %s", exitCodeOrSignalID)
+		testInfo.onExit(observedOutput, status, terminationReason, exitCodeOrSignalID)
 	end
 end
 

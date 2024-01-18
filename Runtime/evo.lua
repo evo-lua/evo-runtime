@@ -310,7 +310,7 @@ function evo.buildZipApp(commandName, argv)
 		printf(transform.brightRed(evo.errorStrings.APP_BUNDLER_INVALID_BUILD_DIR), outputFileName, inputDirectory)
 		print()
 		print(evo.messageStrings.BUILD_COMMAND_USAGE_INFO)
-		return
+		os.exit(EXIT_FAILURE)
 	end
 
 	if #argv == 0 then
@@ -329,7 +329,7 @@ function evo.buildZipApp(commandName, argv)
 		)
 		print()
 		print(evo.messageStrings.BUILD_COMMAND_USAGE_INFO)
-		return
+		os.exit(EXIT_FAILURE)
 	end
 
 	local zipWriter = miniz.new_writer()
@@ -409,7 +409,7 @@ function evo.discoverAndRunTests(command, argv)
 			print(transform.brightRed(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING))
 			print()
 			print(evo.messageStrings.TEST_COMMAND_USAGE_INFO)
-			return
+			os.exit(EXIT_FAILURE)
 		end
 
 		_G.arg = appArgs
