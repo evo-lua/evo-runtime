@@ -1,7 +1,11 @@
+# See deps/install-clang-format.sh for the required version (should always match)
+REQUIRED_CLANG_FORMAT_VERSION="18"
+CLANG_FORMAT="clang-format-$REQUIRED_CLANG_FORMAT_VERSION"
+
 echo "Installed formatters:\n"
 
 echo "* " $(stylua --version)
-echo "* " $(clang-format --version)
+echo "* " $($CLANG_FORMAT --version)
 
 echo "Formatting Lua sources ..."
 
@@ -16,7 +20,7 @@ if [ -n "$RELEVANT_C_FILES_TO_FORMAT" ]; then
 	echo $RELEVANT_C_FILES_TO_FORMAT
 
 	echo "Formatting C sources ..."
-	clang-format -i --verbose $RELEVANT_C_FILES_TO_FORMAT
+	$CLANG_FORMAT -i --verbose $RELEVANT_C_FILES_TO_FORMAT
 else
 	echo "NO relevant C sources found"
 fi
@@ -26,5 +30,4 @@ echo "Discovered C++ sources:"
 echo $RELEVANT_CPP_FILES_TO_FORMAT
 
 echo "Formatting C++ sources ..."
-clang-format -i --verbose $RELEVANT_CPP_FILES_TO_FORMAT
-
+$CLANG_FORMAT -i --verbose $RELEVANT_CPP_FILES_TO_FORMAT
