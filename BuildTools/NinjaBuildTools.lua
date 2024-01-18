@@ -1,7 +1,15 @@
 local ffi = require("ffi")
 
+local format = string.format
+
 local isWindows = (ffi.os == "Windows")
 local isMacOS = (ffi.os == "OSX")
+
+local GCC_RELEASE_FLAGS = "-O3 -DNDEBUG"
+local GCC_DEBUG_FLAGS = "-g" -- For better stack traces
+local GCC_DIAGNOSTICS_FLAGS =
+	"-Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color -Wfatal-errors"
+local DEFAULT_COMPILER_FLAGS = format("%s %s %s", GCC_RELEASE_FLAGS, GCC_DEBUG_FLAGS, GCC_DIAGNOSTICS_FLAGS)
 
 local C_BuildTools = {
 	OBJECT_FILE_EXTENSION = (isWindows and "obj" or "o"),
@@ -13,8 +21,9 @@ local C_BuildTools = {
 		displayName = "GNU Compiler Collection",
 		C_COMPILER = "gcc",
 		CPP_COMPILER = "g++",
-		COMPILER_FLAGS = "-O3 -DNDEBUG -g -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color -Wfatal-errors"
-			.. (isMacOS and " -ObjC++" or ""), -- Forced Objc++ should be removed once glfw3webgpu is merged into the GLFW core library... until then, it's a necessary evil
+		COMPILER_FLAGS_CPP = DEFAULT_COMPILER_FLAGS .. " -std=c++20",
+		-- Forced ObjC compilation should be removed once glfw3webgpu is merged into the GLFW core library
+		COMPILER_FLAGS_C = DEFAULT_COMPILER_FLAGS .. " -std=c11" .. (isMacOS and " -ObjC" or ""),
 		C_LINKER = "gcc",
 		CPP_LINKER = "g++",
 		-- Must export the entry point of bytecode objects so that LuaJIT can load them via require()
@@ -183,8 +192,6 @@ function C_BuildTools.FetchNotableChanges(versionTag)
 	local notableChanges = require("changelog")
 	return notableChanges[versionTag] or {}
 end
-
-local format = _G.format or string.format -- Can be removed after the format alias has been re-introduced
 
 -- This is screaming to get out and become its own class, but for the time being it shall remain imprisoned...
 local function markdownFile_AddCategory(markdownFile, category)

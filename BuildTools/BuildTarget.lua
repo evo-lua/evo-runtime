@@ -34,7 +34,8 @@ function BuildTarget:SetCompilerToolchain(toolchainInfo)
 
 	ninjaFile:AddVariable("C_COMPILER", toolchainInfo.C_COMPILER)
 	ninjaFile:AddVariable("CPP_COMPILER", toolchainInfo.CPP_COMPILER)
-	ninjaFile:AddVariable("COMPILER_FLAGS", toolchainInfo.COMPILER_FLAGS)
+	ninjaFile:AddVariable("COMPILER_FLAGS_C", toolchainInfo.COMPILER_FLAGS_C)
+	ninjaFile:AddVariable("COMPILER_FLAGS_CPP", toolchainInfo.COMPILER_FLAGS_CPP)
 	ninjaFile:AddVariable("C_LINKER", toolchainInfo.CPP_LINKER)
 	ninjaFile:AddVariable("CPP_LINKER", toolchainInfo.CPP_LINKER)
 	ninjaFile:AddVariable("LINKER_FLAGS", toolchainInfo.LINKER_FLAGS)
@@ -45,7 +46,7 @@ function BuildTarget:SetCompilerToolchain(toolchainInfo)
 	-- Technically, this is still specific to GCC due to the emitted deps file, but that could easily be changed later (if needed)
 	ninjaFile:AddRule(
 		"compile",
-		"$CPP_COMPILER -c $in -o $out -MT $out -MMD -MF $out.d $COMPILER_FLAGS $includes $defines",
+		"$CPP_COMPILER -c $in -o $out -MT $out -MMD -MF $out.d $COMPILER_FLAGS_CPP $includes $defines",
 		{
 			description = "Compiling $in ...",
 			deps = "$C_COMPILER", --  g++ uses the same format as gcc
@@ -54,7 +55,7 @@ function BuildTarget:SetCompilerToolchain(toolchainInfo)
 	)
 	ninjaFile:AddRule(
 		"ccompile",
-		"$C_COMPILER -c $in -o $out -MT $out -MMD -MF $out.d $COMPILER_FLAGS $includes $defines",
+		"$C_COMPILER -c $in -o $out -MT $out -MMD -MF $out.d $COMPILER_FLAGS_C $includes $defines",
 		{
 			description = "Compiling $in ...",
 			deps = "$C_COMPILER",
