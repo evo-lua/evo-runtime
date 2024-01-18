@@ -81,4 +81,14 @@ describe("string", function()
 			assertEquals(string.filesize(6044629098073145873530880), "5.00 YB")
 		end)
 	end)
+
+	describe("hexdiff", function()
+		it("should return a hexadecimal string representation of the difference between both inputs", function()
+			function string.hexdiff(first, second)
+				return string.diff(first, second)
+			end
+			assertEquals(string.hexdiff("Hello world", "Hello world!"), "TBD")
+		end)
+
+	end)
 end)
