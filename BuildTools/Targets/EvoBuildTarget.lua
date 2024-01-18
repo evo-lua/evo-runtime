@@ -53,6 +53,7 @@ local EvoBuildTarget = {
 		"Runtime/Libraries/v8.lua",
 	},
 	cSources = {
+		"Runtime/Bindings/glfw_webgpu.c",
 		"Runtime/Bindings/lutf8.c",
 	},
 	cppSources = {
