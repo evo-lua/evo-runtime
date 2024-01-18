@@ -1876,6 +1876,7 @@ static int Lutf8_normalize_nfc(lua_State *L) {
   const char *e, *s = check_utf8(L, 1, &e), *p = s, *starter_p = s;
   utfint starter = 0, ch;
   unsigned int prev_canon_cls = 0;
+  luaL_Buffer buff; // [MOD: Moved to head of block to fix invalid C syntax error]
 
   /* First scan to see if we can find any problems... if not, we may just return the
    * input string unchanged */
@@ -1910,7 +1911,6 @@ static int Lutf8_normalize_nfc(lua_State *L) {
 
 build_string:
   /* We will need to build a new string, this one is not NFC */
-  luaL_Buffer buff;
   luaL_buffinit(L, &buff);
   luaL_addlstring(&buff, s, starter_p - s);
 
