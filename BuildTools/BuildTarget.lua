@@ -32,20 +32,33 @@ end
 function BuildTarget:SetCompilerToolchain(toolchainInfo)
 	local ninjaFile = self.ninjaFile
 
+	ninjaFile:AddVariable("C_COMPILER", toolchainInfo.C_COMPILER)
 	ninjaFile:AddVariable("CPP_COMPILER", toolchainInfo.CPP_COMPILER)
-	ninjaFile:AddVariable("COMPILER_FLAGS", toolchainInfo.COMPILER_FLAGS)
+	ninjaFile:AddVariable("COMPILER_FLAGS_C", toolchainInfo.COMPILER_FLAGS_C)
+	ninjaFile:AddVariable("COMPILER_FLAGS_CPP", toolchainInfo.COMPILER_FLAGS_CPP)
+	ninjaFile:AddVariable("C_LINKER", toolchainInfo.CPP_LINKER)
 	ninjaFile:AddVariable("CPP_LINKER", toolchainInfo.CPP_LINKER)
 	ninjaFile:AddVariable("LINKER_FLAGS", toolchainInfo.LINKER_FLAGS)
+	ninjaFile:AddVariable("C_ARCHIVER", toolchainInfo.C_ARCHIVER)
 	ninjaFile:AddVariable("CPP_ARCHIVER", toolchainInfo.CPP_ARCHIVER)
 	ninjaFile:AddVariable("ARCHIVER_FLAGS", toolchainInfo.ARCHIVER_FLAGS)
 
 	-- Technically, this is still specific to GCC due to the emitted deps file, but that could easily be changed later (if needed)
 	ninjaFile:AddRule(
 		"compile",
-		"$CPP_COMPILER -c $in -o $out -MT $out -MMD -MF $out.d $COMPILER_FLAGS $includes $defines",
+		"$CPP_COMPILER -c $in -o $out -MT $out -MMD -MF $out.d $COMPILER_FLAGS_CPP $includes $defines",
 		{
 			description = "Compiling $in ...",
 			deps = "$C_COMPILER", --  g++ uses the same format as gcc
+			depfile = "$out.d",
+		}
+	)
+	ninjaFile:AddRule(
+		"ccompile",
+		"$C_COMPILER -c $in -o $out -MT $out -MMD -MF $out.d $COMPILER_FLAGS_C $includes $defines",
+		{
+			description = "Compiling $in ...",
+			deps = "$C_COMPILER",
 			depfile = "$out.d",
 		}
 	)
@@ -54,6 +67,7 @@ function BuildTarget:SetCompilerToolchain(toolchainInfo)
 		"$CPP_LINKER $in -o $out $libs $LINKER_FLAGS",
 		{ description = "Linking target $out ..." }
 	)
+	ninjaFile:AddRule("clink", "$C_LINKER $in -o $out $libs $LINKER_FLAGS", { description = "Linking target $out ..." })
 
 	self.toolchain = toolchainInfo
 end
@@ -111,6 +125,17 @@ function BuildTarget:ProcessNativeSources()
 		-- Some dependencies demand special treatment because of how they use defines (questionably?)
 		local defines = self:GetDefines()
 		ninjaFile:AddBuildEdge(outputFile, "compile " .. cppSourceFilePath, { includes = includes, defines = defines })
+
+		table.insert(objectFiles, outputFile)
+	end
+
+	for index, cSourceFilePath in ipairs(self.cSources) do
+		local outputFile =
+			string.format("%s/%s.%s", self.BUILD_DIR, cSourceFilePath, NinjaBuildTools.OBJECT_FILE_EXTENSION)
+
+		-- Some dependencies demand special treatment because of how they use defines (questionably?)
+		local defines = self:GetDefines()
+		ninjaFile:AddBuildEdge(outputFile, "ccompile " .. cSourceFilePath, { includes = includes, defines = defines })
 
 		table.insert(objectFiles, outputFile)
 	end

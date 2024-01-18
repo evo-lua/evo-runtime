@@ -2,7 +2,6 @@
 #include "interop_ffi.hpp"
 
 #include <glfw3webgpu.h>
-#include <glfw3webgpu.c>
 
 #include <string>
 

@@ -3,6 +3,7 @@ extern "C" {
 #include "luv.h"
 #include "lminiz.hpp"
 #include "lrexlib.hpp"
+#include "lutf8.hpp"
 #include "lzlib.hpp"
 #include "openssl.h"
 }
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]) {
 	luaVM->PreloadPackage("openssl", luaopen_openssl);
 	luaVM->PreloadPackage("regex", luaopen_rex_pcre2);
 	luaVM->PreloadPackage("json", luaopen_rapidjson_modified);
+	luaVM->PreloadPackage("utf8", luaopen_utf8);
 	luaVM->PreloadPackage("zlib", luaopen_zlib);
 
 	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
