@@ -28,6 +28,10 @@ jobs:
           args: --check . --verbose
           version: v0.19.1
 
+      # The preinstalled version is positively antique; replace with the latest and greatest (to match MSYS)
+      - name: Install the clang-format
+        run: ./deps/install-clang-format.sh
+
       - name: Run autoformat
         run: ./autoformat.sh
 
