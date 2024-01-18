@@ -28,12 +28,15 @@ local pairs = pairs
 
 local EXIT_FAILURE = 1
 local EXPECTED_TEST_RUNNER_ENTRY_POINT = "test.lua"
+local EXPECTED_APP_BUNDLER_ENTRY_POINT = "main.lua"
+local GITHUB_DOCS_URL = "https://evo-lua.github.io/"
 
 local evo = {
 	signals = {},
 	-- Interpreter CLI
-	DEFAULT_ENTRY_POINT = "main.lua",
+	DEFAULT_ENTRY_POINT = EXPECTED_APP_BUNDLER_ENTRY_POINT,
 	DEFAULT_TEST_SCRIPT = EXPECTED_TEST_RUNNER_ENTRY_POINT,
+	GITHUB_DOCS_URL = GITHUB_DOCS_URL,
 	errorStrings = {
 		TEST_RUNNER_ENTRY_POINT_MISSING = format(
 			"Cannot start test runner in the current directory (entry point %s not found)",
@@ -41,8 +44,14 @@ local evo = {
 		),
 		TEST_RUNNER_CANNOT_OPEN = "Cannot open %s: No such file or directory",
 		TEST_RUNNER_CANNOT_LOAD = "Cannot load %s: Not a .lua script (wrong file extension?)",
+		APP_BUNDLER_ENTRY_POINT_MISSING = "Cannot create self-contained executable: %s (entry point %s not found)",
+		APP_BUNDLER_INVALID_BUILD_DIR = "Cannot create self-contained executable: %s (entry point %s is not a directory)",
 	},
 	messageStrings = {
+		HELP_COMMAND_DOCUMENTATION_LINK = format(
+			"For documentation and examples, visit %s",
+			transform.brightGreen(GITHUB_DOCS_URL)
+		),
 		TEST_COMMAND_USAGE_INFO = format(
 			[[To run automated tests with this command, you can:
 
@@ -51,13 +60,26 @@ local evo = {
 * Provide a %s file that starts your test suite in any way you see fit: %s (no arguments)
 
 All scripts loaded in this mode will have global access to functions in the %s library.]],
-			".lua",
-			transform.green("evo test testFile1.lua testFile2.lua ... testFileN.lua"),
-			".lua",
-			transform.green("evo test testDir1 testDir2 ... testDirN"),
-			EXPECTED_TEST_RUNNER_ENTRY_POINT,
-			transform.green("evo test"),
-			transform.cyan("assertions")
+			transform.bold(".lua"),
+			transform.brightYellow("evo test testFile1.lua testFile2.lua ... testFileN.lua"),
+			transform.bold(".lua"),
+			transform.brightYellow("evo test testDir1 testDir2 ... testDirN"),
+			transform.bold(EXPECTED_TEST_RUNNER_ENTRY_POINT),
+			transform.brightYellow("evo test"),
+			transform.brightBlue("assertions")
+		),
+		BUILD_COMMAND_USAGE_INFO = format(
+			[[To build standalone applications with this command, you can:
+
+* Provide the directory that contains your code (and %s) to build from: %s
+* Provide a %s file that initializes your program in any way you see fit: %s
+
+Running the bundled app will always load %s with the version of the runtime used to create it.]],
+			transform.bold(EXPECTED_APP_BUNDLER_ENTRY_POINT),
+			transform.brightYellow("evo build appDir"),
+			transform.bold(EXPECTED_APP_BUNDLER_ENTRY_POINT),
+			transform.brightYellow("evo build"),
+			transform.brightBlue(EXPECTED_APP_BUNDLER_ENTRY_POINT)
 		),
 	},
 }
@@ -176,12 +198,13 @@ end
 function evo.getHelpText()
 	local helpText = format(
 		[[
-Usage: evo [ script.lua | command ] ...
+%s
 
 Commands:
 
 %s]],
-		C_CommandLine.GetUsageInfo()
+		transform.bold("Usage: evo [ script.lua | command ] ..."),
+		transform.brightYellow(C_CommandLine.GetUsageInfo())
 	)
 	return helpText
 end
@@ -194,11 +217,15 @@ function evo.showVersionStrings(commandName, ...)
 	local versionText = evo.getVersionText()
 
 	print(versionText)
-	print("For documentation and examples, visit https://evo-lua.github.io/")
+	print(evo.messageStrings.HELP_COMMAND_DOCUMENTATION_LINK)
 end
 
 function evo.getVersionText()
-	local versionText = format("This is Evo.lua %s (powered by %s)", EVO_VERSION, jit.version) .. "\n\n"
+	local versionText = format(
+		"This is %s (powered by %s)",
+		transform.brightGreen("Evo.lua " .. EVO_VERSION),
+		transform.brightBlue(jit.version)
+	) .. "\n\n"
 
 	-- The format exposed by PCRE2 is not consistent with the other libraries (no patch version, date suffix)
 	local major, minor = string.match(regex.version(), "^(%d+)%.(%d+)")
@@ -247,7 +274,12 @@ function evo.getVersionText()
 	versionText = versionText .. "Embedded libraries:\n\n"
 	for index, libraryName in ipairs(embeddedLibraryVersions) do
 		local versionString = embeddedLibraryVersions[libraryName]
-		versionText = versionText .. "\t" .. format("%-10s", libraryName) .. "\t" .. versionString .. "\n"
+		versionText = versionText
+			.. "\t"
+			.. transform.brightBlue(format("%-10s", libraryName))
+			.. "\t"
+			.. transform.brightBlue(versionString)
+			.. "\n"
 	end
 
 	return versionText
@@ -275,23 +307,28 @@ function evo.buildZipApp(commandName, argv)
 
 	local outputFileName = path.basename(inputDirectory) .. suffix
 	if not C_FileSystem.Exists(inputDirectory) or not C_FileSystem.IsDirectory(inputDirectory) then
-		printf("Cannot create self-contained executable: %s", outputFileName)
-		printf("Not a directory: %s", inputDirectory)
-		printf("Please make sure a directory with this name exists (and contains %s)", evo.DEFAULT_ENTRY_POINT)
+		printf(transform.brightRed(evo.errorStrings.APP_BUNDLER_INVALID_BUILD_DIR), outputFileName, inputDirectory)
+		print()
+		print(evo.messageStrings.BUILD_COMMAND_USAGE_INFO)
 		return
 	end
 
 	if #argv == 0 then
-		print("No inputs given, building from the current working directory")
+		printf("Building from %s", transform.bold(uv.cwd()))
 	else
-		print("Building from " .. path.resolve(inputDirectory))
+		printf("Building from %s", transform.bold(path.resolve(inputDirectory)))
 	end
 
 	local expectedEntryPoint = path.join(inputDirectory, evo.DEFAULT_ENTRY_POINT)
 	local hasEntryPoint = C_FileSystem.Exists(expectedEntryPoint)
 	if not hasEntryPoint then
-		printf("Cannot create self-contained executable: %s", outputFileName)
-		printf("%s not found - without an entry point, your app won't be able to run!", evo.DEFAULT_ENTRY_POINT)
+		printf(
+			transform.brightRed(evo.errorStrings.APP_BUNDLER_ENTRY_POINT_MISSING),
+			outputFileName,
+			evo.DEFAULT_ENTRY_POINT
+		)
+		print()
+		print(evo.messageStrings.BUILD_COMMAND_USAGE_INFO)
 		return
 	end
 
@@ -316,11 +353,11 @@ function evo.buildZipApp(commandName, argv)
 		numBytesAdded = numBytesAdded + #fileContents
 		numFilesAdded = numFilesAdded + 1
 
-		printf("Adding file: %s", relativePath)
+		printf(transform.magenta("Adding file: %s"), relativePath)
 	end
 	local zipFileContents = zipWriter:finalize()
 	printf(
-		"Archived %d files (%s) - total size: %s",
+		transform.brightGreen("Archived %d files (%s) - total size: %s"),
 		numFilesAdded,
 		string.filesize(numBytesAdded),
 		string.filesize(#zipFileContents)
@@ -328,7 +365,7 @@ function evo.buildZipApp(commandName, argv)
 
 	local archiveFilePath = path.basename(inputDirectory) .. ".zip"
 	C_FileSystem.WriteFile(archiveFilePath, zipFileContents)
-	print("Created miniz archive: " .. archiveFilePath)
+	printf("Created miniz archive: %s", transform.brightYellow(archiveFilePath))
 
 	local runtimeFileContents = C_FileSystem.ReadFile(uv.exepath())
 	local signature = ffi.new("lua_zip_signature_t")
@@ -338,7 +375,7 @@ function evo.buildZipApp(commandName, argv)
 	signature.executableSize = #runtimeFileContents
 	signature.archiveSize = #zipFileContents
 	printf(
-		"Embedding signature: LUAZIP %d.%d (EXE: %d, ZIP: %d)",
+		transform.brightGreen("Embedding signature: LUAZIP %d.%d (EXE: %d, ZIP: %d)"),
 		tonumber(signature.versionMajor),
 		tonumber(signature.versionMinor),
 		tonumber(signature.executableSize),
@@ -349,7 +386,7 @@ function evo.buildZipApp(commandName, argv)
 		.. zipFileContents
 		.. ffi.string(signature, ffi.sizeof(signature))
 	C_FileSystem.WriteFile(outputFileName, standaloneExecutableBytes)
-	printf("Created self-contained executable: %s", outputFileName)
+	printf("Created self-contained executable: %s", transform.brightYellow(outputFileName))
 end
 
 function evo.discoverAndRunTests(command, argv)
@@ -369,7 +406,7 @@ function evo.discoverAndRunTests(command, argv)
 		-- Ran test command without any inputs -> Fall back to custom test runner initialization (test.lua hook)
 		local hasDefaultEntryPoint = C_FileSystem.Exists(evo.DEFAULT_TEST_SCRIPT)
 		if not hasDefaultEntryPoint then
-			print(transform.red(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING))
+			print(transform.brightRed(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING))
 			print()
 			print(evo.messageStrings.TEST_COMMAND_USAGE_INFO)
 			return
@@ -402,13 +439,13 @@ function evo.discoverAndRunTests(command, argv)
 		elseif C_FileSystem.IsFile(specFileOrFolder) then
 			local isLuaScript = (path.extname(specFileOrFolder) == ".lua")
 			if not isLuaScript then
-				print(transform.red(format(evo.errorStrings.TEST_RUNNER_CANNOT_LOAD, specFileOrFolder)))
+				print(transform.brightRed(format(evo.errorStrings.TEST_RUNNER_CANNOT_LOAD, specFileOrFolder)))
 				os.exit(EXIT_FAILURE)
 			end
 
 			table_insert(specFiles, specFileOrFolder)
 		else
-			print(transform.red(format(evo.errorStrings.TEST_RUNNER_CANNOT_OPEN, specFileOrFolder)))
+			print(transform.brightRed(format(evo.errorStrings.TEST_RUNNER_CANNOT_OPEN, specFileOrFolder)))
 			os.exit(EXIT_FAILURE)
 		end
 	end
@@ -429,7 +466,7 @@ function evo.onInvalidCommand(command, argv)
 	end
 
 	if command ~= "" then
-		print("Invalid command: " .. command .. "\n")
+		printf(transform.brightRed("Invalid command: %s\n"), command)
 	end
 
 	evo.displayHelpText()

@@ -1,5 +1,6 @@
 local console = require("console")
 local evo = require("evo")
+local transform = require("transform")
 local uv = require("uv")
 
 describe("evo", function()
@@ -8,6 +9,7 @@ describe("evo", function()
 			console.capture()
 			evo.showVersionStrings()
 			local capturedOutput = console.release()
+			capturedOutput = transform.strip(capturedOutput)
 
 			local VERSION_PATTERN = "%d+.%d+.%d+"
 			local WHITESPACE = "%s+"

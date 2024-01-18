@@ -51,6 +51,22 @@ function transform.disable()
 	transform.ENABLE_TEXT_TRANSFORMATIONS = false
 end
 
+function transform.strip(coloredConsoleText)
+	if type(coloredConsoleText) ~= "string" then
+		error("Usage: transform.strip(text : string)", 0)
+	end
+
+	-- All credit goes to this fine gentleman: https://stackoverflow.com/users/3735873/tonypdmtr
+	local strippedConsoleText = coloredConsoleText
+		:gsub("\x1b%[%d+;%d+;%d+;%d+;%d+m", "")
+		:gsub("\x1b%[%d+;%d+;%d+;%d+m", "")
+		:gsub("\x1b%[%d+;%d+;%d+m", "")
+		:gsub("\x1b%[%d+;%d+m", "")
+		:gsub("\x1b%[%d+m", "")
+
+	return strippedConsoleText
+end
+
 local function transformText(text, color)
 	if type(text) ~= "string" then
 		error("Usage: transform." .. color .. "(text : string)", 0)

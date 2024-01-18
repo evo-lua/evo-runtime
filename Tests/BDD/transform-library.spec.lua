@@ -106,4 +106,16 @@ describe("transform", function()
 			transform.ENABLE_TEXT_TRANSFORMATIONS = true
 		end)
 	end)
+
+	describe("strip", function()
+		it("should remove color codes from the input without otherwise modifying it", function()
+			for name, transformation in pairs(transform) do
+				if type(transformation) == "function" and transform.colorCodes[name] then
+					local originalText = "Hello world"
+					local coloredText = transform.brightYellow(originalText)
+					assertEquals(transform.strip(coloredText), originalText)
+				end
+			end
+		end)
+	end)
 end)

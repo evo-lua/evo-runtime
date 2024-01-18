@@ -39,7 +39,7 @@ local testCases = {
 		onExit = function(observedOutput)
 			local helpText = evo.getHelpText()
 			local versionText = evo.getVersionText()
-			local documentationLinkText = "For documentation and examples, visit https://evo-lua.github.io/"
+			local documentationLinkText = evo.messageStrings.HELP_COMMAND_DOCUMENTATION_LINK
 
 			assertEquals(observedOutput, helpText .. "\n" .. versionText .. "\n" .. documentationLinkText .. "\n")
 		end,
@@ -58,7 +58,7 @@ local testCases = {
 		onExit = function(observedOutput)
 			local helpText = evo.getHelpText()
 			local versionText = evo.getVersionText()
-			local documentationLinkText = "For documentation and examples, visit https://evo-lua.github.io/"
+			local documentationLinkText = evo.messageStrings.HELP_COMMAND_DOCUMENTATION_LINK
 
 			assertEquals(observedOutput, helpText .. "\n" .. versionText .. "\n" .. documentationLinkText .. "\n")
 		end,
@@ -92,14 +92,17 @@ local testCases = {
 		programToRun = "evo build",
 		onExit = function(observedOutput)
 			local executableName = "evo-runtime" .. EXECUTABLE_SUFFIX
-			assertEquals(
-				observedOutput,
-				"No inputs given, building from the current working directory\n"
-					.. "Cannot create self-contained executable: "
-					.. executableName
-					.. "\n"
-					.. "main.lua not found - without an entry point, your app won't be able to run!\n"
-			)
+			local expectedOutput = format("Building from %s", transform.bold(uv.cwd()))
+				.. "\n"
+				.. format(
+					transform.brightRed(evo.errorStrings.APP_BUNDLER_ENTRY_POINT_MISSING),
+					executableName,
+					evo.DEFAULT_ENTRY_POINT
+				)
+				.. "\n\n"
+				.. evo.messageStrings.BUILD_COMMAND_USAGE_INFO
+				.. "\n"
+			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
 	["cli-build-success"] = {
@@ -118,19 +121,26 @@ local testCases = {
 				+ uv.fs_stat(path.join(fullAppDirectoryPath, "some-file.txt")).size
 				+ uv.fs_stat(path.join(fullAppDirectoryPath, "subdirectory", "another-file.lua")).size
 
-			local expectedOutput = format("Building from %s\n", fullAppDirectoryPath)
-				.. format("Adding file: main.lua\n")
-				.. format("Adding file: some-file.txt\n")
-				.. format("Adding file: %s\n", path.join("subdirectory", "another-file.lua"))
+			local expectedOutput = format("Building from %s\n", transform.bold(fullAppDirectoryPath))
+				.. format(transform.magenta("Adding file: main.lua"))
+				.. "\n"
+				.. format(transform.magenta("Adding file: some-file.txt"))
+				.. "\n"
+				.. format(transform.magenta("Adding file: %s"), path.join("subdirectory", "another-file.lua"))
+				.. "\n"
 				.. format(
-					"Archived 3 files (%s) - total size: %s\n",
+					transform.brightGreen("Archived 3 files (%s) - total size: %s") .. "\n",
 					string.filesize(totalFileSize),
 					string.filesize(zipAppSize)
 				)
-				.. format("Created miniz archive: %s\n", "hello-world-app.zip")
-				.. format("Embedding signature: LUAZIP 1.0 (EXE: %d, ZIP: %d)\n", runtimeExeSize, zipAppSize)
-				.. format("Created self-contained executable: %s\n", executableName)
-
+				.. format("Created miniz archive: %s\n", transform.brightYellow("hello-world-app.zip"))
+				.. format(
+					transform.brightGreen("Embedding signature: LUAZIP 1.0 (EXE: %d, ZIP: %d)"),
+					runtimeExeSize,
+					zipAppSize
+				)
+				.. "\n"
+				.. format("Created self-contained executable: %s\n", transform.brightYellow(executableName))
 			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
@@ -139,15 +149,12 @@ local testCases = {
 		programToRun = "evo build does-not-exist",
 		onExit = function(observedOutput)
 			local executableName = "does-not-exist" .. EXECUTABLE_SUFFIX
-			assertEquals(
-				observedOutput,
-				"Cannot create self-contained executable: "
-					.. executableName
-					.. "\n"
-					.. "Not a directory: does-not-exist"
-					.. "\n"
-					.. "Please make sure a directory with this name exists (and contains main.lua)\n"
-			)
+			local expectedOutput = format(
+				transform.brightRed(evo.errorStrings.APP_BUNDLER_INVALID_BUILD_DIR),
+				executableName,
+				"does-not-exist"
+			) .. "\n\n" .. evo.messageStrings.BUILD_COMMAND_USAGE_INFO .. "\n"
+			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
 	["cli-build-file"] = {
@@ -155,22 +162,20 @@ local testCases = {
 		programToRun = "evo build Tests/Fixtures/hello-world-app/main.lua",
 		onExit = function(observedOutput)
 			local executableName = "main.lua" .. EXECUTABLE_SUFFIX
-			assertEquals(
-				observedOutput,
-				"Cannot create self-contained executable: "
-					.. executableName
-					.. "\n"
-					.. "Not a directory: Tests/Fixtures/hello-world-app/main.lua"
-					.. "\n"
-					.. "Please make sure a directory with this name exists (and contains main.lua)\n"
-			)
+			local inputFilePath = "Tests/Fixtures/hello-world-app/main.lua"
+			local expectedOutput = format(
+				transform.brightRed(evo.errorStrings.APP_BUNDLER_INVALID_BUILD_DIR),
+				executableName,
+				inputFilePath
+			) .. "\n\n" .. evo.messageStrings.BUILD_COMMAND_USAGE_INFO .. "\n"
+			assertEquals(observedOutput, expectedOutput)
 		end,
 	},
 	["cli-test-noargs-error"] = {
 		humanReadableDescription = "Invoking the test command without args should print an error if test.lua doesn't exist",
 		programToRun = "evo test",
 		onExit = function(observedOutput)
-			local expectedOutput = transform.red(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING)
+			local expectedOutput = transform.brightRed(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING)
 				.. "\n\n"
 				.. evo.messageStrings.TEST_COMMAND_USAGE_INFO
 				.. "\n"
@@ -181,7 +186,7 @@ local testCases = {
 		humanReadableDescription = "Invoking the test command without args but with app args should print an error if test.lua doesn't exist",
 		programToRun = "evo test --integration",
 		onExit = function(observedOutput)
-			local expectedOutput = transform.red(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING)
+			local expectedOutput = transform.brightRed(evo.errorStrings.TEST_RUNNER_ENTRY_POINT_MISSING)
 				.. "\n\n"
 				.. evo.messageStrings.TEST_COMMAND_USAGE_INFO
 				.. "\n"
@@ -239,7 +244,7 @@ local testCases = {
 		humanReadableDescription = "Invoking the test command with non-Lua script files should fail with an error",
 		programToRun = "evo test Tests/Fixtures/test-dir/lua-spec-file.spec.lua Tests/Fixtures/test-dir/not-a-lua-file.txt",
 		onExit = function(observedOutput)
-			local expectedOutput = transform.red(
+			local expectedOutput = transform.brightRed(
 				format(evo.errorStrings.TEST_RUNNER_CANNOT_LOAD, "Tests/Fixtures/test-dir/not-a-lua-file.txt")
 			) .. "\n"
 			assertEquals(observedOutput, expectedOutput)
@@ -249,7 +254,7 @@ local testCases = {
 		humanReadableDescription = "Invoking the test command with invalid file paths should fail with an error",
 		programToRun = "evo test Tests/Fixtures/test-dir/lua-spec-file.spec.lua Tests/Fixtures/test-dir/does-not-exist.lua",
 		onExit = function(observedOutput)
-			local expectedOutput = transform.red(
+			local expectedOutput = transform.brightRed(
 				format(evo.errorStrings.TEST_RUNNER_CANNOT_OPEN, "Tests/Fixtures/test-dir/does-not-exist.lua")
 			) .. "\n"
 			assertEquals(observedOutput, expectedOutput)
@@ -259,7 +264,7 @@ local testCases = {
 		humanReadableDescription = "Invoking the test command with invalid directory paths should fail with an error",
 		programToRun = "evo test Tests/Fixtures/test-dir/lua-spec-file.spec.lua Tests/Fixtures/test-dir/does-not-exist",
 		onExit = function(observedOutput)
-			local expectedOutput = transform.red(
+			local expectedOutput = transform.brightRed(
 				format(evo.errorStrings.TEST_RUNNER_CANNOT_OPEN, "Tests/Fixtures/test-dir/does-not-exist")
 			) .. "\n"
 			assertEquals(observedOutput, expectedOutput)
