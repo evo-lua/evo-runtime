@@ -1,15 +1,6 @@
 local ffi = require("ffi")
 
-local wgpu = {
-	WGPU_ARRAY_LAYER_COUNT_UNDEFINED = 0xffffffffULL,
-	WGPU_COPY_STRIDE_UNDEFINED = 0xffffffffULL,
-	WGPU_LIMIT_U32_UNDEFINED = 0xffffffffULL,
-	WGPU_LIMIT_U64_UNDEFINED = 0xffffffffffffffffULL,
-	WGPU_MIP_LEVEL_COUNT_UNDEFINED = 0xffffffffULL,
-	WGPU_QUERY_SET_INDEX_UNDEFINED = 0xffffffffULL,
-	WGPU_WHOLE_MAP_SIZE = math.pow(2, 64) - 1, -- SIZE_MAX
-	WGPU_WHOLE_SIZE = 0xffffffffffffffffULL,
-}
+local wgpu = {}
 
 wgpu.cdefs = [[
 	typedef uint32_t WGPUFlags;
