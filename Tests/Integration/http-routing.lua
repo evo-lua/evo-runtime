@@ -64,7 +64,7 @@ function Test:CreateServer()
 		end
 	end
 
-	setResponseHandler(server)
+	setResponseHandler()
 
 	self.server = server
 end
