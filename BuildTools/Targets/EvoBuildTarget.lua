@@ -8,6 +8,8 @@ local EvoBuildTarget = {
 	-- Can't easily discover sources or resolve paths with only Lua APIs. Listing them explicitly is probably safer anyway
 	-- Note that ninja doesn't care about path separators and the mingw toolchain supports forward slashes; no \ required
 	luaSources = {
+		-- Auto-generated versioning information for embedded libraries
+		"deps/versions.lua",
 		-- Integrated third-party code (no build system required)
 		"deps/kikito/inspect.lua/inspect.lua",
 		"deps/roberto-ieru/LPeg/re.lua",
