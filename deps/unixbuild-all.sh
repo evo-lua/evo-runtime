@@ -1,5 +1,7 @@
 set -e
 
+deps/discover-submodule-versions.sh
+
 deps/luajit-unixbuild.sh
 deps/webgpu-unixbuild.sh
 deps/openssl-unixbuild.sh

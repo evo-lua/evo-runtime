@@ -1,5 +1,7 @@
 set -e
 
+deps/discover-submodule-versions.sh
+
 deps/fetch-mswebview2.sh
 deps/luajit-windowsbuild.sh
 deps/webgpu-windowsbuild.sh

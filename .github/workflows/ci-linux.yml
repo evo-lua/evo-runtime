@@ -61,6 +61,9 @@ jobs:
             echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
             echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
 
+      - name: Generate versions.lua # Required for those libraries that don't export versioning information
+        run: deps/discover-submodule-versions.sh && cat deps/versions.lua
+
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 
