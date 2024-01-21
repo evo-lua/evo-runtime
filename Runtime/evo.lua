@@ -20,6 +20,7 @@ local uws = require("uws")
 local vfs = require("vfs")
 local webgpu = require("webgpu")
 local webview = require("webview")
+local versions = require("versions")
 local zlib = require("zlib")
 
 local format = string.format
@@ -33,6 +34,7 @@ local GITHUB_DOCS_URL = "https://evo-lua.github.io/"
 
 local evo = {
 	signals = {},
+	embeddedLibraryVersions = versions,
 	-- Interpreter CLI
 	DEFAULT_ENTRY_POINT = EXPECTED_APP_BUNDLER_ENTRY_POINT,
 	DEFAULT_TEST_SCRIPT = EXPECTED_TEST_RUNNER_ENTRY_POINT,
@@ -271,14 +273,36 @@ function evo.getVersionText()
 		"wgpu",
 		"zlib",
 	}
+	local submodulePaths = {
+		glfw = "deps/glfw/glfw",
+		labsound = "deps/LabSound/LabSound",
+		libuv = "deps/luvit/luv", -- Always tracks the libuv version
+		lpeg = "deps/roberto-ieru/LPeg",
+		miniz = "deps/richgel999/miniz",
+		rapidjson = "deps/xpol/lua-rapidjson",
+		openssl = "deps/openssl/openssl",
+		pcre2 = "deps/PCRE2Project/pcre2",
+		rml = "deps/mikke89/RmlUi",
+		stbi = "deps/nothings/stb",
+		stduuid = "deps/mariusbancila/stduuid",
+		uws = "deps/uNetworking/uWebSockets",
+		wgpu = "deps/gfx-rs/wgpu-native",
+		webview = "deps/webview/webview",
+		zlib = "deps/madler/zlib",
+	}
+
 	versionText = versionText .. "Embedded libraries:\n\n"
 	for index, libraryName in ipairs(embeddedLibraryVersions) do
 		local versionString = embeddedLibraryVersions[libraryName]
+		local submodulePath = submodulePaths[libraryName]
+		local commitHash = evo.embeddedLibraryVersions[submodulePath].commit
 		versionText = versionText
 			.. "\t"
 			.. transform.brightBlue(format("%-10s", libraryName))
 			.. "\t"
 			.. transform.brightBlue(versionString)
+			.. "\t\t"
+			.. format("%s", transform.brightBlue(commitHash))
 			.. "\n"
 	end
 

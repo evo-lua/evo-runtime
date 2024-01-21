@@ -144,17 +144,18 @@ end
 function BuildTarget:GetDefines()
 	local defines = string.format('-DEVO_VERSION=\\"%s\\"', self.GIT_VERSION_TAG)
 
-	-- Some dependencies don't export the version at all, so we have to discover it manually (hacky!)
-	local uwsVersionTag = require(self.BUILD_DIR .. ".uws-version")
+	local discoveredLibraryVersions = require("deps.versions")
+
+	local uwsVersionTag = discoveredLibraryVersions["deps/uNetworking/uWebSockets"].tag
 	local uwsVersionString = string.match(uwsVersionTag, "(%d+.%d+.%d+)")
 	defines = defines .. string.format(' -DUWS_VERSION=\\"%s\\"', uwsVersionString)
 	defines = defines .. " -DUWS_HTTPRESPONSE_NO_WRITEMARK"
 
-	local wgpuVersionTag = require(self.BUILD_DIR .. ".wgpu-version")
+	local wgpuVersionTag = discoveredLibraryVersions["deps/gfx-rs/wgpu-native"].tag
 	local wgpuVersionString = string.match(wgpuVersionTag, "(%d+.%d+.%d+)")
 	defines = defines .. string.format(' -DWGPU_VERSION=\\"%s\\"', wgpuVersionString)
 
-	local labsoundVersionTag = require(self.BUILD_DIR .. ".labsound-version")
+	local labsoundVersionTag = discoveredLibraryVersions["deps/LabSound/LabSound"].tag
 	local labsoundVersionString = string.match(labsoundVersionTag, "(%d+.%d+.%d+)")
 	defines = defines .. string.format(' -DLABSOUND_VERSION=\\"%s\\"', labsoundVersionString)
 
