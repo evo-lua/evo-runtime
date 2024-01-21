@@ -33,16 +33,22 @@ jobs:
         shell: msys2 {0}
 
     steps:
+      # MSYS needs to be available before running any git commands
+      - name: Set up MSYS2 environment
+        uses: msys2/setup-msys2@v2
+        with:
+          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake mingw-w64-x86_64-rust
+
+      - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - name: Check out Git repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
-
-      - name: Set up MSYS2 environment
-        uses: msys2/setup-msys2@v2
-        with:
-          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake mingw-w64-x86_64-rust
 
       - name: Set up sccache
         uses: mozilla-actions/sccache-action@v0.0.3
