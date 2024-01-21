@@ -11,31 +11,32 @@ describe("evo", function()
 			local capturedOutput = console.release()
 			capturedOutput = transform.strip(capturedOutput)
 
-			local VERSION_PATTERN = "%d+.%d+.%d+"
+			local VERSION = "%d+.%d+.%d+"
+			local HASH = "[a-f0-9]+"
 			local WHITESPACE = "%s+"
 
-			local runtimeVersion = capturedOutput:match("This is Evo.lua v" .. VERSION_PATTERN)
-			local engineVersion = capturedOutput:match("powered by LuaJIT " .. VERSION_PATTERN)
+			local runtimeVersion = capturedOutput:match("This is Evo.lua v" .. VERSION)
+			local engineVersion = capturedOutput:match("powered by LuaJIT " .. VERSION)
 			local documentationLink = capturedOutput:match("https://evo%-lua%.github%.io/")
 
 			local hasRuntimeVersion = (runtimeVersion ~= nil)
 			local hasEngineVersion = (engineVersion ~= nil)
 			local hasEmbeddedLibraryVersions = {
-				glfw = (capturedOutput:match("glfw" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				labsound = (capturedOutput:match("labsound" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				libuv = (capturedOutput:match("libuv" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				lpeg = (capturedOutput:match("lpeg" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				miniz = (capturedOutput:match("miniz" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				rapidjson = (capturedOutput:match("rapidjson" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				openssl = (capturedOutput:match("openssl" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				pcre2 = (capturedOutput:match("pcre2" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				rml = (capturedOutput:match("rml" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				stbi = (capturedOutput:match("stbi" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				stduuid = (capturedOutput:match("stduuid" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				uws = (capturedOutput:match("uws" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				wgpu = (capturedOutput:match("wgpu" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				webview = (capturedOutput:match("webview" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
-				zlib = (capturedOutput:match("zlib" .. WHITESPACE .. VERSION_PATTERN) ~= nil),
+				glfw = (capturedOutput:match("glfw" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				labsound = (capturedOutput:match("labsound" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				libuv = (capturedOutput:match("libuv" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				lpeg = (capturedOutput:match("lpeg" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				miniz = (capturedOutput:match("miniz" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				rapidjson = (capturedOutput:match("rapidjson" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				openssl = (capturedOutput:match("openssl" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				pcre2 = (capturedOutput:match("pcre2" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				rml = (capturedOutput:match("rml" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				stbi = (capturedOutput:match("stbi" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				stduuid = (capturedOutput:match("stduuid" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				uws = (capturedOutput:match("uws" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				wgpu = (capturedOutput:match("wgpu" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				webview = (capturedOutput:match("webview" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
+				zlib = (capturedOutput:match("zlib" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
 			}
 			local hasDocumentationLink = (documentationLink ~= nil)
 
