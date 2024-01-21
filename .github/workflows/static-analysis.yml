@@ -47,6 +47,12 @@ jobs:
       - name: Run luacheck
         run: luacheck .
 
+      - name: Install selene
+        run: cargo install selene
+
+      - name: Run selene
+        run: selene .
+
       # apt only has an ancient version, which behaves inconsistently
       - name: Install cppcheck
         run: |

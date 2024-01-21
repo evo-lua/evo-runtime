@@ -37,7 +37,7 @@ describe("iconv", function()
 			end)
 
 			it("should be able to convert Windows encodings to UTF-8", function()
-				local inputBuffer = ffi.new("char[15]", "\xC0\xAF\xC0\xFA\xC0\xCE\xC5\xCD\xC6\xE4\xC0\xCC\xBD\xBA\000")
+				local inputBuffer = ffi.new("char[15]", "\192\175\192\250\192\206\197\205\198\228\192\204\189\186\0")
 				local outputBuffer = buffer.new(1024)
 				local ptr, len = outputBuffer:reserve(1024)
 				assertEquals(len, 1024)
@@ -75,7 +75,7 @@ describe("iconv", function()
 
 	describe("convert", function()
 		it("should be able to convert Windows encodings to UTF-8", function()
-			local input = "\xC0\xAF\xC0\xFA\xC0\xCE\xC5\xCD\xC6\xE4\xC0\xCC\xBD\xBA"
+			local input = "\192\175\192\250\192\206\197\205\198\228\192\204\189\186"
 			local output, message = iconv.convert(input, "CP949", "UTF-8")
 			assertEquals(output, "유저인터페이스")
 			assertEquals(message, ffi_strerror(SUCCESS))

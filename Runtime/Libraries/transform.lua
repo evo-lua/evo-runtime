@@ -58,11 +58,11 @@ function transform.strip(coloredConsoleText)
 
 	-- All credit goes to this fine gentleman: https://stackoverflow.com/users/3735873/tonypdmtr
 	local strippedConsoleText = coloredConsoleText
-		:gsub("\x1b%[%d+;%d+;%d+;%d+;%d+m", "")
-		:gsub("\x1b%[%d+;%d+;%d+;%d+m", "")
-		:gsub("\x1b%[%d+;%d+;%d+m", "")
-		:gsub("\x1b%[%d+;%d+m", "")
-		:gsub("\x1b%[%d+m", "")
+		:gsub("\027%[%d+;%d+;%d+;%d+;%d+m", "")
+		:gsub("\027%[%d+;%d+;%d+;%d+m", "")
+		:gsub("\027%[%d+;%d+;%d+m", "")
+		:gsub("\027%[%d+;%d+m", "")
+		:gsub("\027%[%d+m", "")
 
 	return strippedConsoleText
 end

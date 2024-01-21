@@ -1,0 +1,8 @@
+std = "evo"
+exclude = [".git/*", "deps/*", "ninjabuild-*/*"]
+
+[rules]
+unused_variable = "allow" # Frequently used for clarity and discoverability in the absence of LSP tools
+global_usage = "allow" # Globals aren't used haphazardly here, so assume competence and allow it
+incorrect_standard_library_use = "allow" # There are some extensions that are perfectly valid uses
+mixed_table = "allow" # Mixed tables implement reverse lookups or guarantee determinism for tests

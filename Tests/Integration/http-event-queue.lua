@@ -76,7 +76,7 @@ function Test:CreateServer()
 		server.OnEvent = storeObservedEvent
 	end
 
-	setCustomEventHandler(server)
+	setCustomEventHandler()
 
 	self.server = server
 end

@@ -34,7 +34,7 @@ end
 
 function client:WEBSOCKET_UPGRADE_COMPLETE()
 	print("[WebSocketTestClient] WEBSOCKET_UPGRADE_COMPLETE")
-	local helloWorldTextFrame = "\x81\x8B\x12\x34\x56\x78\x5A\x51\x3A\x14\x7D\x14\x21\x17\x60\x58\x32"
+	local helloWorldTextFrame = "\129\139\18\52\86\120\90\81\58\20\125\20\33\23\96\88\50"
 	client:Send(helloWorldTextFrame)
 
 	local numConnectedClients = uws.bindings.uws_webserver_get_client_count(server)
