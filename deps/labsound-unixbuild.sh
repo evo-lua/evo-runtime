@@ -18,20 +18,3 @@ else
 fi
 cp $BUILD_DIR/bin/libLabSoundRtAudio.a $OUT_DIR
 cp $BUILD_DIR/third_party/libnyquist/lib/liblibnyquist.a $OUT_DIR/libnyquist.a
-
-# Since LabSound doesn't offer an API to get its version, a bit of a hack is needed
-discover_version_tag() {
-	cd $SRC_DIR
-
-	DISCOVERED_VERSION_TAG=$(git describe --tags --abbrev=0)
-	LUA_STRING="return '$DISCOVERED_VERSION_TAG'"
-	TEMP_VERSION_FILE=$OUT_DIR/labsound-version.lua
-
-	echo "Discovered version tag: $DISCOVERED_VERSION_TAG"
-	echo "Storing tag in $TEMP_VERSION_FILE"
-	echo $LUA_STRING > $TEMP_VERSION_FILE
-
-	cd -
-}
-
-discover_version_tag
