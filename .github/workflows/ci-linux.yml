@@ -42,6 +42,9 @@ jobs:
       - name: Install Ninja
         run: sudo apt-get install ninja-build
 
+      - name: Install n2
+        run: cargo install --git https://github.com/evmar/n2
+
       # Can't actually be used on CI runners, but we need the headers for embedding webview
       - name: Install WebKitGTK
         run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
