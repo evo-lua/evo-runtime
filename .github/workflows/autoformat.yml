@@ -15,9 +15,24 @@ on:
 jobs:
   check-format:
     name: Enforce consistent formatting
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
+      # MSYS needs to be available before running any git commands
+      - name: Install clang-format (via MSYS)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          install: git mingw-w64-x86_64-clang
+
+      - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - name: Check out Git repository
         uses: actions/checkout@v4
 
@@ -28,10 +43,15 @@ jobs:
           args: --check . --verbose
           version: v0.19.1
 
-      # The preinstalled version is positively antique; replace with the latest and greatest (to match MSYS)
-      - name: Install the clang-format
+        # The preinstalled version is positively antique; replace with the latest and greatest (to match MSYS)
+      - name: Install clang-format (via APT)
+        if: runner.os == 'Linux'
         run: ./deps/install-clang-format.sh
 
+      - name: Install clang-format (via Homebrew)
+        if: runner.os == 'macOS'
+        run: brew install clang-format
+        
       - name: Run autoformat
         run: ./autoformat.sh
 
