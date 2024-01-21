@@ -1,0 +1,83 @@
+---
+base: lua51
+globals:
+  EVO_VERSION:
+    any: true
+    property: read-only
+  # API namespaces
+  C_CommandLine:
+    any: true
+  C_ImageProcessing:
+    any: true
+  C_FileSystem:
+    any: true
+  C_Runtime:
+    any: true
+  C_Timer:
+    any: true
+  C_WebView:
+    any: true
+  # Standard libraries
+  buffer:
+    any: true
+  path:
+    any: true
+  # Global aliases
+  dump:
+    args:
+      - type: ...
+  printf:
+    args:
+      - type: string
+      - type: ...
+  format:
+    args:
+      - type: string
+      - type: ...
+  describe :
+    args:
+      - type: string
+      - type: function
+  it:
+    args:
+      - type: string
+      - type: function
+  assertCallsFunction:
+    args:
+      - type: function
+      - type: function
+  assertEquals:
+    args:
+      - type: any
+      - type: any
+  assertEqualNumbers:
+    args:
+      - type: number
+      - type: number
+  assertFalse:
+    args:
+      - type: bool
+  assertTrue:
+    args:
+      - type: bool
+  assertThrows:
+    args:
+      - type: function
+      - type: string
+  assertDoesNotThrow:
+    args:
+      - type: function
+      - type: string
+  assertFailure:
+    args:
+      - type: function
+      - type: string
+  before:
+    args:
+      - type: function
+  after:
+    args:
+      - type: function
+  assertNil:
+    args:
+      - type: any
