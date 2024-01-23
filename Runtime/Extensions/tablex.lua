@@ -53,4 +53,5 @@ function table.scopy(source)
 	return shallowCopy
 end
 
+table.clear = require("table.clear")
 table.new = require("table.new")
