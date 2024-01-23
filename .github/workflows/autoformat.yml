@@ -45,8 +45,7 @@ jobs:
         run: ./autoformat.sh
 
       - name: Check for inconsistent formatting
-        # The -b is for inconsistent newlines, which we ignore (for now)
-        run: git --no-pager diff --exit-code -b .
+        run: git --no-pager diff --exit-code .
 
   autoformat-macos:
     name: Enforce consistent formatting on macOS
@@ -71,8 +70,7 @@ jobs:
         run: ./autoformat.sh
 
       - name: Check for inconsistent formatting
-        # The -b is for inconsistent newlines, which we ignore (for now)
-        run: git --no-pager diff --exit-code -b .
+        run: git --no-pager diff --exit-code .
 
   autoformat-linux:
     name: Enforce consistent formatting on Linux
@@ -97,5 +95,4 @@ jobs:
         run: ./autoformat.sh
 
       - name: Check for inconsistent formatting
-        # The -b is for inconsistent newlines, which we ignore (for now)
-        run: git --no-pager diff --exit-code -b .
+        run: git --no-pager diff --exit-code .
