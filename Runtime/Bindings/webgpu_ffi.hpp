@@ -1,6 +1,7 @@
 #pragma once
 
 #include <webgpu.h>
+#include <wgpu.h>
 
 struct static_webgpu_exports_table {
 
@@ -236,6 +237,33 @@ struct static_webgpu_exports_table {
 	void (*wgpu_texture_view_set_label)(WGPUTextureView textureView, char const* label);
 	void (*wgpu_texture_view_reference)(WGPUTextureView textureView);
 	void (*wgpu_texture_view_release)(WGPUTextureView textureView);
+
+	// Native wgpu extensions (from wgpu.h)
+	void (*wgpu_generate_report)(WGPUInstance instance, WGPUGlobalReport* report);
+	size_t (*wgpu_instance_enumerate_adapters)(WGPUInstance instance, WGPUInstanceEnumerateAdapterOptions const* options, WGPUAdapter* adapters);
+
+	WGPUSubmissionIndex (*wgpu_queue_submit_for_index)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const* commands);
+
+	WGPUBool (*wgpu_device_poll)(WGPUDevice device, WGPUBool wait, WGPUWrappedSubmissionIndex const* wrappedSubmissionIndex);
+
+	void (*wgpu_set_log_callback)(WGPULogCallback callback, void* userdata);
+
+	void (*wgpu_set_log_level)(WGPULogLevel level);
+
+	uint32_t (*wgpu_get_version)(void);
+
+	void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void* const data);
+
+	void (*wgpu_render_pass_encoder_multi_draw_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
+	void (*wgpu_render_pass_encoder_multi_draw_indexed_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
+
+	void (*wgpu_render_pass_encoder_multi_draw_indirect_count)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, WGPUBuffer count_buffer, uint64_t count_buffer_offset, uint32_t max_count);
+	void (*wgpu_render_pass_encoder_multi_draw_indexed_indirect_count)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, WGPUBuffer count_buffer, uint64_t count_buffer_offset, uint32_t max_count);
+
+	void (*wgpu_compute_pass_encoder_begin_pipeline_statistics_query)(WGPUComputePassEncoder computePassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
+	void (*wgpu_compute_pass_encoder_end_pipeline_statistics_query)(WGPUComputePassEncoder computePassEncoder);
+	void (*wgpu_render_pass_encoder_begin_pipeline_statistics_query)(WGPURenderPassEncoder renderPassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
+	void (*wgpu_render_pass_encoder_end_pipeline_statistics_query)(WGPURenderPassEncoder renderPassEncoder);
 };
 
 namespace webgpu_ffi {

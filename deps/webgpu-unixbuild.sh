@@ -9,4 +9,3 @@ OUT_DIR=$(pwd)/ninjabuild-unix
 make -C $SRC_DIR lib-native-release
 
 cp $BUILD_DIR/libwgpu_native.a $OUT_DIR
-cp $SRC_DIR/ffi/webgpu-headers/webgpu.h $OUT_DIR
