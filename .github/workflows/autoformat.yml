@@ -51,6 +51,8 @@ jobs:
   autoformat-macos:
     name: Enforce consistent formatting on macOS
     runs-on: macos-latest
+    # Introduce a dependency to eliminate visual clutter in the PR UI
+    needs: [autoformat-windows]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -75,6 +77,8 @@ jobs:
   autoformat-linux:
     name: Enforce consistent formatting on Linux
     runs-on: ubuntu-latest
+    # Introduce a dependency to eliminate visual clutter in the PR UI
+    needs: [autoformat-macos]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
