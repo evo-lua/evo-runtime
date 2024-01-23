@@ -1,5 +1,6 @@
 local validation = require("validation")
 
+local rawget = rawget
 local setmetatable = setmetatable
 local type = type
 
@@ -16,7 +17,7 @@ local oop = {
 
 local function makeDefaultConstructor(class)
 	return function(cls, ...)
-		local instance = {}
+		local instance = rawget(cls, "super") and cls.super.Construct(cls, ...) or {}
 		local inheritanceLookupMetatable = {
 			__index = cls,
 		}

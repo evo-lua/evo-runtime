@@ -15,6 +15,22 @@ describe("oop", function()
 			assertIsBaseClass(EmptyTippingJar, "EmptyTippingJar")
 		end)
 
+		it("should assign a default constructor that can be used by derived classes as well", function()
+			-- Regression: If the derived class defines no constructor, the default one will be used
+			-- It should create an instance of the parent class and then extend it, instead of an empty table
+			local ViolentMurderHobo = oop.class("ViolentMurderHobo")
+			assertIsBaseClass(ViolentMurderHobo, "ViolentMurderHobo")
+			ViolentMurderHobo.weapon = "none" -- Fallback that's always available to the derived class
+			function ViolentMurderHobo:Construct()
+				self.weapon = "fork" -- Should be assigned to derived class when this is called
+			end
+
+			local DangerousMethHead = oop.class("DangerousMethHead")
+			oop.extend(DangerousMethHead, ViolentMurderHobo)
+			local dmh = DangerousMethHead() -- Should call dmh.super.Construct in the default constructor
+			assertEquals(dmh.weapon, "fork")
+		end)
+
 		it("should throw if no class name was passed", function()
 			local expectedErrorMessage =
 				"Expected argument classNameToRegister to be a string value, but received a nil value instead"
