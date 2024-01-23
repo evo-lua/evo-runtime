@@ -241,6 +241,24 @@ namespace webgpu_ffi {
 		webgpu_exports_table.wgpu_texture_view_reference = wgpuTextureViewReference;
 		webgpu_exports_table.wgpu_texture_view_release = wgpuTextureViewRelease;
 
+		// Native wgpu extensions (from wgpu.h)
+		webgpu_exports_table.wgpu_generate_report = wgpuGenerateReport;
+		webgpu_exports_table.wgpu_instance_enumerate_adapters = wgpuInstanceEnumerateAdapters;
+		webgpu_exports_table.wgpu_queue_submit_for_index = wgpuQueueSubmitForIndex;
+		webgpu_exports_table.wgpu_device_poll = wgpuDevicePoll;
+		webgpu_exports_table.wgpu_set_log_callback = wgpuSetLogCallback;
+		webgpu_exports_table.wgpu_set_log_level = wgpuSetLogLevel;
+		webgpu_exports_table.wgpu_get_version = wgpuGetVersion;
+		webgpu_exports_table.wgpu_render_pass_encoder_set_push_constants = wgpuRenderPassEncoderSetPushConstants;
+		webgpu_exports_table.wgpu_render_pass_encoder_multi_draw_indirect = wgpuRenderPassEncoderMultiDrawIndirect;
+		webgpu_exports_table.wgpu_render_pass_encoder_multi_draw_indexed_indirect = wgpuRenderPassEncoderMultiDrawIndexedIndirect;
+		webgpu_exports_table.wgpu_render_pass_encoder_multi_draw_indirect_count = wgpuRenderPassEncoderMultiDrawIndirectCount;
+		webgpu_exports_table.wgpu_render_pass_encoder_multi_draw_indexed_indirect_count = wgpuRenderPassEncoderMultiDrawIndexedIndirectCount;
+		webgpu_exports_table.wgpu_compute_pass_encoder_begin_pipeline_statistics_query = wgpuComputePassEncoderBeginPipelineStatisticsQuery;
+		webgpu_exports_table.wgpu_compute_pass_encoder_end_pipeline_statistics_query = wgpuComputePassEncoderEndPipelineStatisticsQuery;
+		webgpu_exports_table.wgpu_render_pass_encoder_begin_pipeline_statistics_query = wgpuRenderPassEncoderBeginPipelineStatisticsQuery;
+		webgpu_exports_table.wgpu_render_pass_encoder_end_pipeline_statistics_query = wgpuRenderPassEncoderEndPipelineStatisticsQuery;
+
 		return &webgpu_exports_table;
 	}
 }
