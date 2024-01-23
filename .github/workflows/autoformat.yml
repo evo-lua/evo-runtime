@@ -16,15 +16,13 @@ env:
   STYLUA_VERSION: v0.19.1
 
 jobs:
-  autoformat-windows:
-    name: Enforce consistent formatting on Windows
-    runs-on: windows-latest
+  autoformat:
+    name: Enforce consistent formatting on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
     steps:
-      - name: Install clang-format (via MSYS)
-        uses: msys2/setup-msys2@v2
-        with:
-          install: git mingw-w64-x86_64-clang
-
       # Messes up everything on Windows since the formatter writes \n
       - name: Disable autocrlf
         run: |
@@ -41,55 +39,21 @@ jobs:
           args: --check . --verbose
           version: ${{ env.STYLUA_VERSION }}
 
-      - name: Run autoformat
-        run: ./autoformat.sh
-
-      - name: Check for inconsistent formatting
-        run: git --no-pager diff --exit-code .
-
-  autoformat-macos:
-    name: Enforce consistent formatting on macOS
-    runs-on: macos-latest
-    # Introduce a dependency to eliminate visual clutter in the PR UI
-    needs: [autoformat-windows]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: Set up StyLua
-        uses: JohnnyMorganz/stylua-action@v1.1.2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --check . --verbose
-          version: ${{ env.STYLUA_VERSION }}
-
-      - name: Install clang-format (via Homebrew)
-        run: brew install clang-format
-
-      - name: Run autoformat
-        run: ./autoformat.sh
-
-      - name: Check for inconsistent formatting
-        run: git --no-pager diff --exit-code .
-
-  autoformat-linux:
-    name: Enforce consistent formatting on Linux
-    runs-on: ubuntu-latest
-    # Introduce a dependency to eliminate visual clutter in the PR UI
-    needs: [autoformat-macos]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: Set up StyLua
-        uses: JohnnyMorganz/stylua-action@v1.1.2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --check . --verbose
-          version: ${{ env.STYLUA_VERSION }}
-
-      - name: Install clang-format (via APT)
-        run: ./deps/install-clang-format.sh
+      - name: Install clang-format
+        run: |
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            echo "Setting up for Windows"
+            git config --global core.autocrlf false
+            git config --global core.eol lf
+            msys2 setup-msys2@v2
+            msys2 install git mingw-w64-x86_64-clang
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            echo "Setting up for macOS"
+            brew install clang-format
+          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            echo "Setting up for Ubuntu"
+            ./deps/install-clang-format.sh
+          fi
 
       - name: Run autoformat
         run: ./autoformat.sh
