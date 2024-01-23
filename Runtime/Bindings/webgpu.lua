@@ -1428,6 +1428,7 @@ wgpu.cdefs = [[
 		WGPUSType_BindGroupEntryExtras = 0x00030007,
 		WGPUSType_BindGroupLayoutEntryExtras = 0x00030008,
 		WGPUSType_QuerySetDescriptorExtras = 0x00030009,
+		WGPUSType_SurfaceConfigurationExtras = 0x0003000A,
 		WGPUNativeSType_Force32 = 0x7FFFFFFF
 	} WGPUNativeSType;
 
@@ -1545,7 +1546,7 @@ wgpu.cdefs = [[
 
 	typedef struct WGPUPipelineLayoutExtras {
 		WGPUChainedStruct chain;
-		uint32_t pushConstantRangeCount;
+		size_t pushConstantRangeCount;
 		WGPUPushConstantRange* pushConstantRanges;
 	} WGPUPipelineLayoutExtras;
 
@@ -1631,6 +1632,11 @@ wgpu.cdefs = [[
 		WGPUPipelineStatisticName const * pipelineStatistics;
 		size_t pipelineStatisticCount;
 	} WGPUQuerySetDescriptorExtras;
+
+	typedef struct WGPUSurfaceConfigurationExtras {
+		WGPUChainedStruct chain;
+		WGPUBool desiredMaximumFrameLatency;
+	} WGPUSurfaceConfigurationExtras;
 
 	typedef void (*WGPULogCallback)(WGPULogLevel level, char const * message, void * userdata);
 
@@ -1886,7 +1892,7 @@ wgpu.cdefs = [[
 
 		uint32_t (*wgpu_get_version)(void);
 
-		void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void* const data);
+		void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
 
 		void (*wgpu_render_pass_encoder_multi_draw_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 		void (*wgpu_render_pass_encoder_multi_draw_indexed_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
