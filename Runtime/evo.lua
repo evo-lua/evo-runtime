@@ -95,6 +95,14 @@ function evo.run()
 
 	local zipApp = evo.readEmbeddedZipApp()
 	if zipApp then
+		-- The CLI args are shifted if not run from the interpreter CLI, which might break standalone apps
+		local correctedArgs = {}
+		for index, arg in ipairs(arg) do
+			correctedArgs[index + 1] = arg
+		end
+		correctedArgs[1] = arg[0]
+		_G.arg = correctedArgs
+		_G.arg[0] = uv.exepath()
 		return vfs.dofile(zipApp, evo.DEFAULT_ENTRY_POINT)
 	end
 
