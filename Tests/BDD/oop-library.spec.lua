@@ -242,4 +242,55 @@ describe("oop", function()
 			assertEquals(target.hi, 42)
 		end)
 	end)
+
+	describe("implements", function()
+		it("should throw if an invalid class argument was passed", function()
+			local expectedErrorMessage =
+				"Expected argument instanceOrPrototype to be a table value, but received a number value instead"
+			assertThrows(function()
+				oop.implements(42, {})
+			end, expectedErrorMessage)
+		end)
+
+		it("should throw if an invalid mixin argument was passed", function()
+			local expectedErrorMessage =
+				"Expected argument mixin to be a table value, but received a number value instead"
+			assertThrows(function()
+				oop.implements({}, 42)
+			end, expectedErrorMessage)
+		end)
+
+		it("should return false if a class that doesn't include any mixins passed", function()
+			local ClassWithoutMixins = oop.class("ClassWithoutMixins")
+			assertFalse(oop.implements(ClassWithoutMixins, {}))
+		end)
+
+		it("should return whether a table includes the given mixin", function()
+			local SomeClassLikeTable = {}
+			local someMixin = { foo = 42 }
+			local anotherMixin = { bar = "baz" }
+			oop.mixin(SomeClassLikeTable, someMixin)
+			assertTrue(oop.implements(SomeClassLikeTable, someMixin))
+			assertFalse(oop.implements(SomeClassLikeTable, anotherMixin))
+		end)
+
+		it("should return whether a class includes the given mixin", function()
+			local ClassWithDifferentMixinsA = oop.class("ClassWithDifferentMixinsA")
+			local someMixin = { foo = 42 }
+			local anotherMixin = { bar = "baz" }
+			oop.mixin(ClassWithDifferentMixinsA, someMixin)
+			assertTrue(oop.implements(ClassWithDifferentMixinsA, someMixin))
+			assertFalse(oop.implements(ClassWithDifferentMixinsA, anotherMixin))
+		end)
+
+		it("should return whether an instance includes the given mixin", function()
+			local ClassWithDifferentMixinsB = oop.class("ClassWithDifferentMixinsB")
+			local someMixin = { foo = 42 }
+			local anotherMixin = { bar = "baz" }
+			oop.mixin(ClassWithDifferentMixinsB, anotherMixin)
+			local instance = ClassWithDifferentMixinsB()
+			assertTrue(oop.implements(instance, anotherMixin))
+			assertFalse(oop.implements(instance, someMixin))
+		end)
+	end)
 end)

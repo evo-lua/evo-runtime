@@ -39,6 +39,7 @@ function oop.class(classNameToRegister, existingClassPrototype)
 	local class = existingClassPrototype or {}
 	class.Construct = class.Construct or makeDefaultConstructor(class)
 	class.__name = classNameToRegister
+	class.__mixins = {}
 
 	local inheritanceLookupMetatable = {
 		__call = class.Construct,
@@ -93,16 +94,31 @@ end
 function oop.mixin(target, ...)
 	validateTable(target, "target")
 
+	target.__mixins = target.__mixins or {}
+
 	local tablesToMixIn = { ... }
 	for index, sourceObject in pairs(tablesToMixIn) do
 		validateTable(sourceObject, "sourceObject" .. index)
+		target.__mixins[sourceObject] = true
 		for key, value in pairs(sourceObject) do
-			if target[key] ~= nil then
+			if rawget(target, key) ~= nil then
 				error(format(oop.errorStrings.MIXIN_WOULD_OVERWRITE, "sourceObject" .. index, key), 0)
 			end
 			target[key] = value
 		end
 	end
+end
+
+function oop.implements(instanceOrPrototype, mixin)
+	validateTable(instanceOrPrototype, "instanceOrPrototype")
+	validateTable(mixin, "mixin")
+
+	local includedMixins = instanceOrPrototype.__mixins
+	if not includedMixins then
+		return false
+	end
+
+	return includedMixins[mixin] ~= nil
 end
 
 return oop
