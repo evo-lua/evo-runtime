@@ -12,6 +12,7 @@ local globalAliases = {
 	["describe"] = bdd.describe,
 	["dump"] = debug.dump,
 	["extend"] = oop.extend,
+	["implements"] = oop.implements,
 	["instanceof"] = oop.instanceof,
 	["format"] = string.format,
 	["it"] = bdd.it,
