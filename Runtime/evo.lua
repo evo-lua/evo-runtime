@@ -139,29 +139,33 @@ function evo.initializeStaticLibraryExports()
 end
 
 function evo.registerGlobalAliases()
-	_G.buffer = require("string.buffer")
-	_G.path = require("path")
+	-- Can't initialize this table on load as some modules will be missing
+	evo.globalAliases = {
+		after = bdd.after,
+		before = bdd.before,
+		buffer = require("string.buffer"),
+		cast = ffi.cast,
+		cdef = ffi.cdef,
+		class = oop.class,
+		classname = oop.classname,
+		define = ffi.cdef,
+		describe = bdd.describe,
+		dump = debug.dump,
+		extend = oop.extend,
+		format = string.format,
+		instanceof = oop.instanceof,
+		it = bdd.it,
+		mixin = oop.mixin,
+		new = ffi.new,
+		path = require("path"),
+		printf = console.printf,
+		sizeof = ffi.sizeof,
+		typeof = ffi.typeof,
+	}
 
-	_G.after = bdd.after
-	_G.before = bdd.before
-	_G.class = oop.class
-	_G.classname = oop.classname
-	_G.describe = bdd.describe
-	_G.dump = debug.dump
-	_G.extend = oop.extend
-	_G.format = string.format
-	_G.instanceof = oop.instanceof
-	_G.it = bdd.it
-	_G.mixin = oop.mixin
-
-	_G.printf = console.printf
-
-	_G.cdef = ffi.cdef
-	_G.define = ffi.cdef
-	_G.cast = ffi.cast
-	_G.new = ffi.new
-	_G.sizeof = ffi.sizeof
-	_G.typeof = ffi.typeof
+	for alias, target in pairs(evo.globalAliases) do
+		_G[alias] = target
+	end
 end
 
 function evo.initializeGlobalNamespaces()
