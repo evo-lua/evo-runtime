@@ -153,6 +153,7 @@ function evo.registerGlobalAliases()
 		dump = debug.dump,
 		extend = oop.extend,
 		format = string.format,
+		implements = oop.implements,
 		instanceof = oop.instanceof,
 		it = bdd.it,
 		mixin = oop.mixin,
