@@ -24,7 +24,15 @@ jobs:
   build:
     if: github.event.pull_request.draft == false
     name: Build for Mac OS
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, macos-14]
+        include:
+          - os: macos-latest
+            arch: x64
+          - os: macos-14
+            arch: M1
     env:
         MACOSX_DEPLOYMENT_TARGET: 10.13
         HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 # Prevent brew updates in the ccache setup step (~2GB download ...)
@@ -111,7 +119,7 @@ jobs:
         run: evo Tests/integration-test.lua
 
       - name: Prepare artifacts
-        run: cp evo evo-macos-x64
+        run: cp evo evo-macos-${{ matrix.arch }}
 
       # GitHub adds a heading of their own, so remove the duplicate
       - name: Generate CHANGELOG.MD
@@ -122,7 +130,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          files: evo-macos-x64
+          files: evo-macos-${{ matrix.arch }}
           body_path: CHANGELOG.MD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

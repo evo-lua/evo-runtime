@@ -1,5 +1,14 @@
 local ffi = require("ffi")
+local jit = require("jit")
 local labsound = require("labsound")
+local transform = require("transform")
+
+local isM1 = ffi.os == "OSX" and jit.arch == "arm64"
+if isM1 then
+	-- Can't feasibly remote-debug these, so skipping them is the only option (for now)
+	print(transform.yellow("Skipping LabSound FFI playback test due to CoreAudio crashing in the M1 test runner"))
+	return
+end
 
 math.randomseed(os.clock())
 
