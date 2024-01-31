@@ -10,6 +10,7 @@ local expectedGlobalAssertions = {
 	"assertCallsFunction",
 	"assertEqualStrings",
 	"assertEqualNumbers",
+	"assertApproximatelyEquals",
 	"assertEqualTables",
 	"assertEqualBooleans",
 	"assertEqualPointers",

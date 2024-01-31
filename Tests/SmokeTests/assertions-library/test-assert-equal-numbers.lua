@@ -1,5 +1,6 @@
 local assertions = require("assertions")
 local assertEqualNumbers = assertions.assertEqualNumbers
+local assertApproximatelyEquals = assertions.assertApproximatelyEquals
 
 local num1 = 1
 local num2 = 1
@@ -76,6 +77,19 @@ local function testAlmostEqualNumbersCase()
 	)
 end
 
+local function testApproximatelyEqualsSuccessCase()
+	assert(assertApproximatelyEquals(num1, num5) == true, "assertApproximatelyEquals(num1, num6) should return true")
+end
+
+local function testApproximatelyEqualsFailureCase()
+	local success, errorMessage = pcall(assertApproximatelyEquals, 1.01, 1.02)
+	assert(success == false, "assertApproximatelyEquals(1.01, 1.02) should raise an error")
+	assert(
+		string.match(errorMessage, "^ASSERTION FAILURE: Expected 1.02 but got 1.01 within delta 0.001$"),
+		"assertApproximatelyEquals(num5, num6) should raise an error with the correct message"
+	)
+end
+
 local function testAssertEqualNumbers()
 	testEqualNumbersCase()
 	testAlmostEqualFloatsWithoutDeltaCase()
@@ -85,6 +99,8 @@ local function testAssertEqualNumbers()
 	testDifferentNumbersCase()
 	testNumberAndStringCase()
 	testAlmostEqualNumbersCase()
+	testApproximatelyEqualsSuccessCase()
+	testApproximatelyEqualsFailureCase()
 end
 
 testAssertEqualNumbers()
