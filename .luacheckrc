@@ -26,6 +26,7 @@ globals = {
 	"assertCallsFunction",
 	"assertEqualStrings",
 	"assertEqualNumbers",
+	"assertApproximatelyEquals",
 	"assertEqualTables",
 	"assertEqualBooleans",
 	"assertEqualPointers",
