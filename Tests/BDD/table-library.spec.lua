@@ -113,4 +113,30 @@ describe("table", function()
 			assertEquals(table.clear, require("table.clear"))
 		end)
 	end)
+
+	describe("reverse", function()
+		it("should throw if a non-table value was passed", function()
+			assertThrows(function()
+				table.reverse(42)
+			end, "Expected argument tableToReverse to be a table value, but received a number value instead")
+		end)
+
+		it("should return a copy of the table with all array elements reversed", function()
+			local input = { "A", "B", "C" }
+			local expectedOutput = { "C", "B", "A" }
+			assertEquals(table.reverse(input), expectedOutput)
+		end)
+
+		it("should return an empty table if only the dictionary part of the table was used", function()
+			local input = { A = "A", B = "B", C = "C" }
+			local expectedOutput = {}
+			assertEquals(table.reverse(input), expectedOutput)
+		end)
+
+		it("should ignore all dictionary entries if the table is mixed", function()
+			local input = { "A", "B", "C", Hello = "world", something = print }
+			local expectedOutput = { "C", "B", "A" }
+			assertEquals(table.reverse(input), expectedOutput)
+		end)
+	end)
 end)
