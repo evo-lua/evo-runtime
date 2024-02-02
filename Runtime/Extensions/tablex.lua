@@ -53,5 +53,18 @@ function table.scopy(source)
 	return shallowCopy
 end
 
+function table.reverse(tableToReverse)
+	validation.validateTable(tableToReverse, "tableToReverse")
+
+	local reversedTable = {}
+
+	for index, value in ipairs(tableToReverse) do
+		local reversedIndex = #tableToReverse - index + 1
+		reversedTable[reversedIndex] = value
+	end
+
+	return reversedTable
+end
+
 table.clear = require("table.clear")
 table.new = require("table.new")

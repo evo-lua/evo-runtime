@@ -18,7 +18,7 @@ function C_Runtime.RunBasicTests(specFiles)
 	print(bdd.getReport())
 
 	local errorDetails = bdd.getErrorDetails()
-	for index, errorInfo in ipairs(errorDetails) do
+	for index, errorInfo in ipairs(table.reverse(errorDetails)) do
 		print(format("(Error #%d) in %s", index, transform.bold(errorInfo.specFile)))
 		print(transform.brightRed(errorInfo.stackTrace))
 		print()
@@ -38,7 +38,7 @@ function C_Runtime.RunMinimalTests(specFiles)
 	print(bdd.getReport())
 
 	local errorDetails = bdd.getErrorDetails()
-	for index, errorInfo in ipairs(errorDetails) do
+	for index, errorInfo in ipairs(table.reverse(errorDetails)) do
 		print(format("(Error #%d) in %s", index, transform.bold(errorInfo.specFile)))
 		print(transform.brightRed(errorInfo.stackTrace))
 		print()
@@ -58,7 +58,7 @@ function C_Runtime.RunDetailedTests(specFiles)
 	print(bdd.getReport())
 
 	local errorDetails = bdd.getErrorDetails()
-	for index, errorInfo in ipairs(errorDetails) do
+	for index, errorInfo in ipairs(table.reverse(errorDetails)) do
 		print(format("(Error #%d) in %s", index, transform.bold(errorInfo.specFile)))
 		print(transform.brightRed(errorInfo.stackTrace))
 		print()
