@@ -21,11 +21,24 @@ labsound.cdefs = [[
 		float desired_samplerate;
 	} labsound_audio_stream_config_t;
 
+	typedef enum LabSoundPanningModel {
+		LabSoundPanningModel_None = 0,
+		LabSoundPanningModel_EqualPower = 1,
+		LabSoundPanningModel_HRTF = 2,
+	} LabSoundPanningModel;
+
+	typedef enum LabSoundDistanceModel {
+		LabSoundDistanceModel_Linear = 0,
+		LabSoundDistanceModel_Inverse = 1,
+		LabSoundDistanceModel_Exponential = 2,
+	} LabSoundDistanceModel;
+
 	// Opaque to LuaJIT
 	typedef void* labsound_audio_device_t;
 	typedef void* labsound_audio_context_t;
 	typedef void* labsound_destination_node_t;
 	typedef void* labsound_gain_node_t;
+	typedef void* labsound_panner_node_t;
 	typedef void* labsound_sampled_audio_node_t;
 	typedef void* labsound_audio_node_t;
 
@@ -45,6 +58,12 @@ labsound.cdefs = [[
 		void (*labsound_context_destroy)(labsound_audio_context_t context);
 		bool (*labsound_context_connect)(labsound_audio_context_t context, labsound_audio_node_t destination, labsound_audio_node_t source, int destinationIndex, int sourceIndex);
 		bool (*labsound_context_disconnect)(labsound_audio_context_t context, labsound_audio_node_t destination, labsound_audio_node_t source, int destinationIndex, int sourceIndex);
+		bool (*labsound_context_load_hrtf_database)(labsound_audio_context_t context, const char* directory);
+		void (*labsound_context_listener_set_forward)(labsound_audio_context_t context, float x, float y, float z);
+		void (*labsound_context_listener_set_up_vector)(labsound_audio_context_t context, float x, float y, float z);
+		void (*labsound_context_listener_set_position)(labsound_audio_context_t context, float x, float y, float z);
+		void (*labsound_context_listener_set_velocity)(labsound_audio_context_t context, float x, float y, float z);
+		void (*labsound_context_synchronize_connections)(labsound_audio_context_t context);
 
 		// AudioDestinationNode
 		labsound_destination_node_t (*labsound_destination_node_create)(labsound_audio_context_t context, labsound_audio_device_t device);
@@ -54,6 +73,21 @@ labsound.cdefs = [[
 		labsound_gain_node_t (*labsound_gain_node_create)(labsound_audio_context_t context);
 		void (*labsound_gain_node_destroy)(labsound_gain_node_t gain_node);
 		bool (*labsound_gain_node_set_value)(labsound_gain_node_t gain_node, float gain_value);
+
+		// PannerNode
+		labsound_panner_node_t (*labsound_panner_node_create)(labsound_audio_context_t context);
+		void (*labsound_panner_node_destroy)(labsound_panner_node_t panner_node);
+		void (*labsound_panner_node_set_velocity)(labsound_panner_node_t panner_node, float x, float y, float z);
+		void (*labsound_panner_node_set_position)(labsound_panner_node_t panner_node, float x, float y, float z);
+		void (*labsound_panner_node_set_orientation)(labsound_panner_node_t panner_node, float x, float y, float z);
+		void (*labsound_panner_node_set_panning_model)(labsound_panner_node_t panner_node, LabSoundPanningModel panning_model);
+		void (*labsound_panner_node_set_distance_model)(labsound_panner_node_t panner_node, LabSoundDistanceModel distance_model);
+		void (*labsound_panner_node_set_ref_distance)(labsound_panner_node_t panner_node, float ref_distance);
+		void (*labsound_panner_node_set_max_distance)(labsound_panner_node_t panner_node, float max_distance);
+		void (*labsound_panner_node_set_rolloff_factor)(labsound_panner_node_t panner_node, float rollof_factor);
+		void (*labsound_panner_node_set_cone_inner_angle)(labsound_panner_node_t panner_node, float angle);
+		void (*labsound_panner_node_set_cone_outer_angle)(labsound_panner_node_t panner_node, float angle);
+		void (*labsound_panner_node_set_cone_outer_gain)(labsound_panner_node_t panner_node, float angle);
 
 		// SampledAudioNode
 		labsound_sampled_audio_node_t (*labsound_sampled_audio_node_from_file)(labsound_audio_context_t context, const char* file_path, bool mix_to_mono);

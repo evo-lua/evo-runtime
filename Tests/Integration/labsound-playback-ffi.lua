@@ -2,6 +2,7 @@ local ffi = require("ffi")
 local jit = require("jit")
 local labsound = require("labsound")
 local transform = require("transform")
+local uv = require("uv")
 
 local isM1 = ffi.os == "OSX" and jit.arch == "arm64"
 if isM1 then
@@ -98,64 +99,48 @@ labsound.bindings.labsound_print_graph(musicClipNode)
 local when, loopCount = 0, 0
 assert(labsound.bindings.labsound_sampled_audio_node_start(musicClipNode, when, loopCount))
 
-C_Timer.After(3300, function()
-	printf("Stopping all nodes...")
-	assert(labsound.bindings.labsound_sampled_audio_node_stop(musicClipNode, when))
+uv.sleep(3300)
+printf("Stopping all nodes...")
+assert(labsound.bindings.labsound_sampled_audio_node_stop(musicClipNode, when))
 
-	C_Timer.After(1300, function()
-		printf("Disconnecting all nodes...")
-		assert(
-			labsound.bindings.labsound_context_disconnect(
-				audioContext,
-				gainNode,
-				musicClipNode,
-				inputSlotIndex,
-				outputSlotIndex
-			)
-		)
-		assert(
-			labsound.bindings.labsound_context_disconnect(
-				audioContext,
-				destinationNode,
-				gainNode,
-				inputSlotIndex,
-				outputSlotIndex
-			)
-		)
+uv.sleep(1300)
+printf("Disconnecting all nodes...")
+assert(
+	labsound.bindings.labsound_context_disconnect(
+		audioContext,
+		gainNode,
+		musicClipNode,
+		inputSlotIndex,
+		outputSlotIndex
+	)
+)
+assert(
+	labsound.bindings.labsound_context_disconnect(
+		audioContext,
+		destinationNode,
+		gainNode,
+		inputSlotIndex,
+		outputSlotIndex
+	)
+)
 
-		C_Timer.After(1300, function()
-			printf("Reconnecting all nodes...")
+uv.sleep(1300)
+printf("Reconnecting all nodes...")
 
-			assert(
-				labsound.bindings.labsound_context_connect(
-					audioContext,
-					gainNode,
-					musicClipNode,
-					inputSlotIndex,
-					outputSlotIndex
-				)
-			)
-			assert(
-				labsound.bindings.labsound_context_connect(
-					audioContext,
-					destinationNode,
-					gainNode,
-					inputSlotIndex,
-					outputSlotIndex
-				)
-			)
+assert(
+	labsound.bindings.labsound_context_connect(audioContext, gainNode, musicClipNode, inputSlotIndex, outputSlotIndex)
+)
+assert(
+	labsound.bindings.labsound_context_connect(audioContext, destinationNode, gainNode, inputSlotIndex, outputSlotIndex)
+)
 
-			-- Playback doesn't automatically resume (see https://github.com/LabSound/LabSound/issues/199)
-			assert(labsound.bindings.labsound_sampled_audio_node_start(musicClipNode, when, loopCount))
+-- Playback doesn't automatically resume (see https://github.com/LabSound/LabSound/issues/199)
+assert(labsound.bindings.labsound_sampled_audio_node_start(musicClipNode, when, loopCount))
 
-			C_Timer.After(3300, function()
-				print("LabSound FFI playback test complete; deleting the audio graph...")
-				labsound.bindings.labsound_sampled_audio_node_destroy(musicClipNode)
-				labsound.bindings.labsound_gain_node_destroy(gainNode)
-				labsound.bindings.labsound_destination_node_destroy(destinationNode)
-				labsound.bindings.labsound_context_destroy(audioContext)
-				labsound.bindings.labsound_device_destroy(audioDevice)
-			end)
-		end)
-	end)
-end)
+uv.sleep(3300)
+print("LabSound FFI playback test complete; deleting the audio graph...")
+labsound.bindings.labsound_sampled_audio_node_destroy(musicClipNode)
+labsound.bindings.labsound_gain_node_destroy(gainNode)
+labsound.bindings.labsound_destination_node_destroy(destinationNode)
+labsound.bindings.labsound_context_destroy(audioContext)
+labsound.bindings.labsound_device_destroy(audioDevice)

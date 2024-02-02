@@ -166,6 +166,48 @@ bool labsound_context_disconnect(labsound_audio_context_t context, labsound_audi
 	return true;
 }
 
+bool labsound_context_load_hrtf_database(labsound_audio_context_t context, const char* directory) {
+	if(!context) return false;
+	if(!directory) return false;
+
+	LABSOUND_DEBUG_TRACE("Loading HRTF spatialization database from directory %s", directory);
+	return context->loadHrtfDatabase(directory);
+}
+
+void labsound_context_listener_set_forward(labsound_audio_context_t context, float x, float y, float z) {
+	if(!context) return;
+	if(!context->listener()) return;
+
+	context->listener()->setForward({ x, y, z });
+}
+
+void labsound_context_listener_set_up_vector(labsound_audio_context_t context, float x, float y, float z) {
+	if(!context) return;
+	if(!context->listener()) return;
+
+	context->listener()->setUpVector({ x, y, z });
+}
+
+void labsound_context_listener_set_position(labsound_audio_context_t context, float x, float y, float z) {
+	if(!context) return;
+	if(!context->listener()) return;
+
+	context->listener()->setPosition({ x, y, z });
+}
+
+void labsound_context_listener_set_velocity(labsound_audio_context_t context, float x, float y, float z) {
+	if(!context) return;
+	if(!context->listener()) return;
+
+	context->listener()->setPosition({ x, y, z });
+}
+
+void labsound_context_synchronize_connections(labsound_audio_context_t context) {
+	if(!context) return;
+
+	context->synchronizeConnections();
+}
+
 labsound_destination_node_t labsound_destination_node_create(labsound_audio_context_t context, labsound_audio_device_t device) {
 	if(!context) return nullptr;
 	if(!device) return nullptr;
@@ -207,6 +249,82 @@ bool labsound_gain_node_set_value(labsound_gain_node_t gain_node, float gain_val
 	gain_node->gain()->setValue(gain_value);
 
 	return true;
+}
+
+labsound_panner_node_t labsound_panner_node_create(labsound_audio_context_t context) {
+	if(!context) return nullptr;
+
+	return new PannerNode(*context);
+}
+
+void labsound_panner_node_destroy(labsound_panner_node_t panner_node) {
+	delete panner_node;
+}
+
+void labsound_panner_node_set_panning_model(labsound_panner_node_t panner_node, LabSoundPanningModel panning_model) {
+	if(!panner_node) return;
+
+	panner_node->setPanningModel(static_cast<lab::PanningModel>(panning_model));
+}
+
+void labsound_panner_node_set_velocity(labsound_panner_node_t panner_node, float x, float y, float z) {
+	if(!panner_node) return;
+
+	panner_node->setVelocity({ x, y, z });
+}
+
+void labsound_panner_node_set_position(labsound_panner_node_t panner_node, float x, float y, float z) {
+	if(!panner_node) return;
+
+	panner_node->setPosition({ x, y, z });
+}
+
+void labsound_panner_node_set_orientation(labsound_panner_node_t panner_node, float x, float y, float z) {
+	if(!panner_node) return;
+
+	panner_node->setOrientation({ x, y, z });
+}
+
+void labsound_panner_node_set_distance_model(labsound_panner_node_t panner_node, LabSoundDistanceModel distance_model) {
+	if(!panner_node) return;
+
+	panner_node->setDistanceModel(static_cast<lab::PannerNode::DistanceModel>(distance_model));
+}
+
+void labsound_panner_node_set_ref_distance(labsound_panner_node_t panner_node, float ref_distance) {
+	if(!panner_node) return;
+
+	panner_node->setRefDistance(ref_distance);
+}
+
+void labsound_panner_node_set_max_distance(labsound_panner_node_t panner_node, float max_distance) {
+	if(!panner_node) return;
+
+	panner_node->setMaxDistance(max_distance);
+}
+
+void labsound_panner_node_set_rolloff_factor(labsound_panner_node_t panner_node, float rollof_factor) {
+	if(!panner_node) return;
+
+	panner_node->setRolloffFactor(rollof_factor);
+}
+
+void labsound_panner_node_set_cone_inner_angle(labsound_panner_node_t panner_node, float angle) {
+	if(!panner_node) return;
+
+	panner_node->setConeInnerAngle(angle);
+}
+
+void labsound_panner_node_set_cone_outer_angle(labsound_panner_node_t panner_node, float angle) {
+	if(!panner_node) return;
+
+	panner_node->setConeOuterAngle(angle);
+}
+
+void labsound_panner_node_set_cone_outer_gain(labsound_panner_node_t panner_node, float angle) {
+	if(!panner_node) return;
+
+	panner_node->setConeOuterGain(angle);
 }
 
 labsound_sampled_audio_node_t labsound_sampled_audio_node_from_file(labsound_audio_context_t context, const char* file_path, bool mix_to_mono) {
@@ -292,6 +410,12 @@ namespace labsound_ffi {
 		exports_table.labsound_context_destroy = &labsound_context_destroy;
 		exports_table.labsound_context_connect = &labsound_context_connect;
 		exports_table.labsound_context_disconnect = &labsound_context_disconnect;
+		exports_table.labsound_context_load_hrtf_database = &labsound_context_load_hrtf_database;
+		exports_table.labsound_context_listener_set_forward = &labsound_context_listener_set_forward;
+		exports_table.labsound_context_listener_set_up_vector = &labsound_context_listener_set_up_vector;
+		exports_table.labsound_context_listener_set_position = &labsound_context_listener_set_position;
+		exports_table.labsound_context_listener_set_velocity = &labsound_context_listener_set_velocity;
+		exports_table.labsound_context_synchronize_connections = &labsound_context_synchronize_connections;
 
 		// AudioDestinationNode
 		exports_table.labsound_destination_node_create = &labsound_destination_node_create;
@@ -301,6 +425,21 @@ namespace labsound_ffi {
 		exports_table.labsound_gain_node_create = &labsound_gain_node_create;
 		exports_table.labsound_gain_node_destroy = &labsound_gain_node_destroy;
 		exports_table.labsound_gain_node_set_value = &labsound_gain_node_set_value;
+
+		// PannerNode
+		exports_table.labsound_panner_node_create = &labsound_panner_node_create;
+		exports_table.labsound_panner_node_destroy = &labsound_panner_node_destroy;
+		exports_table.labsound_panner_node_set_panning_model = &labsound_panner_node_set_panning_model;
+		exports_table.labsound_panner_node_set_velocity = &labsound_panner_node_set_velocity;
+		exports_table.labsound_panner_node_set_position = &labsound_panner_node_set_position;
+		exports_table.labsound_panner_node_set_orientation = &labsound_panner_node_set_orientation;
+		exports_table.labsound_panner_node_set_distance_model = &labsound_panner_node_set_distance_model;
+		exports_table.labsound_panner_node_set_ref_distance = &labsound_panner_node_set_ref_distance;
+		exports_table.labsound_panner_node_set_max_distance = &labsound_panner_node_set_max_distance;
+		exports_table.labsound_panner_node_set_rolloff_factor = &labsound_panner_node_set_rolloff_factor;
+		exports_table.labsound_panner_node_set_cone_inner_angle = &labsound_panner_node_set_cone_inner_angle;
+		exports_table.labsound_panner_node_set_cone_outer_angle = &labsound_panner_node_set_cone_outer_angle;
+		exports_table.labsound_panner_node_set_cone_outer_gain = &labsound_panner_node_set_cone_outer_gain;
 
 		// SampledAudioNode
 		exports_table.labsound_sampled_audio_node_from_file = &labsound_sampled_audio_node_from_file;
