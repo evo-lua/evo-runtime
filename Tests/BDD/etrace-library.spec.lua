@@ -302,7 +302,7 @@ describe("etrace", function()
 		end)
 	end)
 
-	describe("put", function()
+	describe("record", function()
 		after(function()
 			etrace.reset()
 		end)
