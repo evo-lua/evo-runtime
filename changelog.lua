@@ -1,4 +1,15 @@
 local changelog = {
+	["v0.0.18"] = {
+		newFeatures = {
+			"Spatialized 3D audio is now available as part of the `labsound` bindings (`PannerNode` APIs)",
+			"Experimental platform support for macOS 14 and the M1 architecture, as well as M1 release binaries",
+			"New assertion shorthand for floating-point number comparisons: `assertApproximatelyEquals`",
+		},
+		improvements = {
+			"Native WebGPU extension APIs, enums, and types are now supported by the `webgpu` bindings",
+			"The interpreter CLI now displays the exact commit hash for embedded library versions",
+		},
+	},
 	["v0.0.17"] = {
 		newFeatures = {
 			"Added a new `utf8` library for unicode string manipulation (powered by lua-utf8)",
