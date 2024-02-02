@@ -9,7 +9,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - "README.MD"
+      - '**.md'
+      - 'changelog.lua'
       - '.gitignore'
 
 jobs:
