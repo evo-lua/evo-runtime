@@ -225,11 +225,11 @@ describe("labsound", function()
 		end)
 
 		describe("labsound_gain_node_set_value", function()
-			it("should return false if nullptr values are passed", function()
+			it("should return false if nullptr values were passed", function()
 				assertFalse(labsound.bindings.labsound_gain_node_set_value(nil, 0.5))
 			end)
 
-			it("should return false if invalid nodes are passed", function()
+			it("should return false if invalid nodes were passed", function()
 				local node = ffi.new("labsound_gain_node_t") -- Uninitialized
 				assertFalse(labsound.bindings.labsound_gain_node_set_value(node, 0.5))
 			end)
@@ -253,7 +253,7 @@ describe("labsound", function()
 		end)
 
 		describe("labsound_sampled_audio_node_from_memory", function()
-			it("should return nullptr if nullptr values are passed", function()
+			it("should return nullptr if nullptr values were passed", function()
 				local context = ffi.new("labsound_audio_context_t")
 				local WAV_FILE = path.join("deps", "LabSound", "LabSound", "assets", "samples", "stereo-music-clip.wav")
 				local WAV_FILE_CONTENTS = C_FileSystem.ReadFile(WAV_FILE)
@@ -269,7 +269,7 @@ describe("labsound", function()
 				assert(labsound.bindings.labsound_sampled_audio_node_from_memory(nil, nil, 0, false) == ffi.NULL)
 			end)
 
-			it("should return nullptr if an invalid file contents were passed", function()
+			it("should return nullptr if invalid file contents were passed", function()
 				local context = ffi.new("labsound_audio_context_t")
 				local fileContents = "invalid"
 				assert(
