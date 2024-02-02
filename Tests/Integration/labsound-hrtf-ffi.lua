@@ -2,6 +2,7 @@ local ffi = require("ffi")
 local jit = require("jit")
 local labsound = require("labsound")
 local transform = require("transform")
+local uv = require("uv")
 
 local isM1 = ffi.os == "OSX" and jit.arch == "arm64"
 if isM1 then
@@ -86,7 +87,7 @@ local elapsedTimeInSeconds = 0
 local radius = 1
 local cx, cz = 0, 0
 
-local positionUpdateTicker = C_Timer.NewTicker(10, function()
+local function updateAudioScene()
 	local circularMotionAngle = (elapsedTimeInSeconds / seconds) * 2 * math.pi
 
 	local sourcePositionX = cx + radius * math.cos(circularMotionAngle)
@@ -103,36 +104,37 @@ local positionUpdateTicker = C_Timer.NewTicker(10, function()
 	labsound.bindings.labsound_panner_node_set_orientation(pannerNode, normalizedX, normalizedY, normalizedZ)
 
 	elapsedTimeInSeconds = elapsedTimeInSeconds + 0.01
-end)
+end
 
-C_Timer.After(seconds * 1000, function()
-	print("LabSound FFI HRTF test complete; deleting the audio graph...")
-	assert(labsound.bindings.labsound_sampled_audio_node_stop(musicClipNode, when))
+while elapsedTimeInSeconds <= seconds do
+	updateAudioScene()
+	uv.sleep(10)
+end
 
-	assert(
-		labsound.bindings.labsound_context_disconnect(
-			audioContext,
-			pannerNode,
-			musicClipNode,
-			inputSlotIndex,
-			outputSlotIndex
-		)
+print("LabSound FFI HRTF test complete; deleting the audio graph...")
+assert(labsound.bindings.labsound_sampled_audio_node_stop(musicClipNode, when))
+
+assert(
+	labsound.bindings.labsound_context_disconnect(
+		audioContext,
+		pannerNode,
+		musicClipNode,
+		inputSlotIndex,
+		outputSlotIndex
 	)
-	assert(
-		labsound.bindings.labsound_context_disconnect(
-			audioContext,
-			destinationNode,
-			pannerNode,
-			inputSlotIndex,
-			outputSlotIndex
-		)
+)
+assert(
+	labsound.bindings.labsound_context_disconnect(
+		audioContext,
+		destinationNode,
+		pannerNode,
+		inputSlotIndex,
+		outputSlotIndex
 	)
-	C_Timer.After(1000, function()
-		labsound.bindings.labsound_panner_node_destroy(pannerNode)
-		labsound.bindings.labsound_sampled_audio_node_destroy(musicClipNode)
-		labsound.bindings.labsound_destination_node_destroy(destinationNode)
-		labsound.bindings.labsound_context_destroy(audioContext)
-		labsound.bindings.labsound_device_destroy(audioDevice)
-	end)
-	positionUpdateTicker:stop()
-end)
+)
+uv.sleep(1000)
+labsound.bindings.labsound_panner_node_destroy(pannerNode)
+labsound.bindings.labsound_sampled_audio_node_destroy(musicClipNode)
+labsound.bindings.labsound_destination_node_destroy(destinationNode)
+labsound.bindings.labsound_context_destroy(audioContext)
+labsound.bindings.labsound_device_destroy(audioDevice)
