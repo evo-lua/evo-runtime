@@ -50,7 +50,7 @@ describe("etrace", function()
 			etrace.reset()
 		end)
 
-		it("should return an empty list of no events have been registered", function()
+		it("should return an empty list if no events have been registered", function()
 			assertEquals(etrace.list(), {})
 		end)
 
