@@ -43,6 +43,14 @@ describe("etrace", function()
 			assertEquals(etrace.filter(), {})
 			assertEquals(etrace.list(), {})
 		end)
+
+		it("should reset the list of subscribers", function()
+			etrace.register("TEST_EVENT")
+			etrace.subscribe("TEST_EVENT", print)
+			assertEquals(etrace.subscribers.TEST_EVENT, { [print] = print })
+			etrace.reset()
+			assertEquals(etrace.subscribers.TEST_EVENT, nil)
+		end)
 	end)
 
 	describe("list", function()
@@ -494,6 +502,289 @@ describe("etrace", function()
 			-- If a copy of the internal event log is returned, more events can be added after the fact
 			assertEquals(#eventLog, #expectedEventLog)
 			assertEquals(eventLog[1], expectedEventLog[1])
+		end)
+	end)
+
+	describe("subscribe", function()
+		before(function()
+			etrace.reset()
+		end)
+
+		it("should throw if a non-string event name was passed", function()
+			assertThrows(function()
+				etrace.subscribe(42, print)
+			end, "Expected argument event to be a string value, but received a number value instead")
+		end)
+
+		it("should throw if an unsupported event listener type was passed", function()
+			etrace.register("SOME_EVENT")
+			assertThrows(function()
+				etrace.subscribe("SOME_EVENT", 42)
+			end, "Invalid listener 42 of type number cannot subscribe to event SOME_EVENT")
+		end)
+
+		it("should throw if the provided function listener is already registered for the given event", function()
+			local function listener(self, event, payload) end
+			etrace.register("SOME_EVENT")
+			etrace.subscribe("SOME_EVENT", listener)
+			assertThrows(function()
+				etrace.subscribe("SOME_EVENT", listener)
+			end, format("Listener %s of type function is already subscribed to event SOME_EVENT", tostring(listener)))
+		end)
+
+		it("should throw if the provided table listener is already registered for the given event", function()
+			local listener = {
+				SOME_EVENT = function(self, event, payload) end,
+			}
+			etrace.register("SOME_EVENT")
+			etrace.subscribe("SOME_EVENT", listener)
+			assertThrows(function()
+				etrace.subscribe("SOME_EVENT", listener)
+			end, format("Listener %s of type table is already subscribed to event SOME_EVENT", tostring(listener)))
+		end)
+
+		it("should throw if the provided event name is not registered", function()
+			assertThrows(function()
+				etrace.subscribe("HELLO_WORLD", print)
+			end, format(
+				"Cannot subscribe listener %s of type function to unknown event HELLO_WORLD",
+				tostring(print)
+			))
+		end)
+
+		it("should throw if the provided table listener does not have an event handler for the given event", function()
+			local listener = {}
+			etrace.register("SOME_EVENT")
+			assertThrows(
+				function()
+					etrace.subscribe("SOME_EVENT", listener)
+				end,
+				format(
+					"Listener %s of type table is missing a default handler for event SOME_EVENT",
+					tostring(listener)
+				)
+			)
+		end)
+
+		it("should add the provided function listener to the list of subscribers for the given event", function()
+			etrace.register("SOME_EVENT")
+			etrace.subscribe("SOME_EVENT", print)
+			assertEquals(etrace.subscribers.SOME_EVENT[print], print)
+		end)
+
+		it("should add the provided table listener to the list of subscribers for the given event", function()
+			local listener = { SOME_EVENT = print }
+			etrace.register("SOME_EVENT")
+			etrace.subscribe("SOME_EVENT", listener)
+			assertEquals(etrace.subscribers.SOME_EVENT[listener], print)
+		end)
+	end)
+
+	describe("unsubscribe", function()
+		before(function()
+			etrace.reset()
+		end)
+
+		it("should throw if a non-string event name was passed", function()
+			assertThrows(function()
+				etrace.unsubscribe(42, print)
+			end, "Expected argument event to be a string value, but received a number value instead")
+		end)
+
+		it("should throw if an unsupported event listener type was passed", function()
+			etrace.register("SOME_EVENT")
+			assertThrows(function()
+				etrace.unsubscribe("SOME_EVENT", 42)
+			end, "Invalid listener 42 of type number cannot unsubscribe from event SOME_EVENT")
+		end)
+
+		it("should throw if the provided function listener is not registered for the given event", function()
+			local function listener(self, event, payload) end
+			etrace.register("SOME_EVENT")
+			assertThrows(function()
+				etrace.unsubscribe("SOME_EVENT", listener)
+			end, format("Listener %s of type function is not subscribed to event SOME_EVENT", tostring(listener)))
+		end)
+
+		it("should throw if the provided table listener is not registered for the given event", function()
+			local listener = {
+				SOME_EVENT = function(self, event, payload) end,
+			}
+			etrace.register("SOME_EVENT")
+			assertThrows(function()
+				etrace.unsubscribe("SOME_EVENT", listener)
+			end, format("Listener %s of type table is not subscribed to event SOME_EVENT", tostring(listener)))
+		end)
+
+		it("should throw if the provided event name is not registered", function()
+			assertThrows(
+				function()
+					etrace.unsubscribe("HELLO_WORLD", print)
+				end,
+				format(
+					"Cannot unsubscribe listener %s of type function from unknown event HELLO_WORLD",
+					tostring(print)
+				)
+			)
+		end)
+
+		it("should remove the provided function listener from the list of subscribers for the given event", function()
+			etrace.register("SOME_EVENT")
+			etrace.subscribe("SOME_EVENT", print)
+			assertEquals(etrace.subscribers.SOME_EVENT[print], print)
+			etrace.unsubscribe("SOME_EVENT", print)
+			assertEquals(etrace.subscribers.SOME_EVENT, {})
+		end)
+
+		it("should remove the provided table listener from the list of subscribers for the given event", function()
+			local listener = { SOME_EVENT = print }
+			etrace.register("SOME_EVENT")
+			etrace.subscribe("SOME_EVENT", listener)
+			assertEquals(etrace.subscribers.SOME_EVENT[listener], print)
+			etrace.unsubscribe("SOME_EVENT", listener)
+			assertEquals(etrace.subscribers.SOME_EVENT, {})
+		end)
+	end)
+
+	describe("notify", function()
+		before(function()
+			etrace.reset()
+		end)
+
+		it("should throw if a non-string event name was passed", function()
+			assertThrows(function()
+				etrace.notify(42)
+			end, "Expected argument event to be a string value, but received a number value instead")
+		end)
+
+		it("should throw if a non-table payload was passed", function()
+			etrace.register("SOME_EVENT")
+			assertThrows(function()
+				etrace.notify("SOME_EVENT", 42)
+			end, "Expected argument payload to be a table value, but received a number value instead")
+		end)
+
+		it("should call all subscribed listeners with the event name and payload", function()
+			local notifiedListeners = {}
+			local providedArguments = {}
+
+			local tableListener = {
+				MEEP = function(self, event, payload)
+					-- Should pass self to enable use of the : syntax
+					notifiedListeners[self] = true
+					providedArguments.tableListener = { self, event, payload }
+				end,
+			}
+			local function functionListener(event, payload)
+				-- Should not pass self since that seems rather useless
+				notifiedListeners[functionListener] = true
+				providedArguments.functionListener = { event, payload }
+			end
+
+			etrace.register("MEEP")
+			etrace.enable("MEEP")
+			etrace.subscribe("MEEP", tableListener)
+			etrace.subscribe("MEEP", functionListener)
+			etrace.notify("MEEP", { hello = 42 })
+			assertTrue(notifiedListeners[tableListener])
+			assertTrue(notifiedListeners[functionListener])
+			assertEquals(providedArguments.tableListener, { tableListener, "MEEP", { hello = 42 } })
+			assertEquals(providedArguments.functionListener, { "MEEP", { hello = 42 } })
+		end)
+
+		it("should handle gracefully the case where there are no subscribers for a given event", function()
+			etrace.register("MEEP")
+			etrace.notify("MEEP", { hello = 42 }) -- Should not error
+		end)
+
+		it("should pass an empty payload table if none was provided", function()
+			local providedArguments = {}
+
+			local function functionListener(event, payload)
+				providedArguments.functionListener = { event, payload }
+			end
+
+			etrace.register("MEEP")
+			etrace.enable("MEEP")
+			etrace.subscribe("MEEP", functionListener)
+			etrace.notify("MEEP")
+			assertEquals(providedArguments.functionListener, { "MEEP", {} })
+		end)
+
+		it("should have no effect if the given event is disabled", function()
+			local providedArguments = {}
+
+			local function functionListener(event, payload)
+				providedArguments.functionListener = { event, payload }
+			end
+
+			etrace.register("MEEP")
+			etrace.subscribe("MEEP", functionListener)
+			etrace.notify("MEEP", { hello = 42 })
+			assertEquals(providedArguments.functionListener, nil)
+		end)
+	end)
+
+	describe("publish", function()
+		before(function()
+			etrace.reset()
+		end)
+
+		it("should throw if a non-string event name was passed", function()
+			assertThrows(function()
+				etrace.publish(42)
+			end, "Expected argument event to be a string value, but received a number value instead")
+		end)
+
+		it("should throw if a non-table payload was passed", function()
+			etrace.register("SOME_EVENT")
+			assertThrows(function()
+				etrace.publish("SOME_EVENT", 42)
+			end, "Expected argument payload to be a table value, but received a number value instead")
+		end)
+
+		it("should record the event with the provided payload", function()
+			local function functionListener(event, payload) end
+
+			etrace.register("MEEP")
+			etrace.enable("MEEP")
+			etrace.subscribe("MEEP", functionListener)
+			etrace.publish("MEEP", { hello = 42 })
+
+			assertEquals(etrace.filter(), {
+				{
+					name = "MEEP",
+					payload = { hello = 42 },
+				},
+			})
+		end)
+
+		it("should notify subscribers of the event and pass on the provided payload", function()
+			local providedArguments = {}
+
+			local function functionListener(event, payload)
+				providedArguments.functionListener = { event, payload }
+			end
+
+			etrace.register("MEEP")
+			etrace.enable("MEEP")
+			etrace.subscribe("MEEP", functionListener)
+			etrace.publish("MEEP", { hello = 42 })
+			assertEquals(providedArguments.functionListener, { "MEEP", { hello = 42 } })
+		end)
+
+		it("should have no effect if the given event is disabled", function()
+			local providedArguments = {}
+
+			local function functionListener(event, payload)
+				providedArguments.functionListener = { event, payload }
+			end
+
+			etrace.register("MEEP")
+			etrace.subscribe("MEEP", functionListener)
+			etrace.publish("MEEP", { hello = 42 })
+			assertEquals(providedArguments.functionListener, nil)
+			assertEquals(etrace.filter(), {})
 		end)
 	end)
 end)

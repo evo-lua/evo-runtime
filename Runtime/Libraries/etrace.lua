@@ -1,19 +1,27 @@
+local validation = require("validation")
+local validateString = validation.validateString
+local validateTable = validation.validateTable
+
 local ipairs = ipairs
 local error = error
 local pairs = pairs
+local tostring = tostring
 local type = type
 
 local format = string.format
+local table_copy = table.copy
 local table_insert = table.insert
 
 local etrace = {
 	registeredEvents = {},
 	eventLog = {},
+	subscribers = {},
 }
 
 function etrace.reset()
 	etrace.registeredEvents = {}
 	etrace.eventLog = {}
+	etrace.subscribers = {}
 end
 
 function etrace.clear()
@@ -143,8 +151,6 @@ function etrace.record(event, payload)
 	table_insert(etrace.eventLog, entry)
 end
 
-local table_copy = table.copy
-
 function etrace.filter(event)
 	if event == nil or (type(event) == "table" and #event == 0) then
 		-- This may be modified if other events are created
@@ -175,6 +181,134 @@ function etrace.filter(event)
 	end
 
 	return filteredEventLog
+end
+
+function etrace.subscribe(event, listener)
+	validateString(event, "event")
+
+	if etrace.registeredEvents[event] == nil then
+		error(
+			format(
+				"Cannot subscribe listener %s of type %s to unknown event %s",
+				tostring(listener),
+				type(listener),
+				event
+			),
+			0
+		)
+	end
+
+	etrace.subscribers[event] = etrace.subscribers[event] or {}
+	if etrace.subscribers[event][listener] ~= nil then
+		error(
+			format(
+				"Listener %s of type %s is already subscribed to event %s",
+				tostring(listener),
+				type(listener),
+				event
+			),
+			0
+		)
+	end
+
+	if type(listener) == "function" then
+		etrace.subscribers[event][listener] = listener
+	elseif type(listener) == "table" then
+		if type(listener[event]) ~= "function" then
+			error(
+				format(
+					"Listener %s of type %s is missing a default handler for event %s",
+					tostring(listener),
+					type(listener),
+					event
+				),
+				0
+			)
+		end
+		etrace.subscribers[event][listener] = listener[event]
+	else
+		error(
+			format(
+				"Invalid listener %s of type %s cannot subscribe to event %s",
+				tostring(listener),
+				type(listener),
+				event
+			),
+			0
+		)
+	end
+end
+
+function etrace.unsubscribe(event, listener)
+	validateString(event, "event")
+
+	if etrace.registeredEvents[event] == nil then
+		error(
+			format(
+				"Cannot unsubscribe listener %s of type %s from unknown event %s",
+				tostring(listener),
+				type(listener),
+				event
+			),
+			0
+		)
+	end
+
+	if type(listener) ~= "function" and type(listener) ~= "table" then
+		error(
+			format(
+				"Invalid listener %s of type %s cannot unsubscribe from event %s",
+				tostring(listener),
+				type(listener),
+				event
+			),
+			0
+		)
+	end
+
+	etrace.subscribers[event] = etrace.subscribers[event] or {}
+	if etrace.subscribers[event][listener] == nil then
+		error(
+			format("Listener %s of type %s is not subscribed to event %s", tostring(listener), type(listener), event),
+			0
+		)
+	end
+
+	etrace.subscribers[event][listener] = nil
+end
+
+function etrace.notify(event, payload)
+	payload = payload or {}
+
+	validateString(event, "event")
+	validateTable(payload, "payload")
+
+	local subscribers = etrace.subscribers[event]
+	if not subscribers then
+		return
+	end
+
+	local isEventEnabled = (etrace.registeredEvents[event] == true)
+	if not isEventEnabled then
+		return
+	end
+
+	for listener, eventHandler in pairs(subscribers) do
+		if type(listener) == "table" then -- Enable use of : syntax
+			eventHandler(listener, event, payload)
+		else -- No point in passing self
+			eventHandler(event, payload)
+		end
+	end
+end
+
+function etrace.publish(event, payload)
+	payload = payload or {}
+	validateString(event, "event")
+	validateTable(payload, "payload")
+
+	etrace.record(event, payload)
+	etrace.notify(event, payload)
 end
 
 return etrace
