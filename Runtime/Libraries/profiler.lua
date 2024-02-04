@@ -42,7 +42,7 @@
 -- Cache some library functions and objects.
 local jit = require("jit")
 local profile = require("jit.profile")
-local vmdef = require("jit.vmdef")
+local vmdef = require("vmdef")
 local math = math
 local pairs, ipairs, tonumber, floor = pairs, ipairs, tonumber, math.floor
 local sort, format = table.sort, string.format
