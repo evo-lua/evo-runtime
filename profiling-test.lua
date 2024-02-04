@@ -2,7 +2,8 @@ local profiler = require("profiler")
 
 profiler.start("G", "results.txt")
 for i=1, 56 + 1, 1 do
-	print("Hello world")
+	local license = C_FileSystem.ReadFile("LICENSE")
+	print(license)
 end
 profiler.stop()
 -- profiler.dumpstack("f")
