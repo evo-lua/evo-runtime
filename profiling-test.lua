@@ -1,4 +1,4 @@
-local profiler = require("jit.profiler")
+local profiler = require("profiler")
 
 profiler.start()
 profiler.stop()
