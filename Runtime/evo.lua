@@ -10,6 +10,7 @@ local labsound = require("labsound")
 local lpeg = require("lpeg")
 local miniz = require("miniz")
 local oop = require("oop")
+local profiler = require("profiler")
 local regex = require("regex")
 local rml = require("rml")
 local stbi = require("stbi")
@@ -82,6 +83,20 @@ Running the bundled app will always load %s with the version of the runtime used
 			transform.bold(EXPECTED_APP_BUNDLER_ENTRY_POINT),
 			transform.brightYellow("evo build"),
 			transform.brightBlue(EXPECTED_APP_BUNDLER_ENTRY_POINT)
+		),
+		PROFILE_COMMAND_USAGE_INFO = format(
+			[[To identify performance issues with the help of this command, you can:
+
+* Provide the path to a %s program and additional arguments that it should receive: %s
+* Provide any valid combination of profiler options via mode flags: %s
+* Provide an optional file name to save the profiling results: %s
+
+A list of supported profiling modes and their combinations can be found here: %s]],
+			transform.bold(".lua"),
+			transform.brightYellow("evo profile script.lua ..."),
+			transform.brightYellow("LUAJIT_PROFILEMODE=3si4m1 evo profile script.lua ..."),
+			transform.brightYellow("LUAJIT_PROFILEFILE=results.txt evo profile script.lua ..."),
+			transform.brightBlue("https://luajit.org/ext_profiler.html")
 		),
 	},
 }
@@ -194,12 +209,14 @@ function evo.setUpCommandLineInterface()
 	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate the next token as a Lua chunk")
 	C_CommandLine.RegisterCommand("build", evo.buildZipApp, "Create a self-contained executable")
 	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from files or directories")
+	C_CommandLine.RegisterCommand("profile", evo.runScriptWhileProfiling, "Enable LuaJIT's built-in CPU profiler")
 
 	C_CommandLine.SetAlias("help", "-h")
 	C_CommandLine.SetAlias("version", "-v")
 	C_CommandLine.SetAlias("eval", "-e")
 	C_CommandLine.SetAlias("build", "-b")
 	C_CommandLine.SetAlias("test", "-t")
+	C_CommandLine.SetAlias("profile", "-p")
 
 	C_CommandLine.SetDefaultHandler(evo.onInvalidCommand)
 end
@@ -489,6 +506,29 @@ function evo.discoverAndRunTests(command, argv)
 
 	local numFailedSections = C_Runtime.RunDetailedTests(specFiles)
 	os.exit(numFailedSections, true)
+end
+
+function evo.runScriptWhileProfiling(command, argv)
+	local profilingModeFlags = os.getenv("LUAJIT_PROFILEMODE")
+	local outputFilePath = os.getenv("LUAJIT_PROFILEFILE") -- Duplicated here just in case of upstream changes
+	local scriptToProfile = table.remove(argv, 1)
+
+	if not scriptToProfile then
+		print(evo.messageStrings.PROFILE_COMMAND_USAGE_INFO)
+		os.exit(EXIT_FAILURE)
+	end
+
+	if profilingModeFlags then
+		printf("Detected LUAJIT_PROFILEMODE: %s", profilingModeFlags)
+	end
+
+	if outputFilePath then
+		printf("Detected LUAJIT_PROFILEFILE: %s", outputFilePath)
+	end
+
+	profiler.start(profilingModeFlags, outputFilePath)
+	evo.onInvalidCommand(scriptToProfile, argv)
+	profiler.stop()
 end
 
 function evo.onInvalidCommand(command, argv)

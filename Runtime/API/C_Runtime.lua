@@ -2,6 +2,7 @@ local assertions = require("assertions")
 local bdd = require("bdd")
 local ffi = require("ffi")
 local transform = require("transform")
+local uv = require("uv")
 local validation = require("validation")
 
 -- This namespace is created in C++ land, so just assume it exists here
@@ -76,12 +77,23 @@ function C_Runtime.PrintVersionString()
 	print(EVO_VERSION)
 end
 
-local function shell_exec(command)
+local function shell_exec(command, environmentVariables)
+	environmentVariables = environmentVariables or {}
 	local tempFile = os.tmpname()
+
+	for name, value in pairs(environmentVariables) do
+		printf("Setting environment variable %s to %s", name, value)
+		uv.os_setenv(name, value)
+	end
 	local commandWithRedirection = command .. " > " .. tempFile .. " 2>&1"
 
 	-- Somewhat sketchy, but portable enough for this use case?
 	local success, terminationReason, exitCode = os.execute(commandWithRedirection)
+
+	for name, value in pairs(environmentVariables) do
+		printf("Resetting environment variable %s", name)
+		uv.os_unsetenv(name, value)
+	end
 
 	local file = io.open(tempFile, "rb")
 	local output = file:read("*all")
@@ -105,7 +117,8 @@ function C_Runtime.RunSnapshotTests(testCases)
 
 		printf("Running snapshot test %s", transform.bold(descriptor))
 		printf("[SHELL] Executing command: %s", transform.green(testInfo.programToRun))
-		local observedOutput, status, terminationReason, exitCodeOrSignalID = shell_exec(testInfo.programToRun)
+		local observedOutput, status, terminationReason, exitCodeOrSignalID =
+			shell_exec(testInfo.programToRun, testInfo.environmentVariables)
 		printf("[SHELL] Observed output has %d bytes", #observedOutput)
 		printf("[SHELL] Termination status: %s", status)
 		printf("[SHELL] Termination reason: %s", terminationReason)
