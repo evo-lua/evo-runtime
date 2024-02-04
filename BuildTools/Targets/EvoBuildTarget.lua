@@ -10,6 +10,7 @@ local EvoBuildTarget = {
 	luaSources = {
 		-- Auto-generated versioning information for embedded libraries
 		"deps/versions.lua",
+		"deps/LuaJIT/LuaJIT/src/jit/vmdef.lua",
 		-- Integrated third-party code (no build system required)
 		"deps/kikito/inspect.lua/inspect.lua",
 		"deps/roberto-ieru/LPeg/re.lua",
@@ -48,6 +49,7 @@ local EvoBuildTarget = {
 		"Runtime/Libraries/etrace.lua",
 		"Runtime/Libraries/oop.lua",
 		"Runtime/Libraries/path.lua",
+		"Runtime/Libraries/profiler.lua",
 		"Runtime/Libraries/transform.lua",
 		"Runtime/Libraries/uuid.lua",
 		"Runtime/Libraries/validation.lua",
