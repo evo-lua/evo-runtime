@@ -303,6 +303,32 @@ local testCases = {
 			assertExitFailure(observedOutput, status, terminationReason, exitCodeOrSignalID)
 		end,
 	},
+	["cli-test-profile-noargs"] = {
+		humanReadableDescription = "Invoking the profile command without args should display a help text ",
+		programToRun = "evo profile",
+		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			local expectedOutput = evo.messageStrings.PROFILE_COMMAND_USAGE_INFO .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+			assertExitFailure(observedOutput, status, terminationReason, exitCodeOrSignalID)
+		end,
+	},
+	["cli-test-profile-env-vars"] = {
+		humanReadableDescription = "Invoking the profile command without args should display a help text ",
+		programToRun = "evo profile Tests/Fixtures/empty.spec.lua",
+		environmentVariables = {
+			LUAJIT_PROFILEFILE = "results.txt",
+			LUAJIT_PROFILEMODE = "3si4m1",
+		},
+		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			local expectedOutput = "Detected LUAJIT_PROFILEMODE: 3si4m1\n"
+				.. "Detected LUAJIT_PROFILEFILE: results.txt\n"
+			local profilingResults = C_FileSystem.ReadFile("results.txt")
+			profilingResults = profilingResults:gsub("\r\n", "\n") -- LuaJIT opens the file in text mode
+			assertEquals(observedOutput, expectedOutput)
+			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			assertEquals(profilingResults, "[No samples collected]\n[No samples collected]\n")
+		end,
+	},
 }
 
 C_Runtime.RunSnapshotTests(testCases)
