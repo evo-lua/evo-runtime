@@ -226,6 +226,9 @@ function evo.createSignalHandlers()
 end
 
 function evo.setUpCommandLineInterface()
+	-- Interpreter CLI
+	C_CommandLine.RegisterCommand("build", evo.buildZipApp, "Create a self-contained executable")
+	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate the next token as a Lua chunk")
 	C_CommandLine.RegisterCommand("help", evo.displayHelpText, "Display usage instructions (this text)")
 	C_CommandLine.RegisterCommand("version", evo.displayRuntimeVersion, "Show versioning information only")
 	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate expressions live or from input")
@@ -239,6 +242,34 @@ function evo.setUpCommandLineInterface()
 	C_CommandLine.SetAlias("build", "-b")
 	C_CommandLine.SetAlias("test", "-t")
 	C_CommandLine.SetAlias("profile", "-p")
+
+	C_CommandLine.SetAlias("build", "-b")
+	C_CommandLine.SetAlias("eval", "-e")
+	C_CommandLine.SetAlias("help", "-h")
+	C_CommandLine.SetAlias("version", "-v")
+
+	-- Developer Tools
+	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from files or directories")
+	C_CommandLine.RegisterCommand("profile", evo.runScriptWhileProfiling, "Run script with CPU profiling enabled")
+	C_CommandLine.RegisterCommand("debug", evo.runWhileTracing, "Run script with debug logging enabled")
+	C_CommandLine.RegisterCommand("export", evo.exportLuaEnvironment, "Export details about the Lua environment")
+
+	-- save / bcsave -s / clashes with setup / export -x
+	C_CommandLine.SetAlias("test", "-t")
+	C_CommandLine.SetAlias("profile", "-p")
+	C_CommandLine.SetAlias("debug", "-d")
+	C_CommandLine.SetAlias("export", "-x")
+
+	-- Package Management
+	C_CommandLine.RegisterCommand("install", evo.installPackageOrLibrary, "Install community packages or libraries")
+	C_CommandLine.RegisterCommand("remove", evo.removePackageOrLibrary, "Remove community packages or libraries")
+	C_CommandLine.RegisterCommand("outdated", evo.findOutdatedPackagesOrLibraries, "Check for new package or library versions")
+	C_CommandLine.RegisterCommand("create", evo.createPackageOrLibrary, "Initialize a new package or library")
+	C_CommandLine.SetAlias("install", "-i")
+	C_CommandLine.SetAlias("remove", "-r")
+	C_CommandLine.SetAlias("outdated", "-o")
+	C_CommandLine.SetAlias("create", "-c") -- setup -s / clashes with save
+	-- C_CommandLine.SetAlias("publish", "-p") -- not needed? clashes with profile, also unpublish...
 
 	C_CommandLine.SetDefaultHandler(evo.onInvalidCommand)
 end
@@ -573,5 +604,47 @@ function evo.onInvalidCommand(command, argv)
 
 	evo.displayHelpText()
 end
+
+function evo.runWhileTracing(_, argv)
+	-- local transform = require("transform")
+	-- local etrace = require("etrace")
+
+	etrace.isForceEnabled = true
+
+	local message =
+		"Event tracing is now enabled globally; all attempts to turn it off from inside the scripting environment will be ignored."
+
+	local separator = string.rep("-", #message)
+
+	printf("%s\n%s", transform.yellow(message), separator)
+
+	local scriptFilePath = argv[1]
+	table.remove(argv, 1)
+	return evo.onInvalidCommand(scriptFilePath, argv)
+end
+
+function evo.extend(child, parent)
+	local parentMetatable = getmetatable(parent)
+
+	if type(parentMetatable) ~= "table" then
+		setmetatable(parent, {})
+		parentMetatable = getmetatable(parent)
+	end
+
+	local childMetatable = {}
+	for key, value in pairs(parentMetatable) do
+		childMetatable[key] = value
+	end
+
+	childMetatable.__index = parent
+
+	setmetatable(child, childMetatable)
+end
+
+function evo.exportLuaEnvironment(command, argumentsVector) print("NYI") end
+function evo.installPackageOrLibrary(command, argumentsVector) print("NYI") end
+function evo.removePackageOrLibrary(command, argumentsVector) print("NYI") end
+function evo.findOutdatedPackagesOrLibraries(command, argumentsVector) print("NYI") end
+function evo.createPackageOrLibrary(command, argumentsVector) print("NYI") end
 
 return evo
