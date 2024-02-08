@@ -44,6 +44,9 @@ jobs:
     - name: Install WebKitGTK
       run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
 
+    - name: Install PulseAudio
+      run: sudo apt-get install pulseaudio libpulse-dev --yes
+
     - name: Configure environment
       run: |
             export PATH="/usr/lib/ccache:$PATH"
