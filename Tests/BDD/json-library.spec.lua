@@ -34,6 +34,10 @@ describe("json", function()
 			local jsonTable = json.parse(jsonString)
 			assertEquals(jsonTable, luaTable)
 		end)
+
+		it("should be an alias of json.decode", function()
+			assertEquals(json.parse, json.decode)
+		end)
 	end)
 
 	describe("stringify", function()
@@ -42,6 +46,21 @@ describe("json", function()
 			assertEquals(json.stringify({ 3, "false", false }), '[3,"false",false]')
 			assertEquals(json.stringify({ x = { 10, json.null, 42 } }), '{"x":[10,null,42]}')
 			assertEquals(json.stringify({ x = { 10, nil, 42 } }), '{"x":[10]}')
+		end)
+
+		it("should forward the encoding options if any have been passed", function()
+			local input = { result = true, count = 42 }
+			local expectedOutput = '{\n\t"count": 42,\n\t"result": true\n}'
+			local encodingOptions = {
+				prettier = true,
+				sort_keys = true,
+			}
+			local formattedInput = json.stringify(input, encodingOptions)
+			assertEquals(formattedInput, expectedOutput)
+		end)
+
+		it("should be an alias of json.encode", function()
+			assertEquals(json.stringify, json.encode)
 		end)
 	end)
 
