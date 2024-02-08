@@ -15,6 +15,7 @@ local regex = require("regex")
 local rml = require("rml")
 local stbi = require("stbi")
 local stduuid = require("stduuid")
+local syslog = require("syslog")
 local transform = require("transform")
 local uv = require("uv")
 local uws = require("uws")
@@ -177,6 +178,14 @@ function evo.registerGlobalAliases()
 		printf = console.printf,
 		sizeof = ffi.sizeof,
 		typeof = ffi.typeof,
+		DEBUG = syslog.debug,
+		INFO = syslog.info,
+		NOTICE = syslog.notice,
+		WARNING = syslog.warning,
+		ERROR = syslog.error,
+		CRITICAL = syslog.critical,
+		ALERT = syslog.alert,
+		EMERGENCY = syslog.emergency,
 	}
 
 	for alias, target in pairs(evo.globalAliases) do
