@@ -2,6 +2,7 @@ local assertions = require("assertions")
 local bdd = require("bdd")
 local console = require("console")
 local crypto = require("crypto")
+local etrace = require("etrace")
 local ffi = require("ffi")
 local glfw = require("glfw")
 local jit = require("jit")
@@ -186,6 +187,7 @@ function evo.registerGlobalAliases()
 		CRITICAL = syslog.critical,
 		ALERT = syslog.alert,
 		EMERGENCY = syslog.emergency,
+		EVENT = etrace.publish,
 	}
 
 	for alias, target in pairs(evo.globalAliases) do

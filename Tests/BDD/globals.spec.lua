@@ -1,6 +1,7 @@
 local ffi = require("ffi")
 local bdd = require("bdd")
 local console = require("console")
+local etrace = require("etrace")
 local oop = require("oop")
 local syslog = require("syslog")
 
@@ -35,6 +36,7 @@ local globalAliases = {
 	["CRITICAL"] = syslog.critical,
 	["ALERT"] = syslog.alert,
 	["EMERGENCY"] = syslog.emergency,
+	["EVENT"] = etrace.publish,
 }
 
 local globalNamespaces = {
