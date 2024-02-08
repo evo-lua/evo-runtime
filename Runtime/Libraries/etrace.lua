@@ -9,7 +9,6 @@ local tostring = tostring
 local type = type
 
 local format = string.format
-local table_copy = table.copy
 local table_insert = table.insert
 
 local etrace = {
@@ -154,7 +153,7 @@ end
 function etrace.filter(event)
 	if event == nil or (type(event) == "table" and #event == 0) then
 		-- This may be modified if other events are created
-		return table_copy(etrace.eventLog)
+		return table.copy(etrace.eventLog)
 	end
 
 	local events = {}

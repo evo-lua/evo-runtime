@@ -5,7 +5,8 @@ local VIRTUAL_TIME_NOW = 12345 -- The actual value doesn't matter, just needs to
 
 local function resetTestEnvironment()
 	before(function()
-		etrace.clear()
+		etrace.reset()
+		etrace.register("SYSLOG_MESSAGE")
 		etrace.enable("SYSLOG_MESSAGE")
 		syslog.time = function()
 			return VIRTUAL_TIME_NOW
@@ -13,7 +14,7 @@ local function resetTestEnvironment()
 	end)
 
 	after(function()
-		etrace.disable("SYSLOG_MESSAGE")
+		etrace.reset()
 		syslog.time = os.time
 	end)
 end

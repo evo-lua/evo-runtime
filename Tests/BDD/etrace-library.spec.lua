@@ -2,6 +2,10 @@ local etrace = require("etrace")
 
 describe("etrace", function()
 	describe("clear", function()
+		before(function()
+			etrace.reset()
+		end)
+
 		after(function()
 			etrace.reset()
 		end)
