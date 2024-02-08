@@ -58,7 +58,8 @@ WGPUBuffer RenderInterface_WebGPU::CreateIndexBuffer(int* indices, int num_indic
 }
 
 WGPUTexture RenderInterface_WebGPU::CreateTexture(const uint8_t* rgbaImageBytes, const uint32_t textureWidth, const uint32_t textureHeight) {
-	size_t textureBufferSize = textureWidth * textureHeight * 4; // RGBA
+	constexpr size_t BPP = 4; // RGBA texture format is assumed
+	size_t textureBufferSize = static_cast<size_t>(textureWidth) * static_cast<size_t>(textureHeight) * BPP;
 
 	WGPUTextureDescriptor textureDescriptor = {
 		.usage = WGPUTextureUsage_CopyDst | WGPUTextureUsage_TextureBinding,
