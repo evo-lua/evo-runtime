@@ -22,6 +22,7 @@ local specFiles = {
 	"Tests/BDD/stbi-library.spec.lua",
 	"Tests/BDD/stduuid-library.spec.lua",
 	"Tests/BDD/string-library.spec.lua",
+	"Tests/BDD/syslog-library.spec.lua",
 	"Tests/BDD/table-library.spec.lua",
 	"Tests/BDD/transform-library.spec.lua",
 	"Tests/BDD/uuid-library.spec.lua",
