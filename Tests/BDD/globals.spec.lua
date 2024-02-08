@@ -1,7 +1,9 @@
 local ffi = require("ffi")
 local bdd = require("bdd")
 local console = require("console")
+local etrace = require("etrace")
 local oop = require("oop")
+local syslog = require("syslog")
 
 local globalAliases = {
 	["after"] = bdd.after,
@@ -25,6 +27,16 @@ local globalAliases = {
 	["new"] = ffi.new,
 	["sizeof"] = ffi.sizeof,
 	["typeof"] = ffi.typeof,
+	-- Capitalization avoids name clashes and emphasises the cross-cutting nature
+	["DEBUG"] = syslog.debug,
+	["INFO"] = syslog.info,
+	["NOTICE"] = syslog.notice,
+	["WARNING"] = syslog.warning,
+	["ERROR"] = syslog.error,
+	["CRITICAL"] = syslog.critical,
+	["ALERT"] = syslog.alert,
+	["EMERGENCY"] = syslog.emergency,
+	["EVENT"] = etrace.publish,
 }
 
 local globalNamespaces = {

@@ -52,6 +52,7 @@ local EvoBuildTarget = {
 		"Runtime/Libraries/oop.lua",
 		"Runtime/Libraries/path.lua",
 		"Runtime/Libraries/profiler.lua",
+		"Runtime/Libraries/syslog.lua",
 		"Runtime/Libraries/transform.lua",
 		"Runtime/Libraries/uuid.lua",
 		"Runtime/Libraries/validation.lua",
