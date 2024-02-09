@@ -1,3 +1,6 @@
+local validation = require("validation")
+local validateString = validation.validateString
+
 local transform = {
 	ENABLE_TEXT_TRANSFORMATIONS = true,
 	START_SEQUENCE = "\27[",
@@ -41,8 +44,6 @@ local transform = {
 	},
 }
 
-local type = type
-
 function transform.enable()
 	transform.ENABLE_TEXT_TRANSFORMATIONS = true
 end
@@ -52,9 +53,7 @@ function transform.disable()
 end
 
 function transform.strip(coloredConsoleText)
-	if type(coloredConsoleText) ~= "string" then
-		error("Usage: transform.strip(text : string)", 0)
-	end
+	validateString(coloredConsoleText, "coloredConsoleText")
 
 	-- All credit goes to this fine gentleman: https://stackoverflow.com/users/3735873/tonypdmtr
 	local strippedConsoleText = coloredConsoleText
@@ -68,9 +67,8 @@ function transform.strip(coloredConsoleText)
 end
 
 local function transformText(text, color)
-	if type(text) ~= "string" then
-		error("Usage: transform." .. color .. "(text : string)", 0)
-	end
+	validateString(text, "text")
+	validateString(color, "color")
 
 	if not transform.ENABLE_TEXT_TRANSFORMATIONS then
 		return text
