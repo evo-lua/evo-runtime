@@ -14,6 +14,7 @@ local oop = require("oop")
 local profiler = require("profiler")
 local regex = require("regex")
 local rml = require("rml")
+local runtime = require("runtime")
 local stbi = require("stbi")
 local stduuid = require("stduuid")
 local syslog = require("syslog")
@@ -217,7 +218,7 @@ end
 function evo.setUpCommandLineInterface()
 	C_CommandLine.RegisterCommand("help", evo.displayHelpText, "Display usage instructions (this text)")
 	C_CommandLine.RegisterCommand("version", evo.displayRuntimeVersion, "Show versioning information only")
-	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate the next token as a Lua chunk")
+	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate expressions live or from input")
 	C_CommandLine.RegisterCommand("build", evo.buildZipApp, "Create a self-contained executable")
 	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from files or directories")
 	C_CommandLine.RegisterCommand("profile", evo.runScriptWhileProfiling, "Enable LuaJIT's built-in CPU profiler")
@@ -354,6 +355,8 @@ function evo.evaluateChunk(commandName, argv)
 	local luaCodeToEvaluate = unpack(argv)
 
 	if not luaCodeToEvaluate then
+		printf(transform.brightGreen("Welcome to Evo.lua %s (REPL powered by LuaJIT)"), EVO_VERSION)
+		runtime.bindings.runtime_repl_start()
 		return
 	end
 

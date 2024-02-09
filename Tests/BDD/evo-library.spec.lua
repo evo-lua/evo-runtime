@@ -85,7 +85,7 @@ describe("evo", function()
 			local capturedOutput = console.release()
 
 			local evalCommandInfo =
-				capturedOutput:match("%-e" .. "%s+" .. "eval" .. "%s+" .. "Evaluate the next token as a Lua chunk")
+				capturedOutput:match("%-e" .. "%s+" .. "eval" .. "%s+" .. "Evaluate expressions live or from input")
 			local helpCommandInfo =
 				capturedOutput:match("%-h" .. "%s+" .. "help" .. "%s+" .. "Display usage instructions %(this text%)")
 			local versionCommandInfo =
@@ -93,7 +93,7 @@ describe("evo", function()
 			local buildCommandInfo =
 				capturedOutput:match("%-b" .. "%s+" .. "build" .. "%s+" .. "Create a self%-contained executable")
 
-			assertEquals(evalCommandInfo, "-e\teval\t\tEvaluate the next token as a Lua chunk")
+			assertEquals(evalCommandInfo, "-e\teval\t\tEvaluate expressions live or from input")
 			assertEquals(helpCommandInfo, "-h\thelp\t\tDisplay usage instructions (this text)")
 			assertEquals(versionCommandInfo, "-v\tversion\t\tShow versioning information")
 			assertEquals(buildCommandInfo, "-b\tbuild\t\tCreate a self-contained executable")

@@ -94,11 +94,15 @@ local testCases = {
 		end,
 	},
 	["cli-eval-nil"] = {
-		humanReadableDescription = "Invoking the CLI eval command with no arguments should print nothing",
-		programToRun = "evo eval",
+		humanReadableDescription = "Invoking the CLI eval command with no arguments should start the REPL",
+		-- Sending via stdin to the REPL ensures that it exits (and doesn't hang the test)
+		programToRun = "echo \"print('Hello from the REPL!'); os.exit(1, true)\" | evo eval",
 		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
-			assertEquals(observedOutput, "")
-			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			local welcomeText =
+				transform.brightGreen(format("Welcome to Evo.lua %s (REPL powered by LuaJIT)", EVO_VERSION))
+			local expectedOutput = welcomeText .. "\n" .. "> Hello from the REPL!" .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+			assertExitFailure(observedOutput, status, terminationReason, exitCodeOrSignalID)
 		end,
 	},
 	["cli-eval-chunk"] = {
