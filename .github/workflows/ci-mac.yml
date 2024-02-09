@@ -1,4 +1,4 @@
-name: Build and Release (Mac OS)
+name: Build and Release (macOS)
 
 on:
   push:
@@ -23,7 +23,7 @@ concurrency:
 jobs:
   build:
     if: github.event.pull_request.draft == false
-    name: Build for Mac OS
+    name: Build for macOS
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
