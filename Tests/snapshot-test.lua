@@ -341,6 +341,7 @@ local testCases = {
 			local expectedOutput = "Detected LUAJIT_PROFILEMODE: 3si4m1\n"
 				.. "Detected LUAJIT_PROFILEFILE: results.txt\n"
 			local profilingResults = C_FileSystem.ReadFile("results.txt")
+			C_FileSystem.Delete("results.txt")
 			profilingResults = profilingResults:gsub("\r\n", "\n") -- LuaJIT opens the file in text mode
 			assertEquals(observedOutput, expectedOutput)
 			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
