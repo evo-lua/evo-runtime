@@ -20,7 +20,7 @@ Not all of the included APIs are as user-friendly as I'd like, but that'll chang
 
 ## System Requirements
 
-The supported platforms are current versions of Windows, Linux, and Mac OS X.
+The supported platforms are current versions of Windows, Linux, and macOS.
 
 Automated testing covers all platforms equally:
 
@@ -28,7 +28,7 @@ Automated testing covers all platforms equally:
 ![https://github.com/evo-lua/evo-runtime/actions/workflows/ci-linux.yml/badge.svg](https://github.com/evo-lua/evo-runtime/actions/workflows/ci-linux.yml/badge.svg)
 ![https://github.com/evo-lua/evo-runtime/actions/workflows/ci-mac.yml/badge.svg](https://github.com/evo-lua/evo-runtime/actions/workflows/ci-mac.yml/badge.svg)
 
-Development happens on Windows 10 and Ubuntu. Mac OS support is given on a "best effort" basis.
+Development happens on Windows 10 and Ubuntu; macOS (especially M1) support is given on a "best effort" basis.
 
 ## Compatibility
 
@@ -57,7 +57,7 @@ In this repository, you'll find the following important directories:
 After building, you'll additionally find a temporary directory containing all build artifacts here:
 
 * ``ninjabuild-windows`` (Windows)
-* ``ninjabuild-unix`` (Linux or Mac OS)
+* ``ninjabuild-unix`` (Linux or macOS)
 
 There's also config files for GitHub actions and other tooling in the project root - a necessary evil.
 
