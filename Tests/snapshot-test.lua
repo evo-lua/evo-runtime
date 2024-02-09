@@ -112,9 +112,12 @@ local testCases = {
 			.. SHELL_ESCAPE_SYMBOL
 			.. " | evo eval",
 		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
-			local welcomeText =
-				transform.brightGreen(format("Welcome to Evo.lua %s (REPL powered by LuaJIT)", EVO_VERSION))
-			local expectedOutput = welcomeText .. "\n" .. "> Hello from the REPL!" .. "\n"
+			local expectedOutput = evo.messageStrings.REPL_WELCOME_TEXT
+				.. "\n"
+				.. evo.messageStrings.REPL_USAGE_INSTRUCTIONS
+				.. "\n"
+				.. "> Hello from the REPL!"
+				.. "\n"
 			assertEquals(observedOutput, expectedOutput)
 			assertExitFailure(observedOutput, status, terminationReason, exitCodeOrSignalID)
 		end,

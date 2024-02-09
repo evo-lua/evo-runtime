@@ -101,6 +101,16 @@ A list of supported profiling modes and their combinations can be found here: %s
 			transform.brightYellow("LUAJIT_PROFILEFILE=results.txt evo profile script.lua ..."),
 			transform.brightBlue("https://luajit.org/ext_profiler.html")
 		),
+		REPL_WELCOME_TEXT = format(
+			transform.brightGreen("Welcome to Evo.lua %s (REPL powered by LuaJIT)"),
+			EVO_VERSION
+		),
+		REPL_USAGE_INSTRUCTIONS = format(
+			"Evaluating code in %s mode. To exit, press %s or type %s.",
+			transform.brightMagenta("live edit"),
+			transform.brightYellow("CTRL+C"),
+			transform.brightYellow("os.exit()")
+		),
 	},
 }
 
@@ -355,7 +365,8 @@ function evo.evaluateChunk(commandName, argv)
 	local luaCodeToEvaluate = unpack(argv)
 
 	if not luaCodeToEvaluate then
-		printf(transform.brightGreen("Welcome to Evo.lua %s (REPL powered by LuaJIT)"), EVO_VERSION)
+		print(evo.messageStrings.REPL_WELCOME_TEXT)
+		print(evo.messageStrings.REPL_USAGE_INSTRUCTIONS)
 		runtime.bindings.runtime_repl_start()
 		return
 	end
