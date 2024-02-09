@@ -77,9 +77,13 @@ describe("transform", function()
 		}
 		for _, color in ipairs(supportedTerminalColors) do
 			for _, invalidValue in ipairs(invalidValues) do
+				local actualType = type(invalidValue)
 				assertThrows(function()
 					transform[color](invalidValue)
-				end, "Usage: transform." .. color .. "(text : string)")
+				end, format(
+					"Expected argument text to be a string value, but received a %s value instead",
+					actualType
+				))
 			end
 		end
 	end)
@@ -108,6 +112,12 @@ describe("transform", function()
 	end)
 
 	describe("strip", function()
+		it("should throw if a non-string value was passed", function()
+			assertThrows(function()
+				transform.strip(42)
+			end, "Expected argument coloredConsoleText to be a string value, but received a number value instead")
+		end)
+
 		it("should remove color codes from the input without otherwise modifying it", function()
 			for name, transformation in pairs(transform) do
 				if type(transformation) == "function" and transform.colorCodes[name] then
