@@ -48,6 +48,12 @@ local function simulateDetailedTestRunWithInputs(specFiles)
 	return reportString
 end
 
+-- Working around cmd.exe idiosyncracies ...
+local DOUBLE_QUOTE = '"'
+local SINGLE_QUOTE = "'"
+local SHELL_ESCAPE_SYMBOL = isWindows and "" or DOUBLE_QUOTE
+local STRING_ESCAPE_SYMBOL = isWindows and DOUBLE_QUOTE or SINGLE_QUOTE
+
 local testCases = {
 	["cli-no-args"] = {
 		humanReadableDescription = "Invoking the CLI without passing any arguments should print the help text",
@@ -93,12 +99,24 @@ local testCases = {
 			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
 		end,
 	},
-	["cli-eval-nil"] = {
-		humanReadableDescription = "Invoking the CLI eval command with no arguments should print nothing",
-		programToRun = "evo eval",
+	["cli-eval-repl"] = {
+		humanReadableDescription = "Invoking the CLI eval command with no arguments should start the REPL",
+		-- Sending via stdin to the REPL ensures that it exits (and doesn't hang the test)
+		programToRun = "echo "
+			.. SHELL_ESCAPE_SYMBOL
+			.. "print("
+			.. STRING_ESCAPE_SYMBOL
+			.. "Hello from the REPL!"
+			.. STRING_ESCAPE_SYMBOL
+			.. "); os.exit(1, true)"
+			.. SHELL_ESCAPE_SYMBOL
+			.. " | evo eval",
 		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
-			assertEquals(observedOutput, "")
-			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			local welcomeText =
+				transform.brightGreen(format("Welcome to Evo.lua %s (REPL powered by LuaJIT)", EVO_VERSION))
+			local expectedOutput = welcomeText .. "\n" .. "> Hello from the REPL!" .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+			assertExitFailure(observedOutput, status, terminationReason, exitCodeOrSignalID)
 		end,
 	},
 	["cli-eval-chunk"] = {

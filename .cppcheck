@@ -4,6 +4,9 @@ passedByValue
 // Copy/pasted library code (temporary... hopefully)
 *:Runtime/Bindings/lutf8.c
 
+// cppcheck can't find the headers, but it's whatever since GCC checks macros anyway
+unknownMacro:Runtime/luajit_repl.c
+
 // Debug functions left in on purpose
 unusedFunction:Runtime/LuaVirtualMachine.cpp
 // Callback-based interface (hooks that will be called by RML)
@@ -16,6 +19,7 @@ unusedStructMember:Runtime/Bindings/iconv_ffi.hpp
 unusedStructMember:Runtime/Bindings/interop_ffi.hpp
 unusedStructMember:Runtime/Bindings/labsound_ffi.hpp
 unusedStructMember:Runtime/Bindings/rml_ffi.hpp
+unusedStructMember:Runtime/Bindings/runtime_ffi.hpp
 unusedStructMember:Runtime/Bindings/stbi_ffi.hpp
 unusedStructMember:Runtime/Bindings/stduuid_ffi.hpp
 unusedStructMember:Runtime/Bindings/uws_ffi.hpp

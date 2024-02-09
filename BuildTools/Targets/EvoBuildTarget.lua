@@ -35,6 +35,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/iconv.lua",
 		"Runtime/Bindings/interop.lua",
 		"Runtime/Bindings/labsound.lua",
+		"Runtime/Bindings/runtime.lua",
 		"Runtime/Bindings/rml.lua",
 		"Runtime/Bindings/stbi.lua",
 		"Runtime/Bindings/stduuid.lua",
@@ -60,6 +61,7 @@ local EvoBuildTarget = {
 		"Runtime/Libraries/v8.lua",
 	},
 	cSources = {
+		"Runtime/luajit_repl.c",
 		"Runtime/Bindings/glfw_webgpu.c",
 		"Runtime/Bindings/lutf8.c",
 	},
@@ -75,6 +77,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/lminiz.cpp",
 		"Runtime/Bindings/RmlUi_Renderer_WebGPU.cpp",
 		"Runtime/Bindings/rml_ffi.cpp",
+		"Runtime/Bindings/runtime_ffi.cpp",
 		"Runtime/Bindings/stbi_ffi.cpp",
 		"Runtime/Bindings/stduuid_ffi.cpp",
 		"Runtime/Bindings/uws_ffi.cpp",

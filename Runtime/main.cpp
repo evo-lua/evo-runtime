@@ -1,6 +1,7 @@
 extern "C" {
 #include "lpeg.hpp"
 #include "luv.h"
+#include "luajit_repl.h"
 #include "lminiz.hpp"
 #include "lrexlib.hpp"
 #include "lutf8.hpp"
@@ -15,6 +16,7 @@ extern "C" {
 #include "interop_ffi.hpp"
 #include "labsound_ffi.hpp"
 #include "rapidjson.hpp"
+#include "runtime_ffi.hpp"
 #include "rml_ffi.hpp"
 #include "stbi_ffi.hpp"
 #include "stduuid_ffi.hpp"
@@ -49,6 +51,7 @@ int main(int argc, char* argv[]) {
 	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("uws", uws_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("rml", rml_ffi::getExportsTable());
+	luaVM->BindStaticLibraryExports("runtime", runtime_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("stbi", stbi_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("stduuid", stduuid_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("webgpu", webgpu_ffi::getExportsTable());
@@ -57,6 +60,7 @@ int main(int argc, char* argv[]) {
 	luaVM->CreateGlobalNamespace("C_Runtime");
 	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
 
+	runtime_ffi::assignLuaState(luaVM->GetState());
 	rml_ffi::assignLuaState(luaVM->GetState());
 
 	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
