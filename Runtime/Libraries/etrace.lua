@@ -287,11 +287,6 @@ function etrace.notify(event, payload)
 		return
 	end
 
-	local isEventEnabled = (etrace.registeredEvents[event] == true)
-	if not isEventEnabled then
-		return
-	end
-
 	for listener, eventHandler in pairs(subscribers) do
 		if type(listener) == "table" then -- Enable use of : syntax
 			eventHandler(listener, event, payload)

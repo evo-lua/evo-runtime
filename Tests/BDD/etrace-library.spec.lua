@@ -715,7 +715,7 @@ describe("etrace", function()
 			assertEquals(providedArguments.functionListener, { "MEEP", {} })
 		end)
 
-		it("should have no effect if the given event is disabled", function()
+		it("should still work if logging for the given event is disabled", function()
 			local providedArguments = {}
 
 			local function functionListener(event, payload)
@@ -723,9 +723,11 @@ describe("etrace", function()
 			end
 
 			etrace.register("MEEP")
+			etrace.disable("MEEP")
 			etrace.subscribe("MEEP", functionListener)
 			etrace.notify("MEEP", { hello = 42 })
-			assertEquals(providedArguments.functionListener, nil)
+			assertEquals(providedArguments.functionListener[1], "MEEP")
+			assertEquals(providedArguments.functionListener[2].hello, 42)
 		end)
 	end)
 
@@ -777,7 +779,7 @@ describe("etrace", function()
 			assertEquals(providedArguments.functionListener, { "MEEP", { hello = 42 } })
 		end)
 
-		it("should have no effect if the given event is disabled", function()
+		it("should still work if logging for the given event is disabled", function()
 			local providedArguments = {}
 
 			local function functionListener(event, payload)
@@ -787,7 +789,11 @@ describe("etrace", function()
 			etrace.register("MEEP")
 			etrace.subscribe("MEEP", functionListener)
 			etrace.publish("MEEP", { hello = 42 })
-			assertEquals(providedArguments.functionListener, nil)
+			-- Disabling event notifications would break any listener relying on the event system
+			assertEquals(providedArguments.functionListener[1], "MEEP")
+			assertEquals(providedArguments.functionListener[2].hello, 42)
+
+			-- The log should be empty, however as logging was indeed disabled
 			assertEquals(etrace.filter(), {})
 		end)
 	end)
