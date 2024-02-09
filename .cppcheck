@@ -19,6 +19,7 @@ unusedStructMember:Runtime/Bindings/iconv_ffi.hpp
 unusedStructMember:Runtime/Bindings/interop_ffi.hpp
 unusedStructMember:Runtime/Bindings/labsound_ffi.hpp
 unusedStructMember:Runtime/Bindings/rml_ffi.hpp
+unusedStructMember:Runtime/Bindings/runtime_ffi.hpp
 unusedStructMember:Runtime/Bindings/stbi_ffi.hpp
 unusedStructMember:Runtime/Bindings/stduuid_ffi.hpp
 unusedStructMember:Runtime/Bindings/uws_ffi.hpp

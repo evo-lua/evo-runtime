@@ -234,7 +234,7 @@ static int loadline(lua_State* L) {
 	return status;
 }
 
-static void dotty(lua_State* L) {
+void dotty(lua_State* L) {
 	int status;
 	const char* oldprogname = progname;
 	progname = NULL;
