@@ -356,6 +356,12 @@ function evo.evaluateChunk(commandName, argv)
 
 	if not luaCodeToEvaluate then
 		printf(transform.brightGreen("Welcome to Evo.lua %s (REPL powered by LuaJIT)"), EVO_VERSION)
+		printf(
+			"Evaluating code in %s mode. To exit, press %s or type %s.",
+			transform.brightMagenta("live edit"),
+			transform.brightYellow("CTRL+C"),
+			transform.brightYellow("os.exit()")
+		)
 		runtime.bindings.runtime_repl_start()
 		return
 	end
