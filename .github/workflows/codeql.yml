@@ -78,7 +78,36 @@ jobs:
     - name: Build the runtime
       run: bash ./unixbuild.sh
 
-    - name: Perform CodeQL analysis
-      uses: github/codeql-action/analyze@v3
-      with:
-        category: "/language:${{matrix.language}}"
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+          upload: false  # Upload separately so it can be filtered
+          output: sarif-results
+
+      - name: Basic sanity check
+        run: ls -l && ls -l sarif-results && file sarif-results/cpp.sarif
+
+      - name: Filter SARIF
+        uses: advanced-security/filter-sarif@v1
+        with:
+          patterns: |
+            +**/*.c
+            +**/*.cpp
+          # Getting spammed with library alerts is useless; no one will ever fix them all
+            -**/*deps/**
+              input: sarif-results/${{ matrix.language }}.sarif
+              output: sarif-results/${{ matrix.language }}.sarif
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: sarif-results/${{ matrix.language }}.sarif
+          category: "/language:${{matrix.language}}"
+
+      - name: Upload analysis results
+        uses: actions/upload-artifact@v3
+        with:
+          name: sarif-results
+          path: sarif-results
+          retention-days: 1
