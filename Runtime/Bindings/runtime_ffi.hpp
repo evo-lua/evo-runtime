@@ -7,7 +7,7 @@ struct static_runtime_exports_table {
 	const char* (*runtime_version)(void);
 
 	// REPL
-	void (*runtime_repl_start)(void);
+	void (*repl_start)(void);
 };
 
 namespace runtime_ffi {
@@ -17,7 +17,7 @@ namespace runtime_ffi {
 	const char* runtime_version();
 
 	// REPL
-	void runtime_repl_start();
+	void repl_start();
 
 	void* getExportsTable();
 }

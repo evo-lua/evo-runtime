@@ -15,7 +15,7 @@ namespace runtime_ffi {
 		return EVO_VERSION;
 	}
 
-	void runtime_repl_start() {
+	void repl_start() {
 		dotty(assignedLuaState);
 	}
 
@@ -26,7 +26,7 @@ namespace runtime_ffi {
 		exports_table.runtime_version = &runtime_version;
 
 		// REPL
-		exports_table.runtime_repl_start = &runtime_repl_start;
+		exports_table.repl_start = &repl_start;
 
 		return &exports_table;
 	}

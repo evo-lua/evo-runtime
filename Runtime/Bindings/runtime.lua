@@ -19,7 +19,7 @@ runtime.cdefs = [[
 		const char* (*runtime_version)(void);
 
 		// REPL
-		void (*runtime_repl_start)(void);
+		void (*repl_start)(void);
 	};
 ]]
 
@@ -96,6 +96,10 @@ function runtime.version()
 
 	local majorVersion, minorVersion, patchVersion = versionString:match("(%d+)%.(%d+)%.*(%d*)")
 	return versionString, tonumber(majorVersion), tonumber(minorVersion), tonumber(patchVersion)
+end
+
+function runtime.repl_start()
+	runtime.bindings.repl_start()
 end
 
 return runtime

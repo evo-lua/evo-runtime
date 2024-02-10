@@ -289,10 +289,7 @@ function evo.evaluateChunk(commandName, argv)
 	local luaCodeToEvaluate = unpack(argv)
 
 	if not luaCodeToEvaluate then
-		print(evo.messageStrings.REPL_WELCOME_TEXT)
-		print(evo.messageStrings.REPL_USAGE_INSTRUCTIONS)
-		runtime.bindings.runtime_repl_start()
-		return
+		return evo.startReadEvalPrintLoop()
 	end
 
 	local chunk = load(luaCodeToEvaluate)
@@ -301,6 +298,12 @@ function evo.evaluateChunk(commandName, argv)
 	end
 
 	chunk()
+end
+
+function evo.startReadEvalPrintLoop()
+	print(evo.messageStrings.REPL_WELCOME_TEXT)
+	print(evo.messageStrings.REPL_USAGE_INSTRUCTIONS)
+	return runtime.repl_start()
 end
 
 function evo.buildZipApp(commandName, argv)
