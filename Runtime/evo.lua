@@ -51,7 +51,6 @@ local EXPECTED_APP_BUNDLER_ENTRY_POINT = "main.lua"
 local GITHUB_DOCS_URL = "https://evo-lua.github.io/"
 
 local evo = {
-	signals = {},
 	embeddedLibraryVersions = versions,
 	-- Interpreter CLI
 	DEFAULT_ENTRY_POINT = EXPECTED_APP_BUNDLER_ENTRY_POINT,
@@ -136,7 +135,6 @@ function evo.run()
 	evo.loadNonstandardExtensions()
 	evo.registerGlobalAliases()
 	evo.initializeGlobalNamespaces()
-	evo.createSignalHandlers()
 
 	local zipApp = evo.readEmbeddedZipApp()
 	if zipApp then
@@ -214,16 +212,6 @@ function evo.initializeGlobalNamespaces()
 	require("C_Runtime")
 	_G.C_Timer = require("C_Timer")
 	_G.C_WebView = require("C_WebView")
-end
-
-function evo.createSignalHandlers()
-	-- An unhandled SIGPIPE error signal will crash servers on platforms that send it, e.g. when attempting to write to a closed socket
-	if uv.constants.SIGPIPE then
-		local sigpipeSignal = uv.new_signal()
-		sigpipeSignal:start("sigpipe")
-		uv.unref(sigpipeSignal)
-		evo.signals.SIGPIPE = sigpipeSignal
-	end
 end
 
 function evo.setUpCommandLineInterface()
