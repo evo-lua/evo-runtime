@@ -1,3 +1,4 @@
+local bindings = require("bindings")
 local ffi = require("ffi")
 local stbi = require("stbi")
 local validation = require("validation")
@@ -5,7 +6,41 @@ local validation = require("validation")
 local validateStruct = validation.validateStruct
 local validateTable = validation.validateTable
 
-local glfw = {}
+local glfw = {
+	exports = {
+		"create_cursor",
+		"create_window",
+		"destroy_cursor",
+		"destroy_window",
+		"find_constant",
+		"get_cursor_pos",
+		"get_framebuffer_size",
+		"get_key",
+		"get_monitors",
+		"get_mouse_button",
+		"get_primary_monitor",
+		"get_video_mode",
+		"get_wgpu_surface",
+		"get_window_attrib",
+		"get_window_monitor",
+		"get_window_size",
+		"hide_window",
+		"init",
+		"maximize_window",
+		"poll_events",
+		"register_events",
+		"restore_window",
+		"set_cursor",
+		"set_window_icon",
+		"set_window_monitor",
+		"set_window_pos",
+		"show_window",
+		"terminate",
+		"version",
+		"window_hint",
+		"window_should_close",
+	},
+}
 
 glfw.cdefs = [[
 	typedef struct GLFWimage {
@@ -34,44 +69,44 @@ glfw.cdefs = [[
 	typedef void* WGPUInstance;
 
 	struct static_glfw_exports_table {
-		const char* (*glfw_version)(void);
-		int (*glfw_find_constant)(const char* name);
+		const char* (*version)(void);
+		int (*find_constant)(const char* name);
 
-		WGPUSurface (*glfw_get_wgpu_surface)(WGPUInstance instance, GLFWwindow* window);
+		WGPUSurface (*get_wgpu_surface)(WGPUInstance instance, GLFWwindow* window);
 
-		int (*glfw_init)(void);
-		void (*glfw_terminate)(void);
-		void (*glfw_poll_events)(void);
+		int (*init)(void);
+		void (*terminate)(void);
+		void (*poll_events)(void);
 
-		GLFWwindow* (*glfw_create_window)(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
-		void (*glfw_destroy_window)(GLFWwindow* window);
-		int (*glfw_window_should_close)(GLFWwindow* window);
-		void (*glfw_window_hint)(int hint, int value);
-		void (*glfw_set_window_pos)(GLFWwindow* window, int xpos, int ypos);
-		void (*glfw_get_framebuffer_size)(GLFWwindow* window, int* width, int* height);
-		void (*glfw_get_window_size)(GLFWwindow* window, int* width, int* height);
-		void (*glfw_maximize_window)(GLFWwindow* window);
-		void (*glfw_restore_window)(GLFWwindow* window);
-		void (*glfw_hide_window)(GLFWwindow* window);
-		void (*glfw_show_window)(GLFWwindow* window);
-		int (*glfw_get_window_attrib)(GLFWwindow* window, int attrib);
-		void (*glfw_set_window_icon)(GLFWwindow* window, int count, const GLFWimage* images);
+		GLFWwindow* (*create_window)(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
+		void (*destroy_window)(GLFWwindow* window);
+		int (*window_should_close)(GLFWwindow* window);
+		void (*window_hint)(int hint, int value);
+		void (*set_window_pos)(GLFWwindow* window, int xpos, int ypos);
+		void (*get_framebuffer_size)(GLFWwindow* window, int* width, int* height);
+		void (*get_window_size)(GLFWwindow* window, int* width, int* height);
+		void (*maximize_window)(GLFWwindow* window);
+		void (*restore_window)(GLFWwindow* window);
+		void (*hide_window)(GLFWwindow* window);
+		void (*show_window)(GLFWwindow* window);
+		int (*get_window_attrib)(GLFWwindow* window, int attrib);
+		void (*set_window_icon)(GLFWwindow* window, int count, const GLFWimage* images);
 
-		void (*glfw_register_events)(GLFWwindow* window, deferred_event_queue_t queue);
+		void (*register_events)(GLFWwindow* window, deferred_event_queue_t queue);
 
-		GLFWmonitor* (*glfw_get_primary_monitor)(void);
-		GLFWmonitor** (*glfw_get_monitors)(int* count);
-		GLFWmonitor* (*glfw_get_window_monitor)(GLFWwindow* window);
-		void (*glfw_set_window_monitor)(GLFWwindow* window, GLFWmonitor* monitor, int xpos, int ypos, int width, int height, int refreshRate);
-		const GLFWvidmode* (*glfw_get_video_mode)(GLFWmonitor* monitor);
+		GLFWmonitor* (*get_primary_monitor)(void);
+		GLFWmonitor** (*get_monitors)(int* count);
+		GLFWmonitor* (*get_window_monitor)(GLFWwindow* window);
+		void (*set_window_monitor)(GLFWwindow* window, GLFWmonitor* monitor, int xpos, int ypos, int width, int height, int refreshRate);
+		const GLFWvidmode* (*get_video_mode)(GLFWmonitor* monitor);
 
-		void (*glfw_get_cursor_pos)(GLFWwindow* window, double* xpos, double* ypos);
-		GLFWcursor* (*glfw_create_cursor)(const GLFWimage* image, int xhot, int yhot);
-		void (*glfw_destroy_cursor)(GLFWcursor* cursor);
-		void (*glfw_set_cursor)(GLFWwindow* window, GLFWcursor* cursor);
+		void (*get_cursor_pos)(GLFWwindow* window, double* xpos, double* ypos);
+		GLFWcursor* (*create_cursor)(const GLFWimage* image, int xhot, int yhot);
+		void (*destroy_cursor)(GLFWcursor* cursor);
+		void (*set_cursor)(GLFWwindow* window, GLFWcursor* cursor);
 
-		int (*glfw_get_key)(GLFWwindow* window, int key);
-		int (*glfw_get_mouse_button)(GLFWwindow* window, int button);
+		int (*get_key)(GLFWwindow* window, int key);
+		int (*get_mouse_button)(GLFWwindow* window, int button);
 	};
 ]]
 
@@ -80,20 +115,20 @@ function glfw.initialize()
 end
 
 function glfw.version()
-	return ffi.string(glfw.bindings.glfw_version())
+	return ffi.string(bindings.glfw.version())
 end
 
 function glfw.getWindowSize(window)
 	local width = ffi.new("int[1]")
 	local height = ffi.new("int[1]")
-	glfw.bindings.glfw_get_window_size(window, width, height)
+	glfw.get_window_size(window, width, height)
 	return width[0], height[0]
 end
 
 function glfw.getCursorPosition(window)
 	local cursorPositionX = ffi.new("double[1]")
 	local cursorPositionY = ffi.new("double[1]")
-	glfw.bindings.glfw_get_cursor_pos(window, cursorPositionX, cursorPositionY)
+	glfw.get_cursor_pos(window, cursorPositionX, cursorPositionY)
 	return cursorPositionX[0], cursorPositionY[0]
 end
 
@@ -104,7 +139,7 @@ local function swapAllocatedCursor(newCursor)
 		return
 	end
 
-	glfw.bindings.glfw_destroy_cursor(currentCursor)
+	glfw.destroy_cursor(currentCursor)
 	currentCursor = newCursor
 end
 
@@ -121,10 +156,10 @@ local function createCursorFromImage(window, imageFileContents, hotspotX, hotspo
 			pixels = imageInfo.data,
 		},
 	})
-	local cursor = glfw.bindings.glfw_create_cursor(cursorImage, hotspotX, hotspotY)
+	local cursor = glfw.create_cursor(cursorImage, hotspotX, hotspotY)
 	assert(cursor, "Failed to create cursor from image data (glfw_create_cursor returned NULL)")
 
-	glfw.bindings.glfw_set_cursor(window, cursor)
+	glfw.set_cursor(window, cursor)
 
 	-- The image data should've been copied by GLFW
 	stbi.image_free(imageInfo)
@@ -148,7 +183,7 @@ function glfw.setWindowIcon(window, icons)
 	validateStruct(window, "nativeWindowHandle")
 
 	if not icons then
-		glfw.bindings.glfw_set_window_icon(window, 0, nil)
+		glfw.set_window_icon(window, 0, nil)
 		return
 	end
 	validateTable(icons, "icons")
@@ -169,7 +204,7 @@ function glfw.setWindowIcon(window, icons)
 		glfwImages[cIndex] = glfwImage -- GLFW wants this format
 		stbImages[index] = imageInfo -- Need to free the pixel array later
 	end
-	glfw.bindings.glfw_set_window_icon(window, #icons, glfwImages)
+	glfw.set_window_icon(window, #icons, glfwImages)
 
 	for index, _ in ipairs(icons) do
 		local stbImage = stbImages[index]

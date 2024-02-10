@@ -227,44 +227,44 @@ namespace glfw_ffi {
 	void* getExportsTable() {
 		static struct static_glfw_exports_table glfw_exports_table;
 
-		glfw_exports_table.glfw_version = glfw_version;
-		glfw_exports_table.glfw_find_constant = glfw_find_constant;
+		glfw_exports_table.version = glfw_version;
+		glfw_exports_table.find_constant = glfw_find_constant;
 
-		glfw_exports_table.glfw_get_wgpu_surface = glfwGetWGPUSurface;
+		glfw_exports_table.get_wgpu_surface = glfwGetWGPUSurface;
 
-		glfw_exports_table.glfw_init = glfwInit;
-		glfw_exports_table.glfw_terminate = glfwTerminate;
-		glfw_exports_table.glfw_poll_events = glfwPollEvents;
+		glfw_exports_table.init = glfwInit;
+		glfw_exports_table.terminate = glfwTerminate;
+		glfw_exports_table.poll_events = glfwPollEvents;
 
-		glfw_exports_table.glfw_create_window = glfwCreateWindow;
-		glfw_exports_table.glfw_destroy_window = glfwDestroyWindow;
-		glfw_exports_table.glfw_window_should_close = glfwWindowShouldClose;
-		glfw_exports_table.glfw_window_hint = glfwWindowHint;
-		glfw_exports_table.glfw_set_window_pos = glfwSetWindowPos;
-		glfw_exports_table.glfw_get_framebuffer_size = glfwGetFramebufferSize;
-		glfw_exports_table.glfw_get_window_size = glfwGetWindowSize;
-		glfw_exports_table.glfw_maximize_window = glfwMaximizeWindow;
-		glfw_exports_table.glfw_restore_window = glfwRestoreWindow;
-		glfw_exports_table.glfw_hide_window = glfwHideWindow;
-		glfw_exports_table.glfw_show_window = glfwShowWindow;
-		glfw_exports_table.glfw_get_window_attrib = glfwGetWindowAttrib;
-		glfw_exports_table.glfw_set_window_icon = glfwSetWindowIcon;
+		glfw_exports_table.create_window = glfwCreateWindow;
+		glfw_exports_table.destroy_window = glfwDestroyWindow;
+		glfw_exports_table.window_should_close = glfwWindowShouldClose;
+		glfw_exports_table.window_hint = glfwWindowHint;
+		glfw_exports_table.set_window_pos = glfwSetWindowPos;
+		glfw_exports_table.get_framebuffer_size = glfwGetFramebufferSize;
+		glfw_exports_table.get_window_size = glfwGetWindowSize;
+		glfw_exports_table.maximize_window = glfwMaximizeWindow;
+		glfw_exports_table.restore_window = glfwRestoreWindow;
+		glfw_exports_table.hide_window = glfwHideWindow;
+		glfw_exports_table.show_window = glfwShowWindow;
+		glfw_exports_table.get_window_attrib = glfwGetWindowAttrib;
+		glfw_exports_table.set_window_icon = glfwSetWindowIcon;
 
-		glfw_exports_table.glfw_register_events = glfw_register_events;
+		glfw_exports_table.register_events = glfw_register_events;
 
-		glfw_exports_table.glfw_get_primary_monitor = glfwGetPrimaryMonitor;
-		glfw_exports_table.glfw_get_monitors = glfwGetMonitors;
-		glfw_exports_table.glfw_get_window_monitor = glfwGetWindowMonitor;
-		glfw_exports_table.glfw_set_window_monitor = glfwSetWindowMonitor;
-		glfw_exports_table.glfw_get_video_mode = glfwGetVideoMode;
+		glfw_exports_table.get_primary_monitor = glfwGetPrimaryMonitor;
+		glfw_exports_table.get_monitors = glfwGetMonitors;
+		glfw_exports_table.get_window_monitor = glfwGetWindowMonitor;
+		glfw_exports_table.set_window_monitor = glfwSetWindowMonitor;
+		glfw_exports_table.get_video_mode = glfwGetVideoMode;
 
-		glfw_exports_table.glfw_get_cursor_pos = glfwGetCursorPos;
-		glfw_exports_table.glfw_create_cursor = glfwCreateCursor;
-		glfw_exports_table.glfw_set_cursor = glfwSetCursor;
-		glfw_exports_table.glfw_destroy_cursor = glfwDestroyCursor;
+		glfw_exports_table.get_cursor_pos = glfwGetCursorPos;
+		glfw_exports_table.create_cursor = glfwCreateCursor;
+		glfw_exports_table.set_cursor = glfwSetCursor;
+		glfw_exports_table.destroy_cursor = glfwDestroyCursor;
 
-		glfw_exports_table.glfw_get_key = glfwGetKey;
-		glfw_exports_table.glfw_get_mouse_button = glfwGetMouseButton;
+		glfw_exports_table.get_key = glfwGetKey;
+		glfw_exports_table.get_mouse_button = glfwGetMouseButton;
 
 		return &glfw_exports_table;
 	}

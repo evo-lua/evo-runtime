@@ -7,25 +7,25 @@ if isMacOS then
 	return
 end
 
-if not glfw.bindings.glfw_init() then
+if not glfw.init() then
 	error("Could not initialize GLFW")
 end
 
-local GLFW_CLIENT_API = glfw.bindings.glfw_find_constant("GLFW_CLIENT_API")
-local GLFW_NO_API = glfw.bindings.glfw_find_constant("GLFW_NO_API")
-glfw.bindings.glfw_window_hint(GLFW_CLIENT_API, GLFW_NO_API)
+local GLFW_CLIENT_API = glfw.find_constant("GLFW_CLIENT_API")
+local GLFW_NO_API = glfw.find_constant("GLFW_NO_API")
+glfw.window_hint(GLFW_CLIENT_API, GLFW_NO_API)
 
-local window = glfw.bindings.glfw_create_window(640, 480, "Window Size Test", nil, nil)
+local window = glfw.create_window(640, 480, "Window Size Test", nil, nil)
 assert(window, "Failed to create window")
 
 local contentWidthInPixels = ffi.new("int[1]")
 local contentHeightInPixels = ffi.new("int[1]")
-glfw.bindings.glfw_get_window_size(window, contentWidthInPixels, contentHeightInPixels)
+glfw.get_window_size(window, contentWidthInPixels, contentHeightInPixels)
 
 local width, height = glfw.getWindowSize(window)
 
-glfw.bindings.glfw_destroy_window(window)
-glfw.bindings.glfw_terminate()
+glfw.destroy_window(window)
+glfw.terminate()
 
 assert(width == 640, "Expected width to be 640, got " .. width)
 assert(height == 480, "Expected height to be 480, got " .. height)
@@ -42,18 +42,18 @@ printf(
 -- Deferred for now since the bindings need a do-over, anyway (reorganize later)
 local uv = require("uv")
 
-glfw.bindings.glfw_maximize_window(window)
+glfw.maximize_window(window)
 uv.sleep(1000)
 
-local GLFW_MAXIMIZED = glfw.bindings.glfw_find_constant("GLFW_MAXIMIZED")
-local maximized = glfw.bindings.glfw_get_window_attrib(window, GLFW_MAXIMIZED)
+local GLFW_MAXIMIZED = glfw.find_constant("GLFW_MAXIMIZED")
+local maximized = glfw.get_window_attrib(window, GLFW_MAXIMIZED)
 assert(maximized == 0, "Window should not be maximized (window hints disallow it)")
 
-glfw.bindings.glfw_restore_window(window)
+glfw.restore_window(window)
 uv.sleep(1000)
 
-glfw.bindings.glfw_hide_window(window)
+glfw.hide_window(window)
 uv.sleep(1000)
 
-glfw.bindings.glfw_show_window(window)
+glfw.show_window(window)
 uv.sleep(1000)

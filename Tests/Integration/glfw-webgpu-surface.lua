@@ -14,19 +14,19 @@ if not instance then
 	error("Could not initialize WebGPU!")
 end
 
-if not glfw.bindings.glfw_init() then
+if not glfw.init() then
 	error("Could not initialize GLFW")
 end
 
-local GLFW_CLIENT_API = glfw.bindings.glfw_find_constant("GLFW_CLIENT_API")
-local GLFW_NO_API = glfw.bindings.glfw_find_constant("GLFW_NO_API")
-glfw.bindings.glfw_window_hint(GLFW_CLIENT_API, GLFW_NO_API)
+local GLFW_CLIENT_API = glfw.find_constant("GLFW_CLIENT_API")
+local GLFW_NO_API = glfw.find_constant("GLFW_NO_API")
+glfw.window_hint(GLFW_CLIENT_API, GLFW_NO_API)
 
-local window = glfw.bindings.glfw_create_window(640, 480, "WebGPU Surface Test", nil, nil)
+local window = glfw.create_window(640, 480, "WebGPU Surface Test", nil, nil)
 assert(window, "Failed to create window")
 
 print("Requesting adapter...")
-local surface = glfw.bindings.glfw_get_wgpu_surface(instance, window)
+local surface = glfw.get_wgpu_surface(instance, window)
 assert(surface, "Failed to create WebGPU surface")
 
 local adapterOpts = ffi.new("WGPURequestAdapterOptions")

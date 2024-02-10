@@ -8,15 +8,15 @@ if isMacOS then
 	return
 end
 
-if not glfw.bindings.glfw_init() then
+if not glfw.init() then
 	error("Could not initialize GLFW")
 end
 
-local GLFW_CLIENT_API = glfw.bindings.glfw_find_constant("GLFW_CLIENT_API")
-local GLFW_NO_API = glfw.bindings.glfw_find_constant("GLFW_NO_API")
-glfw.bindings.glfw_window_hint(GLFW_CLIENT_API, GLFW_NO_API)
+local GLFW_CLIENT_API = glfw.find_constant("GLFW_CLIENT_API")
+local GLFW_NO_API = glfw.find_constant("GLFW_NO_API")
+glfw.window_hint(GLFW_CLIENT_API, GLFW_NO_API)
 
-local window = glfw.bindings.glfw_create_window(640, 480, "Window Size Test", nil, nil)
+local window = glfw.create_window(640, 480, "Window Size Test", nil, nil)
 assert(window, "Failed to create window")
 
 local imageInfo = ffi.new("stbi_image_t")
@@ -32,15 +32,15 @@ local cursorImage = ffi.new("GLFWimage[1]", {
 		pixels = imageInfo.data,
 	},
 })
-local cursor = glfw.bindings.glfw_create_cursor(cursorImage, 0, 0)
+local cursor = glfw.create_cursor(cursorImage, 0, 0)
 assert(cursor, "Failed to create cursor")
-glfw.bindings.glfw_set_cursor(window, cursor)
+glfw.set_cursor(window, cursor)
 glfw.setCursorImage(window, imageFileContents)
 
-glfw.bindings.glfw_set_cursor(window, nil)
+glfw.set_cursor(window, nil)
 glfw.setCursorImage(window, nil)
 
-glfw.bindings.glfw_destroy_cursor(cursor)
+glfw.destroy_cursor(cursor)
 
-glfw.bindings.glfw_destroy_window(window)
-glfw.bindings.glfw_terminate()
+glfw.destroy_window(window)
+glfw.terminate()

@@ -12,13 +12,13 @@ end
 
 -- GLFW setup
 local function createWindow()
-	assert(glfw.bindings.glfw_init())
+	assert(glfw.init())
 
-	local GLFW_CLIENT_API = glfw.bindings.glfw_find_constant("GLFW_CLIENT_API")
-	local GLFW_NO_API = glfw.bindings.glfw_find_constant("GLFW_NO_API")
-	glfw.bindings.glfw_window_hint(GLFW_CLIENT_API, GLFW_NO_API)
+	local GLFW_CLIENT_API = glfw.find_constant("GLFW_CLIENT_API")
+	local GLFW_NO_API = glfw.find_constant("GLFW_NO_API")
+	glfw.window_hint(GLFW_CLIENT_API, GLFW_NO_API)
 
-	local window = glfw.bindings.glfw_create_window(640, 480, "RML/GLFW/WebGPU Integration Test", nil, nil)
+	local window = glfw.create_window(640, 480, "RML/GLFW/WebGPU Integration Test", nil, nil)
 	assert(window, "Failed to create window")
 
 	return window
@@ -32,7 +32,7 @@ local function createDevice(window)
 		error("Could not initialize WebGPU!")
 	end
 
-	local surface = glfw.bindings.glfw_get_wgpu_surface(instance, window)
+	local surface = glfw.get_wgpu_surface(instance, window)
 	assert(surface, "Failed to create WebGPU surface")
 
 	local adapterOptions = ffi.new("WGPURequestAdapterOptions")
@@ -90,7 +90,7 @@ assert(document ~= ffi.NULL, "Failed to load RML document")
 rml.bindings.rml_document_show(document)
 
 local ticker = C_Timer.NewTicker(250, function()
-	glfw.bindings.glfw_poll_events()
+	glfw.poll_events()
 	-- Full context updates won't work here (too much WebGPU boilerplate required), so this'll have to do for now
 	rml.bindings.rml_context_update(nil)
 	rml.bindings.rml_context_render(nil)
@@ -106,5 +106,5 @@ rml.bindings.rml_shutdown()
 rml.bindings.rml_destroy_glfw_system_interface(glfwSystemInterface)
 rml.bindings.rml_destroy_wgpu_render_interface(wgpuRenderInterface)
 
-glfw.bindings.glfw_destroy_window(glfwWindow)
-glfw.bindings.glfw_terminate()
+glfw.destroy_window(glfwWindow)
+glfw.terminate()
