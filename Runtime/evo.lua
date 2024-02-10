@@ -10,13 +10,42 @@ for libraryName, staticExportsTable in pairs(bindings) do
 	ffiBindings.initialize()
 
 	-- Enable structured access to the exported functions (doesn't change the static lifetime of the table)
-	local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
-	staticExportsTable = ffi.cast(expectedStructName, staticExportsTable)
+	local expectedStructName = "struct static_" .. libraryName .. "_exports_table"
+	local staticExportsPointerType = expectedStructName .. "*"
+	staticExportsTable = ffi.cast(staticExportsPointerType, staticExportsTable)
+	local functionPointerSize = ffi.sizeof(staticExportsPointerType)
+	local exportsTableSize = ffi.sizeof(expectedStructName)
+	local expectedFunctionCount = exportsTableSize / functionPointerSize
+
+	local exportedFunctionsList = ffiBindings.exports or {}
+	local numExportedFunctions = #exportedFunctionsList
+	-- assert(
+	-- 	numExportedFunctions == expectedFunctionCount,
+	-- 	string.format(
+	-- 		"%s binds %d functions, but %d are expected (outdated %s bindings?)",
+	-- 		expectedStructName,
+	-- 		expectedFunctionCount,
+	-- 		numExportedFunctions,
+	-- 		libraryName
+	-- 	)
+	-- )
+	if numExportedFunctions ~= expectedFunctionCount then
+		print(
+			string.format(
+				"WARNING: %s binds %d functions, but %d are expected (outdated %s bindings?)",
+				expectedStructName,
+				expectedFunctionCount,
+				numExportedFunctions,
+				libraryName
+			)
+		)
+	end
+
 	ffiBindings.bindings = staticExportsTable -- For backwards compatibility (remove later)
 	bindings[libraryName] = staticExportsTable
 
-	for index, functionName in ipairs(ffiBindings.exports or {}) do
-		local functionPointer = bindings.stbi[functionName]
+	for index, functionName in ipairs(exportedFunctionsList or {}) do
+		local functionPointer = bindings[libraryName][functionName]
 		ffiBindings[functionName] = ffiBindings[functionName] or functionPointer
 	end
 end
