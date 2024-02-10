@@ -21,10 +21,10 @@ assert(window, "Failed to create window")
 
 local imageInfo = ffi.new("stbi_image_t")
 local imageFileContents = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "test-icon.png"))
-local result = stbi.bindings.stbi_load_rgba(imageFileContents, #imageFileContents, imageInfo)
+local result = stbi.load_rgba(imageFileContents, #imageFileContents, imageInfo)
 assert(result ~= nil, "Failed to load cursor image")
 
-stbi.bindings.stbi_load_rgba(imageFileContents, #imageFileContents, imageInfo)
+stbi.load_rgba(imageFileContents, #imageFileContents, imageInfo)
 local cursorImage = ffi.new("GLFWimage[1]", {
 	{
 		width = imageInfo.width,

@@ -14,27 +14,7 @@ EXAMPLE_IMAGE.channels = 4
 describe("stbi", function()
 	describe("bindings", function()
 		it("should export the entirety of the stbi API", function()
-			local exportedApiSurface = {
-				"stbi_version",
-				"stbi_image_info",
-				"stbi_load_image",
-				"stbi_image_free",
-				"stbi_load_rgb",
-				"stbi_load_rgba",
-				"stbi_load_monochrome",
-				"stbi_load_monochrome_with_alpha",
-				"stbi_encode_bmp",
-				"stbi_encode_png",
-				"stbi_encode_jpg",
-				"stbi_encode_tga",
-				"stbi_flip_vertically_on_write",
-				"stbi_get_required_bmp_size",
-				"stbi_get_required_png_size",
-				"stbi_get_required_jpg_size",
-				"stbi_get_required_tga_size",
-			}
-
-			for _, functionName in ipairs(exportedApiSurface) do
+			for functionName, functionPointer in ipairs(stbi.exports) do
 				assertEquals(type(stbi.bindings[functionName]), "cdata")
 			end
 		end)
@@ -43,7 +23,7 @@ describe("stbi", function()
 			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
 			it("should return metadata about the image if the buffer contains a supported image format", function()
 				local imageInfo = ffi.new("stbi_image_t")
-				local result = stbi.bindings.stbi_image_info(fileContents, #fileContents, imageInfo)
+				local result = stbi.image_info(fileContents, #fileContents, imageInfo)
 
 				assertTrue(result)
 				assertEquals(imageInfo.width, 2)
@@ -52,22 +32,22 @@ describe("stbi", function()
 			end)
 
 			it("should return false if a null pointer was passed as the result", function()
-				local result = stbi.bindings.stbi_image_info(fileContents, #fileContents, nil)
+				local result = stbi.image_info(fileContents, #fileContents, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if no image data was found in the buffer", function()
-				local result = stbi.bindings.stbi_image_info("not an image", 11, nil)
+				local result = stbi.image_info("not an image", 11, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was zero", function()
-				local result = stbi.bindings.stbi_image_info(fileContents, 0, nil)
+				local result = stbi.image_info(fileContents, 0, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was negative", function()
-				local result = stbi.bindings.stbi_image_info(fileContents, -1, nil)
+				local result = stbi.image_info(fileContents, -1, nil)
 				assertFalse(result)
 			end)
 		end)
@@ -76,7 +56,7 @@ describe("stbi", function()
 			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
 			it("should return the decoded image data if the buffer contains a supported image format", function()
 				local imageInfo = ffi.new("stbi_image_t")
-				local result = stbi.bindings.stbi_load_image(fileContents, #fileContents, imageInfo)
+				local result = stbi.load_image(fileContents, #fileContents, imageInfo)
 
 				assertTrue(result)
 				assertEquals(imageInfo.width, 2)
@@ -108,26 +88,26 @@ describe("stbi", function()
 					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(imageInfo)
+				stbi.image_free(imageInfo)
 			end)
 
 			it("should return false if a null pointer was passed as the result", function()
-				local result = stbi.bindings.stbi_load_image(fileContents, #fileContents, nil)
+				local result = stbi.load_image(fileContents, #fileContents, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if no image data was found in the buffer", function()
-				local result = stbi.bindings.stbi_load_image("not an image", 11, nil)
+				local result = stbi.load_image("not an image", 11, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was zero", function()
-				local result = stbi.bindings.stbi_load_image(fileContents, 0, nil)
+				local result = stbi.load_image(fileContents, 0, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was negative", function()
-				local result = stbi.bindings.stbi_load_image(fileContents, -1, nil)
+				local result = stbi.load_image(fileContents, -1, nil)
 				assertFalse(result)
 			end)
 		end)
@@ -137,21 +117,21 @@ describe("stbi", function()
 				local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
 				local image = ffi.new("stbi_image_t")
 				local result = buffer.new()
-				stbi.bindings.stbi_load_image(fileContents, #fileContents, image)
+				stbi.load_image(fileContents, #fileContents, image)
 
-				stbi.bindings.stbi_flip_vertically_on_write(true)
+				stbi.flip_vertically_on_write(true)
 
-				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
+				local maxFileSize = tonumber(stbi.get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, length)
+				local numBytesWritten = stbi.encode_bmp(image, startPointer, length)
 				result:commit(numBytesWritten)
 
-				stbi.bindings.stbi_flip_vertically_on_write(false)
+				stbi.flip_vertically_on_write(false)
 
 				-- It should just have set the verticalDirection to -1 inside the BMP header
 				-- Since that's a bit difficult to test here, just make sure that the image can still be decoded properly
 				local encodedFileContents = tostring(result)
-				stbi.bindings.stbi_load_image(encodedFileContents, #encodedFileContents, image)
+				stbi.load_image(encodedFileContents, #encodedFileContents, image)
 
 				local expectedPixels = {
 					0,
@@ -178,7 +158,7 @@ describe("stbi", function()
 					assertEquals(image.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(image)
+				stbi.image_free(image)
 			end)
 		end)
 
@@ -187,13 +167,13 @@ describe("stbi", function()
 			local image = ffi.new("stbi_image_t")
 			local result = buffer.new()
 			it("should return the encoded file length after storing the pixel data", function()
-				stbi.bindings.stbi_load_image(fileContents, #fileContents, image)
+				stbi.load_image(fileContents, #fileContents, image)
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
+				local maxFileSize = tonumber(stbi.get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, length)
+				local numBytesWritten = stbi.encode_bmp(image, startPointer, length)
 
 				assertTrue(tonumber(numBytesWritten) > 0)
 				assertTrue(tonumber(numBytesWritten) <= maxFileSize)
@@ -201,7 +181,7 @@ describe("stbi", function()
 				result:commit(numBytesWritten)
 
 				local encodedFileContents = tostring(result)
-				stbi.bindings.stbi_load_image(encodedFileContents, #encodedFileContents, image)
+				stbi.load_image(encodedFileContents, #encodedFileContents, image)
 
 				local encodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 				assertEquals(encodedPixelData, decodedPixelData)
@@ -234,18 +214,18 @@ describe("stbi", function()
 					assertEquals(image.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(image)
+				stbi.image_free(image)
 			end)
 
 			it("should return zero if a null pointer was passed as the result", function()
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, nil, 0)
+				local numBytesWritten = stbi.encode_bmp(image, nil, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if no image was given", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(nil, ptr, len)
+				local numBytesWritten = stbi.encode_bmp(nil, ptr, len)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
@@ -253,21 +233,21 @@ describe("stbi", function()
 				image.data = nil
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, ptr, len)
+				local numBytesWritten = stbi.encode_bmp(image, ptr, len)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was zero", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, ptr, 0)
+				local numBytesWritten = stbi.encode_bmp(image, ptr, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was negative", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, ptr, -1)
+				local numBytesWritten = stbi.encode_bmp(image, ptr, -1)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 		end)
@@ -277,13 +257,13 @@ describe("stbi", function()
 			local image = ffi.new("stbi_image_t")
 			local result = buffer.new()
 			it("should return the encoded file length after storing the pixel data", function()
-				stbi.bindings.stbi_load_image(fileContents, #fileContents, image)
+				stbi.load_image(fileContents, #fileContents, image)
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_tga_size(image))
+				local maxFileSize = tonumber(stbi.get_required_tga_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, startPointer, length)
+				local numBytesWritten = stbi.encode_tga(image, startPointer, length)
 
 				assertTrue(tonumber(numBytesWritten) > 0)
 				assertTrue(tonumber(numBytesWritten) <= maxFileSize)
@@ -291,7 +271,7 @@ describe("stbi", function()
 				result:commit(numBytesWritten)
 
 				local encodedFileContents = tostring(result)
-				stbi.bindings.stbi_load_image(encodedFileContents, #encodedFileContents, image)
+				stbi.load_image(encodedFileContents, #encodedFileContents, image)
 
 				local encodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 				assertEquals(encodedPixelData, decodedPixelData)
@@ -324,18 +304,18 @@ describe("stbi", function()
 					assertEquals(image.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(image)
+				stbi.image_free(image)
 			end)
 
 			it("should return zero if a null pointer was passed as the result", function()
-				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, nil, 0)
+				local numBytesWritten = stbi.encode_tga(image, nil, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if no image was given", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_tga(nil, ptr, len)
+				local numBytesWritten = stbi.encode_tga(nil, ptr, len)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
@@ -343,21 +323,21 @@ describe("stbi", function()
 				image.data = nil
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, ptr, len)
+				local numBytesWritten = stbi.encode_tga(image, ptr, len)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was zero", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, ptr, 0)
+				local numBytesWritten = stbi.encode_tga(image, ptr, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was negative", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_tga(image, ptr, -1)
+				local numBytesWritten = stbi.encode_tga(image, ptr, -1)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 		end)
@@ -367,14 +347,14 @@ describe("stbi", function()
 			local image = ffi.new("stbi_image_t")
 			local result = buffer.new()
 			it("should return the encoded file length after storing the pixel data", function()
-				stbi.bindings.stbi_load_image(fileContents, #fileContents, image)
+				stbi.load_image(fileContents, #fileContents, image)
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_jpg_size(image, 100))
+				local maxFileSize = tonumber(stbi.get_required_jpg_size(image, 100))
 
 				local startPointer, length = result:reserve(maxFileSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, startPointer, length, 100)
+				local numBytesWritten = stbi.encode_jpg(image, startPointer, length, 100)
 
 				assertTrue(tonumber(numBytesWritten) > 0)
 				assertTrue(tonumber(numBytesWritten) <= maxFileSize)
@@ -382,7 +362,7 @@ describe("stbi", function()
 				result:commit(numBytesWritten)
 
 				local encodedFileContents = tostring(result)
-				stbi.bindings.stbi_load_image(encodedFileContents, #encodedFileContents, image)
+				stbi.load_image(encodedFileContents, #encodedFileContents, image)
 
 				local encodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
@@ -419,18 +399,18 @@ describe("stbi", function()
 					assertTrue(math.abs(image.data[i] - expectedPixels[i + 1]) < allowedDelta)
 				end
 
-				stbi.bindings.stbi_image_free(image)
+				stbi.image_free(image)
 			end)
 
 			it("should return zero if a null pointer was passed as the result", function()
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, nil, 0, 100)
+				local numBytesWritten = stbi.encode_jpg(image, nil, 0, 100)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if no image was given", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(nil, ptr, len, 100)
+				local numBytesWritten = stbi.encode_jpg(nil, ptr, len, 100)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
@@ -438,21 +418,21 @@ describe("stbi", function()
 				image.data = nil
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, ptr, len, 100)
+				local numBytesWritten = stbi.encode_jpg(image, ptr, len, 100)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was zero", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, ptr, 0, 100)
+				local numBytesWritten = stbi.encode_jpg(image, ptr, 0, 100)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was negative", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, ptr, -1, 100)
+				local numBytesWritten = stbi.encode_jpg(image, ptr, -1, 100)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 		end)
@@ -462,13 +442,13 @@ describe("stbi", function()
 			local image = ffi.new("stbi_image_t")
 			local result = buffer.new()
 			it("should return the encoded file length after storing the pixel data", function()
-				stbi.bindings.stbi_load_image(fileContents, #fileContents, image)
+				stbi.load_image(fileContents, #fileContents, image)
 
 				local decodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 
-				local maxFileSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(image))
+				local maxFileSize = tonumber(stbi.get_required_bmp_size(image))
 				local startPointer, length = result:reserve(maxFileSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_png(image, startPointer, length, 0)
+				local numBytesWritten = stbi.encode_png(image, startPointer, length, 0)
 
 				assertTrue(tonumber(numBytesWritten) > 0)
 				assertTrue(tonumber(numBytesWritten) <= maxFileSize)
@@ -476,7 +456,7 @@ describe("stbi", function()
 				result:commit(numBytesWritten)
 
 				local encodedFileContents = tostring(result)
-				stbi.bindings.stbi_load_image(encodedFileContents, #encodedFileContents, image)
+				stbi.load_image(encodedFileContents, #encodedFileContents, image)
 
 				local encodedPixelData = ffi.string(image.data, image.width * image.height * image.channels)
 				assertEquals(encodedPixelData, decodedPixelData)
@@ -509,18 +489,18 @@ describe("stbi", function()
 					assertEquals(image.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(image)
+				stbi.image_free(image)
 			end)
 
 			it("should return zero if a null pointer was passed as the result", function()
-				local numBytesWritten = stbi.bindings.stbi_encode_png(image, nil, 0, 0)
+				local numBytesWritten = stbi.encode_png(image, nil, 0, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if no image was given", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_png(nil, ptr, len, 0)
+				local numBytesWritten = stbi.encode_png(nil, ptr, len, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
@@ -528,21 +508,21 @@ describe("stbi", function()
 				image.data = nil
 				local empyBuffer = buffer.new(42)
 				local ptr, len = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_png(image, ptr, len, 0)
+				local numBytesWritten = stbi.encode_png(image, ptr, len, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was zero", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_png(image, ptr, 0, 0)
+				local numBytesWritten = stbi.encode_png(image, ptr, 0, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 
 			it("should return zero if the buffer size given was negative", function()
 				local empyBuffer = buffer.new(42)
 				local ptr, _ = empyBuffer:ref()
-				local numBytesWritten = stbi.bindings.stbi_encode_png(image, ptr, -1, 0)
+				local numBytesWritten = stbi.encode_png(image, ptr, -1, 0)
 				assertEquals(tonumber(numBytesWritten), 0)
 			end)
 		end)
@@ -551,7 +531,7 @@ describe("stbi", function()
 			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
 			it("should return the decoded image data if the buffer contains a supported image format", function()
 				local imageInfo = ffi.new("stbi_image_t")
-				local result = stbi.bindings.stbi_load_rgb(fileContents, #fileContents, imageInfo)
+				local result = stbi.load_rgb(fileContents, #fileContents, imageInfo)
 
 				assertTrue(result)
 				assertEquals(imageInfo.width, 2)
@@ -583,26 +563,26 @@ describe("stbi", function()
 					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(imageInfo)
+				stbi.image_free(imageInfo)
 			end)
 
 			it("should return false if a null pointer was passed as the result", function()
-				local result = stbi.bindings.stbi_load_rgb(fileContents, #fileContents, nil)
+				local result = stbi.load_rgb(fileContents, #fileContents, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if no image data was found in the buffer", function()
-				local result = stbi.bindings.stbi_load_rgb("not an image", 11, nil)
+				local result = stbi.load_rgb("not an image", 11, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was zero", function()
-				local result = stbi.bindings.stbi_load_rgb(fileContents, 0, nil)
+				local result = stbi.load_rgb(fileContents, 0, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was negative", function()
-				local result = stbi.bindings.stbi_load_rgb(fileContents, -1, nil)
+				local result = stbi.load_rgb(fileContents, -1, nil)
 				assertFalse(result)
 			end)
 		end)
@@ -611,7 +591,7 @@ describe("stbi", function()
 			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
 			it("should return the decoded image data if the buffer contains a supported image format", function()
 				local imageInfo = ffi.new("stbi_image_t")
-				local result = stbi.bindings.stbi_load_rgba(fileContents, #fileContents, imageInfo)
+				local result = stbi.load_rgba(fileContents, #fileContents, imageInfo)
 
 				assertTrue(result)
 				assertEquals(imageInfo.width, 2)
@@ -649,26 +629,26 @@ describe("stbi", function()
 					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(imageInfo)
+				stbi.image_free(imageInfo)
 			end)
 
 			it("should return false if a null pointer was passed as the result", function()
-				local result = stbi.bindings.stbi_load_rgba(fileContents, #fileContents, nil)
+				local result = stbi.load_rgba(fileContents, #fileContents, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if no image data was found in the buffer", function()
-				local result = stbi.bindings.stbi_load_rgba("not an image", 11, nil)
+				local result = stbi.load_rgba("not an image", 11, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was zero", function()
-				local result = stbi.bindings.stbi_load_rgba(fileContents, 0, nil)
+				local result = stbi.load_rgba(fileContents, 0, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was negative", function()
-				local result = stbi.bindings.stbi_load_rgba(fileContents, -1, nil)
+				local result = stbi.load_rgba(fileContents, -1, nil)
 				assertFalse(result)
 			end)
 		end)
@@ -677,7 +657,7 @@ describe("stbi", function()
 			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
 			it("should return the decoded image data if the buffer contains a supported image format", function()
 				local imageInfo = ffi.new("stbi_image_t")
-				local result = stbi.bindings.stbi_load_monochrome(fileContents, #fileContents, imageInfo)
+				local result = stbi.load_monochrome(fileContents, #fileContents, imageInfo)
 
 				assertTrue(result)
 				assertEquals(imageInfo.width, 2)
@@ -700,26 +680,26 @@ describe("stbi", function()
 					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
 				end
 
-				stbi.bindings.stbi_image_free(imageInfo)
+				stbi.image_free(imageInfo)
 			end)
 
 			it("should return false if a null pointer was passed as the result", function()
-				local result = stbi.bindings.stbi_load_monochrome(fileContents, #fileContents, nil)
+				local result = stbi.load_monochrome(fileContents, #fileContents, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if no image data was found in the buffer", function()
-				local result = stbi.bindings.stbi_load_monochrome("not an image", 11, nil)
+				local result = stbi.load_monochrome("not an image", 11, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was zero", function()
-				local result = stbi.bindings.stbi_load_monochrome(fileContents, 0, nil)
+				local result = stbi.load_monochrome(fileContents, 0, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was negative", function()
-				local result = stbi.bindings.stbi_load_monochrome(fileContents, -1, nil)
+				local result = stbi.load_monochrome(fileContents, -1, nil)
 				assertFalse(result)
 			end)
 		end)
@@ -728,7 +708,7 @@ describe("stbi", function()
 			local fileContents = C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
 			it("should return the decoded image data if the buffer contains a supported image format", function()
 				local imageInfo = ffi.new("stbi_image_t")
-				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, #fileContents, imageInfo)
+				local result = stbi.load_monochrome_with_alpha(fileContents, #fileContents, imageInfo)
 
 				assertTrue(result)
 				assertEquals(imageInfo.width, 2)
@@ -756,37 +736,37 @@ describe("stbi", function()
 				for i = 0, imageInfo.width * imageInfo.height * MONOCHROME_ALPHA_COLOR_DEPTH - 1 do
 					assertEquals(imageInfo.data[i], expectedPixels[i + 1])
 				end
-				stbi.bindings.stbi_image_free(imageInfo)
+				stbi.image_free(imageInfo)
 			end)
 
 			it("should return false if a null pointer was passed as the result", function()
-				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, #fileContents, nil)
+				local result = stbi.load_monochrome_with_alpha(fileContents, #fileContents, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if no image data was found in the buffer", function()
-				local result = stbi.bindings.stbi_load_monochrome_with_alpha("not an image", 11, nil)
+				local result = stbi.load_monochrome_with_alpha("not an image", 11, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was zero", function()
-				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, 0, nil)
+				local result = stbi.load_monochrome_with_alpha(fileContents, 0, nil)
 				assertFalse(result)
 			end)
 
 			it("should return false if the buffer size given was negative", function()
-				local result = stbi.bindings.stbi_load_monochrome_with_alpha(fileContents, -1, nil)
+				local result = stbi.load_monochrome_with_alpha(fileContents, -1, nil)
 				assertFalse(result)
 			end)
 		end)
 
 		describe("stbi_get_required_bmp_size", function()
 			it("should return the required BMP size for the given image", function()
-				local requiredBufferSize = tonumber(stbi.bindings.stbi_get_required_bmp_size(EXAMPLE_IMAGE))
+				local requiredBufferSize = tonumber(stbi.get_required_bmp_size(EXAMPLE_IMAGE))
 
 				local outputBuffer = buffer.new()
 				local ptr, len = outputBuffer:reserve(requiredBufferSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_bmp(EXAMPLE_IMAGE, ptr, len)
+				local numBytesWritten = stbi.encode_bmp(EXAMPLE_IMAGE, ptr, len)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
@@ -795,11 +775,11 @@ describe("stbi", function()
 
 		describe("stbi_get_required_png_size", function()
 			it("should return the required PNG size for the given image", function()
-				local requiredBufferSize = stbi.bindings.stbi_get_required_png_size(EXAMPLE_IMAGE, 0)
+				local requiredBufferSize = stbi.get_required_png_size(EXAMPLE_IMAGE, 0)
 
 				local outputBuffer = buffer.new()
 				local ptr, len = outputBuffer:reserve(requiredBufferSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_png(EXAMPLE_IMAGE, ptr, len, 0)
+				local numBytesWritten = stbi.encode_png(EXAMPLE_IMAGE, ptr, len, 0)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
@@ -808,11 +788,11 @@ describe("stbi", function()
 
 		describe("stbi_get_required_jpg_size", function()
 			it("should return the required JPG size for the given image", function()
-				local requiredBufferSize = stbi.bindings.stbi_get_required_jpg_size(EXAMPLE_IMAGE, 100)
+				local requiredBufferSize = stbi.get_required_jpg_size(EXAMPLE_IMAGE, 100)
 
 				local outputBuffer = buffer.new()
 				local ptr, len = outputBuffer:reserve(requiredBufferSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_jpg(EXAMPLE_IMAGE, ptr, len, 100)
+				local numBytesWritten = stbi.encode_jpg(EXAMPLE_IMAGE, ptr, len, 100)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
@@ -821,11 +801,11 @@ describe("stbi", function()
 
 		describe("stbi_get_required_tga_size", function()
 			it("should return the required TGA size for the given image", function()
-				local requiredBufferSize = stbi.bindings.stbi_get_required_tga_size(EXAMPLE_IMAGE)
+				local requiredBufferSize = stbi.get_required_tga_size(EXAMPLE_IMAGE)
 
 				local outputBuffer = buffer.new()
 				local ptr, len = outputBuffer:reserve(requiredBufferSize)
-				local numBytesWritten = stbi.bindings.stbi_encode_tga(EXAMPLE_IMAGE, ptr, len)
+				local numBytesWritten = stbi.encode_tga(EXAMPLE_IMAGE, ptr, len)
 				outputBuffer:commit(numBytesWritten)
 
 				assertEquals(tonumber(requiredBufferSize), #outputBuffer)
@@ -841,7 +821,7 @@ describe("stbi", function()
 				image.data = buffer.new(#imageBytes):put(imageBytes)
 				image.channels = 4
 
-				stbi.bindings.stbi_abgr_to_rgba(image)
+				stbi.abgr_to_rgba(image)
 
 				assertEquals(image.data[0], 4)
 				assertEquals(image.data[1], 3)
@@ -852,7 +832,7 @@ describe("stbi", function()
 				assertEquals(image.data[6], 6)
 				assertEquals(image.data[7], 5)
 
-				stbi.bindings.stbi_abgr_to_rgba(image)
+				stbi.abgr_to_rgba(image)
 
 				assertEquals(image.data[0], 1)
 				assertEquals(image.data[1], 2)
@@ -871,7 +851,7 @@ describe("stbi", function()
 			local image = ffi.new("stbi_image_t")
 			local originalBitmapContents =
 				C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
-			stbi.bindings.stbi_load_rgba(originalBitmapContents, #originalBitmapContents, image)
+			stbi.load_rgba(originalBitmapContents, #originalBitmapContents, image)
 
 			local sourceColor = ffi.new("stbi_color_t", { 0, 0, 255, 255 })
 			local replacementColor = ffi.new("stbi_color_t", { 255, 0, 0, 255 })

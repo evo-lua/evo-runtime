@@ -205,30 +205,30 @@ namespace stbi_ffi {
 	void* getExportsTable() {
 		static struct static_stbi_exports_table stbi_exports_table;
 
-		stbi_exports_table.stbi_version = stbi_version;
+		stbi_exports_table.version = stbi_version;
 
-		stbi_exports_table.stbi_image_info = stbi_image_info;
-		stbi_exports_table.stbi_load_image = stbi_load_image;
-		stbi_exports_table.stbi_image_free = stbi_image_free;
+		stbi_exports_table.image_info = stbi_image_info;
+		stbi_exports_table.load_image = stbi_load_image;
+		stbi_exports_table.image_free = stbi_image_free;
 
-		stbi_exports_table.stbi_encode_bmp = stbi_encode_bmp;
-		stbi_exports_table.stbi_encode_jpg = stbi_encode_jpg;
-		stbi_exports_table.stbi_encode_png = stbi_encode_png;
-		stbi_exports_table.stbi_encode_tga = stbi_encode_tga;
+		stbi_exports_table.encode_bmp = stbi_encode_bmp;
+		stbi_exports_table.encode_jpg = stbi_encode_jpg;
+		stbi_exports_table.encode_png = stbi_encode_png;
+		stbi_exports_table.encode_tga = stbi_encode_tga;
 
-		stbi_exports_table.stbi_load_rgb = stbi_load_rgb;
-		stbi_exports_table.stbi_load_rgba = stbi_load_rgba;
-		stbi_exports_table.stbi_load_monochrome = stbi_load_monochrome;
-		stbi_exports_table.stbi_load_monochrome_with_alpha = stbi_load_monochrome_with_alpha;
+		stbi_exports_table.load_rgb = stbi_load_rgb;
+		stbi_exports_table.load_rgba = stbi_load_rgba;
+		stbi_exports_table.load_monochrome = stbi_load_monochrome;
+		stbi_exports_table.load_monochrome_with_alpha = stbi_load_monochrome_with_alpha;
 
-		stbi_exports_table.stbi_flip_vertically_on_write = stbi_flip_vertically_on_write;
+		stbi_exports_table.flip_vertically_on_write = stbi_flip_vertically_on_write;
 
-		stbi_exports_table.stbi_get_required_bmp_size = stbi_get_required_bmp_size;
-		stbi_exports_table.stbi_get_required_png_size = stbi_get_required_png_size;
-		stbi_exports_table.stbi_get_required_jpg_size = stbi_get_required_jpg_size;
-		stbi_exports_table.stbi_get_required_tga_size = stbi_get_required_tga_size;
+		stbi_exports_table.get_required_bmp_size = stbi_get_required_bmp_size;
+		stbi_exports_table.get_required_png_size = stbi_get_required_png_size;
+		stbi_exports_table.get_required_jpg_size = stbi_get_required_jpg_size;
+		stbi_exports_table.get_required_tga_size = stbi_get_required_tga_size;
 
-		stbi_exports_table.stbi_abgr_to_rgba = stbi_abgr_to_rgba;
+		stbi_exports_table.abgr_to_rgba = stbi_abgr_to_rgba;
 
 		return &stbi_exports_table;
 	}

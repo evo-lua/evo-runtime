@@ -110,10 +110,10 @@ end
 
 local function createCursorFromImage(window, imageFileContents, hotspotX, hotspotY)
 	local imageInfo = ffi.new("stbi_image_t")
-	local result = stbi.bindings.stbi_load_rgba(imageFileContents, #imageFileContents, imageInfo)
+	local result = stbi.load_rgba(imageFileContents, #imageFileContents, imageInfo)
 	assert(result ~= nil, "Failed to load cursor image data (stbi_load_rgba returned NULL)")
 
-	stbi.bindings.stbi_load_rgba(imageFileContents, #imageFileContents, imageInfo)
+	stbi.load_rgba(imageFileContents, #imageFileContents, imageInfo)
 	local cursorImage = ffi.new("GLFWimage[1]", {
 		{
 			width = imageInfo.width,
@@ -127,7 +127,7 @@ local function createCursorFromImage(window, imageFileContents, hotspotX, hotspo
 	glfw.bindings.glfw_set_cursor(window, cursor)
 
 	-- The image data should've been copied by GLFW
-	stbi.bindings.stbi_image_free(imageInfo)
+	stbi.image_free(imageInfo)
 end
 
 function glfw.setCursorImage(window, imageFileContents, hotspotX, hotspotY)
@@ -157,7 +157,7 @@ function glfw.setWindowIcon(window, icons)
 	local stbImages = {}
 	for index, icon in ipairs(icons) do
 		local imageInfo = ffi.new("stbi_image_t")
-		local result = stbi.bindings.stbi_load_rgba(icon, #icon, imageInfo)
+		local result = stbi.load_rgba(icon, #icon, imageInfo)
 		assert(result ~= nil, "Failed to load icon image data (stbi_load_rgba returned NULL)")
 
 		local cIndex = index - 1
@@ -173,7 +173,7 @@ function glfw.setWindowIcon(window, icons)
 
 	for index, _ in ipairs(icons) do
 		local stbImage = stbImages[index]
-		stbi.bindings.stbi_image_free(stbImage)
+		stbi.image_free(stbImage)
 	end
 end
 

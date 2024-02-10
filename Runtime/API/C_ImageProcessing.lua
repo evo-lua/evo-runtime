@@ -21,13 +21,13 @@ function C_ImageProcessing.DecodeFileContents(imageFileContents)
 	validateString(imageFileContents, "imageFileContents")
 
 	local image = ffi_new("stbi_image_t")
-	local success = stbi.bindings.stbi_load_rgba(imageFileContents, #imageFileContents, image)
+	local success = stbi.load_rgba(imageFileContents, #imageFileContents, image)
 	if not success then
 		error("Failed to decode image data (stbi_load_rgba returned NULL)", 0)
 	end
 
 	local pixelArray = ffi_string(image.data, image.width * image.height * 4)
-	stbi.bindings.stbi_image_free(image)
+	stbi.image_free(image)
 
 	return pixelArray, tonumber(image.width), tonumber(image.height)
 end
@@ -49,11 +49,11 @@ function C_ImageProcessing.EncodeBMP(rgbaPixelArray, imageWidthInPixels, imageHe
 	image.data = rgbaPixelBuffer
 	image.channels = 4
 
-	local requiredBufferSize = stbi.bindings.stbi_get_required_bmp_size(image)
+	local requiredBufferSize = stbi.get_required_bmp_size(image)
 	local outputBuffer = buffer.new()
 	local startPointer, reservedBufferSize = outputBuffer:reserve(requiredBufferSize)
 
-	local numBytesWritten = stbi.bindings.stbi_encode_bmp(image, startPointer, reservedBufferSize)
+	local numBytesWritten = stbi.encode_bmp(image, startPointer, reservedBufferSize)
 	assert(numBytesWritten > 0, "Failed to encode BMP image (preallocated buffer too small?)")
 	outputBuffer:commit(numBytesWritten)
 
@@ -79,11 +79,11 @@ function C_ImageProcessing.EncodePNG(rgbaPixelArray, imageWidthInPixels, imageHe
 	image.data = rgbaPixelBuffer
 	image.channels = 4
 
-	local requiredBufferSize = stbi.bindings.stbi_get_required_png_size(image, strideInBytes)
+	local requiredBufferSize = stbi.get_required_png_size(image, strideInBytes)
 	local outputBuffer = buffer.new()
 	local startPointer, reservedBufferSize = outputBuffer:reserve(requiredBufferSize)
 
-	local numBytesWritten = stbi.bindings.stbi_encode_png(image, startPointer, reservedBufferSize, strideInBytes)
+	local numBytesWritten = stbi.encode_png(image, startPointer, reservedBufferSize, strideInBytes)
 	assert(numBytesWritten > 0, "Failed to encode PNG image (preallocated buffer too small?)")
 	outputBuffer:commit(numBytesWritten)
 
@@ -109,11 +109,11 @@ function C_ImageProcessing.EncodeJPG(rgbaPixelArray, imageWidthInPixels, imageHe
 	image.data = rgbaPixelBuffer
 	image.channels = 4
 
-	local requiredBufferSize = stbi.bindings.stbi_get_required_jpg_size(image, qualityPercentage)
+	local requiredBufferSize = stbi.get_required_jpg_size(image, qualityPercentage)
 	local outputBuffer = buffer.new()
 	local startPointer, reservedBufferSize = outputBuffer:reserve(requiredBufferSize)
 
-	local numBytesWritten = stbi.bindings.stbi_encode_jpg(image, startPointer, reservedBufferSize, qualityPercentage)
+	local numBytesWritten = stbi.encode_jpg(image, startPointer, reservedBufferSize, qualityPercentage)
 	assert(numBytesWritten > 0, "Failed to encode JPG image (preallocated buffer too small?)")
 	outputBuffer:commit(numBytesWritten)
 
@@ -137,11 +137,11 @@ function C_ImageProcessing.EncodeTGA(rgbaPixelArray, imageWidthInPixels, imageHe
 	image.data = rgbaPixelBuffer
 	image.channels = 4
 
-	local requiredBufferSize = stbi.bindings.stbi_get_required_tga_size(image)
+	local requiredBufferSize = stbi.get_required_tga_size(image)
 	local outputBuffer = buffer.new()
 	local startPointer, reservedBufferSize = outputBuffer:reserve(requiredBufferSize)
 
-	local numBytesWritten = stbi.bindings.stbi_encode_tga(image, startPointer, reservedBufferSize)
+	local numBytesWritten = stbi.encode_tga(image, startPointer, reservedBufferSize)
 	assert(numBytesWritten > 0, "Failed to encode TGA image (preallocated buffer too small?)")
 	outputBuffer:commit(numBytesWritten)
 
