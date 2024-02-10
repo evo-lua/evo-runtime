@@ -14,7 +14,6 @@ ignore = {
 globals = {
 	-- C++ entry point
 	"EVO_VERSION",
-	"STATIC_FFI_EXPORTS",
 
 	-- assertions library
 	"assertTrue",

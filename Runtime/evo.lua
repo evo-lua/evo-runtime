@@ -151,17 +151,17 @@ function evo.loadNonstandardExtensions()
 end
 
 function evo.initializeStaticLibraryExports()
-	local staticLibraryExports = _G.STATIC_FFI_EXPORTS
-	if not staticLibraryExports then
+	local bindings = require("bindings")
+	if not bindings then
 		return
 	end
 
 	-- See https://evo-lua.github.io/docs/background-information/luajit/static-ffi-bindings/
-	for libraryName, staticWrapperObject in pairs(staticLibraryExports) do
+	for libraryName, staticExportsTable in pairs(bindings) do
 		local ffiBindings = require(libraryName)
 		ffiBindings.initialize()
 		local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
-		local ffiExportsTable = ffi.cast(expectedStructName, staticWrapperObject)
+		local ffiExportsTable = ffi.cast(expectedStructName, staticExportsTable)
 		ffiBindings.bindings = ffiExportsTable
 	end
 end
