@@ -5,10 +5,12 @@ local ffi = require("ffi")
 local oop = require("oop")
 local syslog = require("syslog")
 local uv = require("uv")
+local versions = require("versions")
 
 local runtime = {
 	signals = {},
 	aliases = {},
+	submodules = versions,
 }
 
 runtime.cdefs = [[
@@ -79,7 +81,7 @@ function runtime.initialize()
 		runtime.aliases[alias] = target
 	end
 
-	-- High-level APIs that should also be made available globally (for convenience)
+	-- High-level API namespaces that should also be made available globally (for convenience)
 	_G.C_CommandLine = require("C_CommandLine")
 	_G.C_FileSystem = require("C_FileSystem")
 	_G.C_ImageProcessing = require("C_ImageProcessing")

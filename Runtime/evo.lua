@@ -34,7 +34,6 @@ local uws = require("uws")
 local vfs = require("vfs")
 local webgpu = require("webgpu")
 local webview = require("webview")
-local versions = require("versions")
 local zlib = require("zlib")
 
 local format = string.format
@@ -47,8 +46,6 @@ local EXPECTED_APP_BUNDLER_ENTRY_POINT = "main.lua"
 local GITHUB_DOCS_URL = "https://evo-lua.github.io/"
 
 local evo = {
-	embeddedLibraryVersions = versions,
-	-- Interpreter CLI
 	DEFAULT_ENTRY_POINT = EXPECTED_APP_BUNDLER_ENTRY_POINT,
 	DEFAULT_TEST_SCRIPT = EXPECTED_TEST_RUNNER_ENTRY_POINT,
 	GITHUB_DOCS_URL = GITHUB_DOCS_URL,
@@ -274,7 +271,7 @@ function evo.getVersionText()
 	for index, libraryName in ipairs(embeddedLibraryVersions) do
 		local versionString = embeddedLibraryVersions[libraryName]
 		local submodulePath = submodulePaths[libraryName]
-		local commitHash = evo.embeddedLibraryVersions[submodulePath].commit
+		local commitHash = runtime.submodules[submodulePath].commit
 		versionText = versionText
 			.. "\t"
 			.. transform.brightBlue(format("%-10s", libraryName))
