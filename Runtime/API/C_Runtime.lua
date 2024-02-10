@@ -1,6 +1,7 @@
 local assertions = require("assertions")
 local bdd = require("bdd")
 local ffi = require("ffi")
+local runtime = require("runtime")
 local transform = require("transform")
 local uv = require("uv")
 local validation = require("validation")
@@ -74,7 +75,8 @@ function C_Runtime.EvaluateString(luaCode)
 end
 
 function C_Runtime.PrintVersionString()
-	print(EVO_VERSION)
+	local semanticVersionString = runtime.version()
+	print(semanticVersionString)
 end
 
 local function shell_exec(command, environmentVariables)

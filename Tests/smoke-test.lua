@@ -1,4 +1,5 @@
 local assertions = require("assertions")
+local bindings = require("bindings")
 local bdd = require("bdd")
 local inspect = require("inspect")
 local transform = require("transform")
@@ -46,7 +47,7 @@ local testCases = {
 		description = "The validation library should be preloaded",
 	},
 	{
-		actual = type(_G.STATIC_FFI_EXPORTS),
+		actual = type(bindings),
 		expected = "table",
 		description = "The static FFI bindings should be available",
 	},

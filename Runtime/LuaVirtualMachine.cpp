@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+#include <optional>
 
 #include "macros.hpp"
 #include "uws_ffi.hpp"
@@ -60,10 +61,6 @@ LuaVirtualMachine::LuaVirtualMachine() {
 	lua_pushcfunction(m_luaState, onLuaError);
 	m_onLuaErrorIndex = lua_gettop(m_luaState);
 
-	// This global table simply exports the static APIs embedded within the runtime for the FFI to call into
-	lua_newtable(m_luaState);
-	lua_setglobal(m_luaState, "STATIC_FFI_EXPORTS");
-
 	// Not pretty, but os.exit doesn't unassign the uws loop (which crashes the runtime if close=true)
 	lua_getglobal(m_luaState, "os");
 	lua_getfield(m_luaState, -1, "exit");
@@ -80,11 +77,17 @@ LuaVirtualMachine::~LuaVirtualMachine() {
 	lua_close(m_luaState);
 }
 
-bool LuaVirtualMachine::PreloadPackage(std::string packageName, luaopen_function packageLoader) {
+bool LuaVirtualMachine::LoadPackage(std::string packageName) {
+	return LoadPackage(packageName, std::nullopt);
+}
+
+bool LuaVirtualMachine::LoadPackage(std::string packageName, std::optional<lua_CFunction> packageLoader) {
+	lua_CFunction loader = packageLoader.value_or(emptyPackageLoader);
+
 	lua_getglobal(m_luaState, "package");
 	lua_getfield(m_luaState, -1, "loaded");
 
-	lua_pushcfunction(m_luaState, packageLoader);
+	lua_pushcfunction(m_luaState, loader);
 	lua_call(m_luaState, 0, 1);
 	lua_setfield(m_luaState, -2, packageName.c_str());
 
@@ -156,10 +159,17 @@ bool LuaVirtualMachine::SetGlobalArgs(int argc, char* argv[]) {
 	return true; // Can this even fail? If so, the smoke tests should catch it anyway...
 }
 
-void LuaVirtualMachine::BindStaticLibraryExports(std::string fieldName, void* staticExportsTable) {
-	lua_getglobal(m_luaState, "STATIC_FFI_EXPORTS");
-	lua_pushlightuserdata(m_luaState, staticExportsTable);
-	lua_setfield(m_luaState, -2, fieldName.c_str());
+void LuaVirtualMachine::BindStaticLibraryExports(const std::string fieldName, void* staticExportsTable) {
+	lua_getglobal(m_luaState, "package");
+	lua_getfield(m_luaState, -1, "loaded");
+	lua_getfield(m_luaState, -1, "bindings");
+
+	if(lua_istable(m_luaState, -1)) {
+		lua_pushlightuserdata(m_luaState, staticExportsTable);
+		lua_setfield(m_luaState, -2, fieldName.c_str());
+	}
+
+	lua_pop(m_luaState, 3);
 }
 
 void LuaVirtualMachine::CreateGlobalNamespace(std::string name) {

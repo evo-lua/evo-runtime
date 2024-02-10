@@ -11,12 +11,19 @@ namespace runtime_ffi {
 		assignedLuaState = L;
 	}
 
+	const char* runtime_version() {
+		return EVO_VERSION;
+	}
+
 	void runtime_repl_start() {
 		dotty(assignedLuaState);
 	}
 
 	void* getExportsTable() {
 		static struct static_runtime_exports_table exports_table;
+
+		// Build configuration
+		exports_table.runtime_version = &runtime_version;
 
 		// REPL
 		exports_table.runtime_repl_start = &runtime_repl_start;

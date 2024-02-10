@@ -33,16 +33,18 @@ int main(int argc, char* argv[]) {
 	luaVM->SetGlobalArgs(argc, argv);
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
-	luaVM->PreloadPackage("uv", luaopen_luv);
-	luaVM->PreloadPackage("lpeg", luaopen_lpeg);
-	luaVM->PreloadPackage("miniz", luaopen_miniz);
-	luaVM->PreloadPackage("openssl", luaopen_openssl);
-	luaVM->PreloadPackage("regex", luaopen_rex_pcre2);
-	luaVM->PreloadPackage("json", luaopen_rapidjson_modified);
-	luaVM->PreloadPackage("utf8", luaopen_utf8);
-	luaVM->PreloadPackage("zlib", luaopen_zlib);
+	luaVM->LoadPackage("uv", luaopen_luv);
+	luaVM->LoadPackage("lpeg", luaopen_lpeg);
+	luaVM->LoadPackage("miniz", luaopen_miniz);
+	luaVM->LoadPackage("openssl", luaopen_openssl);
+	luaVM->LoadPackage("regex", luaopen_rex_pcre2);
+	luaVM->LoadPackage("json", luaopen_rapidjson_modified);
+	luaVM->LoadPackage("utf8", luaopen_utf8);
+	luaVM->LoadPackage("zlib", luaopen_zlib);
 
-	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
+	// This package exports APIs for the embedded libraries; they're statically linked in and can't just use require
+	// Some glue code is needed to access them via FFI, but calls have lower overhead and they're easier to extend
+	luaVM->LoadPackage("bindings");
 	luaVM->BindStaticLibraryExports("crypto", crypto_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("iconv", iconv_ffi::getExportsTable());
@@ -58,7 +60,6 @@ int main(int argc, char* argv[]) {
 
 	// Some namespaces cannot be created from Lua because they store info only available in C++ land (like #defines)
 	luaVM->CreateGlobalNamespace("C_Runtime");
-	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
 
 	runtime_ffi::assignLuaState(luaVM->GetState());
 	rml_ffi::assignLuaState(luaVM->GetState());

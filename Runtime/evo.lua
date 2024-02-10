@@ -1,9 +1,23 @@
+local bindings = require("bindings")
+local ffi = require("ffi")
+
+assert(bindings, "Failed to load static FFI export tables")
+
+-- The FFI bindings have to be made available ASAP so that the various libraries can be used
+-- For details, see https://evo-lua.github.io/docs/background-information/luajit/static-ffi-bindings/
+for libraryName, staticExportsTable in pairs(bindings) do
+	local ffiBindings = require(libraryName)
+	ffiBindings.initialize()
+	local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
+	local ffiExportsTable = ffi.cast(expectedStructName, staticExportsTable)
+	ffiBindings.bindings = ffiExportsTable
+end
+
 local assertions = require("assertions")
 local bdd = require("bdd")
 local console = require("console")
 local crypto = require("crypto")
 local etrace = require("etrace")
-local ffi = require("ffi")
 local glfw = require("glfw")
 local jit = require("jit")
 local json = require("json")
@@ -103,7 +117,7 @@ A list of supported profiling modes and their combinations can be found here: %s
 		),
 		REPL_WELCOME_TEXT = format(
 			transform.brightGreen("Welcome to Evo.lua %s (REPL powered by LuaJIT)"),
-			EVO_VERSION
+			runtime.version()
 		),
 		REPL_USAGE_INSTRUCTIONS = format(
 			"Evaluating code in %s mode. To exit, press %s or type %s.",
@@ -116,7 +130,6 @@ A list of supported profiling modes and their combinations can be found here: %s
 
 function evo.run()
 	evo.loadNonstandardExtensions()
-	evo.initializeStaticLibraryExports()
 	evo.registerGlobalAliases()
 	evo.initializeGlobalNamespaces()
 	evo.createSignalHandlers()
@@ -148,22 +161,6 @@ function evo.loadNonstandardExtensions()
 	require("jsonx")
 	require("stringx")
 	require("tablex")
-end
-
-function evo.initializeStaticLibraryExports()
-	local staticLibraryExports = _G.STATIC_FFI_EXPORTS
-	if not staticLibraryExports then
-		return
-	end
-
-	-- See https://evo-lua.github.io/docs/background-information/luajit/static-ffi-bindings/
-	for libraryName, staticWrapperObject in pairs(staticLibraryExports) do
-		local ffiBindings = require(libraryName)
-		ffiBindings.initialize()
-		local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
-		local ffiExportsTable = ffi.cast(expectedStructName, staticWrapperObject)
-		ffiBindings.bindings = ffiExportsTable
-	end
 end
 
 function evo.registerGlobalAliases()
@@ -264,7 +261,7 @@ Commands:
 end
 
 function evo.displayRuntimeVersion(commandName, ...)
-	print(EVO_VERSION)
+	print(runtime.version())
 end
 
 function evo.showVersionStrings(commandName, ...)
@@ -277,7 +274,7 @@ end
 function evo.getVersionText()
 	local versionText = format(
 		"This is %s (powered by %s)",
-		transform.brightGreen("Evo.lua " .. EVO_VERSION),
+		transform.brightGreen("Evo.lua " .. runtime.version()),
 		transform.brightBlue(jit.version)
 	) .. "\n\n"
 

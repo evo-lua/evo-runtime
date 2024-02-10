@@ -18,6 +18,7 @@ local specFiles = {
 	"Tests/BDD/path-library.spec.lua",
 	"Tests/BDD/profiler-library.spec.lua",
 	"Tests/BDD/regex-library.spec.lua",
+	"Tests/BDD/runtime-library.spec.lua",
 	"Tests/BDD/rml-library.spec.lua",
 	"Tests/BDD/stbi-library.spec.lua",
 	"Tests/BDD/stduuid-library.spec.lua",
