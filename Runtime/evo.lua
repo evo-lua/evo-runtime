@@ -8,9 +8,17 @@ assert(bindings, "Failed to load static FFI export tables")
 for libraryName, staticExportsTable in pairs(bindings) do
 	local ffiBindings = require(libraryName)
 	ffiBindings.initialize()
+
+	-- Enable structured access to the exported functions (doesn't change the static lifetime of the table)
 	local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
-	local ffiExportsTable = ffi.cast(expectedStructName, staticExportsTable)
-	ffiBindings.bindings = ffiExportsTable
+	staticExportsTable = ffi.cast(expectedStructName, staticExportsTable)
+	ffiBindings.bindings = staticExportsTable -- For backwards compatibility (remove later)
+	bindings[libraryName] = staticExportsTable
+
+	for index, functionName in ipairs(ffiBindings.exports or {}) do
+		local functionPointer = bindings.stbi[functionName]
+		ffiBindings[functionName] = ffiBindings[functionName] or functionPointer
+	end
 end
 
 local assertions = require("assertions")
