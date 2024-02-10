@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+#include <optional>
 
 #include "macros.hpp"
 #include "uws_ffi.hpp"
@@ -80,11 +81,17 @@ LuaVirtualMachine::~LuaVirtualMachine() {
 	lua_close(m_luaState);
 }
 
-bool LuaVirtualMachine::LoadPackage(std::string packageName, luaopen_function packageLoader) {
+bool LuaVirtualMachine::LoadPackage(std::string packageName) {
+	return LoadPackage(packageName, std::nullopt);
+}
+
+bool LuaVirtualMachine::LoadPackage(std::string packageName, std::optional<lua_CFunction> packageLoader) {
+	lua_CFunction loader = packageLoader.value_or(emptyPackageLoader);
+
 	lua_getglobal(m_luaState, "package");
 	lua_getfield(m_luaState, -1, "loaded");
 
-	lua_pushcfunction(m_luaState, packageLoader);
+	lua_pushcfunction(m_luaState, loader);
 	lua_call(m_luaState, 0, 1);
 	lua_setfield(m_luaState, -2, packageName.c_str());
 
