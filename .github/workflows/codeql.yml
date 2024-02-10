@@ -35,48 +35,49 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp' ]
+        language: ['cpp']
 
     steps:
-    - name: Checkout Git repository
-      uses: actions/checkout@v4
-      with:
+      - name: Checkout Git repository
+        uses: actions/checkout@v4
+        with:
           submodules: recursive
-          fetch-depth: "0" # Required so that git describe actually works (and we can discover version tags)
+          # Required so that git describe actually works (and we can discover version tags)
+          fetch-depth: "0"
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL scan
-      uses: github/codeql-action/init@v3
-      with:
-        languages: ${{ matrix.language }}
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL scan
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
 
-    - name: Set up ccache
-      uses: hendrikmuhs/ccache-action@v1.2
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
 
-    - name: Update apt cache
-      run: sudo apt-get update
+      - name: Update apt cache
+        run: sudo apt-get update
 
-    - name: Install Ninja
-      run: sudo apt-get install ninja-build
+      - name: Install Ninja
+        run: sudo apt-get install ninja-build
 
-      # Can't actually be used on CI runners, but we need the headers for embedding webview
-    - name: Install WebKitGTK
-      run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
+        # Can't actually be used on CI runners, but we need the headers for embedding webview
+      - name: Install WebKitGTK
+        run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
 
-    - name: Install PulseAudio
-      run: sudo apt-get install pulseaudio libpulse-dev --yes
+      - name: Install PulseAudio
+        run: sudo apt-get install pulseaudio libpulse-dev --yes
 
-    - name: Configure environment
-      run: |
-            export PATH="/usr/lib/ccache:$PATH"
-            echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
-            echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
+      - name: Configure environment
+        run: |
+              export PATH="/usr/lib/ccache:$PATH"
+              echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
+              echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
 
-    - name: Build dependencies
-      run: bash deps/unixbuild-all.sh
+      - name: Build dependencies
+        run: bash deps/unixbuild-all.sh
 
-    - name: Build the runtime
-      run: bash ./unixbuild.sh
+      - name: Build the runtime
+        run: bash ./unixbuild.sh
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
@@ -91,13 +92,13 @@ jobs:
       - name: Filter SARIF
         uses: advanced-security/filter-sarif@v1
         with:
+          # Getting spammed with library alerts is useless; no one will ever fix them all
           patterns: |
             +**/*.c
             +**/*.cpp
-          # Getting spammed with library alerts is useless; no one will ever fix them all
             -**/*deps/**
-              input: sarif-results/${{ matrix.language }}.sarif
-              output: sarif-results/${{ matrix.language }}.sarif
+          input: sarif-results/${{ matrix.language }}.sarif
+          output: sarif-results/${{ matrix.language }}.sarif
 
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v2
