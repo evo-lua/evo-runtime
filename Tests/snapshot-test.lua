@@ -351,6 +351,41 @@ local testCases = {
 			assertEquals(profilingResults, "[No samples collected]\n[No samples collected]\n")
 		end,
 	},
+	["cli-debug-events"] = {
+		humanReadableDescription = "Invoking the CLI debug command while passing a file that records events should display them",
+		programToRun = "evo debug Tests/Fixtures/etrace-test.lua",
+		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			local separator = string.rep("-", #evo.messageStrings.EVENT_TRACING_NOTICE)
+			local expectedTraceLog = require("Tests.Fixtures.etrace-test")
+			local expectedOutput = evo.messageStrings.EVENT_TRACING_NOTICE
+				.. "\n"
+				.. separator
+				.. "\n"
+				.. expectedTraceLog
+				.. "\n"
+			assertEquals(observedOutput, expectedOutput)
+			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
+		end,
+	},
+	["cli-debug-no-events"] = {
+		humanReadableDescription = "Invoking the CLI debug command while passing a file that doesn't record events should not display event log entries",
+		programToRun = "evo debug Tests/Fixtures/empty.spec.lua",
+		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			local separator = string.rep("-", #evo.messageStrings.EVENT_TRACING_NOTICE)
+			local expectedOutput = evo.messageStrings.EVENT_TRACING_NOTICE .. "\n" .. separator .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
+		end,
+	},
+	["cli-debug-noargs"] = {
+		humanReadableDescription = "Invoking the debug command without args should display a help text ",
+		programToRun = "evo debug",
+		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
+			local expectedOutput = evo.messageStrings.DEBUG_COMMAND_USAGE_INFO .. "\n"
+			assertEquals(observedOutput, expectedOutput)
+			assertExitFailure(observedOutput, status, terminationReason, exitCodeOrSignalID)
+		end,
+	},
 }
 
 C_Runtime.RunSnapshotTests(testCases)
