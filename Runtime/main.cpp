@@ -60,7 +60,6 @@ int main(int argc, char* argv[]) {
 
 	// Some namespaces cannot be created from Lua because they store info only available in C++ land (like #defines)
 	luaVM->CreateGlobalNamespace("C_Runtime");
-	luaVM->AssignGlobalVariable("EVO_VERSION", "" EVO_VERSION "");
 
 	runtime_ffi::assignLuaState(luaVM->GetState());
 	rml_ffi::assignLuaState(luaVM->GetState());

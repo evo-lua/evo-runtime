@@ -117,7 +117,7 @@ A list of supported profiling modes and their combinations can be found here: %s
 		),
 		REPL_WELCOME_TEXT = format(
 			transform.brightGreen("Welcome to Evo.lua %s (REPL powered by LuaJIT)"),
-			EVO_VERSION
+			runtime.version()
 		),
 		REPL_USAGE_INSTRUCTIONS = format(
 			"Evaluating code in %s mode. To exit, press %s or type %s.",
@@ -261,7 +261,7 @@ Commands:
 end
 
 function evo.displayRuntimeVersion(commandName, ...)
-	print(EVO_VERSION)
+	print(runtime.version())
 end
 
 function evo.showVersionStrings(commandName, ...)
@@ -274,7 +274,7 @@ end
 function evo.getVersionText()
 	local versionText = format(
 		"This is %s (powered by %s)",
-		transform.brightGreen("Evo.lua " .. EVO_VERSION),
+		transform.brightGreen("Evo.lua " .. runtime.version()),
 		transform.brightBlue(jit.version)
 	) .. "\n\n"
 

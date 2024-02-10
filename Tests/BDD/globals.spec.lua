@@ -57,15 +57,4 @@ describe("_G", function()
 			assert(alias == target, globalName)
 		end)
 	end
-
-	it("should export important defines from the native entry point", function()
-		local runtimeVersionDefinedAtBuildTime = EVO_VERSION
-		-- Technically git describe adds more information in between releases, but it's still "semver-like" enough
-		assertEquals(type(runtimeVersionDefinedAtBuildTime), "string")
-
-		local expectedVersionStringPattern = "(v%d+%.%d+%.%d+.*)" --vMAJOR.MINOR.PATCH-optionalGitDescribeSuffix
-		local versionString = string.match(runtimeVersionDefinedAtBuildTime, expectedVersionStringPattern)
-
-		assertEquals(type(versionString), "string")
-	end)
 end)

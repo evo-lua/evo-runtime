@@ -1,4 +1,5 @@
 local console = require("console")
+local runtime = require("runtime")
 
 describe("C_Runtime", function()
 	-- Ideally there should be some high-level snapshot tests, but more plumbing is needed
@@ -56,7 +57,7 @@ describe("C_Runtime", function()
 
 			local SEMANTIC_VERSION_STRING_PATTERN = "(v(%d+)%.(%d+)%.(%d+).*)"
 			local versionString, expectedMajorVersion, expectedMinorVersion, expectedPatchVersion =
-				string.match(EVO_VERSION, SEMANTIC_VERSION_STRING_PATTERN)
+				string.match(runtime.version(), SEMANTIC_VERSION_STRING_PATTERN)
 			local displayedVersionString, displayedMajorVersion, displayedMinorVersion, displayedPatchVersion =
 				string.match(capturedOutput, SEMANTIC_VERSION_STRING_PATTERN)
 
