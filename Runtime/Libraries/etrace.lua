@@ -1,3 +1,5 @@
+local json = require("json")
+local transform = require("transform")
 local validation = require("validation")
 local validateString = validation.validateString
 local validateTable = validation.validateTable
@@ -15,6 +17,7 @@ local etrace = {
 	registeredEvents = {},
 	eventLog = {},
 	subscribers = {},
+	isForceEnabled = false,
 }
 
 function etrace.reset()
@@ -135,19 +138,30 @@ function etrace.status(event)
 end
 
 function etrace.record(event, payload)
+	payload = payload or {}
+
 	if etrace.registeredEvents[event] == nil then
 		error(format("Cannot record unknown event %s", event), 0)
 	end
 
-	if etrace.registeredEvents[event] == false then
+	if etrace.registeredEvents[event] == false and not etrace.isForceEnabled then
 		return
 	end
 
 	local entry = {
 		name = event,
-		payload = payload or {},
+		payload = payload,
 	}
 	table_insert(etrace.eventLog, entry)
+
+	if etrace.isForceEnabled then
+		print(etrace.stringify(event, payload))
+	end
+end
+
+function etrace.stringify(event, payload)
+	local payloadString = json.stringify(payload, { sort_keys = true })
+	return format(transform.brightBlue("[EVENT] %s\t%s"), event, payloadString)
 end
 
 function etrace.filter(event)

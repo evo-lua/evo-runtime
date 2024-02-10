@@ -125,6 +125,10 @@ A list of supported profiling modes and their combinations can be found here: %s
 			transform.brightYellow("CTRL+C"),
 			transform.brightYellow("os.exit()")
 		),
+		DEBUG_COMMAND_USAGE_INFO = transform.bold("Usage: evo debug script.lua ..."),
+		EVENT_TRACING_NOTICE = transform.brightGreen(
+			"Event tracing is now enabled globally; all events should be recorded"
+		),
 	},
 }
 
@@ -228,7 +232,8 @@ function evo.setUpCommandLineInterface()
 	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate expressions live or from input")
 	C_CommandLine.RegisterCommand("build", evo.buildZipApp, "Create a self-contained executable")
 	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from files or directories")
-	C_CommandLine.RegisterCommand("profile", evo.runScriptWhileProfiling, "Enable LuaJIT's built-in CPU profiler")
+	C_CommandLine.RegisterCommand("profile", evo.runScriptWhileProfiling, "Run script with CPU profiling enabled")
+	C_CommandLine.RegisterCommand("debug", evo.runWhileTracing, "Run script with debug logging enabled")
 
 	C_CommandLine.SetAlias("help", "-h")
 	C_CommandLine.SetAlias("version", "-v")
@@ -236,6 +241,7 @@ function evo.setUpCommandLineInterface()
 	C_CommandLine.SetAlias("build", "-b")
 	C_CommandLine.SetAlias("test", "-t")
 	C_CommandLine.SetAlias("profile", "-p")
+	C_CommandLine.SetAlias("debug", "-d")
 
 	C_CommandLine.SetDefaultHandler(evo.onInvalidCommand)
 end
@@ -569,6 +575,23 @@ function evo.onInvalidCommand(command, argv)
 	end
 
 	evo.displayHelpText()
+end
+
+function evo.runWhileTracing(_, argv)
+	local scriptFilePath = argv[1]
+	if not scriptFilePath then
+		print(evo.messageStrings.DEBUG_COMMAND_USAGE_INFO)
+		os.exit(1, true)
+	end
+
+	etrace.isForceEnabled = true
+
+	local message = evo.messageStrings.EVENT_TRACING_NOTICE
+	local separator = string.rep("-", #message)
+	printf("%s\n%s", message, separator)
+
+	table.remove(argv, 1)
+	return evo.onInvalidCommand(scriptFilePath, argv)
 end
 
 return evo
