@@ -232,7 +232,7 @@ function evo.setUpCommandLineInterface()
 	C_CommandLine.RegisterCommand("eval", evo.evaluateChunk, "Evaluate expressions live or from input")
 	C_CommandLine.RegisterCommand("build", evo.buildZipApp, "Create a self-contained executable")
 	C_CommandLine.RegisterCommand("test", evo.discoverAndRunTests, "Run tests from files or directories")
-	C_CommandLine.RegisterCommand("profile", evo.runScriptWhileProfiling, "Enable LuaJIT's built-in CPU profiler")
+	C_CommandLine.RegisterCommand("profile", evo.runScriptWhileProfiling, "Run script with CPU profiling enabled")
 	C_CommandLine.RegisterCommand("debug", evo.runWhileTracing, "Run script with debug logging enabled")
 
 	C_CommandLine.SetAlias("help", "-h")
