@@ -1,9 +1,23 @@
+local bindings = require("bindings")
+local ffi = require("ffi")
+
+assert(bindings, "Failed to load static FFI export tables")
+
+-- The FFI bindings have to be made available ASAP so that the various libraries can be used
+-- For details, see https://evo-lua.github.io/docs/background-information/luajit/static-ffi-bindings/
+for libraryName, staticExportsTable in pairs(bindings) do
+	local ffiBindings = require(libraryName)
+	ffiBindings.initialize()
+	local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
+	local ffiExportsTable = ffi.cast(expectedStructName, staticExportsTable)
+	ffiBindings.bindings = ffiExportsTable
+end
+
 local assertions = require("assertions")
 local bdd = require("bdd")
 local console = require("console")
 local crypto = require("crypto")
 local etrace = require("etrace")
-local ffi = require("ffi")
 local glfw = require("glfw")
 local jit = require("jit")
 local json = require("json")
@@ -116,7 +130,6 @@ A list of supported profiling modes and their combinations can be found here: %s
 
 function evo.run()
 	evo.loadNonstandardExtensions()
-	evo.initializeStaticLibraryExports()
 	evo.registerGlobalAliases()
 	evo.initializeGlobalNamespaces()
 	evo.createSignalHandlers()
@@ -148,22 +161,6 @@ function evo.loadNonstandardExtensions()
 	require("jsonx")
 	require("stringx")
 	require("tablex")
-end
-
-function evo.initializeStaticLibraryExports()
-	local bindings = require("bindings")
-	if not bindings then
-		return
-	end
-
-	-- See https://evo-lua.github.io/docs/background-information/luajit/static-ffi-bindings/
-	for libraryName, staticExportsTable in pairs(bindings) do
-		local ffiBindings = require(libraryName)
-		ffiBindings.initialize()
-		local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
-		local ffiExportsTable = ffi.cast(expectedStructName, staticExportsTable)
-		ffiBindings.bindings = ffiExportsTable
-	end
 end
 
 function evo.registerGlobalAliases()
