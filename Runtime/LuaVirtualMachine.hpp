@@ -11,7 +11,7 @@ public:
 	LuaVirtualMachine();
 	~LuaVirtualMachine();
 
-	bool PreloadPackage(std::string packageName, luaopen_function packageLoader);
+	bool LoadPackage(std::string packageName, luaopen_function packageLoader);
 	bool DoFile(std::string filePath);
 	bool DoString(std::string chunk, std::string chunkName);
 	bool CompileChunk(std::string chunk, std::string chunkName);

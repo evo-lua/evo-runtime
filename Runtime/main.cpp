@@ -33,14 +33,14 @@ int main(int argc, char* argv[]) {
 	luaVM->SetGlobalArgs(argc, argv);
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
-	luaVM->PreloadPackage("uv", luaopen_luv);
-	luaVM->PreloadPackage("lpeg", luaopen_lpeg);
-	luaVM->PreloadPackage("miniz", luaopen_miniz);
-	luaVM->PreloadPackage("openssl", luaopen_openssl);
-	luaVM->PreloadPackage("regex", luaopen_rex_pcre2);
-	luaVM->PreloadPackage("json", luaopen_rapidjson_modified);
-	luaVM->PreloadPackage("utf8", luaopen_utf8);
-	luaVM->PreloadPackage("zlib", luaopen_zlib);
+	luaVM->LoadPackage("uv", luaopen_luv);
+	luaVM->LoadPackage("lpeg", luaopen_lpeg);
+	luaVM->LoadPackage("miniz", luaopen_miniz);
+	luaVM->LoadPackage("openssl", luaopen_openssl);
+	luaVM->LoadPackage("regex", luaopen_rex_pcre2);
+	luaVM->LoadPackage("json", luaopen_rapidjson_modified);
+	luaVM->LoadPackage("utf8", luaopen_utf8);
+	luaVM->LoadPackage("zlib", luaopen_zlib);
 
 	// The embedded libraries are statically linked in, so we require some glue code to access them via FFI
 	luaVM->BindStaticLibraryExports("crypto", crypto_ffi::getExportsTable());

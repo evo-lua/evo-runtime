@@ -80,7 +80,7 @@ LuaVirtualMachine::~LuaVirtualMachine() {
 	lua_close(m_luaState);
 }
 
-bool LuaVirtualMachine::PreloadPackage(std::string packageName, luaopen_function packageLoader) {
+bool LuaVirtualMachine::LoadPackage(std::string packageName, luaopen_function packageLoader) {
 	lua_getglobal(m_luaState, "package");
 	lua_getfield(m_luaState, -1, "loaded");
 
