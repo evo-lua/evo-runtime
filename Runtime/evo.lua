@@ -14,8 +14,6 @@ for libraryName, staticExportsTable in pairs(bindings) do
 end
 
 local assertions = require("assertions")
-local bdd = require("bdd")
-local console = require("console")
 local crypto = require("crypto")
 local etrace = require("etrace")
 local glfw = require("glfw")
@@ -24,14 +22,12 @@ local json = require("json")
 local labsound = require("labsound")
 local lpeg = require("lpeg")
 local miniz = require("miniz")
-local oop = require("oop")
 local profiler = require("profiler")
 local regex = require("regex")
 local rml = require("rml")
 local runtime = require("runtime")
 local stbi = require("stbi")
 local stduuid = require("stduuid")
-local syslog = require("syslog")
 local transform = require("transform")
 local uv = require("uv")
 local uws = require("uws")
@@ -132,10 +128,6 @@ A list of supported profiling modes and their combinations can be found here: %s
 }
 
 function evo.run()
-	evo.loadNonstandardExtensions()
-	evo.registerGlobalAliases()
-	evo.initializeGlobalNamespaces()
-
 	local zipApp = evo.readEmbeddedZipApp()
 	if zipApp then
 		-- The CLI args are shifted if not run from the interpreter CLI, which might break standalone apps
@@ -156,62 +148,6 @@ end
 function evo.readEmbeddedZipApp()
 	local executableBytes = C_FileSystem.ReadFile(uv.exepath())
 	return vfs.decode(executableBytes)
-end
-
-function evo.loadNonstandardExtensions()
-	require("debugx")
-	require("jsonx")
-	require("stringx")
-	require("tablex")
-end
-
-function evo.registerGlobalAliases()
-	-- Can't initialize this table on load as some modules will be missing
-	evo.globalAliases = {
-		after = bdd.after,
-		before = bdd.before,
-		buffer = require("string.buffer"),
-		cast = ffi.cast,
-		cdef = ffi.cdef,
-		class = oop.class,
-		classname = oop.classname,
-		define = ffi.cdef,
-		describe = bdd.describe,
-		dump = debug.dump,
-		extend = oop.extend,
-		format = string.format,
-		implements = oop.implements,
-		instanceof = oop.instanceof,
-		it = bdd.it,
-		mixin = oop.mixin,
-		new = ffi.new,
-		path = require("path"),
-		printf = console.printf,
-		sizeof = ffi.sizeof,
-		typeof = ffi.typeof,
-		DEBUG = syslog.debug,
-		INFO = syslog.info,
-		NOTICE = syslog.notice,
-		WARNING = syslog.warning,
-		ERROR = syslog.error,
-		CRITICAL = syslog.critical,
-		ALERT = syslog.alert,
-		EMERGENCY = syslog.emergency,
-		EVENT = etrace.publish,
-	}
-
-	for alias, target in pairs(evo.globalAliases) do
-		_G[alias] = target
-	end
-end
-
-function evo.initializeGlobalNamespaces()
-	_G.C_CommandLine = require("C_CommandLine")
-	_G.C_FileSystem = require("C_FileSystem")
-	_G.C_ImageProcessing = require("C_ImageProcessing")
-	require("C_Runtime")
-	_G.C_Timer = require("C_Timer")
-	_G.C_WebView = require("C_WebView")
 end
 
 function evo.setUpCommandLineInterface()
