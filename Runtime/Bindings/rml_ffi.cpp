@@ -9,6 +9,7 @@
 #include <RmlUi_Platform_GLFW.cpp>
 
 #include "interop_ffi.hpp"
+#include "macros.hpp"
 #include "rml_ffi.hpp"
 
 const char* rml_version() {
@@ -177,6 +178,8 @@ void rml_process_content_scale_callback(rml_context_t context_pointer, float xsc
 	RmlGLFW::ProcessContentScaleCallback(context, xscale);
 }
 
+EMBED_BINARY(rml_exported_types, "Runtime/Bindings/rml_exports.h")
+
 namespace rml_ffi {
 	lua_State* assignedLuaState;
 	void assignLuaState(lua_State* L) {
@@ -185,6 +188,10 @@ namespace rml_ffi {
 
 	lua_State* getAssignedLuaState() {
 		return rml_ffi::assignedLuaState;
+	}
+
+	const char* getTypeDefinitions() {
+		return rml_exported_types;
 	}
 
 	void* getExportsTable() {

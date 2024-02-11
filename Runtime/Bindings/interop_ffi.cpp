@@ -1,4 +1,5 @@
 #include "interop_ffi.hpp"
+#include "macros.hpp"
 
 #include <queue>
 
@@ -40,7 +41,13 @@ void queue_destroy(std::queue<deferred_event_t>* queue) {
 	delete queue;
 }
 
+EMBED_BINARY(interop_exported_types, "Runtime/Bindings/interop_exports.h")
+
 namespace interop_ffi {
+
+	const char* getTypeDefinitions() {
+		return interop_exported_types;
+	}
 
 	void* getExportsTable() {
 		static struct static_interop_exports_table exports_table;

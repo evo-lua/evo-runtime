@@ -1,5 +1,6 @@
 
 #include "labsound_ffi.hpp"
+#include "macros.hpp"
 
 #include "LabSound/backends/AudioDevice_RtAudio.h"
 #include "LabSound/LabSound.h"
@@ -391,7 +392,13 @@ void labsound_print_graph(labsound_audio_node_t root_node) {
 	});
 }
 
+EMBED_BINARY(labsound_exported_types, "Runtime/Bindings/labsound_exports.h")
+
 namespace labsound_ffi {
+
+	const char* getTypeDefinitions() {
+		return labsound_exported_types;
+	}
 
 	void* getExportsTable() {
 		static struct static_labsound_exports_table exports_table;

@@ -1,5 +1,6 @@
 #include "crypto_ffi.hpp"
 #include "crypto_argon2.hpp"
+#include "macros.hpp"
 
 #include <openssl/core_names.h>
 #include <openssl/crypto.h>
@@ -103,7 +104,13 @@ fail:
 	OSSL_set_max_threads(nullptr, 0);
 }
 
+EMBED_BINARY(crypto_exported_types, "Runtime/Bindings/crypto_exports.h")
+
 namespace crypto_ffi {
+
+	const char* getTypeDefinitions() {
+		return crypto_exported_types;
+	}
 
 	void* getExportsTable() {
 		static struct static_crypto_exports_table exports_table;

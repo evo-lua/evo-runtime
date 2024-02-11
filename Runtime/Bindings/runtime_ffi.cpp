@@ -1,9 +1,12 @@
 #include "runtime_ffi.hpp"
 #include "lua.hpp"
+#include "macros.hpp"
 
 extern "C" {
 #include "luajit_repl.h"
 }
+
+EMBED_BINARY(runtime_exported_types, "Runtime/Bindings/runtime_exports.h")
 
 namespace runtime_ffi {
 	lua_State* assignedLuaState;
@@ -17,6 +20,10 @@ namespace runtime_ffi {
 
 	void runtime_repl_start() {
 		dotty(assignedLuaState);
+	}
+
+	const char* getTypeDefinitions() {
+		return runtime_exported_types;
 	}
 
 	void* getExportsTable() {

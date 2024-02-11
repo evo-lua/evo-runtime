@@ -159,7 +159,7 @@ bool LuaVirtualMachine::SetGlobalArgs(int argc, char* argv[]) {
 	return true; // Can this even fail? If so, the smoke tests should catch it anyway...
 }
 
-void LuaVirtualMachine::BindStaticLibraryExports(const std::string fieldName, void* staticExportsTable) {
+void LuaVirtualMachine::BindStaticLibraryExports(const std::string fieldName, void* staticExportsTable, std::string cdefs) {
 	lua_getglobal(m_luaState, "package");
 	lua_getfield(m_luaState, -1, "loaded");
 	lua_getfield(m_luaState, -1, "bindings");
@@ -167,8 +167,7 @@ void LuaVirtualMachine::BindStaticLibraryExports(const std::string fieldName, vo
 	if(lua_istable(m_luaState, -1)) {
 		lua_newtable(m_luaState);
 
-		constexpr const char* cdefs = "PLACEHOLDER: Insert the actual C definitions here";
-		lua_pushstring(m_luaState, cdefs);
+		lua_pushlstring(m_luaState, cdefs.c_str(), cdefs.size());
 		lua_setfield(m_luaState, -2, "cdefs");
 
 		lua_pushlightuserdata(m_luaState, staticExportsTable);

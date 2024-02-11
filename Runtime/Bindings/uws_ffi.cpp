@@ -1,3 +1,4 @@
+#include "macros.hpp"
 #include "uws.hpp"
 #include "uws_ffi.hpp"
 
@@ -191,7 +192,13 @@ void uws_webserver_add_any_route(uws_webserver_t server, const char* route) {
 	static_cast<WebServer*>(server)->AddAnyRoute(std::string(route));
 }
 
+EMBED_BINARY(uws_exported_types, "Runtime/Bindings/uws_exports.h")
+
 namespace uws_ffi {
+
+	const char* getTypeDefinitions() {
+		return uws_exported_types;
+	}
 
 	void* getExportsTable() {
 		static struct static_uws_exports_table uwebsockets_exports_table;

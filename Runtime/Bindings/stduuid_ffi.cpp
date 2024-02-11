@@ -1,3 +1,5 @@
+#include "macros.hpp"
+
 #include <random>
 #include <array>
 
@@ -79,7 +81,13 @@ bool uuid_create_system(uuid_rfc_string_t* result) {
 	return true;
 }
 
+EMBED_BINARY(stduuid_exported_types, "Runtime/Bindings/stduuid_exports.h")
+
 namespace stduuid_ffi {
+
+	const char* getTypeDefinitions() {
+		return stduuid_exported_types;
+	}
 
 	void* getExportsTable() {
 		static struct static_stduuid_exports_table stduuid_exports_table;

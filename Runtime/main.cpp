@@ -45,18 +45,18 @@ int main(int argc, char* argv[]) {
 	// This package exports APIs for the embedded libraries; they're statically linked in and can't just use require
 	// Some glue code is needed to access them via FFI, but calls have lower overhead and they're easier to extend
 	luaVM->LoadPackage("bindings");
-	luaVM->BindStaticLibraryExports("crypto", crypto_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("iconv", iconv_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("interop", interop_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("labsound", labsound_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("uws", uws_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("rml", rml_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("runtime", runtime_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("stbi", stbi_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("stduuid", stduuid_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("webgpu", webgpu_ffi::getExportsTable());
+	luaVM->BindStaticLibraryExports("crypto", crypto_ffi::getExportsTable(), crypto_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable(), glfw_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("iconv", iconv_ffi::getExportsTable(), iconv_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("interop", interop_ffi::getExportsTable(), interop_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("labsound", labsound_ffi::getExportsTable(), labsound_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("webview", webview_ffi::getExportsTable(), webview_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("uws", uws_ffi::getExportsTable(), uws_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("rml", rml_ffi::getExportsTable(), rml_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("runtime", runtime_ffi::getExportsTable(), runtime_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("stbi", stbi_ffi::getExportsTable(), stbi_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("stduuid", stduuid_ffi::getExportsTable(), stduuid_ffi::getTypeDefinitions());
+	luaVM->BindStaticLibraryExports("webgpu", webgpu_ffi::getExportsTable(), webgpu_ffi::getTypeDefinitions());
 
 	// Some namespaces cannot be created from Lua because they store info only available in C++ land (like #defines)
 	luaVM->CreateGlobalNamespace("C_Runtime");

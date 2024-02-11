@@ -1,10 +1,17 @@
+#include "macros.hpp"
 #include "webgpu_ffi.hpp"
 
 const char* wgpu_version() {
 	return WGPU_VERSION;
 }
 
+EMBED_BINARY(webgpu_exported_types, "Runtime/Bindings/webgpu_exports.h")
+
 namespace webgpu_ffi {
+
+	const char* getTypeDefinitions() {
+		return webgpu_exported_types;
+	}
 
 	void* getExportsTable() {
 		static struct static_webgpu_exports_table webgpu_exports_table;

@@ -2,13 +2,7 @@
 
 #include "lua.hpp"
 
-struct static_runtime_exports_table {
-	// Build configuration
-	const char* (*runtime_version)(void);
-
-	// REPL
-	void (*runtime_repl_start)(void);
-};
+#include "runtime_exports.h"
 
 namespace runtime_ffi {
 	void assignLuaState(lua_State* L);
@@ -19,5 +13,6 @@ namespace runtime_ffi {
 	// REPL
 	void runtime_repl_start();
 
+	const char* getTypeDefinitions();
 	void* getExportsTable();
 }

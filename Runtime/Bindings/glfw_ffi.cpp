@@ -222,7 +222,13 @@ void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_e
 	});
 }
 
+EMBED_BINARY(glfw_exported_types, "Runtime/Bindings/glfw_exports.h")
+
 namespace glfw_ffi {
+
+	const char* getTypeDefinitions() {
+		return glfw_exported_types;
+	}
 
 	void* getExportsTable() {
 		static struct static_glfw_exports_table glfw_exports_table;
