@@ -1,6 +1,7 @@
 set -e
 
 deps/discover-submodule-versions.sh
+ninjabuild-windows/BuildTools/generate-cdefs.lua
 
 deps/fetch-mswebview2.sh
 deps/luajit-windowsbuild.sh

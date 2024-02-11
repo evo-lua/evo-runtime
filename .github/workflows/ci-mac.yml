@@ -60,6 +60,9 @@ jobs:
       - name: Generate versions.lua # Required for those libraries that don't export versioning information
         run: deps/discover-submodule-versions.sh && cat deps/versions.lua
 
+      - name: Generate cdefs.lua # Patiently waiting for #embed so this nonsense can be removed
+        run: ninjabuild-unix/luajit BuildTools/generate-cdefs.lua && cat deps/cdefs.lua
+
       - name: Build webgpu
         run: deps/webgpu-unixbuild.sh && ls ninjabuild-unix
 

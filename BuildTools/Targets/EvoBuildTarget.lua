@@ -8,8 +8,9 @@ local EvoBuildTarget = {
 	-- Can't easily discover sources or resolve paths with only Lua APIs. Listing them explicitly is probably safer anyway
 	-- Note that ninja doesn't care about path separators and the mingw toolchain supports forward slashes; no \ required
 	luaSources = {
-		-- Auto-generated versioning information for embedded libraries
+		-- Auto-generated (manually have to run the generator, for now)
 		"deps/versions.lua",
+		"deps/cdefs.lua",
 		"deps/LuaJIT/LuaJIT/src/jit/p.lua",
 		"deps/LuaJIT/LuaJIT/src/jit/vmdef.lua",
 		"deps/LuaJIT/LuaJIT/src/jit/zone.lua",

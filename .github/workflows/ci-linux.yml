@@ -67,6 +67,9 @@ jobs:
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Generate cdefs.lua # Patiently waiting for #embed so this nonsense can be removed
+        run: ninjabuild-unix/luajit BuildTools/generate-cdefs.lua && cat deps/cdefs.lua
+
       - name: Build webgpu
         run: deps/webgpu-unixbuild.sh && ls ninjabuild-unix
 

@@ -76,6 +76,9 @@ jobs:
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
+      - name: Generate cdefs.lua # Patiently waiting for #embed so this nonsense can be removed
+        run: ninjabuild-windows/luajit.exe BuildTools/generate-cdefs.lua && cat deps/cdefs.lua
+
       - name: Build webgpu
         run: deps/webgpu-windowsbuild.sh && ls ninjabuild-windows
 

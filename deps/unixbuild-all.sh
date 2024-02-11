@@ -1,6 +1,7 @@
 set -e
 
 deps/discover-submodule-versions.sh
+ninjabuild-unix/BuildTools/generate-cdefs.lua
 
 deps/luajit-unixbuild.sh
 deps/webgpu-unixbuild.sh
