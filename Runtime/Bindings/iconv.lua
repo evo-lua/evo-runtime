@@ -1,3 +1,4 @@
+local bindings = require("bindings")
 local ffi = require("ffi")
 local validation = require("validation")
 
@@ -8,18 +9,6 @@ local tonumber = tonumber
 local tostring = tostring
 
 local iconv = {}
-
-iconv.cdefs = [[
-	typedef struct iconv_result_t {
-		uint8_t status_code;
-		size_t num_bytes_written;
-		const char* message;
-	} iconv_result_t;
-
-	struct static_iconv_exports_table {
-		iconv_result_t (*iconv_convert)(char* input, size_t input_size, const char* input_encoding, const char* output_encoding, char* output, size_t output_size);
-	};
-]]
 
 -- Should probably move this elsewhere?
 local function ffi_strerror(errno)
@@ -32,7 +21,7 @@ function iconv.initialize()
 		char *strerror(int errnum);
 	]])
 
-	ffi.cdef(iconv.cdefs)
+	ffi.cdef(bindings.iconv.cdefs)
 end
 
 local UTF_BYTES_PER_CODEPOINT = 4

@@ -1,3 +1,4 @@
+local bindings = require("bindings")
 local buffer = require("string.buffer")
 local ffi = require("ffi")
 
@@ -15,54 +16,13 @@ local crypto = {
 	KDF_ARGON2ID = "ARGON2ID",
 }
 
-crypto.cdefs = [[
-
-	typedef struct kdf_parameters_t {
-		const char* kdf;
-		uint32_t version;
-		uint32_t kilobytes;
-		uint32_t threads;
-		uint32_t lanes;
-		size_t size;
-		uint32_t iterations;
-	} kdf_parameters_t;
-
-	typedef struct kdf_input_t {
-		const char* password;
-		size_t pw_length;
-		const char *salt;
-		size_t salt_length;
-	} kdf_input_t;
-
-	typedef struct kdf_result_t {
-		bool success;
-		unsigned char* hash;
-		char* message;
-	} kdf_result_t;
-
-	struct static_crypto_exports_table {
-		// OpenSSL (libcrypto) metadata
-		const char* (*version_text)(void);
-		long int (*version_number)(void);
-
-		// Argon2 MCF utilities
-		size_t (*openssl_to_base64)(char *dst, size_t dst_len, const char *src, size_t src_len);
-		size_t (*openssl_from_base64)(unsigned char* dst, size_t dst_len, const unsigned char* src, size_t src_len);
-		size_t (*argon2_to_base64)(unsigned char* dst, size_t dst_len, const unsigned char* src, size_t src_len);
-		size_t (*argon2_from_base64)(char *dst, size_t dst_len, const char *src);
-		void (*openssl_kdf_derive)(kdf_input_t inputs, kdf_parameters_t parameters, kdf_result_t* result);
-
-		int (*openssl_crypto_memcmp)(const void *a, const void *b, size_t len);
-	};
-]]
-
 -- As per https://www.openssl.org/docs/manmaster/man3/ERR_error_string_n.html
 local OPENSSL_MIN_ERROR_STRING_LENGTH = 120
 local preallocatedMessageExchangeBuffer = buffer:new(OPENSSL_MIN_ERROR_STRING_LENGTH)
 local preallocatedConversionBuffer = buffer.new(128)
 
 function crypto.initialize()
-	ffi.cdef(crypto.cdefs)
+	ffi.cdef(bindings.crypto.cdefs)
 
 	-- Based on https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id
 	crypto.DEFAULT_KDF_PARAMETERS = {

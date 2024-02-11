@@ -1,4 +1,5 @@
 local bdd = require("bdd")
+local bindings = require("bindings")
 local console = require("console")
 local etrace = require("etrace")
 local ffi = require("ffi")
@@ -13,18 +14,8 @@ local runtime = {
 	submodules = versions,
 }
 
-runtime.cdefs = [[
-	struct static_runtime_exports_table {
-		// Build configuration
-		const char* (*runtime_version)(void);
-
-		// REPL
-		void (*runtime_repl_start)(void);
-	};
-]]
-
 function runtime.initialize()
-	ffi.cdef(runtime.cdefs)
+	ffi.cdef(bindings.runtime.cdefs)
 
 	-- An unhandled SIGPIPE error signal will crash servers on platforms that send it
 	-- This frequently happens when attempting to write to a closed socket and must be ignored
