@@ -199,14 +199,14 @@ EMBED_BINARY(uws_exported_types, "Runtime/Bindings/uws_exports.h")
 namespace uws_ffi {
 
 	std::string getTypeDefinitions() {
-		size_t totalSize = uws_aliased_types_size + uws_exported_types_size + 1;
+		size_t totalSize = SYMBOL_NAME(uws_aliased_types_size) + SYMBOL_NAME(uws_exported_types_size) + 1;
 
 		std::string cdefs;
 		cdefs.reserve(totalSize);
 
-		cdefs.append(uws_aliased_types, uws_aliased_types_size);
+		cdefs.append(SYMBOL_NAME(uws_aliased_types), SYMBOL_NAME(uws_aliased_types_size));
 		cdefs.append("\n");
-		cdefs.append(uws_exported_types, uws_exported_types_size);
+		cdefs.append(SYMBOL_NAME(uws_exported_types), SYMBOL_NAME(uws_exported_types_size));
 
 		return cdefs;
 	}
