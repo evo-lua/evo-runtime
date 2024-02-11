@@ -2,6 +2,7 @@
 #include "macros.hpp"
 
 #include <queue>
+#include <string>
 
 std::queue<deferred_event_t>* queue_create() {
 	return new std::queue<deferred_event_t>();
@@ -41,12 +42,22 @@ void queue_destroy(std::queue<deferred_event_t>* queue) {
 	delete queue;
 }
 
+EMBED_BINARY(interop_aliased_types, "Runtime/Bindings/interop_aliases.h")
 EMBED_BINARY(interop_exported_types, "Runtime/Bindings/interop_exports.h")
 
 namespace interop_ffi {
 
 	const char* getTypeDefinitions() {
-		return interop_exported_types;
+		size_t totalSize = interop_aliased_types_size + interop_exported_types_size + 1;
+
+		std::string cdefs;
+		cdefs.reserve(totalSize);
+
+		cdefs.append(interop_aliased_types, interop_aliased_types_size);
+		cdefs.append("\n");
+		cdefs.append(interop_exported_types, interop_exported_types_size);
+
+		return cdefs.c_str();
 	}
 
 	void* getExportsTable() {

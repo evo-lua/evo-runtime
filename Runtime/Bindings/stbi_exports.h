@@ -10,6 +10,13 @@ typedef enum {
 	CONVERT_TO_RGB_WITH_ALPHA = 4
 } stbi_color_depth_t;
 
+typedef struct stbi_color {
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+	uint8_t alpha;
+} stbi_color_t;
+
 typedef struct {
 	int width;
 	int height;

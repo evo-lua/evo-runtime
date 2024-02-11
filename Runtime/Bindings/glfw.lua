@@ -8,36 +8,8 @@ local validateTable = validation.validateTable
 
 local glfw = {}
 
-glfw.cdefs = [[
-	typedef struct GLFWimage {
-		int width;
-		int height;
-		unsigned char* pixels;
-	} GLFWimage;
-
-	typedef struct GLFWvidmode {
-		int width;
-		int height;
-		int redBits;
-		int greenBits;
-		int blueBits;
-		int refreshRate;
-	} GLFWvidmode;
-
-	// Opaque pointer types don't need to be defined as they're only ever handled by glfw internals
-	typedef struct GLFWcursor GLFWcursor;
-	typedef struct GLFWwindow GLFWwindow;
-	typedef struct GLFWmonitor GLFWmonitor;
-	typedef void* deferred_event_queue_t; // Duplicated in interop.cdefs  (fix later)
-
-	// These are passed to WebGPU, but the internals aren't exposed
-	typedef void* WGPUSurface;
-	typedef void* WGPUInstance;
-
-]] .. bindings.glfw.cdefs
-
 function glfw.initialize()
-	ffi.cdef(glfw.cdefs)
+	ffi.cdef(bindings.glfw.cdefs)
 end
 
 function glfw.version()

@@ -392,12 +392,22 @@ void labsound_print_graph(labsound_audio_node_t root_node) {
 	});
 }
 
+EMBED_BINARY(labsound_aliased_types, "Runtime/Bindings/labsound_aliases.h")
 EMBED_BINARY(labsound_exported_types, "Runtime/Bindings/labsound_exports.h")
 
 namespace labsound_ffi {
 
 	const char* getTypeDefinitions() {
-		return labsound_exported_types;
+		size_t totalSize = labsound_aliased_types_size + labsound_exported_types_size + 1;
+
+		std::string cdefs;
+		cdefs.reserve(totalSize);
+
+		cdefs.append(labsound_aliased_types, labsound_aliased_types_size);
+		cdefs.append("\n");
+		cdefs.append(labsound_exported_types, labsound_exported_types_size);
+
+		return cdefs.c_str();
 	}
 
 	void* getExportsTable() {

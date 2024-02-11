@@ -17,6 +17,7 @@
 #include "webview_windows.hpp"
 #endif
 
+EMBED_BINARY(webview_aliased_types, "Runtime/Bindings/webview_aliases.h")
 EMBED_BINARY(webview_exported_types, "Runtime/Bindings/webview_exports.h")
 
 namespace webview_ffi {
@@ -113,7 +114,16 @@ namespace webview_ffi {
 	}
 
 	const char* getTypeDefinitions() {
-		return webview_exported_types;
+		size_t totalSize = webview_aliased_types_size + webview_exported_types_size + 1;
+
+		std::string cdefs;
+		cdefs.reserve(totalSize);
+
+		cdefs.append(webview_aliased_types, webview_aliased_types_size);
+		cdefs.append("\n");
+		cdefs.append(webview_exported_types, webview_exported_types_size);
+
+		return cdefs.c_str();
 	}
 
 	void* getExportsTable() {

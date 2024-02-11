@@ -1,16 +1,28 @@
 #include "macros.hpp"
 #include "webgpu_ffi.hpp"
 
+#include <string>
+
 const char* wgpu_version() {
 	return WGPU_VERSION;
 }
 
+EMBED_BINARY(webgpu_aliased_types, "Runtime/Bindings/webgpu_aliases.h")
 EMBED_BINARY(webgpu_exported_types, "Runtime/Bindings/webgpu_exports.h")
 
 namespace webgpu_ffi {
 
 	const char* getTypeDefinitions() {
-		return webgpu_exported_types;
+		size_t totalSize = webgpu_aliased_types_size + webgpu_exported_types_size + 1;
+
+		std::string cdefs;
+		cdefs.reserve(totalSize);
+
+		cdefs.append(webgpu_aliased_types, webgpu_aliased_types_size);
+		cdefs.append("\n");
+		cdefs.append(webgpu_exported_types, webgpu_exported_types_size);
+
+		return cdefs.c_str();
 	}
 
 	void* getExportsTable() {

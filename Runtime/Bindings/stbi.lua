@@ -16,19 +16,8 @@ local stbi = {
 	},
 }
 
-stbi.cdefs = [[
-	// This may be moved to C later if needed, but for now it's Lua only
-	typedef struct stbi_color {
-		uint8_t red;
-		uint8_t green;
-		uint8_t blue;
-		uint8_t alpha;
-	} stbi_color_t;
-
-]] .. bindings.stbi.cdefs
-
 function stbi.initialize()
-	ffi.cdef(stbi.cdefs)
+	ffi.cdef(bindings.stbi.cdefs)
 end
 
 function stbi.version()

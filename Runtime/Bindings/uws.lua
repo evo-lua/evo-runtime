@@ -3,12 +3,8 @@ local ffi = require("ffi")
 
 local uws = {}
 
-uws.cdefs = [[
-	typedef void* uws_webserver_t;
-]] .. bindings.uws.cdefs
-
 function uws.initialize()
-	ffi.cdef(uws.cdefs)
+	ffi.cdef(bindings.uws.cdefs)
 end
 
 function uws.version()

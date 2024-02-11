@@ -192,12 +192,22 @@ void uws_webserver_add_any_route(uws_webserver_t server, const char* route) {
 	static_cast<WebServer*>(server)->AddAnyRoute(std::string(route));
 }
 
+EMBED_BINARY(uws_aliased_types, "Runtime/Bindings/uws_aliases.h")
 EMBED_BINARY(uws_exported_types, "Runtime/Bindings/uws_exports.h")
 
 namespace uws_ffi {
 
 	const char* getTypeDefinitions() {
-		return uws_exported_types;
+		size_t totalSize = uws_aliased_types_size + uws_exported_types_size + 1;
+
+		std::string cdefs;
+		cdefs.reserve(totalSize);
+
+		cdefs.append(uws_aliased_types, uws_aliased_types_size);
+		cdefs.append("\n");
+		cdefs.append(uws_exported_types, uws_exported_types_size);
+
+		return cdefs.c_str();
 	}
 
 	void* getExportsTable() {

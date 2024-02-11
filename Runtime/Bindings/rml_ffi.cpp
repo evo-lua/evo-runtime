@@ -178,6 +178,7 @@ void rml_process_content_scale_callback(rml_context_t context_pointer, float xsc
 	RmlGLFW::ProcessContentScaleCallback(context, xscale);
 }
 
+EMBED_BINARY(rml_aliased_types, "Runtime/Bindings/rml_aliases.h")
 EMBED_BINARY(rml_exported_types, "Runtime/Bindings/rml_exports.h")
 
 namespace rml_ffi {
@@ -191,7 +192,16 @@ namespace rml_ffi {
 	}
 
 	const char* getTypeDefinitions() {
-		return rml_exported_types;
+		size_t totalSize = rml_aliased_types_size + rml_exported_types_size + 1;
+
+		std::string cdefs;
+		cdefs.reserve(totalSize);
+
+		cdefs.append(rml_aliased_types, rml_aliased_types_size);
+		cdefs.append("\n");
+		cdefs.append(rml_exported_types, rml_exported_types_size);
+
+		return cdefs.c_str();
 	}
 
 	void* getExportsTable() {

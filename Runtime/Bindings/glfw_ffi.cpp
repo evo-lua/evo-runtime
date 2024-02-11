@@ -222,12 +222,22 @@ void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_e
 	});
 }
 
+EMBED_BINARY(glfw_aliased_types, "Runtime/Bindings/glfw_aliases.h")
 EMBED_BINARY(glfw_exported_types, "Runtime/Bindings/glfw_exports.h")
 
 namespace glfw_ffi {
 
 	const char* getTypeDefinitions() {
-		return glfw_exported_types;
+		size_t totalSize = glfw_aliased_types_size + glfw_exported_types_size + 1;
+
+		std::string cdefs;
+		cdefs.reserve(totalSize);
+
+		cdefs.append(glfw_aliased_types, glfw_aliased_types_size);
+		cdefs.append("\n");
+		cdefs.append(glfw_exported_types, glfw_exported_types_size);
+
+		return cdefs.c_str();
 	}
 
 	void* getExportsTable() {
