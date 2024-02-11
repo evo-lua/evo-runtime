@@ -7,6 +7,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+#include <string>
 #include <utility>
 
 const char* stbi_version() {
@@ -204,7 +205,7 @@ EMBED_BINARY(stbi_exported_types, "Runtime/Bindings/stbi_exports.h")
 
 namespace stbi_ffi {
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		return stbi_exported_types;
 	}
 

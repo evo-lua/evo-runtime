@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
 
 // Opaque to LuaJIT
 typedef lab::AudioDevice_RtAudio* labsound_audio_device_t;
@@ -32,7 +33,7 @@ static_assert(sizeof(labsound_audio_stream_config_t::desired_channels) == sizeof
 static_assert(sizeof(labsound_audio_stream_config_t::desired_samplerate) == sizeof(lab::AudioStreamConfig::desired_samplerate));
 
 namespace labsound_ffi {
-	const char* getTypeDefinitions();
+	std::string getTypeDefinitions();
 	void* getExportsTable();
 }
 

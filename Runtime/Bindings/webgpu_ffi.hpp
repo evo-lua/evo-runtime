@@ -3,9 +3,11 @@
 #include <webgpu.h>
 #include <wgpu.h>
 
+#include <string>
+
 #include "webgpu_exports.h"
 
 namespace webgpu_ffi {
-	const char* getTypeDefinitions();
+	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

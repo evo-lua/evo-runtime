@@ -12,7 +12,7 @@ EMBED_BINARY(webgpu_exported_types, "Runtime/Bindings/webgpu_exports.h")
 
 namespace webgpu_ffi {
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		size_t totalSize = webgpu_aliased_types_size + webgpu_exported_types_size + 1;
 
 		std::string cdefs;
@@ -22,7 +22,7 @@ namespace webgpu_ffi {
 		cdefs.append("\n");
 		cdefs.append(webgpu_exported_types, webgpu_exported_types_size);
 
-		return cdefs.c_str();
+		return cdefs;
 	}
 
 	void* getExportsTable() {

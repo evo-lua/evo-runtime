@@ -2,6 +2,8 @@
 
 #include "lua.hpp"
 
+#include <string>
+
 #include "runtime_exports.h"
 
 namespace runtime_ffi {
@@ -13,6 +15,6 @@ namespace runtime_ffi {
 	// REPL
 	void runtime_repl_start();
 
-	const char* getTypeDefinitions();
+	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

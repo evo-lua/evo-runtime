@@ -8,6 +8,8 @@
 #include "interop_ffi.hpp"
 #include "macros.hpp"
 
+#include <string>
+
 #define GLFW_VERSION_STRING TOSTRING(GLFW_VERSION_MAJOR) "." TOSTRING(GLFW_VERSION_MINOR) "." TOSTRING(GLFW_VERSION_REVISION)
 
 void glfw_set_window_move_callback(GLFWwindow* window, std::queue<deferred_event_t>* queue);
@@ -29,6 +31,6 @@ void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_e
 #include "glfw_exports.h"
 
 namespace glfw_ffi {
-	const char* getTypeDefinitions();
+	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

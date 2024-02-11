@@ -4,6 +4,7 @@
 
 #include "WebServer.hpp"
 
+#include <string>
 #include <unordered_map>
 
 const char* uws_version() {
@@ -197,7 +198,7 @@ EMBED_BINARY(uws_exported_types, "Runtime/Bindings/uws_exports.h")
 
 namespace uws_ffi {
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		size_t totalSize = uws_aliased_types_size + uws_exported_types_size + 1;
 
 		std::string cdefs;
@@ -207,7 +208,7 @@ namespace uws_ffi {
 		cdefs.append("\n");
 		cdefs.append(uws_exported_types, uws_exported_types_size);
 
-		return cdefs.c_str();
+		return cdefs;
 	}
 
 	void* getExportsTable() {

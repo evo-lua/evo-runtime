@@ -12,6 +12,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <string>
 
 size_t openssl_to_base64(unsigned char* dst, size_t dst_len, const unsigned char* src, size_t src_len) {
 	EVP_ENCODE_CTX* ctx = EVP_ENCODE_CTX_new();
@@ -108,8 +109,9 @@ EMBED_BINARY(crypto_exported_types, "Runtime/Bindings/crypto_exports.h")
 
 namespace crypto_ffi {
 
-	const char* getTypeDefinitions() {
-		return crypto_exported_types;
+	std::string getTypeDefinitions() {
+		return std::string(crypto_exported_types, crypto_exported_types_size);
+		;
 	}
 
 	void* getExportsTable() {

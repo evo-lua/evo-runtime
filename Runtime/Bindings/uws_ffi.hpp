@@ -6,7 +6,7 @@
 #include <string>
 
 namespace uws_ffi {
-	const char* getTypeDefinitions();
+	std::string getTypeDefinitions();
 	void* getExportsTable();
 	uWS::Loop* assignEventLoop(void* existing_native_loop);
 	void unassignEventLoop(uWS::Loop* uwsEventLoop);

@@ -2,6 +2,7 @@
 
 #include <random>
 #include <array>
+#include <string>
 
 // The platform-specific RNG APIs aren't enabled by default since they're non-standard
 #define UUID_SYSTEM_GENERATOR
@@ -85,7 +86,7 @@ EMBED_BINARY(stduuid_exported_types, "Runtime/Bindings/stduuid_exports.h")
 
 namespace stduuid_ffi {
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		return stduuid_exported_types;
 	}
 

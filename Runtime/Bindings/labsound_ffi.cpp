@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <string>
 #include <vector>
 
 using namespace lab;
@@ -397,7 +398,7 @@ EMBED_BINARY(labsound_exported_types, "Runtime/Bindings/labsound_exports.h")
 
 namespace labsound_ffi {
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		size_t totalSize = labsound_aliased_types_size + labsound_exported_types_size + 1;
 
 		std::string cdefs;
@@ -407,7 +408,7 @@ namespace labsound_ffi {
 		cdefs.append("\n");
 		cdefs.append(labsound_exported_types, labsound_exported_types_size);
 
-		return cdefs.c_str();
+		return cdefs;
 	}
 
 	void* getExportsTable() {

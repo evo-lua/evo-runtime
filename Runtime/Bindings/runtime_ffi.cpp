@@ -6,6 +6,8 @@ extern "C" {
 #include "luajit_repl.h"
 }
 
+#include <string>
+
 EMBED_BINARY(runtime_exported_types, "Runtime/Bindings/runtime_exports.h")
 
 namespace runtime_ffi {
@@ -22,7 +24,7 @@ namespace runtime_ffi {
 		dotty(assignedLuaState);
 	}
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		return runtime_exported_types;
 	}
 

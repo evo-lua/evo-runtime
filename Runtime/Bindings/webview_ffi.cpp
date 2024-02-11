@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <string.h>
+#include <string>
 
 #include "macros.hpp"
 #include "webview_ffi.hpp"
@@ -113,7 +113,7 @@ namespace webview_ffi {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
 	}
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		size_t totalSize = webview_aliased_types_size + webview_exported_types_size + 1;
 
 		std::string cdefs;
@@ -123,7 +123,7 @@ namespace webview_ffi {
 		cdefs.append("\n");
 		cdefs.append(webview_exported_types, webview_exported_types_size);
 
-		return cdefs.c_str();
+		return cdefs;
 	}
 
 	void* getExportsTable() {

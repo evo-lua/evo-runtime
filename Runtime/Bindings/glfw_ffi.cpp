@@ -227,7 +227,7 @@ EMBED_BINARY(glfw_exported_types, "Runtime/Bindings/glfw_exports.h")
 
 namespace glfw_ffi {
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		size_t totalSize = glfw_aliased_types_size + glfw_exported_types_size + 1;
 
 		std::string cdefs;
@@ -237,7 +237,7 @@ namespace glfw_ffi {
 		cdefs.append("\n");
 		cdefs.append(glfw_exported_types, glfw_exported_types_size);
 
-		return cdefs.c_str();
+		return cdefs;
 	}
 
 	void* getExportsTable() {

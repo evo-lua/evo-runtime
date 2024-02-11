@@ -2,7 +2,7 @@
 #include "macros.hpp"
 
 #include <iostream>
-#include <string.h>
+#include <string>
 
 #include <iconv.h>
 
@@ -51,8 +51,8 @@ EMBED_BINARY(iconv_exported_types, "Runtime/Bindings/iconv_exports.h")
 
 namespace iconv_ffi {
 
-	const char* getTypeDefinitions() {
-		return iconv_exported_types;
+	std::string getTypeDefinitions() {
+		return std::string(iconv_exported_types);
 	}
 
 	void* getExportsTable() {

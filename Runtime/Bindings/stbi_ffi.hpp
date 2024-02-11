@@ -2,10 +2,11 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <string>
 
 #include "stbi_exports.h"
 
 namespace stbi_ffi {
-	const char* getTypeDefinitions();
+	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

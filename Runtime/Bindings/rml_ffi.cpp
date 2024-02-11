@@ -191,7 +191,7 @@ namespace rml_ffi {
 		return rml_ffi::assignedLuaState;
 	}
 
-	const char* getTypeDefinitions() {
+	std::string getTypeDefinitions() {
 		size_t totalSize = rml_aliased_types_size + rml_exported_types_size + 1;
 
 		std::string cdefs;
@@ -201,7 +201,7 @@ namespace rml_ffi {
 		cdefs.append("\n");
 		cdefs.append(rml_exported_types, rml_exported_types_size);
 
-		return cdefs.c_str();
+		return cdefs;
 	}
 
 	void* getExportsTable() {
