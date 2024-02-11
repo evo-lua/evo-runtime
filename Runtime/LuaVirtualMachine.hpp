@@ -4,9 +4,6 @@
 #include <optional>
 #include <lua.hpp>
 
-// As per convention, any C function that creates a table with the library APIs and pushes it to the stack
-typedef int (*luaopen_function)(lua_State* L);
-
 class LuaVirtualMachine {
 public:
 	LuaVirtualMachine();
