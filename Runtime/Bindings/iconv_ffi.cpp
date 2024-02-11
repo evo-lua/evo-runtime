@@ -52,7 +52,7 @@ EMBED_BINARY(iconv_exported_types, "Runtime/Bindings/iconv_exports.h")
 namespace iconv_ffi {
 
 	std::string getTypeDefinitions() {
-		return std::string(iconv_exported_types);
+		return std::string(SYMBOL_NAME(iconv_exported_types), SYMBOL_NAME(iconv_exported_types_size));
 	}
 
 	void* getExportsTable() {

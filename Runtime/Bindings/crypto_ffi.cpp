@@ -110,7 +110,7 @@ EMBED_BINARY(crypto_exported_types, "Runtime/Bindings/crypto_exports.h")
 namespace crypto_ffi {
 
 	std::string getTypeDefinitions() {
-		return std::string(crypto_exported_types, crypto_exported_types_size);
+		return std::string(SYMBOL_NAME(crypto_exported_types), SYMBOL_NAME(crypto_exported_types_size));
 		;
 	}
 

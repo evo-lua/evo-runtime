@@ -399,14 +399,14 @@ EMBED_BINARY(labsound_exported_types, "Runtime/Bindings/labsound_exports.h")
 namespace labsound_ffi {
 
 	std::string getTypeDefinitions() {
-		size_t totalSize = labsound_aliased_types_size + labsound_exported_types_size + 1;
+		size_t totalSize = SYMBOL_NAME(labsound_aliased_types_size) + SYMBOL_NAME(labsound_exported_types_size) + 1;
 
 		std::string cdefs;
 		cdefs.reserve(totalSize);
 
-		cdefs.append(labsound_aliased_types, labsound_aliased_types_size);
+		cdefs.append(SYMBOL_NAME(labsound_aliased_types), SYMBOL_NAME(labsound_aliased_types_size));
 		cdefs.append("\n");
-		cdefs.append(labsound_exported_types, labsound_exported_types_size);
+		cdefs.append(SYMBOL_NAME(labsound_exported_types), SYMBOL_NAME(labsound_exported_types_size));
 
 		return cdefs;
 	}

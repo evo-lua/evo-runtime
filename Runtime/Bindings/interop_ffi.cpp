@@ -48,14 +48,14 @@ EMBED_BINARY(interop_exported_types, "Runtime/Bindings/interop_exports.h")
 namespace interop_ffi {
 
 	std::string getTypeDefinitions() {
-		size_t totalSize = interop_aliased_types_size + interop_exported_types_size + 1;
+		size_t totalSize = SYMBOL_NAME(interop_aliased_types_size) + SYMBOL_NAME(interop_exported_types_size) + 1;
 
 		std::string cdefs;
 		cdefs.reserve(totalSize);
 
-		cdefs.append(interop_aliased_types, interop_aliased_types_size);
+		cdefs.append(SYMBOL_NAME(interop_aliased_types), SYMBOL_NAME(interop_aliased_types_size));
 		cdefs.append("\n");
-		cdefs.append(interop_exported_types, interop_exported_types_size);
+		cdefs.append(SYMBOL_NAME(interop_exported_types), SYMBOL_NAME(interop_exported_types_size));
 
 		return cdefs;
 	}

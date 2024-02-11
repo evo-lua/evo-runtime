@@ -25,7 +25,7 @@ namespace runtime_ffi {
 	}
 
 	std::string getTypeDefinitions() {
-		return runtime_exported_types;
+		return std::string(SYMBOL_NAME(runtime_exported_types), SYMBOL_NAME(runtime_exported_types_size));
 	}
 
 	void* getExportsTable() {
