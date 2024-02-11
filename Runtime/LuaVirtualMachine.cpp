@@ -165,7 +165,15 @@ void LuaVirtualMachine::BindStaticLibraryExports(const std::string fieldName, vo
 	lua_getfield(m_luaState, -1, "bindings");
 
 	if(lua_istable(m_luaState, -1)) {
+		lua_newtable(m_luaState);
+
+		constexpr const char* cdefs = "PLACEHOLDER: Insert the actual C definitions here";
+		lua_pushstring(m_luaState, cdefs);
+		lua_setfield(m_luaState, -2, "cdefs");
+
 		lua_pushlightuserdata(m_luaState, staticExportsTable);
+		lua_setfield(m_luaState, -2, "exports");
+
 		lua_setfield(m_luaState, -2, fieldName.c_str());
 	}
 

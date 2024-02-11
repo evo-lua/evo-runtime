@@ -5,7 +5,8 @@ assert(bindings, "Failed to load static FFI export tables")
 
 -- The FFI bindings have to be made available ASAP so that the various libraries can be used
 -- For details, see https://evo-lua.github.io/docs/background-information/luajit/static-ffi-bindings/
-for libraryName, staticExportsTable in pairs(bindings) do
+for libraryName, binding in pairs(bindings) do
+	local staticExportsTable = binding.exports
 	local ffiBindings = require(libraryName)
 	ffiBindings.initialize()
 	local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
