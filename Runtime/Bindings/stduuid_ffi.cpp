@@ -87,7 +87,7 @@ EMBED_BINARY(stduuid_exported_types, "Runtime/Bindings/stduuid_exports.h")
 namespace stduuid_ffi {
 
 	std::string getTypeDefinitions() {
-		return std::string(stduuid_exported_types);
+		return std::string(SYMBOL_NAME(stduuid_exported_types));
 	}
 
 	void* getExportsTable() {

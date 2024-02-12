@@ -7,6 +7,7 @@
 
 // Should replace this with std::embed (or even just C23 #embed) later
 #if defined(__APPLE__)
+#define SYMBOL_NAME(name) name
 #define EMBED_BINARY(name, filename)                 \
 	__asm__(".section __DATA,__rodata\n"             \
 			"   .globl _" #name "\n"                 \
@@ -23,6 +24,7 @@
 	extern const char _##name[];                     \
 	extern const unsigned int _##name##_size;
 #elif defined(__linux__)
+#define SYMBOL_NAME(name) name
 #define EMBED_BINARY(name, filename)                        \
 	__asm__(".section .rodata\n"                            \
 			"   .globl " #name "\n" #name ":\n"             \
@@ -36,6 +38,7 @@
 	extern const char name[];                               \
 	extern const unsigned int name##_size;
 #else
+#define SYMBOL_NAME(name) name
 #define EMBED_BINARY(name, filename)                        \
 	__asm__(".section .rodata\n"                            \
 			"   .globl " #name "\n" #name ":\n"             \

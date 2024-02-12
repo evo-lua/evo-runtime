@@ -230,9 +230,9 @@ namespace glfw_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(glfw_aliased_types);
+		cdefs.append(SYMBOL_NAME(glfw_aliased_types));
 		cdefs.append("\n");
-		cdefs.append(glfw_exported_types);
+		cdefs.append(SYMBOL_NAME(glfw_exported_types));
 
 		return cdefs;
 	}

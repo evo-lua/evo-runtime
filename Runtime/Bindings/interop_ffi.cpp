@@ -50,9 +50,9 @@ namespace interop_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(interop_aliased_types);
+		cdefs.append(SYMBOL_NAME(interop_aliased_types));
 		cdefs.append("\n");
-		cdefs.append(interop_exported_types);
+		cdefs.append(SYMBOL_NAME(interop_exported_types));
 
 		return cdefs;
 	}

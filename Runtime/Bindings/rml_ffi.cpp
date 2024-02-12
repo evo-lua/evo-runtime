@@ -194,9 +194,9 @@ namespace rml_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(rml_aliased_types);
+		cdefs.append(SYMBOL_NAME(rml_aliased_types));
 		cdefs.append("\n");
-		cdefs.append(rml_exported_types);
+		cdefs.append(SYMBOL_NAME(rml_exported_types));
 
 		return cdefs;
 	}

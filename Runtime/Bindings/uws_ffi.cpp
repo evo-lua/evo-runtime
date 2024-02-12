@@ -201,9 +201,9 @@ namespace uws_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(uws_aliased_types);
+		cdefs.append(SYMBOL_NAME(uws_aliased_types));
 		cdefs.append("\n");
-		cdefs.append(uws_exported_types);
+		cdefs.append(SYMBOL_NAME(uws_exported_types));
 
 		return cdefs;
 	}
