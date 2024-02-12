@@ -222,17 +222,20 @@ void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_e
 	});
 }
 
-EMBED_BINARY(glfw_aliased_types, "Runtime/Bindings/glfw_aliases.h")
-EMBED_BINARY(glfw_exported_types, "Runtime/Bindings/glfw_exports.h")
-
 namespace glfw_ffi {
+
+	#include "glfw_aliases_generated.h"
+	#include "glfw_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(glfw_aliased_types));
+		std::string aliasedTypes(*Runtime_Bindings_glfw_aliases_h, Runtime_Bindings_glfw_aliases_h_len);
+		std::string exportedTypes(*Runtime_Bindings_glfw_exports_h, Runtime_Bindings_glfw_exports_h_len);
+
+		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(glfw_exported_types));
+		cdefs.append(exportedTypes));
 
 		return cdefs;
 	}
