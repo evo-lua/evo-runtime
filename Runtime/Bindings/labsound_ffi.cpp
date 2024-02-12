@@ -393,17 +393,20 @@ void labsound_print_graph(labsound_audio_node_t root_node) {
 	});
 }
 
-EMBED_BINARY(labsound_aliased_types, "Runtime/Bindings/labsound_aliases.h")
-EMBED_BINARY(labsound_exported_types, "Runtime/Bindings/labsound_exports.h")
-
 namespace labsound_ffi {
+
+	#include "labsound_aliases_generated.h"
+	#include "labsound_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(labsound_aliased_types));
+		std::string aliasedTypes(*Runtime_Bindings_labsound_aliases_h, Runtime_Bindings_labsound_aliases_h_len);
+		std::string exportedTypes(*Runtime_Bindings_labsound_exports_h, Runtime_Bindings_labsound_exports_h_len);
+
+		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(labsound_exported_types));
+		cdefs.append(exportedTypes));
 
 		return cdefs;
 	}
