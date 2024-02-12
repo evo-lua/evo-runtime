@@ -116,9 +116,9 @@ namespace webview_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(webview_aliased_types));
+		cdefs.append(webview_aliased_types);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(webview_exported_types));
+		cdefs.append(webview_exported_types);
 
 		return cdefs;
 	}

@@ -15,9 +15,9 @@ namespace webgpu_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(webgpu_aliased_types));
+		cdefs.append(webgpu_aliased_types);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(webgpu_exported_types));
+		cdefs.append(webgpu_exported_types);
 
 		return cdefs;
 	}

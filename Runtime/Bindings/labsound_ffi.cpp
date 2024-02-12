@@ -401,9 +401,9 @@ namespace labsound_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(labsound_aliased_types));
+		cdefs.append(labsound_aliased_types);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(labsound_exported_types));
+		cdefs.append(labsound_exported_types);
 
 		return cdefs;
 	}
