@@ -97,6 +97,7 @@ local EvoBuildTarget = {
 			["iconv_exports_generated.h"] = "Runtime/Bindings/iconv_exports.h",
 		},
 		["Runtime/Bindings/labsound_ffi.cpp"] = {
+			["labsound_aliases_generated.h"] = "Runtime/Bindings/labsound_aliases.h",
 			["labsound_exports_generated.h"] = "Runtime/Bindings/labsound_exports.h",
 		},
 		["Runtime/Bindings/stbi_ffi.cpp"] = {
@@ -113,22 +114,25 @@ local EvoBuildTarget = {
 			["webview_aliases_generated.h"] = "Runtime/Bindings/webview_aliases.h",
 			["webview_exports_generated.h"] = "Runtime/Bindings/webview_exports.h",
 		},
+		["Runtime/Bindings/runtime_ffi.cpp"] = {
+			["runtime_exports_generated.h"] = "Runtime/Bindings/runtime_exports.h",
+		},
+		["Runtime/Bindings/interop_ffi.cpp"] = {
+			["interop_aliases_generated.h"] = "Runtime/Bindings/interop_aliases.h",
+			["interop_exports_generated.h"] = "Runtime/Bindings/interop_exports.h",
+		},
 		["Runtime/Bindings/rml_ffi.cpp"] = {
+			["rml_aliases_generated.h"] = "Runtime/Bindings/rml_aliases.h",
 			["rml_exports_generated.h"] = "Runtime/Bindings/rml_exports.h",
 		}, -- TODO order
 		["Runtime/Bindings/glfw_ffi.cpp"] = {
 			["glfw_aliases_generated.h"] = "Runtime/Bindings/glfw_aliases.h",
 			["glfw_exports_generated.h"] = "Runtime/Bindings/glfw_exports.h",
 		},
-		-- ["Runtime/Bindings/glfw_aliases.h"] = "glfw_aliases_generated.h",
-		-- ["Runtime/Bindings/glfw_exports.h"] = "glfw_exports_generated.h",
-		-- ["Runtime/Bindings/rml_aliases.h"] = "rml_aliases_generated.h",
-		-- ["Runtime/Bindings/rml_exports.h"] = "rml_exports_generated.h",
-		-- ["Runtime/Bindings/stduuid_exports.h"] = "stduuid_exports_generated.h",
-		-- ["Runtime/Bindings/uws_aliases.h"] = "uws_aliases_generated.h",
-		-- ["Runtime/Bindings/uws_exports.h"] = "uws_exports_generated.h",
-		-- ["Runtime/Bindings/webgpu_exports.h"] = "webgpu_exports_generated.h",
-		-- ["Runtime/Bindings/webview_exports.h"] = "webview_exports_generated.h",
+		["Runtime/Bindings/webgpu_ffi.cpp"] = {
+			["webgpu_aliases_generated.h"] = "Runtime/Bindings/webgpu_aliases.h",
+			["webgpu_exports_generated.h"] = "Runtime/Bindings/webgpu_exports.h",
+		},
 	},
 	includeDirectories = {
 		NinjaBuildTools.DEFAULT_BUILD_DIRECTORY_NAME, -- For auto-generated headers (e.g., PCRE2)
