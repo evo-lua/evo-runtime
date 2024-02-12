@@ -13,17 +13,17 @@ unusedFunction:Runtime/LuaVirtualMachine.cpp
 unusedFunction:Runtime/Bindings/RmlUi_Renderer_WebGPU.cpp
 
 // FFI exports used from Lua, which cppcheck can't see
-unusedStructMember:Runtime/Bindings/crypto_ffi.hpp
-unusedStructMember:Runtime/Bindings/glfw_ffi.hpp
-unusedStructMember:Runtime/Bindings/iconv_ffi.hpp
-unusedStructMember:Runtime/Bindings/interop_ffi.hpp
-unusedStructMember:Runtime/Bindings/labsound_ffi.hpp
-unusedStructMember:Runtime/Bindings/rml_ffi.hpp
-unusedStructMember:Runtime/Bindings/runtime_ffi.hpp
-unusedStructMember:Runtime/Bindings/stbi_ffi.hpp
-unusedStructMember:Runtime/Bindings/stduuid_ffi.hpp
-unusedStructMember:Runtime/Bindings/uws_ffi.hpp
-unusedStructMember:Runtime/Bindings/webgpu_ffi.hpp
+unusedStructMember:Runtime/Bindings/crypto_exports.hpp
+unusedStructMember:Runtime/Bindings/glfw_exports.hpp
+unusedStructMember:Runtime/Bindings/iconv_exports.hpp
+unusedStructMember:Runtime/Bindings/interop_exports.hpp
+unusedStructMember:Runtime/Bindings/labsound_exports.hpp
+unusedStructMember:Runtime/Bindings/rml_exports.hpp
+unusedStructMember:Runtime/Bindings/runtime_exports.hpp
+unusedStructMember:Runtime/Bindings/stbi_exports.hpp
+unusedStructMember:Runtime/Bindings/stduuid_exports.hpp
+unusedStructMember:Runtime/Bindings/uws_exports.hpp
+unusedStructMember:Runtime/Bindings/webgpu_exports.hpp
 
 // PerSocketData is actually used, but cppcheck can't see it
 unusedStructMember:Runtime/Bindings/WebServer.hpp
