@@ -146,7 +146,7 @@ function BuildTarget:ProcessNativeSources()
 		local defines = self:GetDefines()
 		ninjaFile:AddBuildEdge(
 			outputFile,
-			"compile " .. cppSourceFilePath, --.. " || " .. table.concat(dependencies, " "),
+			"compile " .. cppSourceFilePath .. " " .. table.concat(dependencies, " "),
 			{ includes = includes, defines = defines }
 		)
 
