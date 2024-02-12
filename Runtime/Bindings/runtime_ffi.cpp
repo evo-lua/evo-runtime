@@ -22,7 +22,7 @@ namespace runtime_ffi {
 		dotty(assignedLuaState);
 	}
 
-	#include "runtime_exports_generated.h"
+#include "runtime_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		return std::string(*Runtime_Bindings_runtime_exports_h, Runtime_Bindings_runtime_exports_h_len);

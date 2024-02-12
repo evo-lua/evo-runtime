@@ -9,8 +9,8 @@ const char* wgpu_version() {
 
 namespace webgpu_ffi {
 
-	#include "webgpu_aliases_generated.h"
-	#include "webgpu_exports_generated.h"
+#include "webgpu_aliases_generated.h"
+#include "webgpu_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;

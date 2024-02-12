@@ -195,8 +195,8 @@ void uws_webserver_add_any_route(uws_webserver_t server, const char* route) {
 
 namespace uws_ffi {
 
-	#include "uws_aliases_generated.h"
-	#include "uws_exports_generated.h"
+#include "uws_aliases_generated.h"
+#include "uws_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;

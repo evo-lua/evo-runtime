@@ -110,8 +110,8 @@ namespace webview_ffi {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
 	}
 
-	#include "webview_aliases_generated.h"
-	#include "webview_exports_generated.h"
+#include "webview_aliases_generated.h"
+#include "webview_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;

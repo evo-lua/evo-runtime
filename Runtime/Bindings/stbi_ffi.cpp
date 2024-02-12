@@ -203,7 +203,7 @@ void stbi_abgr_to_rgba(stbi_image_t* image) {
 
 namespace stbi_ffi {
 
-	#include "stbi_exports_generated.h"
+#include "stbi_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		return std::string(*Runtime_Bindings_stbi_exports_h, Runtime_Bindings_stbi_exports_h_len);

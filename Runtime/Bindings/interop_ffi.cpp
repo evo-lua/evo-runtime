@@ -44,8 +44,8 @@ void queue_destroy(std::queue<deferred_event_t>* queue) {
 
 namespace interop_ffi {
 
-	#include "interop_aliases_generated.h"
-	#include "interop_exports_generated.h"
+#include "interop_aliases_generated.h"
+#include "interop_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;

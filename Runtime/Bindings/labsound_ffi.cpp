@@ -395,8 +395,8 @@ void labsound_print_graph(labsound_audio_node_t root_node) {
 
 namespace labsound_ffi {
 
-	#include "labsound_aliases_generated.h"
-	#include "labsound_exports_generated.h"
+#include "labsound_aliases_generated.h"
+#include "labsound_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;

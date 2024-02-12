@@ -224,8 +224,8 @@ void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_e
 
 namespace glfw_ffi {
 
-	#include "glfw_aliases_generated.h"
-	#include "glfw_exports_generated.h"
+#include "glfw_aliases_generated.h"
+#include "glfw_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;

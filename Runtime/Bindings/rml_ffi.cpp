@@ -188,8 +188,8 @@ namespace rml_ffi {
 		return rml_ffi::assignedLuaState;
 	}
 
-	#include "rml_aliases_generated.h"
-	#include "rml_exports_generated.h"
+#include "rml_aliases_generated.h"
+#include "rml_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;
