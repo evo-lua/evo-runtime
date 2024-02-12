@@ -178,9 +178,6 @@ void rml_process_content_scale_callback(rml_context_t context_pointer, float xsc
 	RmlGLFW::ProcessContentScaleCallback(context, xscale);
 }
 
-EMBED_BINARY(rml_aliased_types, "Runtime/Bindings/rml_aliases.h")
-EMBED_BINARY(rml_exported_types, "Runtime/Bindings/rml_exports.h")
-
 namespace rml_ffi {
 	lua_State* assignedLuaState;
 	void assignLuaState(lua_State* L) {
@@ -191,12 +188,18 @@ namespace rml_ffi {
 		return rml_ffi::assignedLuaState;
 	}
 
+	#include "rml_aliases_generated.h"
+	#include "rml_exports_generated.h"
+
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(rml_aliased_types));
+		std::string aliasedTypes(*Runtime_Bindings_rml_aliases_h, Runtime_Bindings_rml_aliases_h_len);
+		std::string exportedTypes(*Runtime_Bindings_rml_exports_h, Runtime_Bindings_rml_exports_h_len);
+
+		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(rml_exported_types));
+		cdefs.append(exportedTypes));
 
 		return cdefs;
 	}
