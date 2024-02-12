@@ -19,7 +19,7 @@ public:
 	bool CompileChunk(std::string chunk, std::string chunkName);
 	bool RunCompiledChunk();
 	bool SetGlobalArgs(int argc, char* argv[]);
-	void BindStaticLibraryExports(std::string fieldName, void* staticExportsTable, std::string cdefs);
+	void BindStaticLibraryExports(std::string fieldName, void* staticExportsTable);
 	void CreateGlobalNamespace(std::string name);
 	void AssignGlobalVariable(std::string key, std::string value);
 	void AssignGlobalVariable(std::string key, void* lightUserdataPointer);

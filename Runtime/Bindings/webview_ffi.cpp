@@ -17,9 +17,6 @@
 #include "webview_windows.hpp"
 #endif
 
-EMBED_BINARY(webview_aliased_types, "Runtime/Bindings/webview_aliases.h")
-EMBED_BINARY(webview_exported_types, "Runtime/Bindings/webview_exports.h")
-
 namespace webview_ffi {
 	webview_t webview_create(int withDevToolsEnabled, void* existingNativeWindow) {
 		return new WebviewBrowserEngine(withDevToolsEnabled, existingNativeWindow);
@@ -111,19 +108,6 @@ namespace webview_ffi {
 
 	bool webview_set_icon(webview_t w, const char* file_path) {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
-	}
-
-	std::string getTypeDefinitions() {
-		size_t totalSize = SYMBOL_NAME(webview_aliased_types_size) + SYMBOL_NAME(webview_exported_types_size) + 1;
-
-		std::string cdefs;
-		cdefs.reserve(totalSize);
-
-		cdefs.append(SYMBOL_NAME(webview_aliased_types), SYMBOL_NAME(webview_aliased_types_size));
-		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(webview_exported_types), SYMBOL_NAME(webview_exported_types_size));
-
-		return cdefs;
 	}
 
 	void* getExportsTable() {

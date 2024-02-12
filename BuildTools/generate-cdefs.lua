@@ -52,7 +52,6 @@ local inputFiles = {
 	"rml_aliases.h",
 	"rml_exports.h",
 	"runtime_exports.h",
-	"rml_exports.h",
 	"stbi_exports.h",
 	"stduuid_exports.h",
 	"uws_aliases.h",

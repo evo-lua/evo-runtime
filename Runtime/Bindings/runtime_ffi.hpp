@@ -15,6 +15,5 @@ namespace runtime_ffi {
 	// REPL
 	void runtime_repl_start();
 
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

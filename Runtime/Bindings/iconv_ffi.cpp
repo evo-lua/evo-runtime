@@ -47,13 +47,7 @@ iconv_result_t iconv_convert(char* input, size_t input_length, const char* input
 	return result;
 }
 
-EMBED_BINARY(iconv_exported_types, "Runtime/Bindings/iconv_exports.h")
-
 namespace iconv_ffi {
-
-	std::string getTypeDefinitions() {
-		return std::string(SYMBOL_NAME(iconv_exported_types), SYMBOL_NAME(iconv_exported_types_size));
-	}
 
 	void* getExportsTable() {
 		static struct static_iconv_exports_table exports_table;

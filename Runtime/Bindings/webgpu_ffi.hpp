@@ -8,6 +8,5 @@
 #include "webgpu_exports.h"
 
 namespace webgpu_ffi {
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

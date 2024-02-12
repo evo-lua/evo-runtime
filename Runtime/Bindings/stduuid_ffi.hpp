@@ -10,6 +10,5 @@ bool uuid_create_v5(const char* namespace_uuid_str, const char* name, uuid_rfc_s
 bool uuid_create_system(uuid_rfc_string_t* result);
 
 namespace stduuid_ffi {
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

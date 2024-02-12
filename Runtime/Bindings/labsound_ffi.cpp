@@ -393,23 +393,7 @@ void labsound_print_graph(labsound_audio_node_t root_node) {
 	});
 }
 
-EMBED_BINARY(labsound_aliased_types, "Runtime/Bindings/labsound_aliases.h")
-EMBED_BINARY(labsound_exported_types, "Runtime/Bindings/labsound_exports.h")
-
 namespace labsound_ffi {
-
-	std::string getTypeDefinitions() {
-		size_t totalSize = SYMBOL_NAME(labsound_aliased_types_size) + SYMBOL_NAME(labsound_exported_types_size) + 1;
-
-		std::string cdefs;
-		cdefs.reserve(totalSize);
-
-		cdefs.append(SYMBOL_NAME(labsound_aliased_types), SYMBOL_NAME(labsound_aliased_types_size));
-		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(labsound_exported_types), SYMBOL_NAME(labsound_exported_types_size));
-
-		return cdefs;
-	}
 
 	void* getExportsTable() {
 		static struct static_labsound_exports_table exports_table;

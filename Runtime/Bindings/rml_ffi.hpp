@@ -17,6 +17,5 @@ typedef GLFWwindow* glfw_window_t;
 namespace rml_ffi {
 	void assignLuaState(lua_State* L);
 	lua_State* getAssignedLuaState();
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

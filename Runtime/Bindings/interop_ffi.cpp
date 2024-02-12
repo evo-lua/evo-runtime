@@ -42,23 +42,7 @@ void queue_destroy(std::queue<deferred_event_t>* queue) {
 	delete queue;
 }
 
-EMBED_BINARY(interop_aliased_types, "Runtime/Bindings/interop_aliases.h")
-EMBED_BINARY(interop_exported_types, "Runtime/Bindings/interop_exports.h")
-
 namespace interop_ffi {
-
-	std::string getTypeDefinitions() {
-		size_t totalSize = SYMBOL_NAME(interop_aliased_types_size) + SYMBOL_NAME(interop_exported_types_size) + 1;
-
-		std::string cdefs;
-		cdefs.reserve(totalSize);
-
-		cdefs.append(SYMBOL_NAME(interop_aliased_types), SYMBOL_NAME(interop_aliased_types_size));
-		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(interop_exported_types), SYMBOL_NAME(interop_exported_types_size));
-
-		return cdefs;
-	}
 
 	void* getExportsTable() {
 		static struct static_interop_exports_table exports_table;

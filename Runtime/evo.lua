@@ -1,4 +1,5 @@
 local bindings = require("bindings")
+local cdefs = require("cdefs")
 local ffi = require("ffi")
 
 assert(bindings, "Failed to load static FFI export tables")
@@ -8,6 +9,10 @@ assert(bindings, "Failed to load static FFI export tables")
 for libraryName, binding in pairs(bindings) do
 	local staticExportsTable = binding.exports
 	local ffiBindings = require(libraryName)
+	for index, cdef in ipairs(cdefs[libraryName]) do
+		bindings[libraryName].cdefs = bindings[libraryName].cdefs .. "\n" .. cdef
+	end
+
 	ffiBindings.initialize()
 	local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
 	local ffiExportsTable = ffi.cast(expectedStructName, staticExportsTable)

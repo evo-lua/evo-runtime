@@ -31,6 +31,5 @@ void glfw_set_character_input_callback(GLFWwindow* window, std::queue<deferred_e
 #include "glfw_exports.h"
 
 namespace glfw_ffi {
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

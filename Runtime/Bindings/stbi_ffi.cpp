@@ -201,13 +201,7 @@ void stbi_abgr_to_rgba(stbi_image_t* image) {
 	}
 }
 
-EMBED_BINARY(stbi_exported_types, "Runtime/Bindings/stbi_exports.h")
-
 namespace stbi_ffi {
-
-	std::string getTypeDefinitions() {
-		return std::string(SYMBOL_NAME(stbi_exported_types), SYMBOL_NAME(stbi_exported_types_size));
-	}
 
 	void* getExportsTable() {
 		static struct static_stbi_exports_table stbi_exports_table;

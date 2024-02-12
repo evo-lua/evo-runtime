@@ -7,23 +7,7 @@ const char* wgpu_version() {
 	return WGPU_VERSION;
 }
 
-EMBED_BINARY(webgpu_aliased_types, "Runtime/Bindings/webgpu_aliases.h")
-EMBED_BINARY(webgpu_exported_types, "Runtime/Bindings/webgpu_exports.h")
-
 namespace webgpu_ffi {
-
-	std::string getTypeDefinitions() {
-		size_t totalSize = SYMBOL_NAME(webgpu_aliased_types_size) + SYMBOL_NAME(webgpu_exported_types_size) + 1;
-
-		std::string cdefs;
-		cdefs.reserve(totalSize);
-
-		cdefs.append(SYMBOL_NAME(webgpu_aliased_types), SYMBOL_NAME(webgpu_aliased_types_size));
-		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(webgpu_exported_types), SYMBOL_NAME(webgpu_exported_types_size));
-
-		return cdefs;
-	}
 
 	void* getExportsTable() {
 		static struct static_webgpu_exports_table webgpu_exports_table;

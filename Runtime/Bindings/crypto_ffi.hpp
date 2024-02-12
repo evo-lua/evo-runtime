@@ -8,7 +8,6 @@
 
 namespace crypto_ffi {
 
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 	const char* getVersionText();
 	long int getVersionNumber();

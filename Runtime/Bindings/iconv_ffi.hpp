@@ -8,6 +8,5 @@
 #include "iconv_exports.h"
 
 namespace iconv_ffi {
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

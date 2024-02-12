@@ -33,7 +33,6 @@ static_assert(sizeof(labsound_audio_stream_config_t::desired_channels) == sizeof
 static_assert(sizeof(labsound_audio_stream_config_t::desired_samplerate) == sizeof(lab::AudioStreamConfig::desired_samplerate));
 
 namespace labsound_ffi {
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }
 

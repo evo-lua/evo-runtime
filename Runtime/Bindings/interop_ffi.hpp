@@ -16,6 +16,5 @@ typedef std::queue<deferred_event_t>* deferred_event_queue_t;
 #include "interop_exports.h"
 
 namespace interop_ffi {
-	std::string getTypeDefinitions();
 	void* getExportsTable();
 }

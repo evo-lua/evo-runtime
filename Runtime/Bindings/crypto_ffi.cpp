@@ -105,14 +105,7 @@ fail:
 	OSSL_set_max_threads(nullptr, 0);
 }
 
-EMBED_BINARY(crypto_exported_types, "Runtime/Bindings/crypto_exports.h")
-
 namespace crypto_ffi {
-
-	std::string getTypeDefinitions() {
-		return std::string(SYMBOL_NAME(crypto_exported_types), SYMBOL_NAME(crypto_exported_types_size));
-		;
-	}
 
 	void* getExportsTable() {
 		static struct static_crypto_exports_table exports_table;
