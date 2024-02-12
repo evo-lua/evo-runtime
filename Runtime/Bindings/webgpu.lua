@@ -1,9 +1,9 @@
 local ffi = require("ffi")
 
-local wgpu = {}
+local webgpu = {}
 
 -- WebGPU API (from webgpu.h)
-wgpu.cdefs = [[
+webgpu.cdefs = [[
 	typedef uint32_t WGPUFlags;
 	typedef uint32_t WGPUBool;
 
@@ -1413,10 +1413,7 @@ wgpu.cdefs = [[
 	typedef void (*WGPUProcTextureViewReference)(WGPUTextureView textureView);
 	typedef void (*WGPUProcTextureViewRelease)(WGPUTextureView textureView);
 
-	]]
-	-- Native wgpu extension types (from wgpu.h)
-	.. [[
-
+	//	Native wgpu extension types (from wgpu.h)
 	typedef enum WGPUNativeSType {
 		// Start at 0003 since that's allocated range for wgpu-native
 		WGPUSType_DeviceExtras = 0x00030001,
@@ -1907,12 +1904,12 @@ wgpu.cdefs = [[
 	};
 ]]
 
-function wgpu.initialize()
-	ffi.cdef(wgpu.cdefs)
+function webgpu.initialize()
+	ffi.cdef(webgpu.cdefs)
 end
 
-function wgpu.version()
-	return ffi.string(wgpu.bindings.wgpu_version())
+function webgpu.version()
+	return ffi.string(webgpu.bindings.wgpu_version())
 end
 
-return wgpu
+return webgpu
