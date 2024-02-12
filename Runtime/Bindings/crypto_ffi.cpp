@@ -107,8 +107,9 @@ fail:
 
 namespace crypto_ffi {
 
+	#include "crypto_exports_generated.h"
+
 	std::string getTypeDefinitions() {
-		#include "crypto_exports_generated.h"
 		return std::string(*Runtime_Bindings_crypto_exports_h, Runtime_Bindings_crypto_exports_h_len);
 	}
 
