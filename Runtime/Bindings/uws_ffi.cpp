@@ -193,17 +193,20 @@ void uws_webserver_add_any_route(uws_webserver_t server, const char* route) {
 	static_cast<WebServer*>(server)->AddAnyRoute(std::string(route));
 }
 
-EMBED_BINARY(uws_aliased_types, "Runtime/Bindings/uws_aliases.h")
-EMBED_BINARY(uws_exported_types, "Runtime/Bindings/uws_exports.h")
-
 namespace uws_ffi {
+
+	#include "uws_aliases_generated.h"
+	#include "uws_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(uws_aliased_types));
+		std::string aliasedTypes(*Runtime_Bindings_uws_aliases_h, Runtime_Bindings_uws_aliases_h_len);
+		std::string exportedTypes(*Runtime_Bindings_uws_exports_h, Runtime_Bindings_uws_exports_h_len);
+
+		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(uws_exported_types));
+		cdefs.append(exportedTypes));
 
 		return cdefs;
 	}
