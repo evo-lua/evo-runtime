@@ -206,7 +206,7 @@ EMBED_BINARY(stbi_exported_types, "Runtime/Bindings/stbi_exports.h")
 namespace stbi_ffi {
 
 	std::string getTypeDefinitions() {
-		return std::string(SYMBOL_NAME(stbi_exported_types), SYMBOL_NAME(stbi_exported_types_size));
+		return std::string(SYMBOL_NAME(stbi_exported_types));
 	}
 
 	void* getExportsTable() {

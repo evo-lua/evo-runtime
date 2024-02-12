@@ -192,14 +192,11 @@ namespace rml_ffi {
 	}
 
 	std::string getTypeDefinitions() {
-		size_t totalSize = SYMBOL_NAME(rml_aliased_types_size) + SYMBOL_NAME(rml_exported_types_size) + 1;
-
 		std::string cdefs;
-		cdefs.reserve(totalSize);
 
-		cdefs.append(SYMBOL_NAME(rml_aliased_types), SYMBOL_NAME(rml_aliased_types_size));
+		cdefs.append(SYMBOL_NAME(rml_aliased_types));
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(rml_exported_types), SYMBOL_NAME(rml_exported_types_size));
+		cdefs.append(SYMBOL_NAME(rml_exported_types));
 
 		return cdefs;
 	}
