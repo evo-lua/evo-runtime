@@ -199,7 +199,7 @@ namespace rml_ffi {
 
 		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
-		cdefs.append(exportedTypes));
+		cdefs.append(exportedTypes);
 
 		return cdefs;
 	}
