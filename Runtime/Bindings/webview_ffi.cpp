@@ -17,9 +17,6 @@
 #include "webview_windows.hpp"
 #endif
 
-EMBED_BINARY(webview_aliased_types, "Runtime/Bindings/webview_aliases.h")
-EMBED_BINARY(webview_exported_types, "Runtime/Bindings/webview_exports.h")
-
 namespace webview_ffi {
 	webview_t webview_create(int withDevToolsEnabled, void* existingNativeWindow) {
 		return new WebviewBrowserEngine(withDevToolsEnabled, existingNativeWindow);
@@ -113,12 +110,18 @@ namespace webview_ffi {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
 	}
 
+	#include "webview_aliases_generated.h"
+	#include "webview_exports_generated.h"
+
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(webview_aliased_types));
+		std::string aliasedTypes(*Runtime_Bindings_webview_aliases_h, Runtime_Bindings_webview_aliases_h_len);
+		std::string exportedTypes(*Runtime_Bindings_webview_exports_h, Runtime_Bindings_webview_exports_h_len);
+
+		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(webview_exported_types));
+		cdefs.append(exportedTypes));
 
 		return cdefs;
 	}
