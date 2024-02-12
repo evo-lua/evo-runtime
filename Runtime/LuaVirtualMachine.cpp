@@ -167,6 +167,7 @@ void LuaVirtualMachine::BindStaticLibraryExports(const std::string fieldName, vo
 	if(lua_istable(m_luaState, -1)) {
 		lua_newtable(m_luaState);
 
+	// printf("Pushing cdefs for %s (%lld bytes): %s\n", fieldName.c_str(), cdefs.size(), cdefs.c_str());
 		lua_pushlstring(m_luaState, cdefs.c_str(), cdefs.size());
 		lua_setfield(m_luaState, -2, "cdefs");
 

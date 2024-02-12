@@ -87,7 +87,7 @@ namespace stduuid_ffi {
 #include "stduuid_exports_generated.h"
 
 	std::string getTypeDefinitions() {
-		return std::string(*Runtime_Bindings_stduuid_exports_h, Runtime_Bindings_stduuid_exports_h_len);
+		return std::string(reinterpret_cast<char*>(Runtime_Bindings_stduuid_exports_h), Runtime_Bindings_stduuid_exports_h_len);
 	}
 
 	void* getExportsTable() {

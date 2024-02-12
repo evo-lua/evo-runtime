@@ -110,7 +110,7 @@ namespace crypto_ffi {
 #include "crypto_exports_generated.h"
 
 	std::string getTypeDefinitions() {
-		return std::string(*Runtime_Bindings_crypto_exports_h, Runtime_Bindings_crypto_exports_h_len);
+		return std::string(reinterpret_cast<char*>(Runtime_Bindings_crypto_exports_h), Runtime_Bindings_crypto_exports_h_len);
 	}
 
 	void* getExportsTable() {

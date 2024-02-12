@@ -15,8 +15,8 @@ namespace webgpu_ffi {
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		std::string aliasedTypes(*Runtime_Bindings_webgpu_aliases_h, Runtime_Bindings_webgpu_aliases_h_len);
-		std::string exportedTypes(*Runtime_Bindings_webgpu_exports_h, Runtime_Bindings_webgpu_exports_h_len);
+		std::string aliasedTypes(reinterpret_cast<char*>(Runtime_Bindings_webgpu_aliases_h), Runtime_Bindings_webgpu_aliases_h_len);
+		std::string exportedTypes(reinterpret_cast<char*>(Runtime_Bindings_webgpu_exports_h), Runtime_Bindings_webgpu_exports_h_len);
 
 		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
