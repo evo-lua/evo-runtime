@@ -37,7 +37,7 @@ jobs:
       - name: Set up MSYS2 environment
         uses: msys2/setup-msys2@v2
         with:
-          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake mingw-w64-x86_64-rust
+          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake mingw-w64-x86_64-rust bash-completion
 
       - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
         run: |
@@ -63,6 +63,7 @@ jobs:
           echo "SCCACHE_UNIX_PATH=$SCCACHE_UNIX_PATH" >> $GITHUB_ENV
           echo "CC=${SCCACHE_UNIX_PATH} gcc" >> $GITHUB_ENV
           echo "CXX=${SCCACHE_UNIX_PATH} g++" >> $GITHUB_ENV
+          which xxd
 
       - name: Start Windows Audio engine # Required for LabSound tests
         run: net start audiosrv
