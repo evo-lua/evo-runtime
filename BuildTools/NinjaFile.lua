@@ -74,7 +74,7 @@ function NinjaFile:ToString()
 		end
 
 		if buildRule.generated then
-			fileContents[#fileContents + 1] = "  generated = " .. buildRule.generated and "1" or "0"
+			fileContents[#fileContents + 1] = "  generated = " .. (buildRule.generated and "1" or "0")
 		end
 	end
 
@@ -105,6 +105,7 @@ function NinjaFile:AddVariable(name, value)
 end
 
 function NinjaFile:AddRule(name, command, args)
+	print(name, args.generated)
 	self.ruleDeclarations[#self.ruleDeclarations + 1] = {
 		name = name,
 		command = command,
