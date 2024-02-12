@@ -8,8 +8,6 @@ extern "C" {
 
 #include <string>
 
-EMBED_BINARY(runtime_exported_types, "Runtime/Bindings/runtime_exports.h")
-
 namespace runtime_ffi {
 	lua_State* assignedLuaState;
 	void assignLuaState(lua_State* L) {
@@ -24,8 +22,10 @@ namespace runtime_ffi {
 		dotty(assignedLuaState);
 	}
 
+	#include "runtime_exports_generated.h"
+
 	std::string getTypeDefinitions() {
-		return std::string(SYMBOL_NAME(runtime_exported_types));
+		return std::string(*Runtime_Bindings_runtime_exports_h, Runtime_Bindings_runtime_exports_h_len);
 	}
 
 	void* getExportsTable() {
