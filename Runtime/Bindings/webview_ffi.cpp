@@ -2,8 +2,9 @@
 #include <string>
 
 #include "macros.hpp"
-#include "webview_ffi.hpp"
+
 #include "webview.h"
+#include "webview_exports.h"
 
 #ifdef __unix__
 #include "webview_unix.hpp"
