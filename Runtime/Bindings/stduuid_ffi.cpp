@@ -82,12 +82,12 @@ bool uuid_create_system(uuid_rfc_string_t* result) {
 	return true;
 }
 
-EMBED_BINARY(stduuid_exported_types, "Runtime/Bindings/stduuid_exports.h")
-
 namespace stduuid_ffi {
 
+	#include "stduuid_exports_generated.h"
+
 	std::string getTypeDefinitions() {
-		return std::string(SYMBOL_NAME(stduuid_exported_types));
+		return std::string(*Runtime_Bindings_stduuid_exports_h, Runtime_Bindings_stduuid_exports_h_len);
 	}
 
 	void* getExportsTable() {
