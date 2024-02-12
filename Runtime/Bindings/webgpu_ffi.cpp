@@ -7,17 +7,20 @@ const char* wgpu_version() {
 	return WGPU_VERSION;
 }
 
-EMBED_BINARY(webgpu_aliased_types, "Runtime/Bindings/webgpu_aliases.h")
-EMBED_BINARY(webgpu_exported_types, "Runtime/Bindings/webgpu_exports.h")
-
 namespace webgpu_ffi {
+
+	#include "webgpu_aliases_generated.h"
+	#include "webgpu_exports_generated.h"
 
 	std::string getTypeDefinitions() {
 		std::string cdefs;
 
-		cdefs.append(SYMBOL_NAME(webgpu_aliased_types));
+		std::string aliasedTypes(*Runtime_Bindings_webgpu_aliases_h, Runtime_Bindings_webgpu_aliases_h_len);
+		std::string exportedTypes(*Runtime_Bindings_webgpu_exports_h, Runtime_Bindings_webgpu_exports_h_len);
+
+		cdefs.append(aliasedTypes);
 		cdefs.append("\n");
-		cdefs.append(SYMBOL_NAME(webgpu_exported_types));
+		cdefs.append(exportedTypes));
 
 		return cdefs;
 	}
