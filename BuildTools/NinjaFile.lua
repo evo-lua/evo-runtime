@@ -72,6 +72,10 @@ function NinjaFile:ToString()
 		if buildRule.depfile then
 			fileContents[#fileContents + 1] = "  depfile = " .. buildRule.depfile
 		end
+
+		if buildRule.generated then
+			fileContents[#fileContents + 1] = "  generated = " .. buildRule.generated and "1" or "0"
+		end
 	end
 
 	if #self.buildEdges > 0 then
@@ -107,6 +111,7 @@ function NinjaFile:AddRule(name, command, args)
 		description = args.description,
 		deps = args.deps,
 		depfile = args.depfile,
+		generated = args.generated,
 	}
 end
 
