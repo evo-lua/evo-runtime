@@ -247,18 +247,11 @@ int luaopen_rapidjson(lua_State* L); // Declared here because there's no header 
 }
 
 static int json_encode_custom(lua_State* L) {
-	try {
-		CustomizedEncoder encode(L, 2);
-		StringBuffer s;
-		encode.encode(L, &s, 1);
-		lua_pushlstring(L, s.GetString(), s.GetSize());
-		return 1;
-	} catch(const std::exception& e) {
-		luaL_error(L, "error while encoding: %s", e.what());
-	} catch(...) {
-		luaL_error(L, "unknown error while encoding");
-	}
-	return 0;
+	CustomizedEncoder encode(L, 2);
+	StringBuffer s;
+	encode.encode(L, &s, 1);
+	lua_pushlstring(L, s.GetString(), s.GetSize());
+	return 1;
 }
 
 int json_get_version_string(lua_State* L) {
