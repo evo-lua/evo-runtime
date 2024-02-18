@@ -121,7 +121,17 @@ private:
 			}
 			[[fallthrough]];
 		default:
-			luaL_error(L, "unsupported value type : %s", lua_typename(L, t));
+			lua_pushvalue(L, idx);
+			lua_pushstring(L, "tostring");
+			lua_gettable(L, LUA_GLOBALSINDEX);
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 1);
+			const char* stringifiedValue = lua_tostring(L, -1);
+			if(stringifiedValue == nullptr) stringifiedValue = "nil";
+			lua_pop(L, 2);
+
+			lua_pushfstring(L, "Cannot encode value %s (only JSON-compatible primitive types are supported)", stringifiedValue);
+			lua_error(L);
 		}
 	}
 

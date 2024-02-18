@@ -62,6 +62,15 @@ describe("json", function()
 		it("should be an alias of json.encode", function()
 			assertEquals(json.stringify, json.encode)
 		end)
+
+		it("should propagate encoding errors to the Lua environment", function()
+			assertThrows(function()
+				json.stringify(print)
+			end, format(
+				"Cannot encode value %s (only JSON-compatible primitive types are supported)",
+				tostring(print)
+			))
+		end)
 	end)
 
 	describe("pretty", function()
