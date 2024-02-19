@@ -10,25 +10,25 @@ unknownMacro:Runtime/luajit_repl.c
 // Debug functions left in on purpose
 unusedFunction:Runtime/LuaVirtualMachine.cpp
 // Callback-based interface (hooks that will be called by RML)
-unusedFunction:Runtime/Bindings/RmlUi_Renderer_WebGPU.cpp
+unusedFunction:Runtime/Bindings/FFI/RmlUi_Renderer_WebGPU.cpp
 
 // FFI exports used from Lua, which cppcheck can't see
-unusedStructMember:Runtime/Bindings/crypto_exports.hpp
-unusedStructMember:Runtime/Bindings/glfw_exports.hpp
-unusedStructMember:Runtime/Bindings/iconv_exports.hpp
-unusedStructMember:Runtime/Bindings/interop_exports.hpp
-unusedStructMember:Runtime/Bindings/labsound_exports.hpp
-unusedStructMember:Runtime/Bindings/rml_exports.hpp
-unusedStructMember:Runtime/Bindings/runtime_exports.hpp
-unusedStructMember:Runtime/Bindings/stbi_exports.hpp
-unusedStructMember:Runtime/Bindings/stduuid_exports.hpp
-unusedStructMember:Runtime/Bindings/uws_exports.hpp
-unusedStructMember:Runtime/Bindings/webgpu_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/crypto/crypto_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/glfw/glfw_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/iconv/iconv_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/interop/interop_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/labsound/labsound_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/rml/rml_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/runtime/runtime_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/stbi/stbi_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/stduuid/stduuid_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/uws/uws_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/webgpu/webgpu_exports.hpp
 
 // PerSocketData is actually used, but cppcheck can't see it
-unusedStructMember:Runtime/Bindings/WebServer.hpp
+unusedStructMember:Runtime/Bindings/FFI/WebServer.hpp
 // The internal types are used by miniz, of course... 
 unusedStructMember:Runtime/Bindings/lminiz.hpp
 
 // Let's just hope we don't have to descent into the depths of Objective C hell ever again
-cstyleCast:Runtime/Bindings/webview_mac.hpp
+cstyleCast:Runtime/Bindings/FFI/webview/webview_mac.hpp

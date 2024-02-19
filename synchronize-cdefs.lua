@@ -1,6 +1,6 @@
 local transform = require("transform")
 
-local bindingsDirectory = path.join("Runtime", "Bindings")
+local bindingsDirectory = path.join("Runtime", "Bindings", "FFI")
 
 local function discoverBindings(dir)
 	local files = C_FileSystem.ReadDirectoryTree(dir)
@@ -26,7 +26,7 @@ local function string_explode_with_newlines(fileContents)
 end
 
 local function updateTypeDefinitions(binding)
-	local fileSystemPath = path.join(bindingsDirectory, binding .. ".lua")
+	local fileSystemPath = path.join(bindingsDirectory, binding, binding .. ".lua")
 	printf("Updating cdefs for %s (package name: %s)", transform.green(fileSystemPath), transform.blue(binding))
 	local moduleFileContents = C_FileSystem.ReadFile(fileSystemPath)
 
@@ -52,9 +52,9 @@ local function updateTypeDefinitions(binding)
 		cdefsEnd - cdefsStart - 2
 	)
 
-	local aliasedDefinitionsPath = path.join(bindingsDirectory, binding .. "_aliases.h")
+	local aliasedDefinitionsPath = path.join(bindingsDirectory, binding, binding .. "_aliases.h")
 	local hasAliases = C_FileSystem.Exists(aliasedDefinitionsPath)
-	local exportDefinitionsPath = path.join(bindingsDirectory, binding .. "_exports.h")
+	local exportDefinitionsPath = path.join(bindingsDirectory, binding, binding .. "_exports.h")
 
 	local updatedAliases = hasAliases and C_FileSystem.ReadFile(aliasedDefinitionsPath) or ""
 	local updatedDefinitions = C_FileSystem.ReadFile(exportDefinitionsPath)
