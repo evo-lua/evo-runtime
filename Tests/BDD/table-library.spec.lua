@@ -139,4 +139,18 @@ describe("table", function()
 			assertEquals(table.reverse(input), expectedOutput)
 		end)
 	end)
+
+	describe("invert", function()
+		it("should throw if a non-table value was passed", function()
+			assertThrows(function()
+				table.invert(42)
+			end, "Expected argument tableToInvert to be a table value, but received a number value instead")
+		end)
+
+		it("should return a copy of the table with the keys and values swapped", function()
+			local input = { "A", "B", "C" }
+			local expectedOutput = { A = 1, B = 2, C = 3 }
+			assertEquals(table.invert(input), expectedOutput)
+		end)
+	end)
 end)
