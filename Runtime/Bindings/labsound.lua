@@ -3,6 +3,13 @@ local ffi = require("ffi")
 local labsound = {}
 
 labsound.cdefs = [[
+typedef void* labsound_audio_device_t;
+typedef void* labsound_audio_context_t;
+typedef void* labsound_destination_node_t;
+typedef void* labsound_gain_node_t;
+typedef void* labsound_panner_node_t;
+typedef void* labsound_sampled_audio_node_t;
+typedef void* labsound_audio_node_t;
 // Equivalent to lab::AudioDeviceInfo, but using fixed list sizes for ease of use
 typedef struct labsound_audio_device_info_t {
 	int32_t index;
@@ -32,15 +39,6 @@ typedef enum LabSoundDistanceModel {
 	LabSoundDistanceModel_Inverse = 1,
 	LabSoundDistanceModel_Exponential = 2,
 } LabSoundDistanceModel;
-
-// Opaque to LuaJIT
-typedef void* labsound_audio_device_t;
-typedef void* labsound_audio_context_t;
-typedef void* labsound_destination_node_t;
-typedef void* labsound_gain_node_t;
-typedef void* labsound_panner_node_t;
-typedef void* labsound_sampled_audio_node_t;
-typedef void* labsound_audio_node_t;
 
 struct static_labsound_exports_table {
 

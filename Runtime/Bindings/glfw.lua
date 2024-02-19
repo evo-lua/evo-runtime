@@ -23,16 +23,13 @@ typedef struct GLFWvidmode {
 	int refreshRate;
 } GLFWvidmode;
 
-// Opaque pointer types don't need to be defined as they're only ever handled by glfw internals
 typedef struct GLFWcursor GLFWcursor;
 typedef struct GLFWwindow GLFWwindow;
 typedef struct GLFWmonitor GLFWmonitor;
-typedef void* deferred_event_queue_t;
+typedef void* deferred_event_queue_t; // Duplicated in the interop aliases (fix later)
 
-// These are passed to WebGPU, but the internals aren't exposed
 typedef void* WGPUSurface;
 typedef void* WGPUInstance;
-
 struct static_glfw_exports_table {
 	const char* (*glfw_version)(void);
 	int (*glfw_find_constant)(const char* name);
@@ -73,6 +70,7 @@ struct static_glfw_exports_table {
 	int (*glfw_get_key)(GLFWwindow* window, int key);
 	int (*glfw_get_mouse_button)(GLFWwindow* window, int button);
 };
+
 ]]
 
 function glfw.initialize()

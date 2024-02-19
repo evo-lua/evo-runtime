@@ -15,6 +15,8 @@ typedef void* wgpu_device_t;
 typedef void* deferred_event_queue_t;
 typedef void* rml_compiled_geometry_t;
 typedef void* glfw_window_t;
+typedef void* rml_context_t;
+typedef void* rml_document_t;
 
 struct static_rml_exports_table {
 	const char* (*rml_version)(void);

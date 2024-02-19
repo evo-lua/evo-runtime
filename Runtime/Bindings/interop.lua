@@ -3,6 +3,10 @@ local ffi = require("ffi")
 local interop = {}
 
 interop.cdefs = [[
+typedef void* wgpu_buffer_t;
+typedef void* wgpu_texture_t;
+
+typedef void* deferred_event_queue_t; // Duplicated in the glfw aliases (fix later)
 enum {
 	UNKNOWN_ERROR = 0, // Fallback (to catch uninitialized values)
 	ERROR_POPPING_EMPTY_QUEUE = 1,
@@ -135,9 +139,6 @@ typedef struct error_event_t {
 	int code;
 } error_event_t;
 
-typedef void* wgpu_buffer_t;
-typedef void* wgpu_texture_t;
-
 // RML UI events (may contain dynamically-allocated buffers
 typedef struct rml_geometry_info_t {
 	wgpu_buffer_t vertex_buffer;
@@ -250,9 +251,6 @@ typedef union deferred_event_t {
 	transformation_update_event_t transformation_update_details;
 } deferred_event_t;
 
-// Opaque types (must be managed from C++)
-typedef void* deferred_event_queue_t;
-
 struct static_interop_exports_table {
 	deferred_event_queue_t (*queue_create)(void);
 	size_t (*queue_size)(deferred_event_queue_t);
@@ -260,6 +258,7 @@ struct static_interop_exports_table {
 	deferred_event_t (*queue_pop_event)(deferred_event_queue_t);
 	void (*queue_destroy)(deferred_event_queue_t);
 };
+
 ]]
 
 function interop.initialize()
