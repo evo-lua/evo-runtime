@@ -1,6 +1,7 @@
 -- All paths are relative to the project root, since that's where the CI run will start
 local specFiles = {
 	"Tests/BDD/globals.spec.lua",
+	"Tests/BDD/bit-library.spec.lua",
 	"Tests/BDD/console-library.spec.lua",
 	"Tests/BDD/crypto-library.spec.lua",
 	"Tests/BDD/debug-library.spec.lua",
