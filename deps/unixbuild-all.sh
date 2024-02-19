@@ -3,7 +3,7 @@ set -e
 deps/discover-submodule-versions.sh
 
 deps/luajit-unixbuild.sh
-deps/webgpu-unixbuild.sh
+deps/wgpu-unixbuild.sh
 deps/openssl-unixbuild.sh
 deps/luaopenssl-unixbuild.sh
 deps/rapidjson-unixbuild.sh

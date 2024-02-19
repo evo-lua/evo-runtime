@@ -1,9 +1,8 @@
 local ffi = require("ffi")
 
-local webgpu = {}
+local wgpu = {}
 
--- WebGPU API (from webgpu.h)
-webgpu.cdefs = [[
+wgpu.cdefs = [[
 // WebGPU API (from webgpu.h)
 typedef uint32_t WGPUFlags;
 typedef uint32_t WGPUBool;
@@ -1635,7 +1634,7 @@ typedef struct WGPUSurfaceConfigurationExtras {
 
 typedef void (*WGPULogCallback)(WGPULogLevel level, char const* message, void* userdata);
 
-struct static_webgpu_exports_table {
+struct static_wgpu_exports_table {
 
 	// Custom methods
 	const char* (*wgpu_version)();
@@ -1900,12 +1899,12 @@ struct static_webgpu_exports_table {
 
 ]]
 
-function webgpu.initialize()
-	ffi.cdef(webgpu.cdefs)
+function wgpu.initialize()
+	ffi.cdef(wgpu.cdefs)
 end
 
-function webgpu.version()
-	return ffi.string(webgpu.bindings.wgpu_version())
+function wgpu.version()
+	return ffi.string(wgpu.bindings.wgpu_version())
 end
 
-return webgpu
+return wgpu

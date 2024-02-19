@@ -76,8 +76,8 @@ jobs:
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
-      - name: Build webgpu
-        run: deps/webgpu-windowsbuild.sh && ls ninjabuild-windows
+      - name: Build wgpu
+        run: deps/wgpu-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build luv and libuv
         run: deps/luv-windowsbuild.sh && ls ninjabuild-windows

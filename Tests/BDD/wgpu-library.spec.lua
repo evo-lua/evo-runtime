@@ -9,7 +9,7 @@ local function assertStruct(cdata)
 	assertEquals(type(cdata), "cdata")
 end
 
-describe("webgpu", function()
+describe("wgpu", function()
 	describe("bindings", function()
 		it("should export native wgpu extension enums", function()
 			-- WGPUNativeSType
