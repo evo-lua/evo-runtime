@@ -1,5 +1,7 @@
+local ffi = require("ffi")
+local json = require("json")
+
 describe("json", function()
-	local json = require("json")
 	local exportedFunctions = {
 		"array",
 		"decode",
@@ -70,6 +72,11 @@ describe("json", function()
 				"Cannot encode value %s (only JSON-compatible primitive types are supported)",
 				tostring(print)
 			))
+		end)
+
+		it("should be able to stringify cdata values", function()
+			local cdata = ffi.new("uint32_t", 42)
+			assertEquals(json.stringify({ cdata = cdata }), '{"cdata":"' .. tostring(cdata) .. '"}')
 		end)
 	end)
 

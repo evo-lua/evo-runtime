@@ -121,17 +121,23 @@ private:
 			}
 			[[fallthrough]];
 		default:
-			lua_pushvalue(L, idx);
-			lua_pushstring(L, "tostring");
-			lua_gettable(L, LUA_GLOBALSINDEX);
-			lua_pushvalue(L, -2);
-			lua_call(L, 1, 1);
-			const char* stringifiedValue = lua_tostring(L, -1);
-			if(stringifiedValue == nullptr) stringifiedValue = "nil";
-			lua_pop(L, 2);
+			if(!luaL_callmeta(L, idx, "__tostring")) { // Not a serializable object
+				lua_pushvalue(L, idx);
+				lua_pushstring(L, "tostring");
+				lua_gettable(L, LUA_GLOBALSINDEX);
+				lua_pushvalue(L, -2);
+				lua_call(L, 1, 1);
+				const char* stringifiedValue = lua_tostring(L, -1);
+				if(stringifiedValue == nullptr) stringifiedValue = "nil";
+				lua_pop(L, 2);
 
-			lua_pushfstring(L, "Cannot encode value %s (only JSON-compatible primitive types are supported)", stringifiedValue);
-			lua_error(L);
+				lua_pushfstring(L, "Cannot encode value %s (only JSON-compatible primitive types are supported)", stringifiedValue);
+				lua_error(L);
+			}
+
+			// While this isn't reversible, assume __tostring was set on purpose (serializable object)
+			encodeString(L, writer, -1);
+			lua_pop(L, 1);
 		}
 	}
 
