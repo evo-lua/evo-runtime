@@ -1,25 +1,3 @@
-local ffi = require("ffi")
-
-local webview = {}
-
-webview.cdefs = [[
-typedef void* webview_t;
-
-typedef void (*promise_function_t)(const char* seq, const char* req, void* arg);
-typedef void (*webview_dispatch_function_t)(webview_t w, void* arg);
-
-typedef struct {
-	unsigned int major;
-	unsigned int minor;
-	unsigned int patch;
-} webview_version_t;
-
-typedef struct {
-	webview_version_t version;
-	char version_number[32];
-	char pre_release[48];
-	char build_metadata[48];
-} webview_version_info_t;
 typedef void (*promise_function_t)(const char* seq, const char* req, void* arg);
 typedef void (*webview_dispatch_function_t)(webview_t w, void* arg);
 
@@ -44,17 +22,3 @@ struct static_webview_exports_table {
 	const webview_version_info_t* (*webview_version)(void);
 	bool (*webview_set_icon)(webview_t w, const char* file_path);
 };
-
-]]
-
-function webview.initialize()
-	ffi.cdef(webview.cdefs)
-end
-
-function webview.version()
-	local versionInfo = webview.bindings.webview_version()
-	local luaVersionString = ffi.string(versionInfo.version_number)
-	return luaVersionString
-end
-
-return webview

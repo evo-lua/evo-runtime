@@ -1,9 +1,3 @@
-local ffi = require("ffi")
-
-local uws = {}
-
-uws.cdefs = [[
-typedef void* uws_webserver_t;
 typedef enum {
 	None = 0,
 	Sent = 1,
@@ -75,15 +69,3 @@ typedef struct static_uws_exports_table {
 	void (*uws_webserver_add_any_route)(uws_webserver_t server, const char* route);
 
 } static_uws_exports_table;
-
-]]
-
-function uws.initialize()
-	ffi.cdef(uws.cdefs)
-end
-
-function uws.version()
-	return ffi.string(uws.bindings.uws_version())
-end
-
-return uws

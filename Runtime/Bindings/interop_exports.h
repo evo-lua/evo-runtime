@@ -1,12 +1,3 @@
-local ffi = require("ffi")
-
-local interop = {}
-
-interop.cdefs = [[
-typedef void* wgpu_buffer_t;
-typedef void* wgpu_texture_t;
-
-typedef void* deferred_event_queue_t; // Duplicated in the glfw aliases (fix later)
 enum {
 	UNKNOWN_ERROR = 0, // Fallback (to catch uninitialized values)
 	ERROR_POPPING_EMPTY_QUEUE = 1,
@@ -258,11 +249,3 @@ struct static_interop_exports_table {
 	deferred_event_t (*queue_pop_event)(deferred_event_queue_t);
 	void (*queue_destroy)(deferred_event_queue_t);
 };
-
-]]
-
-function interop.initialize()
-	ffi.cdef(interop.cdefs)
-end
-
-return interop

@@ -1,15 +1,3 @@
-local ffi = require("ffi")
-
-local labsound = {}
-
-labsound.cdefs = [[
-typedef void* labsound_audio_device_t;
-typedef void* labsound_audio_context_t;
-typedef void* labsound_destination_node_t;
-typedef void* labsound_gain_node_t;
-typedef void* labsound_panner_node_t;
-typedef void* labsound_sampled_audio_node_t;
-typedef void* labsound_audio_node_t;
 // Equivalent to lab::AudioDeviceInfo, but using fixed list sizes for ease of use
 typedef struct labsound_audio_device_info_t {
 	int32_t index;
@@ -98,15 +86,3 @@ struct static_labsound_exports_table {
 	void (*labsound_log_set_quiet)(int quiet_flag);
 	void (*labsound_print_graph)(labsound_audio_node_t root_node);
 };
-
-]]
-
-function labsound.initialize()
-	ffi.cdef(labsound.cdefs)
-end
-
-function labsound.version()
-	return ffi.string(labsound.bindings.labsound_version())
-end
-
-return labsound

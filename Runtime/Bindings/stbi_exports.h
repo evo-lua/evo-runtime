@@ -1,22 +1,3 @@
-local ffi = require("ffi")
-
-local stbi = {
-	COLOR_DEPTHS = {
-		[0] = "NO_CONVERSION",
-		[1] = "CONVERT_TO_GREYSCALE",
-		[2] = "CONVERT_TO_GREYSCALE_WITH_ALPHA",
-		[3] = "CONVERT_TO_RGB",
-		[4] = "CONVERT_TO_RGB_WITH_ALPHA",
-		NO_CONVERSION = 0,
-		CONVERT_TO_GREYSCALE = 1,
-		CONVERT_TO_GREYSCALE_WITH_ALPHA = 2,
-		CONVERT_TO_RGB = 3,
-		CONVERT_TO_RGB_WITH_ALPHA = 4,
-	},
-}
-
-stbi.cdefs = [[
-
 typedef unsigned char stbi_unsigned_char_t;
 typedef unsigned char* stbi_pixelbuffer_t;
 typedef unsigned char const* stbi_readonly_file_contents_t;
@@ -75,33 +56,3 @@ struct static_stbi_exports_table {
 
 	void (*stbi_abgr_to_rgba)(stbi_image_t* image);
 };
-
-]]
-
-function stbi.initialize()
-	ffi.cdef(stbi.cdefs)
-end
-
-function stbi.version()
-	return ffi.string(stbi.bindings.stbi_version())
-end
-
-function stbi.replace_pixel_color_rgba(image, sourceColor, replacementColor)
-	local pixelCount = image.width * image.height
-	local pixelBuffer = ffi.cast("stbi_color_t*", image.data)
-
-	for i = 0, pixelCount - 1 do
-		local pixel = pixelBuffer[i]
-
-		if
-			pixel.red == sourceColor.red
-			and pixel.green == sourceColor.green
-			and pixel.blue == sourceColor.blue
-			and pixel.alpha == sourceColor.alpha
-		then
-			pixelBuffer[i] = replacementColor
-		end
-	end
-end
-
-return stbi
