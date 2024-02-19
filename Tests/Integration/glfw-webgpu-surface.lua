@@ -1,6 +1,6 @@
 local ffi = require("ffi")
 local glfw = require("glfw")
-local webgpu = require("webgpu")
+local wgpu = require("wgpu")
 
 local isMacOS = (ffi.os == "OSX")
 if isMacOS then
@@ -9,7 +9,7 @@ if isMacOS then
 end
 
 local instanceDescriptor = ffi.new("WGPUInstanceDescriptor")
-local instance = webgpu.bindings.wgpu_create_instance(instanceDescriptor)
+local instance = wgpu.bindings.wgpu_create_instance(instanceDescriptor)
 if not instance then
 	error("Could not initialize WebGPU!")
 end
@@ -38,13 +38,13 @@ local function onAdapterRequested(status, adapter, message, pUserData)
 	assert(status == ffi.C.WGPURequestAdapterStatus_Success, "Failed to request adapter")
 	requestedAdapter = adapter
 end
-webgpu.bindings.wgpu_instance_request_adapter(instance, adapterOpts, onAdapterRequested, nil)
+wgpu.bindings.wgpu_instance_request_adapter(instance, adapterOpts, onAdapterRequested, nil)
 print("Got adapter: ", requestedAdapter)
 
 local function inspectAdapter(adapter)
-	local featureCount = webgpu.bindings.wgpu_adapter_enumerate_features(adapter, nil)
+	local featureCount = wgpu.bindings.wgpu_adapter_enumerate_features(adapter, nil)
 	local features = ffi.new("WGPUFeatureName[?]", featureCount)
-	webgpu.bindings.wgpu_adapter_enumerate_features(adapter, features)
+	wgpu.bindings.wgpu_adapter_enumerate_features(adapter, features)
 
 	print("Adapter features:")
 	for index = 0, tonumber(featureCount) - 1 do
@@ -53,7 +53,7 @@ local function inspectAdapter(adapter)
 	end
 
 	local limits = ffi.new("WGPUSupportedLimits")
-	local success = webgpu.bindings.wgpu_adapter_get_limits(adapter, limits)
+	local success = wgpu.bindings.wgpu_adapter_get_limits(adapter, limits)
 	assert(success, "Failed to get adapter limits")
 
 	print("Adapter limits:")
@@ -85,7 +85,7 @@ local function inspectAdapter(adapter)
 	print("\tmaxComputeWorkgroupsPerDimension: ", limits.limits.maxComputeWorkgroupsPerDimension)
 
 	local properties = ffi.new("WGPUAdapterProperties")
-	webgpu.bindings.wgpu_adapter_get_properties(adapter, properties)
+	wgpu.bindings.wgpu_adapter_get_properties(adapter, properties)
 
 	print("Adapter properties:")
 	print("\tvendorID: ", properties.vendorID)

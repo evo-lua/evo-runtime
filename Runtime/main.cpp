@@ -21,7 +21,7 @@ extern "C" {
 #include "stbi_ffi.hpp"
 #include "stduuid_ffi.hpp"
 #include "uws_ffi.hpp"
-#include "webgpu_ffi.hpp"
+#include "wgpu_ffi.hpp"
 #include "webview_ffi.hpp"
 
 #include "LuaVirtualMachine.hpp"
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	luaVM->BindStaticLibraryExports("runtime", runtime_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("stbi", stbi_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("stduuid", stduuid_ffi::getExportsTable());
-	luaVM->BindStaticLibraryExports("webgpu", webgpu_ffi::getExportsTable());
+	luaVM->BindStaticLibraryExports("wgpu", wgpu_ffi::getExportsTable());
 
 	// Some namespaces cannot be created from Lua because they store info only available in C++ land (like #defines)
 	luaVM->CreateGlobalNamespace("C_Runtime");

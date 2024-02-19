@@ -3,8 +3,8 @@
 #include <webgpu.h>
 #include <wgpu.h>
 
-#include "webgpu_exports.h"
+#include "wgpu_exports.h"
 
-namespace webgpu_ffi {
+namespace wgpu_ffi {
 	void* getExportsTable();
 }

@@ -60,8 +60,8 @@ jobs:
       - name: Generate versions.lua # Required for those libraries that don't export versioning information
         run: deps/discover-submodule-versions.sh && cat deps/versions.lua
 
-      - name: Build webgpu
-        run: deps/webgpu-unixbuild.sh && ls ninjabuild-unix
+      - name: Build wgpu
+        run: deps/wgpu-unixbuild.sh && ls ninjabuild-unix
 
       - name: Build luv and libuv
         run: deps/luv-unixbuild.sh && ls ninjabuild-unix

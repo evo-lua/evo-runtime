@@ -1,4 +1,4 @@
-struct static_webgpu_exports_table {
+struct static_wgpu_exports_table {
 
 	// Custom methods
 	const char* (*wgpu_version)();

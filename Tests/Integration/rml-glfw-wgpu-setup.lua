@@ -2,7 +2,7 @@ local ffi = require("ffi")
 local glfw = require("glfw")
 local interop = require("interop")
 local rml = require("rml")
-local webgpu = require("webgpu")
+local wgpu = require("wgpu")
 
 local isMacOS = (ffi.os == "OSX")
 if isMacOS then
@@ -27,7 +27,7 @@ end
 -- WebGPU setup
 local function createDevice(window)
 	local instanceDescriptor = ffi.new("WGPUInstanceDescriptor")
-	local instance = webgpu.bindings.wgpu_create_instance(instanceDescriptor)
+	local instance = wgpu.bindings.wgpu_create_instance(instanceDescriptor)
 	if not instance then
 		error("Could not initialize WebGPU!")
 	end
@@ -43,7 +43,7 @@ local function createDevice(window)
 		assert(status == ffi.C.WGPURequestAdapterStatus_Success, "Failed to request adapter")
 		requestedAdapter = adapter
 	end
-	webgpu.bindings.wgpu_instance_request_adapter(instance, adapterOptions, onAdapterRequested, nil)
+	wgpu.bindings.wgpu_instance_request_adapter(instance, adapterOptions, onAdapterRequested, nil)
 
 	local requestedDevice
 	local function onDeviceRequested(status, device, message, userdata)
@@ -61,7 +61,7 @@ local function createDevice(window)
 	end
 
 	local deviceDescriptor = ffi.new("WGPUDeviceDescriptor")
-	webgpu.bindings.wgpu_adapter_request_device(requestedAdapter, deviceDescriptor, onDeviceRequested, nil)
+	wgpu.bindings.wgpu_adapter_request_device(requestedAdapter, deviceDescriptor, onDeviceRequested, nil)
 	assert(requestedDevice, "onDeviceRequested did not trigger, but it should have")
 
 	return requestedDevice

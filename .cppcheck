@@ -23,7 +23,7 @@ unusedStructMember:Runtime/Bindings/FFI/runtime/runtime_exports.hpp
 unusedStructMember:Runtime/Bindings/FFI/stbi/stbi_exports.hpp
 unusedStructMember:Runtime/Bindings/FFI/stduuid/stduuid_exports.hpp
 unusedStructMember:Runtime/Bindings/FFI/uws/uws_exports.hpp
-unusedStructMember:Runtime/Bindings/FFI/webgpu/webgpu_exports.hpp
+unusedStructMember:Runtime/Bindings/FFI/wgpu/wgpu_exports.hpp
 
 // PerSocketData is actually used, but cppcheck can't see it
 unusedStructMember:Runtime/Bindings/FFI/WebServer.hpp

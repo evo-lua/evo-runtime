@@ -31,7 +31,7 @@ local specFiles = {
 	"Tests/BDD/uv-library.spec.lua",
 	"Tests/BDD/v8-library.spec.lua",
 	"Tests/BDD/vfs-library.spec.lua",
-	"Tests/BDD/webgpu-library.spec.lua",
+	"Tests/BDD/wgpu-library.spec.lua",
 	"Tests/BDD/webview-library.spec.lua",
 	"Tests/BDD/zlib-library.spec.lua",
 	"Tests/BDD/commandline-namespace.spec.lua",
