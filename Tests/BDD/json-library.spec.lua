@@ -1,5 +1,7 @@
+local ffi = require("ffi")
+local json = require("json")
+
 describe("json", function()
-	local json = require("json")
 	local exportedFunctions = {
 		"array",
 		"decode",
@@ -61,6 +63,20 @@ describe("json", function()
 
 		it("should be an alias of json.encode", function()
 			assertEquals(json.stringify, json.encode)
+		end)
+
+		it("should propagate encoding errors to the Lua environment", function()
+			assertThrows(function()
+				json.stringify(print)
+			end, format(
+				"Cannot encode value %s (only JSON-compatible primitive types are supported)",
+				tostring(print)
+			))
+		end)
+
+		it("should be able to stringify cdata values", function()
+			local cdata = ffi.new("uint32_t", 42)
+			assertEquals(json.stringify({ cdata = cdata }), '{"cdata":"' .. tostring(cdata) .. '"}')
 		end)
 	end)
 

@@ -121,7 +121,23 @@ private:
 			}
 			[[fallthrough]];
 		default:
-			luaL_error(L, "unsupported value type : %s", lua_typename(L, t));
+			if(!luaL_callmeta(L, idx, "__tostring")) { // Not a serializable object
+				lua_pushvalue(L, idx);
+				lua_pushstring(L, "tostring");
+				lua_gettable(L, LUA_GLOBALSINDEX);
+				lua_pushvalue(L, -2);
+				lua_call(L, 1, 1);
+				const char* stringifiedValue = lua_tostring(L, -1);
+				if(stringifiedValue == nullptr) stringifiedValue = "nil";
+				lua_pop(L, 2);
+
+				lua_pushfstring(L, "Cannot encode value %s (only JSON-compatible primitive types are supported)", stringifiedValue);
+				lua_error(L);
+			}
+
+			// While this isn't reversible, assume __tostring was set on purpose (serializable object)
+			encodeString(L, writer, -1);
+			lua_pop(L, 1);
 		}
 	}
 
@@ -247,18 +263,11 @@ int luaopen_rapidjson(lua_State* L); // Declared here because there's no header 
 }
 
 static int json_encode_custom(lua_State* L) {
-	try {
-		CustomizedEncoder encode(L, 2);
-		StringBuffer s;
-		encode.encode(L, &s, 1);
-		lua_pushlstring(L, s.GetString(), s.GetSize());
-		return 1;
-	} catch(const std::exception& e) {
-		luaL_error(L, "error while encoding: %s", e.what());
-	} catch(...) {
-		luaL_error(L, "unknown error while encoding");
-	}
-	return 0;
+	CustomizedEncoder encode(L, 2);
+	StringBuffer s;
+	encode.encode(L, &s, 1);
+	lua_pushlstring(L, s.GetString(), s.GetSize());
+	return 1;
 }
 
 int json_get_version_string(lua_State* L) {
