@@ -66,5 +66,16 @@ function table.reverse(tableToReverse)
 	return reversedTable
 end
 
+function table.invert(tableToInvert)
+	validation.validateTable(tableToInvert, "tableToInvert")
+
+	local invertedTable = {}
+	for key, value in pairs(tableToInvert) do
+		invertedTable[value] = key
+	end
+
+	return invertedTable
+end
+
 table.clear = require("table.clear")
 table.new = require("table.new")
