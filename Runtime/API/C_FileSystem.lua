@@ -2,7 +2,9 @@ local uv = require("uv")
 
 local path_join = path.join
 
-local C_FileSystem = {}
+local C_FileSystem = {
+	AsyncFileReader = require("AsyncFileReader"),
+}
 
 function C_FileSystem.Exists(fileSystemPath)
 	return uv.fs_access(fileSystemPath, "R")

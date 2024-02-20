@@ -27,6 +27,7 @@ local EvoBuildTarget = {
 		"Runtime/API/C_Runtime.lua",
 		"Runtime/API/C_Timer.lua",
 		"Runtime/API/C_WebView.lua",
+		"Runtime/API/FileSystem/AsyncFileReader.lua",
 		"Runtime/API/Networking/HttpServer.lua",
 		"Runtime/API/Networking/WebSocketTestClient.lua",
 		"Runtime/API/Networking/WebSocketServer.lua",
