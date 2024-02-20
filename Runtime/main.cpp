@@ -11,6 +11,7 @@ extern "C" {
 
 #include "macros.hpp"
 #include "crypto_ffi.hpp"
+#include "cpp_ffi.hpp"
 #include "glfw_ffi.hpp"
 #include "iconv_ffi.hpp"
 #include "interop_ffi.hpp"
@@ -45,6 +46,7 @@ int main(int argc, char* argv[]) {
 	// This package exports APIs for the embedded libraries; they're statically linked in and can't just use require
 	// Some glue code is needed to access them via FFI, but calls have lower overhead and they're easier to extend
 	luaVM->LoadPackage("bindings");
+	luaVM->BindStaticLibraryExports("cpp", cpp_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("crypto", crypto_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("iconv", iconv_ffi::getExportsTable());

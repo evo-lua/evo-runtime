@@ -13,6 +13,7 @@ unusedFunction:Runtime/LuaVirtualMachine.cpp
 unusedFunction:Runtime/Bindings/FFI/RmlUi_Renderer_WebGPU.cpp
 
 // FFI exports used from Lua, which cppcheck can't see
+unusedStructMember:Runtime/Bindings/FFI/cpp/cpp_exports.hpp
 unusedStructMember:Runtime/Bindings/FFI/crypto/crypto_exports.hpp
 unusedStructMember:Runtime/Bindings/FFI/glfw/glfw_exports.hpp
 unusedStructMember:Runtime/Bindings/FFI/iconv/iconv_exports.hpp
