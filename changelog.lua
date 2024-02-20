@@ -1,4 +1,26 @@
 local changelog = {
+	["v0.0.19"] = {
+		newFeatures = {
+			"LuaJIT's built-in CPU profiler can be enabled with the new `profile` command, or loaded as `profiler`",
+			"A `syslog` library has been added to support formatted log messages that tie into the event system",
+			"The `eval` command provides a REPL for interactive code evaluation if no arguments were passed",
+			"Added a `debug` command that allows running apps in debug mode, where event logging is always enabled",
+			"Two extensions have been added to the `table` library: `table.reverse` and `table.invert`",
+			"The `etrace` library received support for event listeners via  `publish`,`subscribe`, and `notify`",
+			"Optimized `bit` operations for C++ numerics are now available: `ceil`, `floor`, `ispow2`, and `width`",
+		},
+		improvements = {
+			"Error details are now displayed in reverse order by `bdd` reports to reduce the need for scrolling",
+			"Encoding options should correctly be passed to `json.stringify` (and not just `json.encode`)",
+			"Apps can now use `json.encode` with `cdata` and other values that provide a `__tostring` metamethod",
+		},
+		breakingChanges = {
+			"Replaced the global `EVO_VERSION` variable with `runtime.version()`, which supports multiple returns",
+			"The WebGPU FFI bindings are now preloaded as `wgpu` instead of `webgpu`, providing the same API",
+			"Moved `stbi.replace_pixel_color_rgba` from Lua to C++ (apps must now access it via `stbi.bindings`)",
+			"The `assertions.export` method has been replaced with a new `package.open` extension",
+		},
+	},
 	["v0.0.18"] = {
 		newFeatures = {
 			"Spatialized 3D audio is now available as part of the `labsound` bindings (`PannerNode` APIs)",
