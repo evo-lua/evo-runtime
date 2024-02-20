@@ -12,7 +12,7 @@ local C_Runtime = _G.C_Runtime
 function C_Runtime.RunBasicTests(specFiles)
 	validation.validateTable(specFiles, "specFiles")
 
-	assertions.export() -- Should probably remove this after global aliases are set up by the runtime
+	package.open(assertions)
 
 	bdd.setBasicReportMode()
 	local numFailedTests = bdd.startTestRunner(specFiles)
@@ -32,7 +32,7 @@ end
 function C_Runtime.RunMinimalTests(specFiles)
 	validation.validateTable(specFiles, "specFiles")
 
-	assertions.export() -- Should probably remove this after global aliases are set up by the runtime
+	package.open(assertions)
 
 	bdd.setMinimalReportMode()
 	local numFailedTests = bdd.startTestRunner(specFiles)
@@ -52,7 +52,7 @@ end
 function C_Runtime.RunDetailedTests(specFiles)
 	validation.validateTable(specFiles, "specFiles")
 
-	assertions.export() -- Should probably remove this after global aliases are set up by the runtime
+	package.open(assertions)
 
 	bdd.setDetailedReportMode()
 	local numFailedTests = bdd.startTestRunner(specFiles)

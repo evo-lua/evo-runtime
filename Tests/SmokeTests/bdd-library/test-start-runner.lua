@@ -1,3 +1,4 @@
+local assertions = require("assertions")
 local bdd = require("bdd")
 local transform = require("transform")
 
@@ -9,6 +10,8 @@ local green = transform.green
 local yellow = transform.yellow
 
 local startTestRunner = bdd.startTestRunner
+
+package.open(assertions)
 
 local function testNoFilesCase()
 	local function runWithNil()

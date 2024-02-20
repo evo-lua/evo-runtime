@@ -45,6 +45,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/FFI/webview/webview.lua",
 		"Runtime/Extensions/debugx.lua",
 		"Runtime/Extensions/jsonx.lua",
+		"Runtime/Extensions/packagex.lua",
 		"Runtime/Extensions/stringx.lua",
 		"Runtime/Extensions/tablex.lua",
 		"Runtime/Libraries/assertions.lua",

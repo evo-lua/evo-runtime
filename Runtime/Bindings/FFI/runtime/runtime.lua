@@ -40,6 +40,7 @@ function runtime.initialize()
 	-- Extended standard libraries should always be made available
 	require("debugx")
 	require("jsonx")
+	require("packagex")
 	require("stringx")
 	require("tablex")
 

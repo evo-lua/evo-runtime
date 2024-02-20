@@ -6,6 +6,5 @@ dofile("Tests/SmokeTests/assertions-library/test-assert-throws.lua")
 dofile("Tests/SmokeTests/assertions-library/test-assert-does-not-throw.lua")
 dofile("Tests/SmokeTests/assertions-library/test-assert-failure.lua")
 dofile("Tests/SmokeTests/assertions-library/test-assert-calls-function.lua")
-dofile("Tests/SmokeTests/assertions-library/test-export.lua")
 
 print("OK", "The assertions library should be functional")
