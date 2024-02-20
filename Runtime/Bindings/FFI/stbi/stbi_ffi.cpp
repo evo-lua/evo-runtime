@@ -200,6 +200,25 @@ void stbi_abgr_to_rgba(stbi_image_t* image) {
 	}
 }
 
+void stbi_replace_pixel_color_rgba(stbi_image_t* image, const stbi_color_t* source_color, const stbi_color_t* replacement_color) {
+	if(!image) return;
+	if(!image->data) return;
+
+	size_t pixelCount
+		= static_cast<size_t>(image->width) * static_cast<size_t>(image->height);
+	stbi_color_t* pixelBuffer = reinterpret_cast<stbi_color_t*>(image->data);
+
+	for(size_t index = 0; index < pixelCount; ++index) {
+		stbi_color_t* pixel = &pixelBuffer[index];
+
+		bool shouldReplacePixel = pixel->red == source_color->red && pixel->green == source_color->green && pixel->blue == source_color->blue && pixel->alpha == source_color->alpha;
+
+		if(shouldReplacePixel) {
+			*pixel = *replacement_color;
+		}
+	}
+}
+
 namespace stbi_ffi {
 
 	void* getExportsTable() {
@@ -229,6 +248,7 @@ namespace stbi_ffi {
 		stbi_exports_table.stbi_get_required_tga_size = stbi_get_required_tga_size;
 
 		stbi_exports_table.stbi_abgr_to_rgba = stbi_abgr_to_rgba;
+		stbi_exports_table.stbi_replace_pixel_color_rgba = stbi_replace_pixel_color_rgba;
 
 		return &stbi_exports_table;
 	}

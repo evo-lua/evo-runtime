@@ -864,50 +864,50 @@ describe("stbi", function()
 				assertEquals(image.data[7], 8)
 			end)
 		end)
-	end)
 
-	describe("replace_pixel_color_rgba", function()
-		it("should replace all pixels of the given color", function()
-			local image = ffi.new("stbi_image_t")
-			local originalBitmapContents =
-				C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
-			stbi.bindings.stbi_load_rgba(originalBitmapContents, #originalBitmapContents, image)
+		describe("replace_pixel_color_rgba", function()
+			it("should replace all pixels of the given color", function()
+				local image = ffi.new("stbi_image_t")
+				local originalBitmapContents =
+					C_FileSystem.ReadFile(path.join(FIXTURES_DIR, "8bpp-image-without-alpha.bmp"))
+				stbi.bindings.stbi_load_rgba(originalBitmapContents, #originalBitmapContents, image)
 
-			local sourceColor = ffi.new("stbi_color_t", { 0, 0, 255, 255 })
-			local replacementColor = ffi.new("stbi_color_t", { 255, 0, 0, 255 })
-			stbi.replace_pixel_color_rgba(image, sourceColor, replacementColor)
+				local sourceColor = ffi.new("stbi_color_t", { 0, 0, 255, 255 })
+				local replacementColor = ffi.new("stbi_color_t", { 255, 0, 0, 255 })
+				stbi.bindings.stbi_replace_pixel_color_rgba(image, sourceColor, replacementColor)
 
-			local expectedPixels = {
-				255,
-				0,
-				0,
-				255,
-				255,
-				0,
-				0,
-				255,
-				255,
-				0,
-				0,
-				255,
-				255,
-				0,
-				0,
-				255,
-				255,
-				0,
-				0,
-				255,
-				255,
-				0,
-				0,
-				255,
-			}
+				local expectedPixels = {
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+					255,
+					0,
+					0,
+					255,
+				}
 
-			local BYTES_PER_PIXEL = 4 -- RGBA
-			for i = 0, image.width * image.height * BYTES_PER_PIXEL - 1 do
-				assertEquals(image.data[i], expectedPixels[i + 1])
-			end
+				local BYTES_PER_PIXEL = 4 -- RGBA
+				for i = 0, image.width * image.height * BYTES_PER_PIXEL - 1 do
+					assertEquals(image.data[i], expectedPixels[i + 1])
+				end
+			end)
 		end)
 	end)
 
