@@ -64,7 +64,7 @@ namespace webview_ffi {
 	}
 
 	void webview_set_size(webview_t w, int width, int height,
-		int hints) {
+		webview_hint_t hints) {
 		static_cast<WebviewBrowserEngine*>(w)->set_size(width, height, hints);
 	}
 
@@ -131,6 +131,7 @@ namespace webview_ffi {
 		webview_exports_table.webview_unbind = webview_unbind;
 		webview_exports_table.webview_version = webview_version;
 		webview_exports_table.webview_set_icon = webview_set_icon;
+		webview_exports_table.webview_get_native_handle = webview_get_native_handle;
 
 		return &webview_exports_table;
 	}

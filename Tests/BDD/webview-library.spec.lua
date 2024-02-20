@@ -41,8 +41,7 @@ describe("webview", function()
 
 		describe("run_once", function()
 			it("should not block the event loop", function()
-				local WEBVIEW_HINT_NONE = 0
-				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				webview.bindings.webview_set_size(view, 640, 480, ffi.C.WEBVIEW_HINT_NONE)
 				webview.bindings.webview_set_title(view, "Le window")
 
 				local numUpdates = 0
@@ -69,8 +68,7 @@ describe("webview", function()
 			it("should toggle the fullscreen state of the window", function()
 				-- We can't actually test this, but it should at least not crash...
 
-				local WEBVIEW_HINT_NONE = 0
-				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				webview.bindings.webview_set_size(view, 640, 480, ffi.C.WEBVIEW_HINT_NONE)
 				webview.bindings.webview_set_title(view, "Fullscreen window")
 
 				webview.bindings.webview_toggle_fullscreen(view)
@@ -94,8 +92,7 @@ describe("webview", function()
 			local expectedFileExtension = extensions[ffi.os]
 
 			it("should return false if the icon file does not exist", function()
-				local WEBVIEW_HINT_NONE = 0
-				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				webview.bindings.webview_set_size(view, 640, 480, ffi.C.WEBVIEW_HINT_NONE)
 				webview.bindings.webview_set_title(view, "Icon window")
 
 				local success = webview.bindings.webview_set_icon(view, "does_not_exist.png")
@@ -105,9 +102,8 @@ describe("webview", function()
 			end)
 
 			it("should retun true if the icon file exists and is in the right OS-dependent format", function()
-				-- Can't really check th icon, but it should load without errors and never crash
-				local WEBVIEW_HINT_NONE = 0
-				webview.bindings.webview_set_size(view, 640, 480, WEBVIEW_HINT_NONE)
+				-- Can't really check the icon, but it should load without errors and never crash
+				webview.bindings.webview_set_size(view, 640, 480, ffi.C.WEBVIEW_HINT_NONE)
 				webview.bindings.webview_set_title(view, "Icon window")
 
 				local success =
