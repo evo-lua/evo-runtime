@@ -16,6 +16,7 @@ local specFiles = {
 	"Tests/BDD/miniz-library.spec.lua",
 	"Tests/BDD/openssl-library.spec.lua",
 	"Tests/BDD/oop-library.spec.lua",
+	"Tests/BDD/package-library.spec.lua",
 	"Tests/BDD/path-library.spec.lua",
 	"Tests/BDD/profiler-library.spec.lua",
 	"Tests/BDD/regex-library.spec.lua",
