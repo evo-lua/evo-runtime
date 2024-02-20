@@ -41,7 +41,6 @@
 
 static lua_State* globalL = NULL;
 static const char* progname = LUA_PROGNAME;
-static char* empty_argv[2] = { NULL, NULL };
 
 #if !LJ_TARGET_CONSOLE
 static void lstop(lua_State* L, lua_Debug* ar) {
