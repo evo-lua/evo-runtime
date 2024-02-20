@@ -416,7 +416,7 @@ function evo.discoverAndRunTests(command, argv)
 		end
 
 		_G.arg = appArgs
-		assertions.export()
+		package.open(assertions)
 		return dofile(evo.DEFAULT_TEST_SCRIPT)
 	end
 

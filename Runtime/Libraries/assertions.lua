@@ -335,30 +335,6 @@ function assertions.assertEquals(firstValue, secondValue)
 	error(errorMessage, 0)
 end
 
-function assertions.export()
-	local functionsToExport = {
-		"assertTrue",
-		"assertFalse",
-		"assertNil",
-		"assertThrows",
-		"assertDoesNotThrow",
-		"assertFailure",
-		"assertCallsFunction",
-		"assertEqualStrings",
-		"assertEqualNumbers",
-		"assertApproximatelyEquals",
-		"assertEqualTables",
-		"assertEqualBooleans",
-		"assertEqualPointers",
-		"assertEqualBytes",
-		"assertEquals",
-	}
-
-	for index, functionName in ipairs(functionsToExport) do
-		_G[functionName] = assertions[functionName]
-	end
-end
-
 function assertions.assertApproximatelyEquals(firstNumber, secondNumber)
 	return assertions.assertEqualNumbers(firstNumber, secondNumber, 1E-3)
 end
