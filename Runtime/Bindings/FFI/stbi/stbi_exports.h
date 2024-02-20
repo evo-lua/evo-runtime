@@ -55,4 +55,5 @@ struct static_stbi_exports_table {
 	size_t (*stbi_get_required_tga_size)(stbi_image_t* image);
 
 	void (*stbi_abgr_to_rgba)(stbi_image_t* image);
+	void (*stbi_replace_pixel_color_rgba)(stbi_image_t* image, const stbi_color_t* source_color, const stbi_color_t* replacement_color);
 };

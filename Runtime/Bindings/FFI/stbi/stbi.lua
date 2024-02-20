@@ -74,6 +74,7 @@ struct static_stbi_exports_table {
 	size_t (*stbi_get_required_tga_size)(stbi_image_t* image);
 
 	void (*stbi_abgr_to_rgba)(stbi_image_t* image);
+	void (*stbi_replace_pixel_color_rgba)(stbi_image_t* image, const stbi_color_t* source_color, const stbi_color_t* replacement_color);
 };
 
 ]]
@@ -84,24 +85,6 @@ end
 
 function stbi.version()
 	return ffi.string(stbi.bindings.stbi_version())
-end
-
-function stbi.replace_pixel_color_rgba(image, sourceColor, replacementColor)
-	local pixelCount = image.width * image.height
-	local pixelBuffer = ffi.cast("stbi_color_t*", image.data)
-
-	for i = 0, pixelCount - 1 do
-		local pixel = pixelBuffer[i]
-
-		if
-			pixel.red == sourceColor.red
-			and pixel.green == sourceColor.green
-			and pixel.blue == sourceColor.blue
-			and pixel.alpha == sourceColor.alpha
-		then
-			pixelBuffer[i] = replacementColor
-		end
-	end
 end
 
 return stbi
