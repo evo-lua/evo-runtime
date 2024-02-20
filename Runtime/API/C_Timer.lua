@@ -3,7 +3,7 @@ local validation = require("validation")
 
 local coroutine_resume = coroutine.resume
 local coroutine_running = coroutine.running
-local coroutine_yield = coroutine.yield
+-- local coroutine_yield = coroutine.yield
 local uv_hrtime = uv.hrtime
 local uv_new_timer = uv.new_timer
 local validateFunction = validation.validateFunction
@@ -20,24 +20,24 @@ local timerStartTimes = {}
 function C_Timer.ResumeAfter(delayInMilliseconds)
 	validateNumber(delayInMilliseconds, "delayInMilliseconds")
 
-	local currentThread, isMainThread = coroutine.running()
-	if isMainThread then
-		error("Cannot yield from the main thread (wrap async task in a coroutine)", 0)
-	end
+	-- local currentThread, isMainThread = coroutine.running()
+	-- if isMainThread then
+	-- 	error("Cannot yield from the main thread (wrap async task in a coroutine)", 0)
+	-- end
 
 	local timer = uv_new_timer()
 
 	timer:start(delayInMilliseconds, 0, function()
 		timer:stop()
 		timer:close()
-
-		local ok, errorMessage = coroutine_resume(currentThread)
-		if not ok then
-			error("Error resuming coroutine: " .. errorMessage, 0)
-		end
+		uv.stop()
+		-- local ok, errorMessage = coroutine_resume(currentThread)
+		-- if not ok then
+		-- 	error("Error resuming coroutine: " .. errorMessage, 0)
+		-- end
 	end)
 
-	coroutine_yield()
+	uv.run()
 end
 
 function C_Timer.After(delayInMilliseconds, callback)
