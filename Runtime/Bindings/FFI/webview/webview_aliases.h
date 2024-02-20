@@ -9,6 +9,19 @@ typedef enum {
 	WEBVIEW_HINT_FIXED
 } webview_hint_t;
 
+typedef enum {
+	/// Top-level window. @c GtkWindow pointer (GTK), @c NSWindow pointer (Cocoa)
+	/// or @c HWND (Win32).
+	WEBVIEW_NATIVE_HANDLE_KIND_UI_WINDOW,
+	/// Browser widget. @c GtkWidget pointer (GTK), @c NSView pointer (Cocoa) or
+	/// @c HWND (Win32).
+	WEBVIEW_NATIVE_HANDLE_KIND_UI_WIDGET,
+	/// Browser controller. @c WebKitWebView pointer (WebKitGTK), @c WKWebView
+	/// pointer (Cocoa/WebKit) or @c ICoreWebView2Controller pointer
+	/// (Win32/WebView2).
+	WEBVIEW_NATIVE_HANDLE_KIND_BROWSER_CONTROLLER
+} webview_native_handle_kind_t;
+
 typedef void* webview_t;
 
 typedef void (*promise_function_t)(const char* seq, const char* req, void* arg);

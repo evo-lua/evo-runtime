@@ -21,4 +21,5 @@ struct static_webview_exports_table {
 	void (*webview_return)(webview_t w, const char* seq, int status, const char* result);
 	const webview_version_info_t* (*webview_version)(void);
 	bool (*webview_set_icon)(webview_t w, const char* file_path);
+	void* (*webview_get_native_handle)(webview_t w, webview_native_handle_kind_t kind);
 };
