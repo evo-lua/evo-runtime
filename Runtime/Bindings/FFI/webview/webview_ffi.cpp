@@ -64,7 +64,7 @@ namespace webview_ffi {
 	}
 
 	void webview_set_size(webview_t w, int width, int height,
-		int hints) {
+		webview_hint_t hints) {
 		static_cast<WebviewBrowserEngine*>(w)->set_size(width, height, hints);
 	}
 

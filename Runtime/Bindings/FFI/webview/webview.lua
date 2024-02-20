@@ -3,6 +3,17 @@ local ffi = require("ffi")
 local webview = {}
 
 webview.cdefs = [[
+typedef enum {
+	/// Width and height are default size.
+	WEBVIEW_HINT_NONE,
+	/// Width and height are minimum bounds.
+	WEBVIEW_HINT_MIN,
+	/// Width and height are maximum bounds.
+	WEBVIEW_HINT_MAX,
+	/// Window size can not be changed by a user.
+	WEBVIEW_HINT_FIXED
+} webview_hint_t;
+
 typedef void* webview_t;
 
 typedef void (*promise_function_t)(const char* seq, const char* req, void* arg);
@@ -33,7 +44,7 @@ struct static_webview_exports_table {
 	void (*webview_dispatch)(webview_t w, webview_dispatch_function_t fn, void* arg);
 	void* (*webview_get_window)(webview_t w);
 	void (*webview_set_title)(webview_t w, const char* title);
-	void (*webview_set_size)(webview_t w, int width, int height, int hints);
+	void (*webview_set_size)(webview_t w, int width, int height, webview_hint_t hints);
 	void (*webview_navigate)(webview_t w, const char* url);
 	void (*webview_set_html)(webview_t w, const char* html);
 	void (*webview_init)(webview_t w, const char* js);
