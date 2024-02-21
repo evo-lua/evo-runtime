@@ -7,10 +7,16 @@ local syslog = require("syslog")
 local uv = require("uv")
 local versions = require("versions")
 
+local require = require
+
 local runtime = {
 	signals = {},
 	aliases = {},
 	submodules = versions,
+	events = {
+		"MODULE_SEARCH_STARTED",
+		"MODULE_LOAD_REQUIRED",
+	},
 }
 
 runtime.cdefs = [[
@@ -27,6 +33,7 @@ struct static_runtime_exports_table {
 
 function runtime.initialize()
 	ffi.cdef(runtime.cdefs)
+	etrace.register(runtime.events)
 
 	-- An unhandled SIGPIPE error signal will crash servers on platforms that send it
 	-- This frequently happens when attempting to write to a closed socket and must be ignored
@@ -91,6 +98,9 @@ function runtime.initialize()
 	require("C_Runtime")
 	_G.C_Timer = require("C_Timer")
 	_G.C_WebView = require("C_WebView")
+
+	table.insert(package.searchers, 1, runtime.search)
+	_G.require = runtime.require
 end
 
 function runtime.version()
@@ -99,6 +109,15 @@ function runtime.version()
 
 	local majorVersion, minorVersion, patchVersion = versionString:match("(%d+)%.(%d+)%.*(%d*)")
 	return versionString, tonumber(majorVersion), tonumber(minorVersion), tonumber(patchVersion)
+end
+
+function runtime.search(moduleName)
+	EVENT("MODULE_SEARCH_STARTED", { moduleName = moduleName })
+end
+
+function runtime.require(moduleName)
+	EVENT("MODULE_LOAD_REQUIRED", { moduleName = moduleName })
+	return require(moduleName)
 end
 
 return runtime
