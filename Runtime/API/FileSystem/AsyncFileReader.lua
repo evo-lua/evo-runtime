@@ -9,7 +9,7 @@ local AsyncFileReader = {
 		"FILE_REQUEST_FAILED",
 		"FILE_REQUEST_COMPLETED",
 		"FILE_DESCRIPTOR_OPENED",
-		"FILE_ATTRIBUTES_AVAILABLE",
+		"FILE_STATUS_AVAILABLE",
 		"FILE_CONTENTS_AVAILABLE",
 		"FILE_DESCRIPTOR_CLOSED",
 	},
@@ -50,13 +50,13 @@ function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
 	uv.fs_fstat(payload.fileDescriptor, function(err, stat)
 		-- if err then return callback(err) end
 		EVENT(
-			"FILE_ATTRIBUTES_AVAILABLE",
+			"FILE_STATUS_AVAILABLE",
 			{ fileSystemPath = payload.fileSystemPath, fileDescriptor = payload.fileDescriptor, stat = stat }
 		)
 	end)
 end
 
-function AsyncFileReader:FILE_ATTRIBUTES_AVAILABLE(event, payload)
+function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 	-- TBD buffered reading, not all in one go
 	uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(err, data)
 		EVENT(
@@ -87,7 +87,7 @@ function AsyncFileReader:FILE_DESCRIPTOR_CLOSED(event, payload)
 end
 
 etrace.subscribe("FILE_DESCRIPTOR_OPENED", AsyncFileReader)
-etrace.subscribe("FILE_ATTRIBUTES_AVAILABLE", AsyncFileReader) -- FILE_STATUS_AVAILABLE?
+etrace.subscribe("FILE_STATUS_AVAILABLE", AsyncFileReader) -- FILE_STATUS_AVAILABLE?
 etrace.subscribe("FILE_CONTENTS_AVAILABLE", AsyncFileReader)
 etrace.subscribe("FILE_DESCRIPTOR_CLOSED", AsyncFileReader)
 
