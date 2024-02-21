@@ -1,5 +1,3 @@
 describe("AsyncFileReader", function()
-	describe("StartFileRequest", function()
-	
-	end)
+	describe("StartFileRequest", function() end)
 end)
