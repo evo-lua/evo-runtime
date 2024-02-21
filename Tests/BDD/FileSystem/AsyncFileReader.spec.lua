@@ -4,7 +4,6 @@ local uv = require("uv")
 local AsyncFileReader = require("Runtime.API.FileSystem.AsyncFileReader") -- C_FileSystem.AsyncFileReader
 
 local function assertEventTrigger(functionToObserve, expectedEvent, expectedPayload, numExpectedNotifications)
-
 	numExpectedNotifications = numExpectedNotifications or 1
 
 	etrace.clear()
@@ -17,7 +16,7 @@ local function assertEventTrigger(functionToObserve, expectedEvent, expectedPayl
 	local observedEvents = etrace.filter(expectedEvent)
 	assertEquals(#observedEvents, numExpectedNotifications)
 
-	for index=1, numExpectedNotifications, 1 do
+	for index = 1, numExpectedNotifications, 1 do
 		local event = observedEvents[index]
 		assertEquals(event.name, expectedEvent)
 		assertEquals(event.payload, expectedPayload)
@@ -33,9 +32,16 @@ end
 describe("AsyncFileReader", function()
 	describe("LoadFileContents", function()
 		it("should throw if the given path is invalid", function()
-			assertEventTrigger(function()
-				AsyncFileReader:LoadFileContents("does-not-exist")
-			end, "FILE_REQUEST_FAILED", { fileSystemPath = "does-not-exist", failureReason = "ENOENT: no such file or directory: does-not-exist"})
+			assertEventTrigger(
+				function()
+					AsyncFileReader:LoadFileContents("does-not-exist")
+				end,
+				"FILE_REQUEST_FAILED",
+				{
+					fileSystemPath = "does-not-exist",
+					failureReason = "ENOENT: no such file or directory: does-not-exist",
+				}
+			)
 		end)
 	end)
 end)
