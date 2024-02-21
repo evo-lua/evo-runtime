@@ -101,11 +101,11 @@ local submodules = {
 		abbreviatedName = "lrexlib",
 		displayName = "lrexlib",
 	},
-	rapidjson = {
+	["lua-rapidjson"] = {
 		path = "deps/xpol/lua-rapidjson",
 		branch = "master",
-		abbreviatedName = "json",
-		displayName = "rapidjson",
+		abbreviatedName = "lrjson",
+		displayName = "lua-rapidjson",
 	},
 	stb = {
 		path = "deps/nothings/stb",
@@ -154,6 +154,12 @@ local submodules = {
 		branch = "main",
 		abbreviatedName = "labsound",
 		displayName = "LabSound",
+	},
+	rapidjson = {
+		path = "deps/Tencent/rapidjson",
+		branch = "master",
+		abbreviatedName = "rjson",
+		displayName = "rapidjson",
 	},
 }
 
