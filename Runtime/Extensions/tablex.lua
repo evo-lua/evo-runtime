@@ -4,6 +4,8 @@ local ipairs = ipairs
 local pairs = pairs
 local type = type
 
+local table_insert = table.insert
+
 function table.contains(table, value)
 	validation.validateTable(table, "table")
 
@@ -75,6 +77,28 @@ function table.invert(tableToInvert)
 	end
 
 	return invertedTable
+end
+
+function table.keys(table)
+	validation.validateTable(table, "table")
+
+	local keys = {}
+	for key, value in pairs(table) do
+		table_insert(keys, key)
+	end
+
+	return keys
+end
+
+function table.values(table)
+	validation.validateTable(table, "table")
+
+	local values = {}
+	for key, value in pairs(table) do
+		table_insert(values, value)
+	end
+
+	return values
 end
 
 table.clear = require("table.clear")
