@@ -81,9 +81,14 @@ bool uuid_create_system(uuid_rfc_string_t* result) {
 
 namespace stduuid_ffi {
 
+	const char* stduuid_version() {
+		return STDUUID_VERSION;
+	}
+
 	void* getExportsTable() {
 		static struct static_stduuid_exports_table stduuid_exports_table;
 
+		stduuid_exports_table.stduuid_version = stduuid_version;
 		stduuid_exports_table.uuid_create_v4 = uuid_create_v4;
 		stduuid_exports_table.uuid_create_mt19937 = uuid_create_mt19937;
 		stduuid_exports_table.uuid_create_v5 = uuid_create_v5;
