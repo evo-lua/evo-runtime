@@ -49,7 +49,6 @@ function AsyncFileReader:LoadFileContents(fileSystemPath)
 end
 
 function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
-	-- TBD simpler way, just fs_read directly?
 	uv.fs_fstat(payload.fileDescriptor, function(err, stat)
 		-- if err then return callback(err) end
 		EVENT(
