@@ -1,3 +1,5 @@
+local ffi = require("ffi")
+
 local error = error
 local format = string.format
 local type = type
@@ -104,6 +106,19 @@ function validation.validateStruct(value, name)
 			0
 		)
 	end
+end
+
+function validation.validateExportsTable(exportsTable, cType)
+	local numExportedFunctions = ffi.sizeof(cType) / ffi.sizeof("void*")
+	local functionPointer = ffi.cast("void**", exportsTable)
+
+	for index = 0, numExportedFunctions - 1, 1 do
+		if functionPointer[index] == ffi.NULL then
+			return nil, index
+		end
+	end
+
+	return true, numExportedFunctions
 end
 
 return validation

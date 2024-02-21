@@ -1,15 +1,21 @@
 local bindings = require("bindings")
 local ffi = require("ffi")
+local validation = require("validation")
 
-assert(bindings, "Failed to load static FFI export tables")
+local format = string.format
+local table_insert = table.insert
+local pairs = pairs
 
 -- The FFI bindings have to be made available ASAP so that the various libraries can be used
 -- For details, see https://evo-lua.github.io/docs/background-information/luajit/static-ffi-bindings/
+assert(bindings, "Failed to load static FFI export tables")
 for libraryName, staticExportsTable in pairs(bindings) do
 	local ffiBindings = require(libraryName)
 	ffiBindings.initialize()
-	local expectedStructName = "struct static_" .. libraryName .. "_exports_table*"
-	local ffiExportsTable = ffi.cast(expectedStructName, staticExportsTable)
+	local expectedStructName = "struct static_" .. libraryName .. "_exports_table"
+	local ffiExportsTable = ffi.cast(expectedStructName .. "*", staticExportsTable)
+	local success, lastIndex = validation.validateExportsTable(ffiExportsTable, expectedStructName)
+	assert(success, format("Invalid exports table for library %s (entry %d is NULL)", libraryName, lastIndex))
 	ffiBindings.bindings = ffiExportsTable
 end
 
@@ -35,10 +41,6 @@ local vfs = require("vfs")
 local wgpu = require("wgpu")
 local webview = require("webview")
 local zlib = require("zlib")
-
-local format = string.format
-local table_insert = table.insert
-local pairs = pairs
 
 local EXIT_FAILURE = 1
 local EXPECTED_TEST_RUNNER_ENTRY_POINT = "test.lua"
