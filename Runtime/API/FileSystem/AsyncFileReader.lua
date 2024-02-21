@@ -39,7 +39,7 @@ function AsyncFileReader:LoadFileContents(fileSystemPath)
 	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(errorMessage, fileDescriptor)
 		-- handle err: if err then set failed, emit event, cancel request
 		if errorMessage then
-			EVENT("FILE_REQUEST_FAILED", {fileSystemPath = fileSystemPath, failureReason = errorMessage})
+			EVENT("FILE_REQUEST_FAILED", { fileSystemPath = fileSystemPath, failureReason = errorMessage })
 			return
 		end
 
@@ -51,8 +51,9 @@ end
 
 function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
 	uv.fs_fstat(payload.fileDescriptor, function(err, stat)
-
-		if err then error(err, 0) end
+		if err then
+			error(err, 0)
+		end
 		-- if err then return callback(err) end
 		EVENT(
 			"FILE_STATUS_AVAILABLE",
@@ -91,9 +92,9 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 			end
 
 			EVENT(
-					"FILE_CHUNK_AVAILABLE",
-					{ fileSystemPath = fileSystemPath, data = data, fileDescriptor = fileDescriptor }
-				)
+				"FILE_CHUNK_AVAILABLE",
+				{ fileSystemPath = fileSystemPath, data = data, fileDescriptor = fileDescriptor }
+			)
 
 			local newAccumulatedData = accumulatedData .. data
 			local newOffset = offset + toRead
