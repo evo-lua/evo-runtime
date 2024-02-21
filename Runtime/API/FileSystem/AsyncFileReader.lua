@@ -16,6 +16,7 @@ local AsyncFileReader = {
 	completedRequests = {},
 	failedRequests = {},
 	pendingRequests = {},
+	MODE_READABLE_WRITABLE = 438, -- 0o666
 }
 
 etrace.register(AsyncFileReader.events)
@@ -33,7 +34,7 @@ end
 function AsyncFileReader:StartFileRequest(fileSystemPath)
 	self.pendingRequests[fileSystemPath] = true
 	-- TBD store uv requests also? or pass as payload
-	uv.fs_open(fileSystemPath, "r", 438, function(err, fileDescriptor)
+	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(err, fileDescriptor)
 		-- handle err: if err then set failed, emit event, cancel request
 		EVENT("FILE_DESCRIPTOR_OPENED", { fileSystemPath = fileSystemPath, fileDescriptor = fileDescriptor })
 	end)
