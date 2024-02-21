@@ -10,13 +10,15 @@ local AsyncFileReader = {
 		"FILE_REQUEST_COMPLETED",
 		"FILE_DESCRIPTOR_OPENED",
 		"FILE_STATUS_AVAILABLE",
+		"FILE_CHUNK_AVAILABLE",
 		"FILE_CONTENTS_AVAILABLE",
 		"FILE_DESCRIPTOR_CLOSED",
 	},
 	completedRequests = {},
 	failedRequests = {},
 	pendingRequests = {},
-	MODE_READABLE_WRITABLE = 438, -- 0o666
+	MODE_READABLE_WRITABLE = 438, -- Octal: 666
+	CHUNK_SIZE_IN_BYTES = 1024 * 64,
 }
 
 etrace.register(AsyncFileReader.events)
@@ -27,11 +29,11 @@ function AsyncFileReader:GatherFileContents(fileSystemPaths)
 
 	for index, fileSystemPath in ipairs(fileSystemPaths) do
 		-- TBD what if already loading this file? Then, discard or error?
-		self:StartFileRequest(fileSystemPath)
+		self:LoadFileContents(fileSystemPath)
 	end
 end
 
-function AsyncFileReader:StartFileRequest(fileSystemPath)
+function AsyncFileReader:LoadFileContents(fileSystemPath)
 	self.pendingRequests[fileSystemPath] = true
 	-- TBD store uv requests also? or pass as payload
 	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(err, fileDescriptor)
@@ -58,13 +60,51 @@ function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
 end
 
 function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
-	-- TBD buffered reading, not all in one go
-	uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(err, data)
+	if payload.stat.size <= AsyncFileReader.CHUNK_SIZE_IN_BYTES then
+		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(err, data)
+			EVENT(
+				"FILE_CONTENTS_AVAILABLE",
+				{ fileSystemPath = payload.fileSystemPath, data = data, fileDescriptor = payload.fileDescriptor }
+			)
+		end)
+	else
+		self:ReadFileInChunks(payload.fileDescriptor, payload.fileSystemPath, payload.stat.size, 0)
+	end
+end
+
+function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSize, offset, accumulatedData)
+	accumulatedData = accumulatedData or ""
+
+	local toRead = math.min(AsyncFileReader.CHUNK_SIZE_IN_BYTES, fileSize - offset)
+	if toRead <= 0 then
 		EVENT(
 			"FILE_CONTENTS_AVAILABLE",
-			{ fileSystemPath = payload.fileSystemPath, data = data, fileDescriptor = payload.fileDescriptor }
+			{ fileSystemPath = fileSystemPath, data = accumulatedData, fileDescriptor = fileDescriptor }
 		)
-	end)
+	else
+		uv.fs_read(fileDescriptor, toRead, offset, function(err, data)
+			if err then
+				-- Handle error, possibly emit FILE_REQUEST_FAILED
+				return
+			end
+
+			EVENT(
+					"FILE_CHUNK_AVAILABLE",
+					{ fileSystemPath = fileSystemPath, data = data, fileDescriptor = fileDescriptor }
+				)
+
+			local newAccumulatedData = accumulatedData .. data
+			local newOffset = offset + toRead
+			if newOffset < fileSize then
+				self:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSize, newOffset, newAccumulatedData)
+			else
+				EVENT(
+					"FILE_CONTENTS_AVAILABLE",
+					{ fileSystemPath = fileSystemPath, data = newAccumulatedData, fileDescriptor = fileDescriptor }
+				)
+			end
+		end)
+	end
 end
 
 function AsyncFileReader:FILE_CONTENTS_AVAILABLE(event, payload)
@@ -89,6 +129,7 @@ end
 
 etrace.subscribe("FILE_DESCRIPTOR_OPENED", AsyncFileReader)
 etrace.subscribe("FILE_STATUS_AVAILABLE", AsyncFileReader) -- FILE_STATUS_AVAILABLE?
+etrace.subscribe("FILE_CHUNK_AVAILABLE", AsyncFileReader)
 etrace.subscribe("FILE_CONTENTS_AVAILABLE", AsyncFileReader)
 etrace.subscribe("FILE_DESCRIPTOR_CLOSED", AsyncFileReader)
 
