@@ -106,19 +106,19 @@ fail:
 namespace crypto_ffi {
 
 	void* getExportsTable() {
-		static struct static_crypto_exports_table exports_table;
+		static struct static_crypto_exports_table exports = {
+			.version_text = &getVersionText,
+			.version_number = &getVersionNumber,
 
-		exports_table.version_text = &getVersionText;
-		exports_table.version_number = &getVersionNumber;
+			.openssl_to_base64 = &openssl_to_base64,
+			.openssl_from_base64 = &openssl_from_base64,
+			.argon2_to_base64 = &argon2_to_base64,
+			.argon2_from_base64 = &argon2_from_base64,
+			.openssl_kdf_derive = &openssl_kdf_derive,
+			.openssl_crypto_memcmp = &CRYPTO_memcmp,
+		};
 
-		exports_table.openssl_to_base64 = &openssl_to_base64;
-		exports_table.openssl_from_base64 = &openssl_from_base64;
-		exports_table.argon2_to_base64 = &argon2_to_base64;
-		exports_table.argon2_from_base64 = &argon2_from_base64;
-		exports_table.openssl_kdf_derive = &openssl_kdf_derive;
-		exports_table.openssl_crypto_memcmp = &CRYPTO_memcmp;
-
-		return &exports_table;
+		return &exports;
 	}
 
 	const char* getVersionText() {

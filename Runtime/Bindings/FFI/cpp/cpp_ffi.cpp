@@ -7,13 +7,13 @@ namespace cpp_ffi {
 	}
 
 	void* getExportsTable() {
-		static struct static_cpp_exports_table exports_table;
+		static struct static_cpp_exports_table exports = {
+			.bit_ceil = &std::bit_ceil,
+			.bit_floor = &std::bit_floor,
+			.bit_width = &std_bit_width,
+			.has_single_bit = &std::has_single_bit,
+		};
 
-		exports_table.bit_ceil = &std::bit_ceil;
-		exports_table.bit_floor = &std::bit_floor;
-		exports_table.bit_width = &std_bit_width;
-		exports_table.has_single_bit = &std::has_single_bit;
-
-		return &exports_table;
+		return &exports;
 	}
 }

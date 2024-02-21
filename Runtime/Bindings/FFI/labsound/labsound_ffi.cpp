@@ -394,64 +394,64 @@ void labsound_print_graph(labsound_audio_node_t root_node) {
 namespace labsound_ffi {
 
 	void* getExportsTable() {
-		static struct static_labsound_exports_table exports_table;
+		static struct static_labsound_exports_table exports = {
 
-		exports_table.labsound_version = &labsound_version;
+			.labsound_version = &labsound_version,
 
-		// AudioDevice
-		exports_table.labsound_get_device_count = &labsound_get_device_count;
-		exports_table.labsound_get_device_info = &labsound_get_device_info;
-		exports_table.labsound_get_default_device_config = &labsound_get_default_device_config;
-		exports_table.labsound_device_create = &labsound_device_create;
-		exports_table.labsound_device_destroy = &labsound_device_destroy;
+			// AudioDevice
+			.labsound_get_device_count = &labsound_get_device_count,
+			.labsound_get_device_info = &labsound_get_device_info,
+			.labsound_get_default_device_config = &labsound_get_default_device_config,
+			.labsound_device_create = &labsound_device_create,
+			.labsound_device_destroy = &labsound_device_destroy,
 
-		// AudioContext
-		exports_table.labsound_context_create = &labsound_context_create;
-		exports_table.labsound_context_destroy = &labsound_context_destroy;
-		exports_table.labsound_context_connect = &labsound_context_connect;
-		exports_table.labsound_context_disconnect = &labsound_context_disconnect;
-		exports_table.labsound_context_load_hrtf_database = &labsound_context_load_hrtf_database;
-		exports_table.labsound_context_listener_set_forward = &labsound_context_listener_set_forward;
-		exports_table.labsound_context_listener_set_up_vector = &labsound_context_listener_set_up_vector;
-		exports_table.labsound_context_listener_set_position = &labsound_context_listener_set_position;
-		exports_table.labsound_context_listener_set_velocity = &labsound_context_listener_set_velocity;
-		exports_table.labsound_context_synchronize_connections = &labsound_context_synchronize_connections;
+			// AudioContext
+			.labsound_context_create = &labsound_context_create,
+			.labsound_context_destroy = &labsound_context_destroy,
+			.labsound_context_connect = &labsound_context_connect,
+			.labsound_context_disconnect = &labsound_context_disconnect,
+			.labsound_context_load_hrtf_database = &labsound_context_load_hrtf_database,
+			.labsound_context_listener_set_forward = &labsound_context_listener_set_forward,
+			.labsound_context_listener_set_up_vector = &labsound_context_listener_set_up_vector,
+			.labsound_context_listener_set_position = &labsound_context_listener_set_position,
+			.labsound_context_listener_set_velocity = &labsound_context_listener_set_velocity,
+			.labsound_context_synchronize_connections = &labsound_context_synchronize_connections,
 
-		// AudioDestinationNode
-		exports_table.labsound_destination_node_create = &labsound_destination_node_create;
-		exports_table.labsound_destination_node_destroy = &labsound_destination_node_destroy;
+			// AudioDestinationNode
+			.labsound_destination_node_create = &labsound_destination_node_create,
+			.labsound_destination_node_destroy = &labsound_destination_node_destroy,
 
-		// GainNode
-		exports_table.labsound_gain_node_create = &labsound_gain_node_create;
-		exports_table.labsound_gain_node_destroy = &labsound_gain_node_destroy;
-		exports_table.labsound_gain_node_set_value = &labsound_gain_node_set_value;
+			// GainNode
+			.labsound_gain_node_create = &labsound_gain_node_create,
+			.labsound_gain_node_destroy = &labsound_gain_node_destroy,
+			.labsound_gain_node_set_value = &labsound_gain_node_set_value,
 
-		// PannerNode
-		exports_table.labsound_panner_node_create = &labsound_panner_node_create;
-		exports_table.labsound_panner_node_destroy = &labsound_panner_node_destroy;
-		exports_table.labsound_panner_node_set_panning_model = &labsound_panner_node_set_panning_model;
-		exports_table.labsound_panner_node_set_velocity = &labsound_panner_node_set_velocity;
-		exports_table.labsound_panner_node_set_position = &labsound_panner_node_set_position;
-		exports_table.labsound_panner_node_set_orientation = &labsound_panner_node_set_orientation;
-		exports_table.labsound_panner_node_set_distance_model = &labsound_panner_node_set_distance_model;
-		exports_table.labsound_panner_node_set_ref_distance = &labsound_panner_node_set_ref_distance;
-		exports_table.labsound_panner_node_set_max_distance = &labsound_panner_node_set_max_distance;
-		exports_table.labsound_panner_node_set_rolloff_factor = &labsound_panner_node_set_rolloff_factor;
-		exports_table.labsound_panner_node_set_cone_inner_angle = &labsound_panner_node_set_cone_inner_angle;
-		exports_table.labsound_panner_node_set_cone_outer_angle = &labsound_panner_node_set_cone_outer_angle;
-		exports_table.labsound_panner_node_set_cone_outer_gain = &labsound_panner_node_set_cone_outer_gain;
+			// PannerNode
+			.labsound_panner_node_create = &labsound_panner_node_create,
+			.labsound_panner_node_destroy = &labsound_panner_node_destroy,
+			.labsound_panner_node_set_velocity = &labsound_panner_node_set_velocity,
+			.labsound_panner_node_set_position = &labsound_panner_node_set_position,
+			.labsound_panner_node_set_orientation = &labsound_panner_node_set_orientation,
+			.labsound_panner_node_set_panning_model = &labsound_panner_node_set_panning_model,
+			.labsound_panner_node_set_distance_model = &labsound_panner_node_set_distance_model,
+			.labsound_panner_node_set_ref_distance = &labsound_panner_node_set_ref_distance,
+			.labsound_panner_node_set_max_distance = &labsound_panner_node_set_max_distance,
+			.labsound_panner_node_set_rolloff_factor = &labsound_panner_node_set_rolloff_factor,
+			.labsound_panner_node_set_cone_inner_angle = &labsound_panner_node_set_cone_inner_angle,
+			.labsound_panner_node_set_cone_outer_angle = &labsound_panner_node_set_cone_outer_angle,
+			.labsound_panner_node_set_cone_outer_gain = &labsound_panner_node_set_cone_outer_gain,
 
-		// SampledAudioNode
-		exports_table.labsound_sampled_audio_node_from_file = &labsound_sampled_audio_node_from_file;
-		exports_table.labsound_sampled_audio_node_from_memory = &labsound_sampled_audio_node_from_memory;
-		exports_table.labsound_sampled_audio_node_destroy = &labsound_sampled_audio_node_destroy;
-		exports_table.labsound_sampled_audio_node_start = &labsound_sampled_audio_node_start;
-		exports_table.labsound_sampled_audio_node_stop = &labsound_sampled_audio_node_stop;
+			// SampledAudioNode
+			.labsound_sampled_audio_node_from_file = &labsound_sampled_audio_node_from_file,
+			.labsound_sampled_audio_node_from_memory = &labsound_sampled_audio_node_from_memory,
+			.labsound_sampled_audio_node_destroy = &labsound_sampled_audio_node_destroy,
+			.labsound_sampled_audio_node_start = &labsound_sampled_audio_node_start,
+			.labsound_sampled_audio_node_stop = &labsound_sampled_audio_node_stop,
 
-		exports_table.labsound_print_graph = &labsound_print_graph;
-		exports_table.labsound_log_set_quiet = &log_set_quiet;
+			.labsound_log_set_quiet = &log_set_quiet,
+			.labsound_print_graph = &labsound_print_graph,
+		};
 
-		return &exports_table;
+		return &exports;
 	}
-
 }
