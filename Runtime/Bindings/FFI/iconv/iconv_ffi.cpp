@@ -48,11 +48,11 @@ iconv_result_t iconv_convert(char* input, size_t input_length, const char* input
 namespace iconv_ffi {
 
 	void* getExportsTable() {
-		static struct static_iconv_exports_table exports_table;
+		static struct static_iconv_exports_table exports = {
+			.iconv_convert = &iconv_convert,
+		};
 
-		exports_table.iconv_convert = &iconv_convert;
-
-		return &exports_table;
+		return &exports;
 	}
 
 }

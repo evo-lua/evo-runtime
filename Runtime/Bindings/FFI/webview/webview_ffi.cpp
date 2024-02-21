@@ -110,29 +110,29 @@ namespace webview_ffi {
 	}
 
 	void* getExportsTable() {
-		static struct static_webview_exports_table webview_exports_table;
+		static struct static_webview_exports_table exports = {
+			.webview_create = webview_create,
+			.webview_destroy = webview_destroy,
+			.webview_toggle_fullscreen = webview_toggle_fullscreen,
+			.webview_run = webview_run,
+			.webview_run_once = webview_run_once,
+			.webview_terminate = webview_terminate,
+			.webview_dispatch = webview_dispatch,
+			.webview_get_window = webview_get_window,
+			.webview_set_title = webview_set_title,
+			.webview_set_size = webview_set_size,
+			.webview_navigate = webview_navigate,
+			.webview_set_html = webview_set_html,
+			.webview_init = webview_init,
+			.webview_eval = webview_eval,
+			.webview_bind = webview_bind,
+			.webview_unbind = webview_unbind,
+			.webview_return = webview_return,
+			.webview_version = webview_version,
+			.webview_set_icon = webview_set_icon,
+			.webview_get_native_handle = webview_get_native_handle,
+		};
 
-		webview_exports_table.webview_bind = webview_bind;
-		webview_exports_table.webview_create = webview_create;
-		webview_exports_table.webview_destroy = webview_destroy;
-		webview_exports_table.webview_toggle_fullscreen = webview_toggle_fullscreen;
-		webview_exports_table.webview_dispatch = webview_dispatch;
-		webview_exports_table.webview_eval = webview_eval;
-		webview_exports_table.webview_get_window = webview_get_window;
-		webview_exports_table.webview_init = webview_init;
-		webview_exports_table.webview_navigate = webview_navigate;
-		webview_exports_table.webview_return = webview_return;
-		webview_exports_table.webview_run = webview_run;
-		webview_exports_table.webview_run_once = webview_run_once;
-		webview_exports_table.webview_set_html = webview_set_html;
-		webview_exports_table.webview_set_size = webview_set_size;
-		webview_exports_table.webview_set_title = webview_set_title;
-		webview_exports_table.webview_terminate = webview_terminate;
-		webview_exports_table.webview_unbind = webview_unbind;
-		webview_exports_table.webview_version = webview_version;
-		webview_exports_table.webview_set_icon = webview_set_icon;
-		webview_exports_table.webview_get_native_handle = webview_get_native_handle;
-
-		return &webview_exports_table;
+		return &exports;
 	}
 }

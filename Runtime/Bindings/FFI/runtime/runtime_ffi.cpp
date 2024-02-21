@@ -20,15 +20,14 @@ namespace runtime_ffi {
 	}
 
 	void* getExportsTable() {
-		static struct static_runtime_exports_table exports_table;
+		static struct static_runtime_exports_table exports = {
+			// Build configuration
+			.runtime_version = &runtime_version,
 
-		// Build configuration
-		exports_table.runtime_version = &runtime_version;
+			// REPL
+			.runtime_repl_start = &runtime_repl_start,
+		};
 
-		// REPL
-		exports_table.runtime_repl_start = &runtime_repl_start;
-
-		return &exports_table;
+		return &exports;
 	}
-
 }

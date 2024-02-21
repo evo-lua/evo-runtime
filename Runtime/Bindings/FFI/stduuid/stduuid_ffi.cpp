@@ -86,14 +86,15 @@ namespace stduuid_ffi {
 	}
 
 	void* getExportsTable() {
-		static struct static_stduuid_exports_table stduuid_exports_table;
+		static struct static_stduuid_exports_table exports = {
 
-		stduuid_exports_table.stduuid_version = stduuid_version;
-		stduuid_exports_table.uuid_create_v4 = uuid_create_v4;
-		stduuid_exports_table.uuid_create_mt19937 = uuid_create_mt19937;
-		stduuid_exports_table.uuid_create_v5 = uuid_create_v5;
-		stduuid_exports_table.uuid_create_system = uuid_create_system;
+			.stduuid_version = stduuid_version,
+			.uuid_create_v4 = uuid_create_v4,
+			.uuid_create_mt19937 = uuid_create_mt19937,
+			.uuid_create_v5 = uuid_create_v5,
+			.uuid_create_system = uuid_create_system,
+		};
 
-		return &stduuid_exports_table;
+		return &exports;
 	}
 }

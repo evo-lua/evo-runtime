@@ -188,35 +188,45 @@ namespace rml_ffi {
 	}
 
 	void* getExportsTable() {
-		static struct static_rml_exports_table exports_table;
+		static struct static_rml_exports_table exports = {
+			.rml_version = &rml_version,
+			.rml_initialise = &rml_initialise,
+			.rml_shutdown = &rml_shutdown,
 
-		exports_table.rml_version = &rml_version;
-		exports_table.rml_initialise = &rml_initialise;
-		exports_table.rml_shutdown = &rml_shutdown;
-		exports_table.rml_create_glfw_system_interface = &rml_create_glfw_system_interface;
-		exports_table.rml_destroy_glfw_system_interface = &rml_destroy_glfw_system_interface;
-		exports_table.rml_create_wgpu_render_interface = &rml_create_wgpu_render_interface;
-		exports_table.rml_destroy_wgpu_render_interface = &rml_destroy_wgpu_render_interface;
-		exports_table.rml_release_compiled_geometry = &rml_release_compiled_geometry;
-		exports_table.rml_set_system_interface = &rml_set_system_interface;
-		exports_table.rml_set_render_interface = &rml_set_render_interface;
-		exports_table.rml_context_create = &rml_context_create;
-		exports_table.rml_context_load_document = &rml_context_load_document;
-		exports_table.rml_document_show = &rml_document_show;
-		exports_table.rml_context_update = &rml_context_update;
-		exports_table.rml_context_render = &rml_context_render;
-		exports_table.rml_context_remove = &rml_context_remove;
-		exports_table.rml_load_font_face = &rml_load_font_face;
-		exports_table.rml_process_key_callback = &rml_process_key_callback;
-		exports_table.rml_process_char_callback = &rml_process_char_callback;
-		exports_table.rml_process_cursor_enter_callback = &rml_process_cursor_enter_callback;
-		exports_table.rml_process_cursor_pos_callback = &rml_process_cursor_pos_callback;
-		exports_table.rml_process_mouse_button_callback = &rml_process_mouse_button_callback;
-		exports_table.rml_process_scroll_callback = &rml_process_scroll_callback;
-		exports_table.rml_process_framebuffer_size_callback = &rml_process_framebuffer_size_callback;
-		exports_table.rml_process_content_scale_callback = &rml_process_content_scale_callback;
+			// GLFW integration
+			.rml_create_glfw_system_interface = &rml_create_glfw_system_interface,
+			.rml_destroy_glfw_system_interface = &rml_destroy_glfw_system_interface,
+			.rml_set_system_interface = &rml_set_system_interface,
+			.rml_process_key_callback = &rml_process_key_callback,
+			.rml_process_char_callback = &rml_process_char_callback,
+			.rml_process_cursor_enter_callback = &rml_process_cursor_enter_callback,
+			.rml_process_cursor_pos_callback = &rml_process_cursor_pos_callback,
+			.rml_process_mouse_button_callback = &rml_process_mouse_button_callback,
+			.rml_process_scroll_callback = &rml_process_scroll_callback,
+			.rml_process_framebuffer_size_callback = &rml_process_framebuffer_size_callback,
+			.rml_process_content_scale_callback = &rml_process_content_scale_callback,
 
-		return &exports_table;
+			// WebGPU integration
+			.rml_create_wgpu_render_interface = &rml_create_wgpu_render_interface,
+			.rml_destroy_wgpu_render_interface = &rml_destroy_wgpu_render_interface,
+			.rml_set_render_interface = &rml_set_render_interface,
+			.rml_release_compiled_geometry = &rml_release_compiled_geometry,
+
+			// Rml::Document APIs
+			.rml_document_show = &rml_document_show,
+
+			// Rml::Context APIs
+			.rml_context_create = &rml_context_create,
+			.rml_context_update = &rml_context_update,
+			.rml_context_render = &rml_context_render,
+			.rml_context_remove = &rml_context_remove,
+			.rml_context_load_document = &rml_context_load_document,
+
+			// Font management APIs
+			.rml_load_font_face = &rml_load_font_face,
+		};
+
+		return &exports;
 	}
 
 }

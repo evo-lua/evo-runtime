@@ -194,61 +194,62 @@ void uws_webserver_add_any_route(uws_webserver_t server, const char* route) {
 namespace uws_ffi {
 
 	void* getExportsTable() {
-		static struct static_uws_exports_table uwebsockets_exports_table;
+		static struct static_uws_exports_table exports = {
 
-		// uws
-		uwebsockets_exports_table.uws_version = uws_version;
-		uwebsockets_exports_table.uws_event_name = uws_event_name;
+			// uws
+			.uws_version = uws_version,
+			.uws_event_name = uws_event_name,
 
-		// WebServer
-		uwebsockets_exports_table.uws_webserver_create = uws_webserver_create;
-		uwebsockets_exports_table.uws_webserver_listen = uws_webserver_listen;
-		uwebsockets_exports_table.uws_webserver_has_event = uws_webserver_has_event;
-		uwebsockets_exports_table.uws_webserver_get_next_event = uws_webserver_get_next_event;
-		uwebsockets_exports_table.uws_webserver_stop = uws_webserver_stop;
-		uwebsockets_exports_table.uws_webserver_delete = uws_webserver_delete;
+			// WebServer
+			.uws_webserver_create = uws_webserver_create,
+			.uws_webserver_listen = uws_webserver_listen,
+			.uws_webserver_has_event = uws_webserver_has_event,
+			.uws_webserver_get_next_event = uws_webserver_get_next_event,
+			.uws_webserver_stop = uws_webserver_stop,
+			.uws_webserver_delete = uws_webserver_delete,
 
-		uwebsockets_exports_table.uws_webserver_set_echo_mode = uws_webserver_set_echo_mode;
-		uwebsockets_exports_table.uws_webserver_dump_config = uws_webserver_dump_config;
-		uwebsockets_exports_table.uws_webserver_dump_events = uws_webserver_dump_events;
+			.uws_webserver_set_echo_mode = uws_webserver_set_echo_mode,
+			.uws_webserver_dump_config = uws_webserver_dump_config,
+			.uws_webserver_dump_events = uws_webserver_dump_events,
 
-		uwebsockets_exports_table.uws_webserver_get_client_count = uws_webserver_get_client_count;
-		uwebsockets_exports_table.uws_webserver_get_event_count = uws_webserver_get_event_count;
-		uwebsockets_exports_table.uws_webserver_payload_size = uws_webserver_payload_size;
-		uwebsockets_exports_table.uws_webserver_purge_connections = uws_webserver_purge_connections;
+			.uws_webserver_get_client_count = uws_webserver_get_client_count,
+			.uws_webserver_get_event_count = uws_webserver_get_event_count,
+			.uws_webserver_payload_size = uws_webserver_payload_size,
+			.uws_webserver_purge_connections = uws_webserver_purge_connections,
 
-		uwebsockets_exports_table.uws_webserver_broadcast_text = uws_webserver_broadcast_text;
-		uwebsockets_exports_table.uws_webserver_broadcast_binary = uws_webserver_broadcast_binary;
-		uwebsockets_exports_table.uws_webserver_broadcast_compressed = uws_webserver_broadcast_compressed;
-		uwebsockets_exports_table.uws_webserver_send_text = uws_webserver_send_text;
-		uwebsockets_exports_table.uws_webserver_send_binary = uws_webserver_send_binary;
-		uwebsockets_exports_table.uws_webserver_send_compressed = uws_webserver_send_compressed;
+			.uws_webserver_broadcast_text = uws_webserver_broadcast_text,
+			.uws_webserver_broadcast_binary = uws_webserver_broadcast_binary,
+			.uws_webserver_broadcast_compressed = uws_webserver_broadcast_compressed,
+			.uws_webserver_send_text = uws_webserver_send_text,
+			.uws_webserver_send_binary = uws_webserver_send_binary,
+			.uws_webserver_send_compressed = uws_webserver_send_compressed,
 
-		uwebsockets_exports_table.uws_webserver_response_write = uws_webserver_response_write;
-		uwebsockets_exports_table.uws_webserver_response_end = uws_webserver_response_end;
-		uwebsockets_exports_table.uws_webserver_response_try_end = uws_webserver_response_try_end;
-		uwebsockets_exports_table.uws_webserver_response_status = uws_webserver_response_status;
-		uwebsockets_exports_table.uws_webserver_response_header = uws_webserver_response_header;
+			.uws_webserver_response_write = uws_webserver_response_write,
+			.uws_webserver_response_end = uws_webserver_response_end,
+			.uws_webserver_response_try_end = uws_webserver_response_try_end,
+			.uws_webserver_response_status = uws_webserver_response_status,
+			.uws_webserver_response_header = uws_webserver_response_header,
 
-		uwebsockets_exports_table.uws_webserver_has_request = uws_webserver_has_request;
-		uwebsockets_exports_table.uws_webserver_request_method = uws_webserver_request_method;
-		uwebsockets_exports_table.uws_webserver_request_url = uws_webserver_request_url;
-		uwebsockets_exports_table.uws_webserver_request_query = uws_webserver_request_query;
-		uwebsockets_exports_table.uws_webserver_request_endpoint = uws_webserver_request_endpoint;
-		uwebsockets_exports_table.uws_webserver_request_serialized_headers = uws_webserver_request_serialized_headers;
-		uwebsockets_exports_table.uws_webserver_request_header_value = uws_webserver_request_header_value;
+			.uws_webserver_has_request = uws_webserver_has_request,
+			.uws_webserver_request_method = uws_webserver_request_method,
+			.uws_webserver_request_url = uws_webserver_request_url,
+			.uws_webserver_request_query = uws_webserver_request_query,
+			.uws_webserver_request_endpoint = uws_webserver_request_endpoint,
+			.uws_webserver_request_serialized_headers = uws_webserver_request_serialized_headers,
+			.uws_webserver_request_header_value = uws_webserver_request_header_value,
 
-		uwebsockets_exports_table.uws_webserver_add_websocket_route = uws_webserver_add_websocket_route;
-		uwebsockets_exports_table.uws_webserver_add_get_route = uws_webserver_add_get_route;
-		uwebsockets_exports_table.uws_webserver_add_post_route = uws_webserver_add_post_route;
-		uwebsockets_exports_table.uws_webserver_add_options_route = uws_webserver_add_options_route;
-		uwebsockets_exports_table.uws_webserver_add_delete_route = uws_webserver_add_delete_route;
-		uwebsockets_exports_table.uws_webserver_add_patch_route = uws_webserver_add_patch_route;
-		uwebsockets_exports_table.uws_webserver_add_put_route = uws_webserver_add_put_route;
-		uwebsockets_exports_table.uws_webserver_add_head_route = uws_webserver_add_head_route;
-		uwebsockets_exports_table.uws_webserver_add_any_route = uws_webserver_add_any_route;
+			.uws_webserver_add_websocket_route = uws_webserver_add_websocket_route,
+			.uws_webserver_add_get_route = uws_webserver_add_get_route,
+			.uws_webserver_add_post_route = uws_webserver_add_post_route,
+			.uws_webserver_add_options_route = uws_webserver_add_options_route,
+			.uws_webserver_add_delete_route = uws_webserver_add_delete_route,
+			.uws_webserver_add_patch_route = uws_webserver_add_patch_route,
+			.uws_webserver_add_put_route = uws_webserver_add_put_route,
+			.uws_webserver_add_head_route = uws_webserver_add_head_route,
+			.uws_webserver_add_any_route = uws_webserver_add_any_route,
+		};
 
-		return &uwebsockets_exports_table;
+		return &exports;
 	}
 
 	uWS::Loop* assignEventLoop(void* existing_native_loop) {

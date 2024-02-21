@@ -43,15 +43,15 @@ void queue_destroy(std::queue<deferred_event_t>* queue) {
 namespace interop_ffi {
 
 	void* getExportsTable() {
-		static struct static_interop_exports_table exports_table;
+		static struct static_interop_exports_table exports = {
+			.queue_create = &queue_create,
+			.queue_size = &queue_size,
+			.queue_push_event = &queue_push_event,
+			.queue_pop_event = &queue_pop_event,
+			.queue_destroy = &queue_destroy,
+		};
 
-		exports_table.queue_create = &queue_create;
-		exports_table.queue_destroy = &queue_destroy;
-		exports_table.queue_size = &queue_size;
-		exports_table.queue_push_event = &queue_push_event;
-		exports_table.queue_pop_event = &queue_pop_event;
-
-		return &exports_table;
+		return &exports;
 	}
 
 }
