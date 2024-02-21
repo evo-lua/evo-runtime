@@ -3,6 +3,8 @@ local syslog = require("syslog")
 
 local VIRTUAL_TIME_NOW = 12345 -- The actual value doesn't matter, just needs to be consistent
 
+local registeredEvents = table.copy(etrace.registeredEvents)
+local subscribers = table.copy(etrace.subscribers)
 local function resetTestEnvironment()
 	before(function()
 		etrace.reset()
@@ -16,6 +18,8 @@ local function resetTestEnvironment()
 	after(function()
 		etrace.reset()
 		syslog.time = os.time
+		etrace.registeredEvents = table.copy(registeredEvents)
+		etrace.subscribers = table.copy(subscribers)
 	end)
 end
 
