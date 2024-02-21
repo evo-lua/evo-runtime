@@ -29,21 +29,37 @@ globals = {
 	"assertEqualBytes",
 	"assertEquals",
 
-	-- bdd library
-	"describe",
-	"it",
-
-	-- global aliases
+	-- Global aliases
+	"ALERT",
+	"CRITICAL",
+	"DEBUG",
+	"EMERGENCY",
+	"ERROR",
+	"EVENT",
+	"INFO",
+	"NOTICE",
+	"WARNING",
 	"after",
 	"before",
 	"buffer",
+	"cast",
+	"cdef",
+	"class",
+	"classname",
+	"define",
+	"describe",
 	"dump",
-	"printf",
-	"format",
-	"path",
-
-	-- builtins
 	"extend",
+	"format",
+	"implements",
+	"instanceof",
+	"it",
+	"mixin",
+	"new",
+	"path",
+	"printf",
+	"sizeof",
+	"typeof",
 
 	-- API namespaces
 	"C_CommandLine",
