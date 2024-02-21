@@ -23,6 +23,10 @@ globals:
   dump:
     args:
       - type: ...
+  EVENT:
+    args:
+      - type: string
+      - type: table
   printf:
     args:
       - type: string

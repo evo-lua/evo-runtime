@@ -10,6 +10,10 @@ etrace.record("NO_PAYLOAD")
 
 local events = {
 	{
+		name = "MODULE_LOAD_REQUIRED",
+		payload = { moduleName = "etrace" },
+	},
+	{
 		name = "SOME_EVENT",
 		payload = { 42 },
 	},
