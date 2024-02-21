@@ -153,4 +153,48 @@ describe("table", function()
 			assertEquals(table.invert(input), expectedOutput)
 		end)
 	end)
+
+	describe("keys", function()
+		it("should throw if a non-table value was passed as the first parameter", function()
+			assertThrows(function()
+				table.keys(nil)
+			end, "Expected argument table to be a table value, but received a nil value instead")
+		end)
+
+		it("should return a list of keys for both the array and the dictionary part of the given table", function()
+			local someTable = {
+				A = 42,
+				B = 123,
+				"Hello",
+				"world",
+			}
+			local keys = table.keys(someTable)
+			assertTrue(table.contains(keys, 1))
+			assertTrue(table.contains(keys, 2))
+			assertTrue(table.contains(keys, "A"))
+			assertTrue(table.contains(keys, "B"))
+		end)
+	end)
+
+	describe("values", function()
+		it("should throw if a non-table value was passed as the first parameter", function()
+			assertThrows(function()
+				table.values(nil)
+			end, "Expected argument table to be a table value, but received a nil value instead")
+		end)
+
+		it("should return a list of values for both the array and the dictionary part of the given table", function()
+			local someTable = {
+				A = 42,
+				B = 123,
+				"Hello",
+				"world",
+			}
+			local values = table.values(someTable)
+			assertTrue(table.contains(values, 42))
+			assertTrue(table.contains(values, 123))
+			assertTrue(table.contains(values, "Hello"))
+			assertTrue(table.contains(values, "world"))
+		end)
+	end)
 end)
