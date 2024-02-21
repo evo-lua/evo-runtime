@@ -31,7 +31,7 @@ end
 
 describe("AsyncFileReader", function()
 	describe("LoadFileContents", function()
-		it("should throw if the given path is invalid", function()
+		it("should trigger FILE_REQUEST_FAILED if the given path is invalid", function()
 			assertEventTrigger(
 				function()
 					AsyncFileReader:LoadFileContents("does-not-exist")
@@ -39,7 +39,20 @@ describe("AsyncFileReader", function()
 				"FILE_REQUEST_FAILED",
 				{
 					fileSystemPath = "does-not-exist",
-					failureReason = "ENOENT: no such file or directory: does-not-exist",
+					message = "ENOENT: no such file or directory: does-not-exist",
+				}
+			)
+		end)
+
+		it("should trigger FILE_REQUEST_FAILED if the given path refers to a directory", function()
+			assertEventTrigger(
+				function()
+					AsyncFileReader:LoadFileContents("Runtime")
+				end,
+				"FILE_REQUEST_FAILED",
+				{
+					fileSystemPath = "Runtime",
+					message = "EISDIR: illegal operation on a directory",
 				}
 			)
 		end)
