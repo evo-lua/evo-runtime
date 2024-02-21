@@ -51,6 +51,7 @@ namespace wgpu_ffi {
 		// CommandBuffer
 		wgpu_exports_table.wgpu_command_buffer_reference = wgpuCommandBufferReference;
 		wgpu_exports_table.wgpu_command_buffer_release = wgpuCommandBufferRelease;
+		wgpu_exports_table.wgpu_command_buffer_set_label = wgpuCommandBufferSetLabel;
 
 		// CommandEncoder
 		wgpu_exports_table.wgpu_command_encoder_begin_compute_pass = wgpuCommandEncoderBeginComputePass;
