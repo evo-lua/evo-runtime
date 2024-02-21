@@ -3,7 +3,7 @@ local uv = require("uv")
 local path_join = path.join
 
 local C_FileSystem = {
-	AsyncFileReader = require("AsyncFileReader"),
+	-- AsyncFileReader = require("AsyncFileReader"),
 }
 
 function C_FileSystem.Exists(fileSystemPath)

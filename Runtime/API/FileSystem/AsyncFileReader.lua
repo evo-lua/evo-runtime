@@ -36,20 +36,23 @@ end
 function AsyncFileReader:LoadFileContents(fileSystemPath)
 	self.pendingRequests[fileSystemPath] = true
 	-- TBD store uv requests also? or pass as payload
-	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(err, fileDescriptor)
+	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(errorMessage, fileDescriptor)
 		-- handle err: if err then set failed, emit event, cancel request
+		if errorMessage then
+			EVENT("FILE_REQUEST_FAILED", {fileSystemPath = fileSystemPath, failureReason = errorMessage})
+			return
+		end
+
 		EVENT("FILE_DESCRIPTOR_OPENED", { fileSystemPath = fileSystemPath, fileDescriptor = fileDescriptor })
 	end)
 
 	EVENT("FILE_REQUEST_STARTED", { fileSystemPath = fileSystemPath })
 end
 
-function AsyncFileReader:LoadFileContents(fileSystemPath)
-	EVENT("ASYNC_LOAD_STARTED", { fileSystemPath = fileSystemPath })
-end
-
 function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
 	uv.fs_fstat(payload.fileDescriptor, function(err, stat)
+
+		if err then error(err, 0) end
 		-- if err then return callback(err) end
 		EVENT(
 			"FILE_STATUS_AVAILABLE",
@@ -127,8 +130,8 @@ function AsyncFileReader:FILE_DESCRIPTOR_CLOSED(event, payload)
 end
 
 etrace.subscribe("FILE_DESCRIPTOR_OPENED", AsyncFileReader)
-etrace.subscribe("FILE_STATUS_AVAILABLE", AsyncFileReader) -- FILE_STATUS_AVAILABLE?
-etrace.subscribe("FILE_CHUNK_AVAILABLE", AsyncFileReader)
+etrace.subscribe("FILE_STATUS_AVAILABLE", AsyncFileReader)
+-- etrace.subscribe("FILE_CHUNK_AVAILABLE", AsyncFileReader)
 etrace.subscribe("FILE_CONTENTS_AVAILABLE", AsyncFileReader)
 etrace.subscribe("FILE_DESCRIPTOR_CLOSED", AsyncFileReader)
 
