@@ -86,3 +86,6 @@
 	path = deps/starwing/luautf8
 	url = https://github.com/starwing/luautf8
 	ignore = dirty
+[submodule "deps/Tencent/rapidjson"]
+	path = deps/Tencent/rapidjson
+	url = https://github.com/Tencent/rapidjson
