@@ -159,6 +159,10 @@ function BuildTarget:GetDefines()
 	local labsoundVersionString = string.match(labsoundVersionTag, "(%d+.%d+.%d+)")
 	defines = defines .. string.format(' -DLABSOUND_VERSION=\\"%s\\"', labsoundVersionString)
 
+	local stduuidVersionTag = discoveredLibraryVersions["deps/mariusbancila/stduuid"].tag
+	local stduuidVersionString = string.match(stduuidVersionTag, "(%d+.%d+.%d+)")
+	defines = defines .. string.format(' -DSTDUUID_VERSION=\\"%s\\"', stduuidVersionString)
+
 	return defines
 end
 
