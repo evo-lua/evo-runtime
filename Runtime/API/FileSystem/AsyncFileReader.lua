@@ -39,7 +39,7 @@ function AsyncFileReader:LoadFileContents(fileSystemPath)
 	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(errorMessage, fileDescriptor)
 		-- handle err: if err then set failed, emit event, cancel request
 		if errorMessage then
-			EVENT("FILE_REQUEST_FAILED", { fileSystemPath = fileSystemPath, failureReason = errorMessage })
+			EVENT("FILE_REQUEST_FAILED", { fileSystemPath = fileSystemPath, message = errorMessage })
 			return
 		end
 
@@ -50,11 +50,12 @@ function AsyncFileReader:LoadFileContents(fileSystemPath)
 end
 
 function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
-	uv.fs_fstat(payload.fileDescriptor, function(err, stat)
-		if err then
-			error(err, 0)
+	uv.fs_fstat(payload.fileDescriptor, function(errorMessage, stat)
+		if errorMessage then
+			EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
+			return
 		end
-		-- if err then return callback(err) end
+	
 		EVENT(
 			"FILE_STATUS_AVAILABLE",
 			{ fileSystemPath = payload.fileSystemPath, fileDescriptor = payload.fileDescriptor, stat = stat }
@@ -64,7 +65,13 @@ end
 
 function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 	if payload.stat.size <= AsyncFileReader.CHUNK_SIZE_IN_BYTES then
-		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(err, data)
+		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(errorMessage, data)
+
+			if errorMessage then
+				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
+				return
+			end
+
 			EVENT(
 				"FILE_CONTENTS_AVAILABLE",
 				{ fileSystemPath = payload.fileSystemPath, data = data, fileDescriptor = payload.fileDescriptor }
@@ -85,9 +92,9 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 			{ fileSystemPath = fileSystemPath, data = accumulatedData, fileDescriptor = fileDescriptor }
 		)
 	else
-		uv.fs_read(fileDescriptor, toRead, offset, function(err, data)
-			if err then
-				-- Handle error, possibly emit FILE_REQUEST_FAILED
+		uv.fs_read(fileDescriptor, toRead, offset, function(errorMessage, data)
+			if errorMessage then
+				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
 				return
 			end
 
