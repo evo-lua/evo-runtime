@@ -18,7 +18,7 @@ local AsyncFileReader = {
 	failedRequests = {},
 	pendingRequests = {},
 	MODE_READABLE_WRITABLE = 438, -- Octal: 666
-	CHUNK_SIZE_IN_BYTES = 1024 * 64,
+	CHUNK_SIZE_IN_BYTES = 1024 * 256,
 }
 
 etrace.register(AsyncFileReader.events)
