@@ -66,7 +66,7 @@ end
 
 function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 	if payload.stat.size <= AsyncFileReader.CHUNK_SIZE_IN_BYTES then
-		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(errorMessage, data)
+		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(errorMessage, chunk)
 			if errorMessage then
 				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
 				return
@@ -74,7 +74,7 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 
 			EVENT(
 				"FILE_CONTENTS_AVAILABLE",
-				{ fileSystemPath = payload.fileSystemPath, data = data, fileDescriptor = payload.fileDescriptor }
+				{ fileSystemPath = payload.fileSystemPath, fileContents = chunk, fileDescriptor = payload.fileDescriptor }
 			)
 		end)
 	else
@@ -89,10 +89,10 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 	if toRead <= 0 then
 		EVENT(
 			"FILE_CONTENTS_AVAILABLE",
-			{ fileSystemPath = fileSystemPath, data = accumulatedData, fileDescriptor = fileDescriptor }
+			{ fileSystemPath = fileSystemPath, fileContents = accumulatedData, fileDescriptor = fileDescriptor }
 		)
 	else
-		uv.fs_read(fileDescriptor, toRead, offset, function(errorMessage, data)
+		uv.fs_read(fileDescriptor, toRead, offset, function(errorMessage, chunk)
 			if errorMessage then
 				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
 				return
@@ -100,17 +100,17 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 
 			EVENT(
 				"FILE_CHUNK_AVAILABLE",
-				{ fileSystemPath = fileSystemPath, data = data, fileDescriptor = fileDescriptor }
+				{ fileSystemPath = fileSystemPath, chunk = chunk, fileDescriptor = fileDescriptor }
 			)
 
-			local newAccumulatedData = accumulatedData .. data
+			local newAccumulatedData = accumulatedData .. chunk
 			local newOffset = offset + toRead
 			if newOffset < fileSize then
 				self:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSize, newOffset, newAccumulatedData)
 			else
 				EVENT(
 					"FILE_CONTENTS_AVAILABLE",
-					{ fileSystemPath = fileSystemPath, data = newAccumulatedData, fileDescriptor = fileDescriptor }
+					{ fileSystemPath = fileSystemPath, fileContents = newAccumulatedData, fileDescriptor = fileDescriptor }
 				)
 			end
 		end)
@@ -122,7 +122,7 @@ function AsyncFileReader:FILE_CONTENTS_AVAILABLE(event, payload)
 		EVENT("FILE_DESCRIPTOR_CLOSED", {
 			fileSystemPath = payload.fileSystemPath,
 			fileDescriptor = payload.fileDescriptor,
-			fileContents = payload.data,
+			-- fileContents = payload.chunk,
 		})
 	end)
 end
