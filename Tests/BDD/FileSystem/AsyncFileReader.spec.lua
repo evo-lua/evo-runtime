@@ -88,7 +88,6 @@ describe("AsyncFileReader", function()
 			uv.run()
 
 			local events = etrace.filter("FILE_CHUNK_AVAILABLE")
-			-- error(dump(events))
 			assertEquals(#events, numExpectedChunks)
 
 			assertEquals(events[1].name, "FILE_CHUNK_AVAILABLE")
