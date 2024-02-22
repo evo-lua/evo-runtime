@@ -43,6 +43,10 @@ C_FileSystem.WriteFile(LARGE_TEST_FILE, FILE_CONTENTS_LARGE)
 
 describe("AsyncFileReader", function()
 	describe("LoadFileContents", function()
+		after(function()
+			etrace.clear()
+		end)
+
 		it("should trigger FILE_REQUEST_FAILED if the given path is invalid", function()
 			local function loadInvalidPath()
 				AsyncFileReader:LoadFileContents("does-not-exist")
@@ -72,25 +76,41 @@ describe("AsyncFileReader", function()
 			local expectedPayload = {
 				fileSystemPath = SMALL_TEST_FILE,
 				chunk = FILE_CONTENTS_SMALL,
+				numChunksRead = 1,
 			}
 			assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload)
 		end)
 
-
 		it("should read multiple chunks if the file is large enough to warrant buffering", function()
 			local numExpectedChunks = 2
-			local function loadSmallFile()
-				AsyncFileReader:LoadFileContents(LARGE_TEST_FILE)
-			end
+
 			local expectedPayload = {
 				fileSystemPath = LARGE_TEST_FILE, -- CHUNK_BYTES
 				chunk = MAX_LENGTH_CHUNK,
+				numChunksRead = numExpectedChunks,
 			}
 			-- loadSmallFile()
 			-- uv.run()
 			-- local events = etrace.filter("FILE_CHUNK_AVAILABLE")
 			-- error(dump(events))
-			assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload, numExpectedChunks)
+
+			AsyncFileReader:LoadFileContents(LARGE_TEST_FILE)
+			uv.run()
+
+			local events = etrace.filter("FILE_CHUNK_AVAILABLE")
+			-- error(dump(events))
+			assertEquals(#events, numExpectedChunks)
+
+			assertEquals(events[1].name, "FILE_CHUNK_AVAILABLE")
+			assertEquals(events[1].payload.chunk, "AA")
+			assertEquals(events[1].payload.fileSystemPath, "temp-large.txt")
+			assertEquals(events[1].payload.numChunksRead, 1)
+
+			assertEquals(events[2].name, "FILE_CHUNK_AVAILABLE")
+			assertEquals(events[2].payload.chunk, "AA")
+			assertEquals(events[2].payload.fileSystemPath, "temp-large.txt")
+			assertEquals(events[2].payload.numChunksRead, 2)
+			-- assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload, numExpectedChunks)
 		end)
 	end)
 end)
