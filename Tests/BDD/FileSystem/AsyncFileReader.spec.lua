@@ -65,19 +65,19 @@ describe("AsyncFileReader", function()
 			assertEvent(loadDirectory, "FILE_REQUEST_FAILED", expectedPayload)
 		end)
 
-		it("should trigger FILE_CONTENTS_AVAILABLE if the read doesn't require buffering", function()
+		it("should read a single chunk if the file isn't large enough to warrant buffering", function()
 			local function loadSmallFile()
 				AsyncFileReader:LoadFileContents(SMALL_TEST_FILE)
 			end
 			local expectedPayload = {
 				fileSystemPath = SMALL_TEST_FILE,
-				fileContents = FILE_CONTENTS_SMALL,
+				chunk = FILE_CONTENTS_SMALL,
 			}
-			assertEvent(loadSmallFile, "FILE_CONTENTS_AVAILABLE", expectedPayload)
+			assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload)
 		end)
 
 
-		it("should trigger FILE_CHUNK_AVAILABLE if the read requires buffering", function()
+		it("should read multiple chunks if the file is large enough to warrant buffering", function()
 			local numExpectedChunks = 2
 			local function loadSmallFile()
 				AsyncFileReader:LoadFileContents(LARGE_TEST_FILE)
