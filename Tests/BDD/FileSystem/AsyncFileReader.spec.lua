@@ -84,16 +84,6 @@ describe("AsyncFileReader", function()
 		it("should read multiple chunks if the file is large enough to warrant buffering", function()
 			local numExpectedChunks = 2
 
-			local expectedPayload = {
-				fileSystemPath = LARGE_TEST_FILE, -- CHUNK_BYTES
-				chunk = MAX_LENGTH_CHUNK,
-				numChunksRead = numExpectedChunks,
-			}
-			-- loadSmallFile()
-			-- uv.run()
-			-- local events = etrace.filter("FILE_CHUNK_AVAILABLE")
-			-- error(dump(events))
-
 			AsyncFileReader:LoadFileContents(LARGE_TEST_FILE)
 			uv.run()
 
@@ -110,7 +100,6 @@ describe("AsyncFileReader", function()
 			assertEquals(events[2].payload.chunk, "AA")
 			assertEquals(events[2].payload.fileSystemPath, "temp-large.txt")
 			assertEquals(events[2].payload.numChunksRead, 2)
-			-- assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload, numExpectedChunks)
 		end)
 	end)
 end)
