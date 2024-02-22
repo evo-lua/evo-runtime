@@ -84,8 +84,6 @@ describe("AsyncFileReader", function()
 end)
 
 -- tbd what if the same file is read, queue up or just wait until one request and return the result?
--- tbd what if write/read interleaves? should be handled by libuv, in order?
--- what if file is deleted while reading chunks? probably impossible, uv threads block?
 
 C_FileSystem.Delete(SMALL_TEST_FILE)
 C_FileSystem.Delete(LARGE_TEST_FILE)
