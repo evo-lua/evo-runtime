@@ -118,6 +118,9 @@ jobs:
       - name: Run integration tests
         run: evo Tests/integration-test.lua
 
+      - name: Run benchmarks
+        run: evo .github/run-all-benchmarks.lua
+
       - name: Prepare artifacts
         run: cp evo evo-macos-${{ matrix.arch }}
 
