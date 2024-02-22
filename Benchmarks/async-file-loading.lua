@@ -4,7 +4,7 @@ local console = require("console")
 local uv = require("uv")
 
 console.startTimer("Generating test fixtures")
-local SAMPLE_SIZE = 1 --0000000
+local SAMPLE_SIZE = 250 --0000000
 local SMALL_FILE_PATH = path.join("Tests", "Fixtures", "test-small.txt")
 local LARGE_FILE_PATH = path.join("Tests", "Fixtures", "test-large.txt")
 local HUGE_FILE_PATH = path.join("Tests", "Fixtures", "test-huge.txt")
