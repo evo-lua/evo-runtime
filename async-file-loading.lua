@@ -29,8 +29,9 @@ etrace.subscribe("FILE_CONTENTS_AVAILABLE", MyApp)
 etrace.subscribe("ASYNC_GATHER_COMPLETED", MyApp)
 
 printf("Asynchronously loading %d files", #filesToLoad)
-for index, fileSystemPath in pairs(filesToLoad) do	AsyncFileReader:LoadFileContents(fileSystemPath) end
--- for index, fileSystemPath in pairs(filesToLoad) do	C_FileSystem.ReadFile(fileSystemPath) end
+-- for index, fileSystemPath in pairs(filesToLoad) do	AsyncFileReader:LoadFileContents(fileSystemPath) end
+for index, fileSystemPath in pairs(filesToLoad) do	C_FileSystem.ReadFile(fileSystemPath) end
+-- TBD coro-fs also worth checking out?
 -- AsyncFileReader:GatherFileContents(filesToLoad)
 
 print("Fence reached: Starting the event loop")
