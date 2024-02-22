@@ -41,6 +41,7 @@ local specFiles = {
 	"Tests/BDD/imageprocessing-namespace.spec.lua",
 	"Tests/BDD/runtime-namespace.spec.lua",
 	"Tests/BDD/timer-namespace.spec.lua",
+	"Tests/BDD/FileSystem/AsyncFileReader.spec.lua",
 }
 
 local numFailedSections = C_Runtime.RunDetailedTests(#arg > 0 and arg or specFiles)
