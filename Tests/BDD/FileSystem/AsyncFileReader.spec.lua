@@ -83,8 +83,6 @@ describe("AsyncFileReader", function()
 	end)
 end)
 
--- tbd what if the same file is read, queue up or just wait until one request and return the result?
-
 C_FileSystem.Delete(SMALL_TEST_FILE)
 C_FileSystem.Delete(LARGE_TEST_FILE)
 AsyncFileReader.CHUNK_SIZE_IN_BYTES = OLD_CHUNK_SIZE
