@@ -133,6 +133,9 @@ jobs:
       - name: Run integration tests
         run: evo Tests/integration-test.lua
 
+      - name: Run benchmarks
+        run: evo .github/run-all-benchmarks.lua
+
       # GitHub adds a heading of their own, so remove the duplicate
       - name: Generate CHANGELOG.MD
         run: evo create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
