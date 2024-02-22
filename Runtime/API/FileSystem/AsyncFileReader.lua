@@ -67,16 +67,19 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 	local lastChunkIndex = math_ceil(payload.stat.size / AsyncFileReader.CHUNK_SIZE_IN_BYTES)
 	payload.lastChunkIndex = lastChunkIndex
 	payload.chunkIndex = 0
-		self:ReadFileInChunks(payload.fileDescriptor, payload.fileSystemPath, payload.stat.size, 0, payload)
+	self:ReadFileInChunks(payload.fileDescriptor, payload.fileSystemPath, payload.stat.size, 0, payload)
 end
 
 function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSize, offset, payload)
-
 	local toRead = math.min(AsyncFileReader.CHUNK_SIZE_IN_BYTES, fileSize - offset)
 	if toRead <= 0 then
 		EVENT(
 			"FILE_CONTENTS_AVAILABLE",
-			{ fileSystemPath = payload.fileSystemPath, lastChunkIndex = payload.lastChunkIndex, fileDescriptor = fileDescriptor }
+			{
+				fileSystemPath = payload.fileSystemPath,
+				lastChunkIndex = payload.lastChunkIndex,
+				fileDescriptor = fileDescriptor,
+			}
 		)
 	else
 		uv.fs_read(fileDescriptor, toRead, offset, function(errorMessage, chunk)
@@ -85,16 +88,13 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 				return
 			end
 
-			EVENT(
-				"FILE_CHUNK_AVAILABLE",
-				{
-					fileSystemPath = fileSystemPath,
-					chunk = chunk,
-					lastChunkIndex = payload.lastChunkIndex,
-					chunkIndex = payload.chunkIndex,
-					fileDescriptor = fileDescriptor,
-				}
-			)
+			EVENT("FILE_CHUNK_AVAILABLE", {
+				fileSystemPath = fileSystemPath,
+				chunk = chunk,
+				lastChunkIndex = payload.lastChunkIndex,
+				chunkIndex = payload.chunkIndex,
+				fileDescriptor = fileDescriptor,
+			})
 
 			local newOffset = offset + toRead
 			if newOffset < fileSize then
