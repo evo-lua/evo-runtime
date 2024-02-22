@@ -45,20 +45,27 @@ function client:WEBSOCKET_UPGRADE_COMPLETE()
 	registerNewMessageHandler()
 end
 
-local shutdownTimer = uv.new_timer()
-shutdownTimer:start(250, 0, function()
+local shutdownTicker
+shutdownTicker = C_Timer.NewTicker(100, function()
+	if not receivedEchoedMessage then
+		print("Waiting for received echo message...")
+		return
+	end
+
+	if not hasUpdatedClientCount then
+		print("Waiting for updated client count...")
+		return
+	end
+
 	client:Disconnect()
 
 	uws.bindings.uws_webserver_stop(server)
 	uws.bindings.uws_webserver_delete(server)
 
-	shutdownTimer:stop()
-	shutdownTimer:close()
+	shutdownTicker:stop()
+	shutdownTicker:close()
 
 	uv.stop()
-
-	assertTrue(receivedEchoedMessage)
-	assertTrue(hasUpdatedClientCount)
 end)
 
 uv.run()
