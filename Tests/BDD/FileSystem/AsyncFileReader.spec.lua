@@ -29,9 +29,17 @@ local function assertEvent(functionToObserve, expectedEvent, expectedPayload, nu
 	end
 end
 
+local OLD_CHUNK_SIZE = AsyncFileReader.CHUNK_SIZE_IN_BYTES
+local NEW_CHUNKS_SIZE = 2 -- No point in generating large payloads here
+local MAX_LENGTH_CHUNK = string.rep("A", NEW_CHUNKS_SIZE)
+AsyncFileReader.CHUNK_SIZE_IN_BYTES = NEW_CHUNKS_SIZE
+
 local SMALL_TEST_FILE = "temp-small.txt"
-local FILE_CONTENTS_SMALL = string.rep("A", 1)--AsyncFileReader.CHUNK_SIZE_IN_BYTES - 1)
+local LARGE_TEST_FILE = "temp-large.txt"
+local FILE_CONTENTS_SMALL = string.rep("A", NEW_CHUNKS_SIZE - 1)
+local FILE_CONTENTS_LARGE = MAX_LENGTH_CHUNK .. MAX_LENGTH_CHUNK
 C_FileSystem.WriteFile(SMALL_TEST_FILE, FILE_CONTENTS_SMALL)
+C_FileSystem.WriteFile(LARGE_TEST_FILE, FILE_CONTENTS_LARGE)
 
 describe("AsyncFileReader", function()
 	describe("LoadFileContents", function()
@@ -67,7 +75,26 @@ describe("AsyncFileReader", function()
 			}
 			assertEvent(loadSmallFile, "FILE_CONTENTS_AVAILABLE", expectedPayload)
 		end)
+
+
+		it("should trigger FILE_CHUNK_AVAILABLE if the read requires buffering", function()
+			local numExpectedChunks = 2
+			local function loadSmallFile()
+				AsyncFileReader:LoadFileContents(LARGE_TEST_FILE)
+			end
+			local expectedPayload = {
+				fileSystemPath = LARGE_TEST_FILE, -- CHUNK_BYTES
+				chunk = MAX_LENGTH_CHUNK,
+			}
+			-- loadSmallFile()
+			-- uv.run()
+			-- local events = etrace.filter("FILE_CHUNK_AVAILABLE")
+			-- error(dump(events))
+			assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload, numExpectedChunks)
+		end)
 	end)
 end)
 
 C_FileSystem.Delete(SMALL_TEST_FILE)
+C_FileSystem.Delete(LARGE_TEST_FILE)
+AsyncFileReader.CHUNK_SIZE_IN_BYTES = OLD_CHUNK_SIZE
