@@ -76,32 +76,32 @@ describe("AsyncFileReader", function()
 			local expectedPayload = {
 				fileSystemPath = SMALL_TEST_FILE,
 				chunk = FILE_CONTENTS_SMALL,
-				numChunksRead = 1,
-				numChunks = 1,
+				maxChunkIndex = 1,
+				currentChunkIndex = 1,
 			}
 			assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload)
 		end)
 
 		it("should read multiple chunks if the file is large enough to warrant buffering", function()
-			local numExpectedChunks = 2
 
 			AsyncFileReader:LoadFileContents(LARGE_TEST_FILE)
 			uv.run()
 
 			local events = etrace.filter("FILE_CHUNK_AVAILABLE")
+			local numExpectedChunks = 2
 			assertEquals(#events, numExpectedChunks)
 
 			assertEquals(events[1].name, "FILE_CHUNK_AVAILABLE")
 			assertEquals(events[1].payload.chunk, "AA")
 			assertEquals(events[1].payload.fileSystemPath, "temp-large.txt")
-			assertEquals(events[1].payload.numChunksRead, 1)
-			assertEquals(events[1].payload.numChunks, 2)
+			assertEquals(events[1].payload.maxChunkIndex, 1)
+			assertEquals(events[1].payload.currentChunkIndex, 2)
 
 			assertEquals(events[2].name, "FILE_CHUNK_AVAILABLE")
 			assertEquals(events[2].payload.chunk, "AA")
 			assertEquals(events[2].payload.fileSystemPath, "temp-large.txt")
-			assertEquals(events[2].payload.numChunksRead, 2)
-			assertEquals(events[2].payload.numChunks, 2)
+			assertEquals(events[2].payload.maxChunkIndex, 2)
+			assertEquals(events[2].payload.currentChunkIndex, 2)
 		end)
 	end)
 end)
