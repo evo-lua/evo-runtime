@@ -17,7 +17,7 @@ local AsyncFileReader = {
 	completedRequests = {},
 	failedRequests = {},
 	pendingRequests = {},
-	MODE_READABLE_WRITABLE = 438, -- Octal: 666
+	FILE_MODE_READONLY = 292, -- Octal: 444
 	CHUNK_SIZE_IN_BYTES = 1024 * 256,
 }
 
@@ -35,9 +35,7 @@ end
 
 function AsyncFileReader:LoadFileContents(fileSystemPath)
 	self.pendingRequests[fileSystemPath] = true
-	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(errorMessage, fileDescriptor)
-		-- handle err: if err then set failed, emit event, cancel request
-		-- TODO use MODE_READONLY, check benchmark results
+	uv.fs_open(fileSystemPath, "r", AsyncFileReader.FILE_MODE_READONLY, function(errorMessage, fileDescriptor)
 		if errorMessage then
 			EVENT("FILE_REQUEST_FAILED", { fileSystemPath = fileSystemPath, message = errorMessage })
 			return
