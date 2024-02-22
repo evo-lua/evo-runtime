@@ -47,7 +47,7 @@ describe("AsyncFileReader", function()
 			etrace.clear()
 		end)
 
-		it("should trigger FILE_REQUEST_FAILED if the given path is invalid", function()
+		it("should trigger fail if the given path is invalid", function()
 			local function loadInvalidPath()
 				AsyncFileReader:LoadFileContents("does-not-exist")
 			end
@@ -58,15 +58,17 @@ describe("AsyncFileReader", function()
 			assertEvent(loadInvalidPath, "FILE_REQUEST_FAILED", expectedPayload)
 		end)
 
-		it("should trigger FILE_REQUEST_FAILED if the given path refers to a directory", function()
-			local function loadDirectory()
-				AsyncFileReader:LoadFileContents("Runtime")
-			end
-			local expectedPayload = {
-				fileSystemPath = "Runtime",
-				message = "EISDIR: illegal operation on a directory",
-			}
-			assertEvent(loadDirectory, "FILE_REQUEST_FAILED", expectedPayload)
+		it("should trigger fail if the given path refers to a directory", function()
+			AsyncFileReader:LoadFileContents("Runtime")
+			uv.run()
+			
+			local events = etrace.filter("FILE_REQUEST_FAILED")
+			local numExpectedChunks = 1
+			assertEquals(#events, numExpectedChunks)
+			
+			assertEquals(events[1].name, "FILE_REQUEST_FAILED")
+			assertEquals(events[1].payload.fileSystemPath, "Runtime")
+			assertEquals(events[1].payload.message, "EISDIR: illegal operation on a directory")
 		end)
 
 		it("should read a single chunk if the file isn't large enough to warrant buffering", function()
