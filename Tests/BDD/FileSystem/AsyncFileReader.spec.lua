@@ -11,7 +11,7 @@ AsyncFileReader.CHUNK_SIZE_IN_BYTES = NEW_CHUNKS_SIZE
 local SMALL_TEST_FILE = "temp-small.txt"
 local LARGE_TEST_FILE = "temp-large.txt"
 local FILE_CONTENTS_SMALL = string.rep("A", NEW_CHUNKS_SIZE - 1)
-local FILE_CONTENTS_LARGE = MAX_LENGTH_CHUNK .. MAX_LENGTH_CHUNK
+local FILE_CONTENTS_LARGE = MAX_LENGTH_CHUNK .. MAX_LENGTH_CHUNK .. "A"
 C_FileSystem.WriteFile(SMALL_TEST_FILE, FILE_CONTENTS_SMALL)
 C_FileSystem.WriteFile(LARGE_TEST_FILE, FILE_CONTENTS_LARGE)
 
@@ -54,10 +54,10 @@ describe("AsyncFileReader", function()
 			assertEquals(#events, numExpectedChunks)
 
 			assertEquals(events[1].name, "FILE_CHUNK_AVAILABLE")
-			assertEquals(events[1].payload.chunkBytes, "A")
+			assertEquals(events[1].payload.chunk, "A")
 			assertEquals(events[1].payload.fileSystemPath, SMALL_TEST_FILE)
-			assertEquals(events[1].payload.maxChunkIndex, 1)
-			assertEquals(events[1].payload.currentChunkIndex, 1)
+			assertEquals(events[1].payload.lastChunkIndex, 1)
+			assertEquals(events[1].payload.chunkIndex, 1)
 		end)
 
 		it("should read multiple chunks if the file is large enough to warrant buffering", function()
@@ -65,20 +65,26 @@ describe("AsyncFileReader", function()
 			uv.run()
 
 			local events = etrace.filter("FILE_CHUNK_AVAILABLE")
-			local numExpectedChunks = 2
+			local numExpectedChunks = 3
 			assertEquals(#events, numExpectedChunks)
 
 			assertEquals(events[1].name, "FILE_CHUNK_AVAILABLE")
-			assertEquals(events[1].payload.chunkBytes, "AA")
+			assertEquals(events[1].payload.chunk, "AA")
 			assertEquals(events[1].payload.fileSystemPath, LARGE_TEST_FILE)
-			assertEquals(events[1].payload.maxChunkIndex, 1)
-			assertEquals(events[1].payload.currentChunkIndex, 2)
+			assertEquals(events[1].payload.lastChunkIndex, 3)
+			assertEquals(events[1].payload.chunkIndex, 1)
 
 			assertEquals(events[2].name, "FILE_CHUNK_AVAILABLE")
-			assertEquals(events[2].payload.chunkBytes, "AA")
+			assertEquals(events[2].payload.chunk, "AA")
 			assertEquals(events[2].payload.fileSystemPath, LARGE_TEST_FILE)
-			assertEquals(events[2].payload.maxChunkIndex, 2)
-			assertEquals(events[2].payload.currentChunkIndex, 2)
+			assertEquals(events[2].payload.lastChunkIndex, 3)
+			assertEquals(events[2].payload.chunkIndex, 2)
+
+			assertEquals(events[3].name, "FILE_CHUNK_AVAILABLE")
+			assertEquals(events[3].payload.chunk, "A")
+			assertEquals(events[3].payload.fileSystemPath, LARGE_TEST_FILE)
+			assertEquals(events[3].payload.lastChunkIndex, 3)
+			assertEquals(events[3].payload.chunkIndex, 3)
 		end)
 	end)
 end)

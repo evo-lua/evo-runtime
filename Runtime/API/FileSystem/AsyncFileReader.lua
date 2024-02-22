@@ -1,6 +1,8 @@
 local etrace = require("etrace")
 local uv = require("uv")
 
+local math_ceil = math.ceil
+
 local AsyncFileReader = {
 	events = {
 		"ASYNC_GATHER_STARTED",
@@ -62,48 +64,24 @@ function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
 end
 
 function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
-	local currentChunkIndex = math.ceil(payload.stat.size / AsyncFileReader.CHUNK_SIZE_IN_BYTES)
-	payload.currentChunkIndex = currentChunkIndex
-	if currentChunkIndex == 1 then
-		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(errorMessage, chunkBytes)
-			if errorMessage then
-				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
-				return
-			end
-
-			EVENT("FILE_CHUNK_AVAILABLE", {
-				fileSystemPath = payload.fileSystemPath,
-				chunkBytes = chunkBytes,
-				maxChunkIndex = 1,
-				currentChunkIndex = 1,
-				fileDescriptor = payload.fileDescriptor,
-			})
-			EVENT("FILE_CONTENTS_AVAILABLE", {
-				fileSystemPath = payload.fileSystemPath,
-				maxChunkIndex = payload.maxChunkIndex,
-				currentChunkIndex = payload.currentChunkIndex,
-				fileDescriptor = payload.fileDescriptor,
-			})
-		end)
-	else
-		payload.maxChunkIndex = 0 -- TBD initialize and reuse payload table, only update as needed
+	local lastChunkIndex = math_ceil(payload.stat.size / AsyncFileReader.CHUNK_SIZE_IN_BYTES)
+	payload.lastChunkIndex = lastChunkIndex
+	payload.chunkIndex = 0
 		self:ReadFileInChunks(payload.fileDescriptor, payload.fileSystemPath, payload.stat.size, 0, payload)
-	end
 end
 
 function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSize, offset, payload)
-	-- accumulatedData = accumulatedData or ""
-	payload.maxChunkIndex = payload.maxChunkIndex + 1
+
 	local toRead = math.min(AsyncFileReader.CHUNK_SIZE_IN_BYTES, fileSize - offset)
 	if toRead <= 0 then
 		EVENT(
 			"FILE_CONTENTS_AVAILABLE",
-			{ fileSystemPath = fileSystemPath, maxChunkIndex = payload.maxChunkIndex, fileDescriptor = fileDescriptor }
+			{ fileSystemPath = payload.fileSystemPath, lastChunkIndex = payload.lastChunkIndex, fileDescriptor = fileDescriptor }
 		)
 	else
-		uv.fs_read(fileDescriptor, toRead, offset, function(errorMessage, chunkBytes)
+		uv.fs_read(fileDescriptor, toRead, offset, function(errorMessage, chunk)
 			if errorMessage then
-				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = fileSystemPath, message = errorMessage })
+				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
 				return
 			end
 
@@ -111,14 +89,13 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 				"FILE_CHUNK_AVAILABLE",
 				{
 					fileSystemPath = fileSystemPath,
-					chunkBytes = chunkBytes,
-					maxChunkIndex = payload.maxChunkIndex,
-					currentChunkIndex = payload.currentChunkIndex,
+					chunk = chunk,
+					lastChunkIndex = payload.lastChunkIndex,
+					chunkIndex = payload.chunkIndex,
 					fileDescriptor = fileDescriptor,
-				} -- TODO chunkBytes -> lastChunk
+				}
 			)
 
-			-- local newAccumulatedData = accumulatedData .. chunk
 			local newOffset = offset + toRead
 			if newOffset < fileSize then
 				self:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSize, newOffset, payload)
@@ -127,6 +104,8 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 			end
 		end)
 	end
+
+	payload.chunkIndex = payload.chunkIndex + 1
 end
 
 function AsyncFileReader:FILE_CONTENTS_AVAILABLE(event, payload)
@@ -135,7 +114,7 @@ function AsyncFileReader:FILE_CONTENTS_AVAILABLE(event, payload)
 			fileSystemPath = payload.fileSystemPath,
 			fileDescriptor = payload.fileDescriptor,
 			-- fileContents = payload.chunk,
-			-- maxChunkIndex = payload.maxChunkIndex,
+			-- lastChunkIndex = payload.lastChunkIndex,
 		})
 	end)
 end
