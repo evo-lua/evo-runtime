@@ -3,32 +3,6 @@ local uv = require("uv")
 
 local AsyncFileReader = require("Runtime.API.FileSystem.AsyncFileReader") -- C_FileSystem.AsyncFileReader
 
-local function assertEvent(functionToObserve, expectedEvent, expectedPayload, numExpectedNotifications)
-	numExpectedNotifications = numExpectedNotifications or 1
-
-	etrace.clear()
-	local wasEventEnabled = etrace.status(expectedEvent)
-
-	etrace.enable(expectedEvent)
-	functionToObserve()
-	uv.run()
-
-	local observedEvents = etrace.filter(expectedEvent)
-	assertEquals(#observedEvents, numExpectedNotifications)
-
-	for index = 1, numExpectedNotifications, 1 do
-		local event = observedEvents[index]
-		assertEquals(event.name, expectedEvent)
-		for key, value in pairs(expectedPayload) do
-			assertEquals(event.payload[key], value)
-		end
-	end
-
-	if wasEventEnabled then
-		etrace.enable(expectedEvent)
-	end
-end
-
 local OLD_CHUNK_SIZE = AsyncFileReader.CHUNK_SIZE_IN_BYTES
 local NEW_CHUNKS_SIZE = 2 -- No point in generating large payloads here
 local MAX_LENGTH_CHUNK = string.rep("A", NEW_CHUNKS_SIZE)
