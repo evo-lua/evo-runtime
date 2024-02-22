@@ -21,7 +21,7 @@ describe("AsyncFileReader", function()
 			etrace.clear()
 		end)
 
-		it("should trigger fail if the given path is invalid", function()
+		it("should visibly fail if the given path is invalid", function()
 			AsyncFileReader:LoadFileContents("does-not-exist")
 			uv.run()
 
@@ -33,7 +33,7 @@ describe("AsyncFileReader", function()
 			assertEquals(events[1].payload.message, "ENOENT: no such file or directory: does-not-exist")
 		end)
 
-		it("should trigger fail if the given path refers to a directory", function()
+		it("should visibly fail if the given path refers to a directory", function()
 			AsyncFileReader:LoadFileContents("Runtime")
 			uv.run()
 
