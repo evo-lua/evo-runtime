@@ -77,6 +77,7 @@ describe("AsyncFileReader", function()
 				fileSystemPath = SMALL_TEST_FILE,
 				chunk = FILE_CONTENTS_SMALL,
 				numChunksRead = 1,
+				numChunks = 1,
 			}
 			assertEvent(loadSmallFile, "FILE_CHUNK_AVAILABLE", expectedPayload)
 		end)
@@ -94,11 +95,13 @@ describe("AsyncFileReader", function()
 			assertEquals(events[1].payload.chunk, "AA")
 			assertEquals(events[1].payload.fileSystemPath, "temp-large.txt")
 			assertEquals(events[1].payload.numChunksRead, 1)
+			assertEquals(events[1].payload.numChunks, 2)
 
 			assertEquals(events[2].name, "FILE_CHUNK_AVAILABLE")
 			assertEquals(events[2].payload.chunk, "AA")
 			assertEquals(events[2].payload.fileSystemPath, "temp-large.txt")
 			assertEquals(events[2].payload.numChunksRead, 2)
+			assertEquals(events[2].payload.numChunks, 2)
 		end)
 	end)
 end)

@@ -65,7 +65,9 @@ function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
 end
 
 function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
-	if payload.stat.size <= AsyncFileReader.CHUNK_SIZE_IN_BYTES then
+	local numChunks = math.ceil(payload.stat.size / AsyncFileReader.CHUNK_SIZE_IN_BYTES)
+	payload.numChunks = numChunks
+	if numChunks == 1 then
 		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(errorMessage, chunk)
 			if errorMessage then
 				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
@@ -78,6 +80,7 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 					fileSystemPath = payload.fileSystemPath,
 					chunk = chunk,
 					numChunksRead = 1,
+					numChunks = 1,
 					fileDescriptor = payload.fileDescriptor,
 				}
 			)
@@ -86,6 +89,7 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 				{
 					fileSystemPath = payload.fileSystemPath,
 					numChunksRead = payload.numChunksRead,
+					numChunks = payload.numChunks,
 					fileDescriptor = payload.fileDescriptor,
 				}
 			)
@@ -118,6 +122,7 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 					fileSystemPath = fileSystemPath,
 					chunk = chunk,
 					numChunksRead = payload.numChunksRead,
+					numChunks = payload.numChunks,
 					fileDescriptor = fileDescriptor,
 				} -- TODO chunk -> lastChunk
 			)
