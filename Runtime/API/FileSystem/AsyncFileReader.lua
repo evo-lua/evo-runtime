@@ -55,7 +55,7 @@ function AsyncFileReader:FILE_DESCRIPTOR_OPENED(event, payload)
 			EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
 			return
 		end
-	
+
 		EVENT(
 			"FILE_STATUS_AVAILABLE",
 			{ fileSystemPath = payload.fileSystemPath, fileDescriptor = payload.fileDescriptor, stat = stat }
@@ -66,7 +66,6 @@ end
 function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 	if payload.stat.size <= AsyncFileReader.CHUNK_SIZE_IN_BYTES then
 		uv.fs_read(payload.fileDescriptor, payload.stat.size, 0, function(errorMessage, data)
-
 			if errorMessage then
 				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
 				return
