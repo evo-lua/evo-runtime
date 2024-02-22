@@ -41,16 +41,14 @@ describe("AsyncFileReader", function()
 		end)
 
 		it("should trigger FILE_REQUEST_FAILED if the given path refers to a directory", function()
-			assertEvent(
-				function()
-					AsyncFileReader:LoadFileContents("Runtime")
-				end,
-				"FILE_REQUEST_FAILED",
-				{
-					fileSystemPath = "Runtime",
-					message = "EISDIR: illegal operation on a directory",
-				}
-			)
+			local function loadDirectory()
+				AsyncFileReader:LoadFileContents("Runtime")
+			end
+			local expectedPayload = {
+				fileSystemPath = "Runtime",
+				message = "EISDIR: illegal operation on a directory",
+			}
+			assertEvent(loadDirectory, "FILE_REQUEST_FAILED", expectedPayload)
 		end)
 	end)
 end)
