@@ -101,5 +101,25 @@ function table.values(table)
 	return values
 end
 
+function table.shuffle(tableToShuffle, randomNumberGenerator, seed)
+	validation.validateTable(tableToShuffle, "tableToShuffle")
+
+	randomNumberGenerator = randomNumberGenerator or math.random
+	seed = seed or math.randomseed
+
+	validation.validateFunction(randomNumberGenerator, "randomNumberGenerator")
+	validation.validateFunction(seed, "seed")
+
+	seed(os.clock()) -- Good enough, for now?
+	local shuffledTable = {}
+	for i = 1, #tableToShuffle, 1 do
+		local j = randomNumberGenerator(i)
+		shuffledTable[i] = tableToShuffle[j]
+		shuffledTable[j] = tableToShuffle[i]
+	end
+
+	return shuffledTable
+end
+
 table.clear = require("table.clear")
 table.new = require("table.new")
