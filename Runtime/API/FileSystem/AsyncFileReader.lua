@@ -94,7 +94,7 @@ function AsyncFileReader:ReadFileInChunks(fileDescriptor, fileSystemPath, fileSi
 	else
 		uv.fs_read(fileDescriptor, toRead, offset, function(errorMessage, chunk)
 			if errorMessage then
-				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = payload.fileSystemPath, message = errorMessage })
+				EVENT("FILE_REQUEST_FAILED", { fileSystemPath = fileSystemPath, message = errorMessage })
 				return
 			end
 
