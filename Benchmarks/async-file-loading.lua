@@ -71,7 +71,7 @@ local availableBenchmarks = {
 			C_FileSystem.ReadFile(HUGE_FILE_PATH)
 		end
 		console.stopTimer(label)
-	end
+	end,
 }
 
 local function shuffle(tbl)
