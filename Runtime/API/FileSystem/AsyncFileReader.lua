@@ -38,6 +38,7 @@ function AsyncFileReader:LoadFileContents(fileSystemPath)
 	-- TBD store uv requests also? or pass as payload
 	uv.fs_open(fileSystemPath, "r", AsyncFileReader.MODE_READABLE_WRITABLE, function(errorMessage, fileDescriptor)
 		-- handle err: if err then set failed, emit event, cancel request
+		-- TODO use MODE_READONLY
 		if errorMessage then
 			EVENT("FILE_REQUEST_FAILED", { fileSystemPath = fileSystemPath, message = errorMessage })
 			return
