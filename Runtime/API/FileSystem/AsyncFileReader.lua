@@ -73,6 +73,10 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 			end
 
 			EVENT(
+				"FILE_CHUNK_AVAILABLE",
+				{ fileSystemPath = payload.fileSystemPath, chunk = chunk, fileDescriptor = payload.fileDescriptor }
+			)
+			EVENT(
 				"FILE_CONTENTS_AVAILABLE",
 				{ fileSystemPath = payload.fileSystemPath, fileContents = chunk, fileDescriptor = payload.fileDescriptor }
 			)
