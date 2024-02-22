@@ -48,24 +48,24 @@ describe("AsyncFileReader", function()
 		end)
 
 		it("should trigger fail if the given path is invalid", function()
-			local function loadInvalidPath()
-				AsyncFileReader:LoadFileContents("does-not-exist")
-			end
-			local expectedPayload = {
-				fileSystemPath = "does-not-exist",
-				message = "ENOENT: no such file or directory: does-not-exist",
-			}
-			assertEvent(loadInvalidPath, "FILE_REQUEST_FAILED", expectedPayload)
+			AsyncFileReader:LoadFileContents("does-not-exist")
+			uv.run()
+
+			local events = etrace.filter("FILE_REQUEST_FAILED")
+			assertEquals(#events, 1)
+
+			assertEquals(events[1].name, "FILE_REQUEST_FAILED")
+			assertEquals(events[1].payload.fileSystemPath, "does-not-exist")
+			assertEquals(events[1].payload.message, "ENOENT: no such file or directory: does-not-exist")
 		end)
 
 		it("should trigger fail if the given path refers to a directory", function()
 			AsyncFileReader:LoadFileContents("Runtime")
 			uv.run()
-			
+
 			local events = etrace.filter("FILE_REQUEST_FAILED")
-			local numExpectedChunks = 1
-			assertEquals(#events, numExpectedChunks)
-			
+			assertEquals(#events, 1)
+
 			assertEquals(events[1].name, "FILE_REQUEST_FAILED")
 			assertEquals(events[1].payload.fileSystemPath, "Runtime")
 			assertEquals(events[1].payload.message, "EISDIR: illegal operation on a directory")
@@ -87,7 +87,6 @@ describe("AsyncFileReader", function()
 		end)
 
 		it("should read multiple chunks if the file is large enough to warrant buffering", function()
-
 			AsyncFileReader:LoadFileContents(LARGE_TEST_FILE)
 			uv.run()
 

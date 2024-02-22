@@ -73,25 +73,19 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 				return
 			end
 
-			EVENT(
-				"FILE_CHUNK_AVAILABLE",
-				{
-					fileSystemPath = payload.fileSystemPath,
-					chunkBytes = chunkBytes,
-					maxChunkIndex = 1,
-					currentChunkIndex = 1,
-					fileDescriptor = payload.fileDescriptor,
-				}
-			)
-			EVENT(
-				"FILE_CONTENTS_AVAILABLE",
-				{
-					fileSystemPath = payload.fileSystemPath,
-					maxChunkIndex = payload.maxChunkIndex,
-					currentChunkIndex = payload.currentChunkIndex,
-					fileDescriptor = payload.fileDescriptor,
-				}
-			)
+			EVENT("FILE_CHUNK_AVAILABLE", {
+				fileSystemPath = payload.fileSystemPath,
+				chunkBytes = chunkBytes,
+				maxChunkIndex = 1,
+				currentChunkIndex = 1,
+				fileDescriptor = payload.fileDescriptor,
+			})
+			EVENT("FILE_CONTENTS_AVAILABLE", {
+				fileSystemPath = payload.fileSystemPath,
+				maxChunkIndex = payload.maxChunkIndex,
+				currentChunkIndex = payload.currentChunkIndex,
+				fileDescriptor = payload.fileDescriptor,
+			})
 		end)
 	else
 		payload.maxChunkIndex = 0 -- TBD initialize and reuse payload table, only update as needed
