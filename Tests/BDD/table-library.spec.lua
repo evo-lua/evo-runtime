@@ -197,4 +197,44 @@ describe("table", function()
 			assertTrue(table.contains(values, "world"))
 		end)
 	end)
+
+	describe("shuffle", function()
+		it("should throw if a non-table value was passed as the first parameter", function()
+			assertThrows(function()
+				table.shuffle(nil)
+			end, "Expected argument tableToShuffle to be a table value, but received a nil value instead")
+		end)
+
+		it("should throw if a non-function value was passed as the second parameter", function()
+			assertThrows(function()
+				table.shuffle({}, 42)
+			end, "Expected argument randomNumberGenerator to be a function value, but received a number value instead")
+		end)
+
+		it("should throw if a non-function value was passed as the third parameter", function()
+			assertThrows(function()
+				table.shuffle({}, math.random, 42)
+			end, "Expected argument seed to be a function value, but received a number value instead")
+		end)
+
+		it("should randomize the given table using the provided generator and seed", function()
+			local randomSequence = {}
+			local initialValue = 0
+			local numGeneratedValues = 0
+			local function generator()
+				local nextPseudoRandomNumber = initialValue - numGeneratedValues
+				numGeneratedValues = numGeneratedValues + 1
+				table.insert(randomSequence, nextPseudoRandomNumber)
+				return nextPseudoRandomNumber
+			end
+
+			local tableToShuffle = { 1, 2, 3 }
+			local function seed(clock)
+				initialValue = #tableToShuffle
+			end
+
+			local shuffledTable = table.shuffle(tableToShuffle, generator, seed)
+			assertEquals(shuffledTable, { 3, 2, 1 })
+		end)
+	end)
 end)
