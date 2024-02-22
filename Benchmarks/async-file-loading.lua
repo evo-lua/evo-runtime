@@ -51,6 +51,8 @@ for _, benchmark in ipairs(availableBenchmarks) do
 	benchmark()
 end
 
--- C_FileSystem.Delete(SMALL_FILE_PATH)
--- C_FileSystem.Delete(LARGE_FILE_PATH)
--- C_FileSystem.Delete(HUGE_FILE_PATH)
+console.startTimer("Removing test fixtures")
+C_FileSystem.Delete(SMALL_FILE_PATH)
+C_FileSystem.Delete(LARGE_FILE_PATH)
+C_FileSystem.Delete(HUGE_FILE_PATH)
+console.stopTimer("Removing test fixtures")
