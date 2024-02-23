@@ -57,6 +57,7 @@ describe("webview", function()
 					if numUpdates == 6 then
 						uv.stop()
 						-- Should destroy view here, but it's shared
+						guiUpdateTimer:stop()
 					end
 				end)
 
