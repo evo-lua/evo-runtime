@@ -58,6 +58,15 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 	payload.lastChunkIndex = math_ceil(payload.stat.size / AsyncFileReader.CHUNK_SIZE_IN_BYTES)
 	payload.chunkIndex = 0
 	payload.cursorPosition = 0
+
+	if payload.stat.type == "directory" then
+		-- On Windows, read requests on directories succeed without returning any data
+		-- Simulating the error returned on other platforms here allows providing a consistent interface
+		payload.errorMessage = "EISDIR: illegal operation on a directory" -- Should use uv_strerror but it isn't currently bound
+		EVENT("FILE_REQUEST_FAILED", payload)
+		return
+	end
+
 	self:ReadNextFileChunk(payload)
 end
 
