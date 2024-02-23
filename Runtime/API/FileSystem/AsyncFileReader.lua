@@ -62,7 +62,7 @@ function AsyncFileReader:FILE_STATUS_AVAILABLE(event, payload)
 	if payload.stat.type == "directory" then
 		-- On Windows, read requests on directories succeed without returning any data
 		-- Simulating the error returned on other platforms here allows providing a consistent interface
-		payload.errorMessage = "EISDIR: illegal operation on a directory" -- Should use uv_strerror but it isn't currently bound
+		payload.errorMessage = uv.translate_sys_error(uv.errno.EISDIR)
 		EVENT("FILE_REQUEST_FAILED", payload)
 		return
 	end
