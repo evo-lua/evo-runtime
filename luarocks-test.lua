@@ -10,8 +10,13 @@ local json = require("json")
 local cjson = require("cjson")
 assert(type(cjson) == "table")
 
+local dkjson = require("deps.json")
+assert(type(dkjson) == "table")
+
 local someTable = {hi = 42}
 local cjsonEncodedString = dump(cjson.encode(someTable))
 local rapidjsonEncodedString = dump(json.encode(someTable))
+local dkjsonEncodedString = dump(dkjson.encode(someTable))
 
 assertions.assertEquals(cjsonEncodedString, rapidjsonEncodedString)
+assertions.assertEquals(dkjsonEncodedString, rapidjsonEncodedString)
