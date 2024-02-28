@@ -145,7 +145,7 @@ function evo.run()
 	return C_CommandLine.ProcessArguments(arg)
 end
 
-function evo.readEmbeddedZipApp()
+function evo.readEmbeddedZipApp() -- TODO only read trailer, reuce loading times for non-vfs apps?
 	local executableBytes = C_FileSystem.ReadFile(uv.exepath())
 	return vfs.decode(executableBytes)
 end
