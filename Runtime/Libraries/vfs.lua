@@ -87,6 +87,32 @@ function vfs.dofile(zipApp, filePath)
 	return nil, "Failed to load file " .. filePath .. " (no such entry exists)"
 end
 
+function vfs.extract(filePath) -- C_VFS.ExtractInMemory
+	console.startTimer("VFS: Extract")
+	local zipApp = vfs.app -- or load VFS from app bytes
+	validation.validateTable(zipApp, "zipApp")
+	validation.validateString(filePath, "filePath")
+	
+	-- WUT? Read in memory, unless a DLL needs to be extracted... what a waste
+	local tempFile, tempFilePath = uv.fs_mkstemp("LUAZIP-XXXXXX")
+	C_FileSystem.WriteFile(tempFilePath, zipApp.archive)
+	
+	local reader = miniz.new_reader(tempFilePath)
+	
+	assert(uv.fs_close(tempFile))
+	assert(uv.fs_unlink(tempFilePath))
+
+	for index = 1, reader:get_num_files() do
+		if reader:get_filename(index) == filePath then
+			local fileContents = reader:extract(index)
+			console.stopTimer("VFS: Extract")
+			return fileContents
+		end
+	end
+	console.stopTimer("VFS: Extract")
+	return nil, "Failed to extract file " .. filePath .. " (no such entry exists)"
+end
+
 -- VFS searcher: Allow optional requires from LUAZIP apps (file system takes priority? (TBD: security risk?))
 -- See https://www.lua.org/manual/5.2/manual.html#pdf-package.searchers
 function vfs.searcher(moduleName)
@@ -97,12 +123,13 @@ function vfs.searcher(moduleName)
 			local appBytes = C_FileSystem.ReadFile(uv.exepath()) -- fileContents -- TODO don't read, entire file, only once
 			console.stopTimer("LUAZIP: ReadFile")
 			printf("[VFS] Searching LUAZIP app %s (%s)", uv.exepath(), string.filesize(#appBytes))
-			local filePath = moduleName:gsub("%.", path.separator)
+			local filePath = moduleName:gsub("%.", path.separator) .. ".lua"
 			printf("[VFS] Resolved module name %s to virtual file path %s", moduleName, filePath)
 			console.startTimer("LUAZIP: Decode")
 			local zipApp = vfs.decode(appBytes, filePath)
 			console.stopTimer("LUAZIP: Decode")
-			dump(zipApp.signature)
+			-- dump(zipApp.signature)
+			vfs.app = zipApp -- TODO not here, do once on load OR async/streaming?
 			local mod, err = vfs.dofile(zipApp, filePath)
 			assert(mod, err)
 			return mod, err
