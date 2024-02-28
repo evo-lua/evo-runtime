@@ -85,6 +85,23 @@ function vfs.dofile(zipApp, filePath)
 	return nil, "Failed to load file " .. filePath .. " (no such entry exists)"
 end
 
+-- VFS searcher: Allow optional requires from LUAZIP apps (file system takes priority? (TBD: security risk?))
+-- See https://www.lua.org/manual/5.2/manual.html#pdf-package.searchers
+function vfs.searcher(moduleName)
+	printf("[VFS] Searcher called with moduleName = %s", moduleName)
+	if true then
+		return function()
+			local zipApp = C_FileSystem.ReadFile(uv.exepath())
+			printf("[VFS] Searching LUAZIP app %s (%s)", uv.exepath(), string.filesize(#zipApp))
+			local filePath = moduleName:gsub("%.", path.separator)
+			printf("[VFS] Resolved module name %s to virtual file path %s", moduleName, filePath)
+			return vfs.decode(zipApp, filePath)
+		end
+	end
+	-- local errorMessage = "NYI" -- vfs.errorStrings.NOT_YET_IMPLEMENTED
+	-- return nil, errorMessage
+end
+
 ffi.cdef(vfs.cdefs)
 
 return vfs

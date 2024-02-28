@@ -120,6 +120,7 @@ function evo.run()
 		correctedArgs[1] = arg[0]
 		_G.arg = correctedArgs
 		_G.arg[0] = uv.exepath()
+		table.insert(package.searchers, vfs.searcher)
 		return vfs.dofile(zipApp, evo.DEFAULT_ENTRY_POINT)
 	end
 
