@@ -1,3 +1,4 @@
+local console = require("console")
 local ffi = require("ffi")
 local miniz = require("miniz")
 local uv = require("uv")
@@ -91,11 +92,17 @@ function vfs.searcher(moduleName)
 	printf("[VFS] Searcher called with moduleName = %s", moduleName)
 	if true then
 		return function()
-			local zipApp = C_FileSystem.ReadFile(uv.exepath())
-			printf("[VFS] Searching LUAZIP app %s (%s)", uv.exepath(), string.filesize(#zipApp))
+			console.startTimer("LUAZIP: ReadFile")
+			local appBytes = C_FileSystem.ReadFile(uv.exepath()) -- fileContents -- TODO don't read, entire file, only once
+			console.stopTimer("LUAZIP: ReadFile")
+			printf("[VFS] Searching LUAZIP app %s (%s)", uv.exepath(), string.filesize(#appBytes))
 			local filePath = moduleName:gsub("%.", path.separator)
 			printf("[VFS] Resolved module name %s to virtual file path %s", moduleName, filePath)
-			return vfs.decode(zipApp, filePath)
+			console.startTimer("LUAZIP: Decode")
+			local zipApp = vfs.decode(appBytes, filePath)
+			console.startTimer("LUAZIP: Decode")
+			dump(zipApp)
+			return zipApp
 		end
 	end
 	-- local errorMessage = "NYI" -- vfs.errorStrings.NOT_YET_IMPLEMENTED
