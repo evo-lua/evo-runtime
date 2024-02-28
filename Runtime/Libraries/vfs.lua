@@ -103,7 +103,9 @@ function vfs.searcher(moduleName)
 			local zipApp = vfs.decode(appBytes, filePath)
 			console.stopTimer("LUAZIP: Decode")
 			dump(zipApp.signature)
-			return vfs.dofile(zipApp, filePath)
+			local mod, err = vfs.dofile(zipApp, filePath)
+			assert(mod, err)
+			return mod, err
 		end
 	end
 	-- local errorMessage = "NYI" -- vfs.errorStrings.NOT_YET_IMPLEMENTED
