@@ -68,6 +68,7 @@ function vfs.dofile(zipApp, filePath)
 	validation.validateTable(zipApp, "zipApp")
 	validation.validateString(filePath, "filePath")
 
+	-- WUT? Read in memory, unless a DLL needs to be extracted... what a waste
 	local tempFile, tempFilePath = uv.fs_mkstemp("LUAZIP-XXXXXX")
 	C_FileSystem.WriteFile(tempFilePath, zipApp.archive)
 
@@ -100,9 +101,9 @@ function vfs.searcher(moduleName)
 			printf("[VFS] Resolved module name %s to virtual file path %s", moduleName, filePath)
 			console.startTimer("LUAZIP: Decode")
 			local zipApp = vfs.decode(appBytes, filePath)
-			console.startTimer("LUAZIP: Decode")
-			dump(zipApp)
-			return zipApp
+			console.stopTimer("LUAZIP: Decode")
+			dump(zipApp.signature)
+			return vfs.dofile(zipApp, filePath)
 		end
 	end
 	-- local errorMessage = "NYI" -- vfs.errorStrings.NOT_YET_IMPLEMENTED
