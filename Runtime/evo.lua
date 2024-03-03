@@ -146,8 +146,19 @@ function evo.run()
 end
 
 function evo.readEmbeddedZipApp() -- TODO only read trailer, reuce loading times for non-vfs apps?
+	local console = require("console") -- TBD compare uv vs io library perf
+	console.startTimer("readEmbeddedZipApp")
+	-- vfs.open(uv.exepath)
+	-- local vfsHandle = io.open(uv.exepath(), "rb")
+	-- local signatureSize = ffi.sizeof("lua_zip_signature_t")
+	-- vfsHandle:seek("end", signatureSize)
+	-- local signature = vfsHandle:read(signatureSize)
+	-- -- vfs.close()
+	-- vfsHandle:close()
 	local executableBytes = C_FileSystem.ReadFile(uv.exepath())
-	return vfs.decode(executableBytes)
+	local fs, err = vfs.decode(executableBytes)
+	console.stopTimer("readEmbeddedZipApp")
+	return fs, err
 end
 
 function evo.setUpCommandLineInterface()
