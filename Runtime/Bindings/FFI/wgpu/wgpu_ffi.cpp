@@ -21,6 +21,7 @@ namespace wgpu_ffi {
 			.wgpu_adapter_get_limits = wgpuAdapterGetLimits,
 			.wgpu_adapter_get_properties = wgpuAdapterGetProperties,
 			.wgpu_adapter_has_feature = wgpuAdapterHasFeature,
+			.wgpu_adapter_request_adapter_info = wgpuAdapterRequestAdapterInfo,
 			.wgpu_adapter_request_device = wgpuAdapterRequestDevice,
 			.wgpu_adapter_reference = wgpuAdapterReference,
 			.wgpu_adapter_release = wgpuAdapterRelease,
@@ -119,6 +120,7 @@ namespace wgpu_ffi {
 
 			// Instance
 			.wgpu_instance_create_surface = wgpuInstanceCreateSurface,
+			.wgpu_instance_has_wgsl_language_feature = wgpuInstanceHasWGSLLanguageFeature,
 			.wgpu_instance_process_events = wgpuInstanceProcessEvents,
 			.wgpu_instance_request_adapter = wgpuInstanceRequestAdapter,
 			.wgpu_instance_reference = wgpuInstanceReference,
@@ -215,6 +217,7 @@ namespace wgpu_ffi {
 			.wgpu_surface_get_current_texture = wgpuSurfaceGetCurrentTexture,
 			.wgpu_surface_get_preferred_format = wgpuSurfaceGetPreferredFormat,
 			.wgpu_surface_present = wgpuSurfacePresent,
+			.wgpu_surface_set_label = wgpuSurfaceSetLabel,
 			.wgpu_surface_unconfigure = wgpuSurfaceUnconfigure,
 			.wgpu_surface_reference = wgpuSurfaceReference,
 			.wgpu_surface_release = wgpuSurfaceRelease,

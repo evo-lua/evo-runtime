@@ -12,7 +12,8 @@ struct static_wgpu_exports_table {
 	WGPUBool (*wgpu_adapter_get_limits)(WGPUAdapter adapter, WGPUSupportedLimits* limits);
 	void (*wgpu_adapter_get_properties)(WGPUAdapter adapter, WGPUAdapterProperties* properties);
 	WGPUBool (*wgpu_adapter_has_feature)(WGPUAdapter adapter, WGPUFeatureName feature);
-	void (*wgpu_adapter_request_device)(WGPUAdapter adapter, WGPUDeviceDescriptor const* descriptor /* nullable */, WGPURequestDeviceCallback callback, void* userdata);
+	void (*wgpu_adapter_request_adapter_info)(WGPUAdapter adapter, WGPUAdapterRequestAdapterInfoCallback callback, void* userdata);
+	void (*wgpu_adapter_request_device)(WGPUAdapter adapter, WGPUDeviceDescriptor const* descriptor /* nullable */, WGPUAdapterRequestDeviceCallback callback, void* userdata);
 	void (*wgpu_adapter_reference)(WGPUAdapter adapter);
 	void (*wgpu_adapter_release)(WGPUAdapter adapter);
 
@@ -33,7 +34,7 @@ struct static_wgpu_exports_table {
 	void* (*wgpu_buffer_get_mapped_range)(WGPUBuffer buffer, size_t offset, size_t size);
 	uint64_t (*wgpu_buffer_get_size)(WGPUBuffer buffer);
 	WGPUBufferUsageFlags (*wgpu_buffer_get_usage)(WGPUBuffer buffer);
-	void (*wgpu_buffer_map_async)(WGPUBuffer buffer, WGPUMapModeFlags mode, size_t offset, size_t size, WGPUBufferMapCallback callback, void* userdata);
+	void (*wgpu_buffer_map_async)(WGPUBuffer buffer, WGPUMapModeFlags mode, size_t offset, size_t size, WGPUBufferMapAsyncCallback callback, void* userdata);
 	void (*wgpu_buffer_set_label)(WGPUBuffer buffer, char const* label);
 	void (*wgpu_buffer_unmap)(WGPUBuffer buffer);
 	void (*wgpu_buffer_reference)(WGPUBuffer buffer);
@@ -87,12 +88,12 @@ struct static_wgpu_exports_table {
 	WGPUBuffer (*wgpu_device_create_buffer)(WGPUDevice device, WGPUBufferDescriptor const* descriptor);
 	WGPUCommandEncoder (*wgpu_device_create_command_encoder)(WGPUDevice device, WGPUCommandEncoderDescriptor const* descriptor /* nullable */);
 	WGPUComputePipeline (*wgpu_device_create_compute_pipeline)(WGPUDevice device, WGPUComputePipelineDescriptor const* descriptor);
-	void (*wgpu_device_create_compute_pipeline_async)(WGPUDevice device, WGPUComputePipelineDescriptor const* descriptor, WGPUCreateComputePipelineAsyncCallback callback, void* userdata);
+	void (*wgpu_device_create_compute_pipeline_async)(WGPUDevice device, WGPUComputePipelineDescriptor const* descriptor, WGPUDeviceCreateComputePipelineAsyncCallback callback, void* userdata);
 	WGPUPipelineLayout (*wgpu_device_create_pipeline_layout)(WGPUDevice device, WGPUPipelineLayoutDescriptor const* descriptor);
 	WGPUQuerySet (*wgpu_device_create_query_set)(WGPUDevice device, WGPUQuerySetDescriptor const* descriptor);
 	WGPURenderBundleEncoder (*wgpu_device_create_render_bundle_encoder)(WGPUDevice device, WGPURenderBundleEncoderDescriptor const* descriptor);
 	WGPURenderPipeline (*wgpu_device_create_render_pipeline)(WGPUDevice device, WGPURenderPipelineDescriptor const* descriptor);
-	void (*wgpu_device_create_render_pipeline_async)(WGPUDevice device, WGPURenderPipelineDescriptor const* descriptor, WGPUCreateRenderPipelineAsyncCallback callback, void* userdata);
+	void (*wgpu_device_create_render_pipeline_async)(WGPUDevice device, WGPURenderPipelineDescriptor const* descriptor, WGPUDeviceCreateRenderPipelineAsyncCallback callback, void* userdata);
 	WGPUSampler (*wgpu_device_create_sampler)(WGPUDevice device, WGPUSamplerDescriptor const* descriptor /* nullable */);
 	WGPUShaderModule (*wgpu_device_create_shader_module)(WGPUDevice device, WGPUShaderModuleDescriptor const* descriptor);
 	WGPUTexture (*wgpu_device_create_texture)(WGPUDevice device, WGPUTextureDescriptor const* descriptor);
@@ -110,8 +111,9 @@ struct static_wgpu_exports_table {
 
 	// Methods of Instance
 	WGPUSurface (*wgpu_instance_create_surface)(WGPUInstance instance, WGPUSurfaceDescriptor const* descriptor);
+	WGPUBool (*wgpu_instance_has_wgsl_language_feature)(WGPUInstance instance, WGPUWGSLFeatureName feature);
 	void (*wgpu_instance_process_events)(WGPUInstance instance);
-	void (*wgpu_instance_request_adapter)(WGPUInstance instance, WGPURequestAdapterOptions const* options /* nullable */, WGPURequestAdapterCallback callback, void* userdata);
+	void (*wgpu_instance_request_adapter)(WGPUInstance instance, WGPURequestAdapterOptions const* options /* nullable */, WGPUInstanceRequestAdapterCallback callback, void* userdata);
 	void (*wgpu_instance_reference)(WGPUInstance instance);
 	void (*wgpu_instance_release)(WGPUInstance instance);
 
@@ -129,7 +131,7 @@ struct static_wgpu_exports_table {
 	void (*wgpu_query_set_release)(WGPUQuerySet querySet);
 
 	// Methods of Queue
-	void (*wgpu_queue_on_submitted_work_done)(WGPUQueue queue, WGPUQueueWorkDoneCallback callback, void* userdata);
+	void (*wgpu_queue_on_submitted_work_done)(WGPUQueue queue, WGPUQueueOnSubmittedWorkDoneCallback callback, void* userdata);
 	void (*wgpu_queue_set_label)(WGPUQueue queue, char const* label);
 	void (*wgpu_queue_submit)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const* commands);
 	void (*wgpu_queue_write_buffer)(WGPUQueue queue, WGPUBuffer buffer, uint64_t bufferOffset, void const* data, size_t size);
@@ -195,23 +197,24 @@ struct static_wgpu_exports_table {
 	void (*wgpu_sampler_release)(WGPUSampler sampler);
 
 	// Methods of ShaderModule
-	void (*wgpu_shader_module_get_compilation_info)(WGPUShaderModule shaderModule, WGPUCompilationInfoCallback callback, void* userdata);
+	void (*wgpu_shader_module_get_compilation_info)(WGPUShaderModule shaderModule, WGPUShaderModuleGetCompilationInfoCallback callback, void* userdata);
 	void (*wgpu_shader_module_set_label)(WGPUShaderModule shaderModule, char const* label);
 	void (*wgpu_shader_module_reference)(WGPUShaderModule shaderModule);
 	void (*wgpu_shader_module_release)(WGPUShaderModule shaderModule);
 
 	// Methods of Surface
 	void (*wgpu_surface_configure)(WGPUSurface surface, WGPUSurfaceConfiguration const* config);
-	void (*wgpu_surface_get_capabilities)(WGPUSurface surface, WGPUAdapter adapter, WGPUSurfaceCapabilities* capabilities);
+	void (*wgpu_surface_get_capabilities)(WGPUSurface surface, WGPUAdapter adapter, WGPUSurfaceCapabilities* surfaceCapabilities);
 	void (*wgpu_surface_get_current_texture)(WGPUSurface surface, WGPUSurfaceTexture* surfaceTexture);
 	WGPUTextureFormat (*wgpu_surface_get_preferred_format)(WGPUSurface surface, WGPUAdapter adapter);
 	void (*wgpu_surface_present)(WGPUSurface surface);
+	void (*wgpu_surface_set_label)(WGPUSurface surface, char const* label);
 	void (*wgpu_surface_unconfigure)(WGPUSurface surface);
 	void (*wgpu_surface_reference)(WGPUSurface surface);
 	void (*wgpu_surface_release)(WGPUSurface surface);
 
 	// Methods of SurfaceCapabilities
-	void (*wgpu_surface_capabilities_free_members)(WGPUSurfaceCapabilities capabilities);
+	void (*wgpu_surface_capabilities_free_members)(WGPUSurfaceCapabilities surfaceCapabilities);
 
 	// Methods of Texture
 	WGPUTextureView (*wgpu_texture_create_view)(WGPUTexture texture, WGPUTextureViewDescriptor const* descriptor /* nullable */);
