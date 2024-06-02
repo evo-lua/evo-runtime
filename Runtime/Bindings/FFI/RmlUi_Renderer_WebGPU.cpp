@@ -26,7 +26,7 @@ size_t RenderInterface_WebGPU::GetAlignedBufferSize(size_t unalignedSize) {
 	return paddedSize;
 }
 
-WGPUBuffer RenderInterface_WebGPU::CreateVertexBuffer(Rml::Vertex* vertices, int num_vertices) {
+WGPUBuffer RenderInterface_WebGPU::CreateVertexBuffer(const Rml::Vertex* vertices, int num_vertices) {
 	size_t rawBufferSizeInBytes = num_vertices * sizeof(Rml::Vertex);
 	size_t alignedBufferSizeInBytes = GetAlignedBufferSize(rawBufferSizeInBytes);
 	WGPUBufferDescriptor bufferDescriptor = {
@@ -41,7 +41,7 @@ WGPUBuffer RenderInterface_WebGPU::CreateVertexBuffer(Rml::Vertex* vertices, int
 	return vertexBuffer;
 }
 
-WGPUBuffer RenderInterface_WebGPU::CreateIndexBuffer(int* indices, int num_indices) {
+WGPUBuffer RenderInterface_WebGPU::CreateIndexBuffer(const int* indices, int num_indices) {
 	size_t rawBufferSizeInBytes = num_indices * sizeof(int);
 	size_t alignedBufferSizeInBytes = GetAlignedBufferSize(rawBufferSizeInBytes);
 	WGPUBufferDescriptor bufferDescriptor = {
@@ -99,65 +99,39 @@ WGPUTexture RenderInterface_WebGPU::CreateTexture(const uint8_t* rgbaImageBytes,
 	return wgpuTexture;
 }
 
-void RenderInterface_WebGPU::RenderGeometry(Rml::Vertex* vertices, int num_vertices, int* indices, int num_indices,
-	Rml::TextureHandle rmlTextureHandle, const Rml::Vector2f& rmlTranslationVector) {
-	RML_DEBUG_TRACE("Rendering geometry: %d vertices, %d indices", num_vertices, num_indices);
-
+Rml::CompiledGeometryHandle RenderInterface_WebGPU::CompileGeometry(Rml::Span<const Rml::Vertex> vertices, Rml::Span<const int> indices) {
+	const size_t num_vertices = vertices.size();
+	const size_t num_indices = indices.size();
 	assert(num_vertices > 0);
 	assert(num_indices > 0);
 
-	WGPUBuffer vertexBuffer = CreateVertexBuffer(vertices, num_vertices);
-	WGPUBuffer indexBuffer = CreateIndexBuffer(indices, num_indices);
-
-	rml_geometry_info_t geometry {
-		.vertex_buffer = vertexBuffer,
-		.num_vertices = num_vertices,
-		.index_buffer = indexBuffer,
-		.num_indices = num_indices,
-		.texture = reinterpret_cast<WGPUTexture>(rmlTextureHandle)
-	};
-	geometry_render_event_t payload {
-		.type = GEOMETRY_RENDER_EVENT,
-		.geometry = geometry,
-		.translate_u = rmlTranslationVector.x,
-		.translate_v = rmlTranslationVector.y
-	};
-	deferred_event_t event { .geometry_render_details = payload };
-	m_deferredEventsQueue->push(event);
-}
-
-Rml::CompiledGeometryHandle RenderInterface_WebGPU::CompileGeometry(Rml::Vertex* vertices, int num_vertices, int* indices, int num_indices, Rml::TextureHandle rmlTextureHandle) {
-	assert(num_vertices > 0);
-	assert(num_indices > 0);
-
-	WGPUBuffer vertexBuffer = CreateVertexBuffer(vertices, num_vertices);
-	WGPUBuffer indexBuffer = CreateIndexBuffer(indices, num_indices);
+	WGPUBuffer vertexBuffer = CreateVertexBuffer(vertices.data(), num_vertices);
+	WGPUBuffer indexBuffer = CreateIndexBuffer(indices.data(), num_indices);
 
 	rml_geometry_info_t* geometry = new rml_geometry_info_t;
 	geometry->vertex_buffer = vertexBuffer;
 	geometry->num_vertices = num_vertices;
 	geometry->index_buffer = indexBuffer;
 	geometry->num_indices = num_indices;
-	geometry->texture = reinterpret_cast<WGPUTexture>(rmlTextureHandle);
 
 	if(DEBUG_RML_GEOMETRY_GENERATION) {
 		std::ofstream vertexFile("rml-vertices.bin", std::ios::out | std::ios::binary);
 		if(vertexFile.is_open()) {
-			vertexFile.write(reinterpret_cast<const char*>(vertices), num_vertices * sizeof(Rml::Vertex));
+			vertexFile.write(reinterpret_cast<const char*>(vertices.data()), num_vertices * sizeof(Rml::Vertex));
 			vertexFile.close();
 		}
 
 		std::ofstream indexFile("rml-indices.bin", std::ios::out | std::ios::binary);
 		if(indexFile.is_open()) {
-			indexFile.write(reinterpret_cast<const char*>(indices), num_indices * sizeof(int));
+			indexFile.write(reinterpret_cast<const char*>(indices.data()), num_indices * sizeof(int));
 			indexFile.close();
 		}
 	}
 
-	RML_DEBUG_TRACE("Compiled geometry %p with texture %p (%d vertices + %d indices; %d bytes per vertex)", geometry, reinterpret_cast<void*>(rmlTextureHandle), num_vertices, num_indices, sizeof(Rml::Vertex));
+	RML_DEBUG_TRACE("Compiled geometry %p (%d vertices + %d indices; %d bytes per vertex)", geometry, num_vertices, num_indices, sizeof(Rml::Vertex));
 
-	geometry_compile_event_t payload {
-		.type = GEOMETRY_COMPILE_EVENT,
+	geometry_compilation_event_t payload {
+		.type = GEOMETRY_COMPILATION_EVENT,
 		.compiled_geometry = *geometry,
 	};
 	deferred_event_t event { .geometry_compilation_details = payload };
@@ -166,30 +140,31 @@ Rml::CompiledGeometryHandle RenderInterface_WebGPU::CompileGeometry(Rml::Vertex*
 	return reinterpret_cast<Rml::CompiledGeometryHandle>(geometry);
 }
 
-void RenderInterface_WebGPU::RenderCompiledGeometry(Rml::CompiledGeometryHandle rmlGeometryHandle, const Rml::Vector2f& rmlTranslationVector) {
+void RenderInterface_WebGPU::RenderGeometry(Rml::CompiledGeometryHandle rmlGeometryHandle, Rml::Vector2f rmlTranslationVector, Rml::TextureHandle rmlTextureHandle) {
 	rml_geometry_info_t* geometry = reinterpret_cast<rml_geometry_info_t*>(rmlGeometryHandle);
 
 	RML_DEBUG_TRACE("Rendering compiled geometry %p with translation (%.2f, %.2f)", geometry, rmlTranslationVector.x, rmlTranslationVector.y);
 
-	compilation_render_event_t payload {
-		.type = COMPILATION_RENDER_EVENT,
+	geometry_render_event_t payload {
+		.type = GEOMETRY_RENDER_EVENT,
 		.compiled_geometry = *geometry,
 		.translate_u = rmlTranslationVector.x,
-		.translate_v = rmlTranslationVector.y
+		.translate_v = rmlTranslationVector.y,
+		.texture = reinterpret_cast<WGPUTexture>(rmlTextureHandle),
 	};
-	deferred_event_t event { .compilation_render_details = payload };
+	deferred_event_t event { .geometry_render_details = payload };
 	m_deferredEventsQueue->push(event);
 }
 
-void RenderInterface_WebGPU::ReleaseCompiledGeometry(Rml::CompiledGeometryHandle rmlGeometryHandle) {
+void RenderInterface_WebGPU::ReleaseGeometry(Rml::CompiledGeometryHandle rmlGeometryHandle) {
 	rml_geometry_info_t* geometry = reinterpret_cast<rml_geometry_info_t*>(rmlGeometryHandle);
 	RML_DEBUG_TRACE("Releasing compiled geometry %p", geometry);
 
-	compilation_release_event_t payload {
-		.type = COMPILATION_RELEASE_EVENT,
+	geometry_release_event_t payload {
+		.type = GEOMETRY_RELEASE_EVENT,
 		.compiled_geometry = *geometry,
 	};
-	deferred_event_t event { .compilation_release_details = payload };
+	deferred_event_t event { .geometry_release_details = payload };
 	m_deferredEventsQueue->push(event);
 }
 
@@ -204,7 +179,12 @@ void RenderInterface_WebGPU::EnableScissorRegion(bool enabledFlag) {
 	m_deferredEventsQueue->push(event);
 }
 
-void RenderInterface_WebGPU::SetScissorRegion(int x, int y, int width, int height) {
+void RenderInterface_WebGPU::SetScissorRegion(Rml::Rectanglei region) {
+
+	const int x = region.Position().x;
+	const int y = region.Position().y;
+	const int width = region.Width();
+	const int height = region.Height();
 	RML_DEBUG_TRACE("Enabling scissor testing for the region from (%d, %d) to (%d, %d)", x, y, x + width, y + height);
 
 	scissortest_region_event_t payload {
@@ -218,7 +198,7 @@ void RenderInterface_WebGPU::SetScissorRegion(int x, int y, int width, int heigh
 	m_deferredEventsQueue->push(event);
 }
 
-bool RenderInterface_WebGPU::LoadTexture(Rml::TextureHandle& rmlTextureHandle, Rml::Vector2i& textureDimensions, const Rml::String& source) {
+Rml::TextureHandle RenderInterface_WebGPU::LoadTexture(Rml::Vector2i& textureDimensions, const Rml::String& source) {
 	RML_DEBUG_TRACE("Loading texture from source %s", source.c_str());
 
 	// Should probably defer this for async/background loading (later)
@@ -227,8 +207,6 @@ bool RenderInterface_WebGPU::LoadTexture(Rml::TextureHandle& rmlTextureHandle, R
 	if(!rgbaImageBytes) return false;
 
 	WGPUTexture wgpuTexture = CreateTexture(rgbaImageBytes, textureDimensions.x, textureDimensions.y);
-	rmlTextureHandle = reinterpret_cast<Rml::TextureHandle>(wgpuTexture);
-
 	texture_load_event_t payload {
 		.type = TEXTURE_LOAD_EVENT,
 		.texture = wgpuTexture,
@@ -236,18 +214,18 @@ bool RenderInterface_WebGPU::LoadTexture(Rml::TextureHandle& rmlTextureHandle, R
 	deferred_event_t event { .texture_load_details = payload };
 	m_deferredEventsQueue->push(event);
 
-	return true;
+	return reinterpret_cast<Rml::TextureHandle>(wgpuTexture);
 }
 
-bool RenderInterface_WebGPU::GenerateTexture(Rml::TextureHandle& rmlTextureHandle, const Rml::byte* rgbaImageBytes, const Rml::Vector2i& sourceDimensions) {
+Rml::TextureHandle RenderInterface_WebGPU::GenerateTexture(Rml::Span<const Rml::byte> rgbaImageBytes, const Rml::Vector2i sourceDimensions) {
 	const uint32_t textureWidth = static_cast<uint32_t>(sourceDimensions.x);
 	const uint32_t textureHeight = static_cast<uint32_t>(sourceDimensions.y);
 	const uint32_t textureBufferSize = textureWidth * textureHeight * 4; // RGBA
-	WGPUTexture wgpuTexture = CreateTexture(rgbaImageBytes, textureWidth, textureHeight);
+	WGPUTexture wgpuTexture = CreateTexture(rgbaImageBytes.data(), textureWidth, textureHeight);
 
 	RML_DEBUG_TRACE("Generated WebGPU texture %p with dimensions %d x %d (%d bytes)", wgpuTexture, textureWidth, textureHeight, textureBufferSize);
 
-	rmlTextureHandle = reinterpret_cast<Rml::TextureHandle>(wgpuTexture);
+	Rml::TextureHandle rmlTextureHandle = reinterpret_cast<Rml::TextureHandle>(wgpuTexture);
 
 	texture_generation_event_t payload {
 		.type = TEXTURE_GENERATION_EVENT,
@@ -258,11 +236,11 @@ bool RenderInterface_WebGPU::GenerateTexture(Rml::TextureHandle& rmlTextureHandl
 
 	if(DEBUG_RML_TEXTURE_GENERATION) {
 		std::string pngFileName = "rml-texture-" + std::to_string(rmlTextureHandle) + ".png";
-		std::vector<uint8_t> pngImageBytes(rgbaImageBytes, rgbaImageBytes + textureBufferSize);
+		std::vector<uint8_t> pngImageBytes(rgbaImageBytes.data(), rgbaImageBytes.data() + textureBufferSize);
 		stbi_write_png(pngFileName.c_str(), textureWidth, textureHeight, 4, pngImageBytes.data(), textureWidth * 4);
 	}
 
-	return true;
+	return rmlTextureHandle;
 }
 
 void RenderInterface_WebGPU::ReleaseTexture(Rml::TextureHandle rmlTextureHandle) {
