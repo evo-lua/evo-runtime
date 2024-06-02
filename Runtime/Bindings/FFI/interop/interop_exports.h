@@ -136,7 +136,6 @@ typedef struct rml_geometry_info_t {
 	int num_vertices;
 	wgpu_buffer_t index_buffer;
 	int num_indices;
-	wgpu_texture_t texture;
 } rml_geometry_info_t;
 
 typedef struct geometry_render_event_t {
@@ -156,6 +155,7 @@ typedef struct compilation_render_event_t {
 	rml_geometry_info_t compiled_geometry;
 	float translate_u;
 	float translate_v;
+	wgpu_texture_t texture;
 } compilation_render_event_t;
 
 typedef struct compilation_release_event_t {

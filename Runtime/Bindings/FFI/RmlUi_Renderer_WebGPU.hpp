@@ -24,20 +24,18 @@ public:
 
 	// Utilities and glue code (creating GPU buffers immediately avoids unnecessary copies)
 	size_t GetAlignedBufferSize(size_t unalignedSize);
-	WGPUBuffer CreateVertexBuffer(Rml::Vertex* vertices, int num_vertices);
-	WGPUBuffer CreateIndexBuffer(int* indices, int num_indices);
+	WGPUBuffer CreateVertexBuffer(const Rml::Vertex* vertices, int num_vertices);
+	WGPUBuffer CreateIndexBuffer(const int* indices, int num_indices);
 	WGPUTexture CreateTexture(const uint8_t* rgbaImageBytes, const uint32_t textureWidth, const uint32_t textureHeight);
 
 	// RML command handlers
-	void RenderGeometry(Rml::Vertex* vertices, int num_vertices, int* indices, int num_indices,
-		Rml::TextureHandle texture, const Rml::Vector2f& translation) override;
-	Rml::CompiledGeometryHandle CompileGeometry(Rml::Vertex* vertices, int num_vertices, int* indices, int num_indices, Rml::TextureHandle texture) override;
-	void RenderCompiledGeometry(Rml::CompiledGeometryHandle geometry, const Rml::Vector2f& translation) override;
-	void ReleaseCompiledGeometry(Rml::CompiledGeometryHandle geometry) override;
+	Rml::CompiledGeometryHandle CompileGeometry(Rml::Span<const Rml::Vertex> vertices, Rml::Span<const int> indices) override;
+	void RenderGeometry(Rml::CompiledGeometryHandle rmlGeometryHandle, Rml::Vector2f rmlTranslationVector, Rml::TextureHandle rmlTextureHandle) override;
+	void ReleaseGeometry(Rml::CompiledGeometryHandle rmlGeometryHandle) override;
 	void EnableScissorRegion(bool enable) override;
-	void SetScissorRegion(int x, int y, int width, int height) override;
-	bool LoadTexture(Rml::TextureHandle& rmlTextureHandle, Rml::Vector2i& textureDimensions, const Rml::String& source) override;
-	bool GenerateTexture(Rml::TextureHandle& rmlTextureHandle, const Rml::byte* rgbaImageBytes, const Rml::Vector2i& sourceDimensions) override;
+	void SetScissorRegion(Rml::Rectanglei region) override;
+	Rml::TextureHandle LoadTexture(Rml::Vector2i& textureDimensions, const Rml::String& source) override;
+	Rml::TextureHandle GenerateTexture(Rml::Span<const Rml::byte> rgbaImageBytes, Rml::Vector2i sourceDimensions) override;
 	void ReleaseTexture(Rml::TextureHandle rmlTextureHandle) override;
 	void SetTransform(const Rml::Matrix4f* transform) override;
 };
