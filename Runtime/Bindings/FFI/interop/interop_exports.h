@@ -22,10 +22,9 @@ typedef enum {
 	KEYBOARD_EVENT,
 	CHARACTER_INPUT_EVENT,
 	// RML UI events
+	GEOMETRY_COMPILATION_EVENT,
 	GEOMETRY_RENDER_EVENT,
-	GEOMETRY_COMPILE_EVENT,
-	COMPILATION_RENDER_EVENT,
-	COMPILATION_RELEASE_EVENT,
+	GEOMETRY_RELEASE_EVENT,
 	SCISSORTEST_STATUS_EVENT,
 	SCISSORTEST_REGION_EVENT,
 	TEXTURE_LOAD_EVENT,
@@ -138,30 +137,23 @@ typedef struct rml_geometry_info_t {
 	int num_indices;
 } rml_geometry_info_t;
 
-typedef struct geometry_render_event_t {
-	int type;
-	rml_geometry_info_t geometry;
-	float translate_u;
-	float translate_v;
-} geometry_render_event_t;
-
-typedef struct geometry_compile_event_t {
+typedef struct geometry_compilation_event_t {
 	int type;
 	rml_geometry_info_t compiled_geometry;
-} geometry_compile_event_t;
+} geometry_compilation_event_t;
 
-typedef struct compilation_render_event_t {
+typedef struct geometry_render_event_t {
 	int type;
 	rml_geometry_info_t compiled_geometry;
 	float translate_u;
 	float translate_v;
 	wgpu_texture_t texture;
-} compilation_render_event_t;
+} geometry_render_event_t;
 
-typedef struct compilation_release_event_t {
+typedef struct geometry_release_event_t {
 	int type;
 	rml_geometry_info_t compiled_geometry;
-} compilation_release_event_t;
+} geometry_release_event_t;
 
 typedef struct scissortest_status_event_t {
 	int type;
@@ -230,10 +222,9 @@ typedef union deferred_event_t {
 	key_event_t key_details;
 	character_input_event_t character_input_details;
 	// RML
+	geometry_compilation_event_t geometry_compilation_details;
 	geometry_render_event_t geometry_render_details;
-	geometry_compile_event_t geometry_compilation_details;
-	compilation_render_event_t compilation_render_details;
-	compilation_release_event_t compilation_release_details;
+	geometry_release_event_t geometry_release_details;
 	scissortest_status_event_t scissortest_status_details;
 	scissortest_region_event_t scissortest_region_details;
 	texture_load_event_t texture_load_details;

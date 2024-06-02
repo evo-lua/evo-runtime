@@ -130,8 +130,8 @@ Rml::CompiledGeometryHandle RenderInterface_WebGPU::CompileGeometry(Rml::Span<co
 
 	RML_DEBUG_TRACE("Compiled geometry %p (%d vertices + %d indices; %d bytes per vertex)", geometry, num_vertices, num_indices, sizeof(Rml::Vertex));
 
-	geometry_compile_event_t payload {
-		.type = GEOMETRY_COMPILE_EVENT,
+	geometry_compilation_event_t payload {
+		.type = GEOMETRY_COMPILATION_EVENT,
 		.compiled_geometry = *geometry,
 	};
 	deferred_event_t event { .geometry_compilation_details = payload };
@@ -145,14 +145,14 @@ void RenderInterface_WebGPU::RenderGeometry(Rml::CompiledGeometryHandle rmlGeome
 
 	RML_DEBUG_TRACE("Rendering compiled geometry %p with translation (%.2f, %.2f)", geometry, rmlTranslationVector.x, rmlTranslationVector.y);
 
-	compilation_render_event_t payload {
-		.type = COMPILATION_RENDER_EVENT,
+	geometry_render_event_t payload {
+		.type = GEOMETRY_RENDER_EVENT,
 		.compiled_geometry = *geometry,
 		.translate_u = rmlTranslationVector.x,
 		.translate_v = rmlTranslationVector.y,
 		.texture = reinterpret_cast<WGPUTexture>(rmlTextureHandle),
 	};
-	deferred_event_t event { .compilation_render_details = payload };
+	deferred_event_t event { .geometry_render_details = payload };
 	m_deferredEventsQueue->push(event);
 }
 
@@ -160,11 +160,11 @@ void RenderInterface_WebGPU::ReleaseGeometry(Rml::CompiledGeometryHandle rmlGeom
 	rml_geometry_info_t* geometry = reinterpret_cast<rml_geometry_info_t*>(rmlGeometryHandle);
 	RML_DEBUG_TRACE("Releasing compiled geometry %p", geometry);
 
-	compilation_release_event_t payload {
-		.type = COMPILATION_RELEASE_EVENT,
+	geometry_release_event_t payload {
+		.type = GEOMETRY_RELEASE_EVENT,
 		.compiled_geometry = *geometry,
 	};
-	deferred_event_t event { .compilation_release_details = payload };
+	deferred_event_t event { .geometry_release_details = payload };
 	m_deferredEventsQueue->push(event);
 }
 
