@@ -1,0 +1,3 @@
+return {
+	checksum = 42,
+}

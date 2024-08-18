@@ -162,18 +162,24 @@ local testCases = {
 			local zipApp = vfs.decode(zipAppBytes)
 			local zipAppSize = #zipApp.archive
 			local totalFileSize = uv.fs_stat(path.join(fullAppDirectoryPath, "main.lua")).size
+				+ uv.fs_stat(path.join(fullAppDirectoryPath, "conflicting.lua")).size
+				+ uv.fs_stat(path.join(fullAppDirectoryPath, "searchable.lua")).size
 				+ uv.fs_stat(path.join(fullAppDirectoryPath, "some-file.txt")).size
 				+ uv.fs_stat(path.join(fullAppDirectoryPath, "subdirectory", "another-file.lua")).size
 
 			local expectedOutput = format("Building from %s\n", transform.bold(fullAppDirectoryPath))
+				.. format(transform.magenta("Adding file: conflicting.lua"))
+				.. "\n"
 				.. format(transform.magenta("Adding file: main.lua"))
+				.. "\n"
+				.. format(transform.magenta("Adding file: searchable.lua"))
 				.. "\n"
 				.. format(transform.magenta("Adding file: some-file.txt"))
 				.. "\n"
 				.. format(transform.magenta("Adding file: %s"), path.join("subdirectory", "another-file.lua"))
 				.. "\n"
 				.. format(
-					transform.brightGreen("Archived 3 files (%s) - total size: %s") .. "\n",
+					transform.brightGreen("Archived 5 files (%s) - total size: %s") .. "\n",
 					string.filesize(totalFileSize),
 					string.filesize(zipAppSize)
 				)
@@ -432,6 +438,7 @@ testCases = {
 	},
 }
 
+C_FileSystem.WriteFile("conflicting.lua", "return {checksum=0}")
 C_FileSystem.WriteFile("main.lua", "print('Hello from main.lua')")
 C_FileSystem.WriteFile(
 	"test.lua",
@@ -443,4 +450,5 @@ C_Runtime.RunSnapshotTests(testCases)
 C_FileSystem.Delete("hello-world-app.zip")
 C_FileSystem.Delete("hello-world-app" .. EXECUTABLE_SUFFIX)
 C_FileSystem.Delete("main.lua")
+C_FileSystem.Delete("conflicting.lua")
 C_FileSystem.Delete("test.lua")
