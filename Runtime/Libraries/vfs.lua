@@ -85,6 +85,15 @@ function vfs.dofile(zipApp, filePath)
 	return nil, "Failed to load file " .. filePath .. " (no such entry exists)"
 end
 
+-- VFS searcher: Allow require to find files stored in the VFS of LUAZIP apps
+-- See https://www.lua.org/manual/5.2/manual.html#pdf-package.searchers
+function vfs.searcher(zipApp, moduleName)
+	return function()
+		local filePath = moduleName:gsub("%.", path.separator) .. ".lua"
+		return vfs.dofile(zipApp, filePath)
+	end
+end
+
 ffi.cdef(vfs.cdefs)
 
 return vfs

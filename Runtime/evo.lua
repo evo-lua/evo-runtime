@@ -127,7 +127,8 @@ A list of supported profiling modes and their combinations can be found here: %s
 }
 
 function evo.run()
-	local zipApp = evo.readEmbeddedZipApp()
+	local executableBytes = C_FileSystem.ReadFile(uv.exepath())
+	local zipApp = vfs.decode(executableBytes)
 	if zipApp then
 		-- The CLI args are shifted if not run from the interpreter CLI, which might break standalone apps
 		local correctedArgs = {}
@@ -137,16 +138,18 @@ function evo.run()
 		correctedArgs[1] = arg[0]
 		_G.arg = correctedArgs
 		_G.arg[0] = uv.exepath()
+
+		local function vfsSearcher(moduleName)
+			return vfs.searcher(zipApp, moduleName)
+		end
+		-- For security and performance reasons, prefer loading from the VFS in case of conflicts
+		table.insert(package.searchers, 1, vfsSearcher)
+
 		return vfs.dofile(zipApp, evo.DEFAULT_ENTRY_POINT)
 	end
 
 	evo.setUpCommandLineInterface()
 	return C_CommandLine.ProcessArguments(arg)
-end
-
-function evo.readEmbeddedZipApp()
-	local executableBytes = C_FileSystem.ReadFile(uv.exepath())
-	return vfs.decode(executableBytes)
 end
 
 function evo.setUpCommandLineInterface()
