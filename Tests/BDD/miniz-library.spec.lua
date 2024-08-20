@@ -65,6 +65,12 @@ describe("miniz", function()
 
 			assertEquals(checksum1, checksum2)
 		end)
+
+		it("should initialize the checksum with one if none was passed", function()
+			-- See https://github.com/luvit/luvi/pull/294)
+			local checksum = miniz.adler32("Wikipedia", nil)
+			assertEquals(checksum, 300286872) -- 0x11E60398
+		end)
 	end)
 
 	describe("crc32", function()
