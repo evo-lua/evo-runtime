@@ -81,10 +81,37 @@ static int lmz_reader_init(lua_State* L) {
 	return 1;
 }
 
+static int lmz_reader_init_mem(lua_State* L) {
+	size_t buf_len;
+	const char* buf = luaL_checklstring(L, 1, &buf_len);
+	mz_uint32 flags = luaL_optinteger(L, 2, 0);
+
+	lmz_file_t* zip = static_cast<lmz_file_t*>(lua_newuserdata(L, sizeof(*zip)));
+	mz_zip_archive* archive = &(zip->archive);
+	memset(archive, 0, sizeof(*archive));
+
+	luaL_getmetatable(L, "miniz_reader");
+	lua_setmetatable(L, -2);
+
+	mz_uint64 size = static_cast<mz_uint64>(buf_len);
+	if(!mz_zip_reader_init_mem(archive, buf, size, flags)) {
+		lua_pushnil(L);
+		const char* error_string = mz_zip_get_error_string(mz_zip_get_last_error(archive));
+		error_messages[L] = error_string;
+		lua_pushfstring(L, "Failed to initialize miniz reader from memory (Last error: %s)", error_string);
+		return 2;
+	}
+
+	return 1;
+}
+
 static int lmz_reader_gc(lua_State* L) {
 	lmz_file_t* zip = static_cast<lmz_file_t*>(luaL_checkudata(L, 1, "miniz_reader"));
-	uv_fs_close(zip->loop, &(zip->req), zip->fd, NULL);
-	uv_fs_req_cleanup(&(zip->req));
+	if(zip->loop != nullptr) {
+		// In-memory reader shouldn't be using libuv (arguably, disk reader shouldn't either...)
+		uv_fs_close(zip->loop, &(zip->req), zip->fd, NULL);
+		uv_fs_req_cleanup(&(zip->req));
+	}
 	mz_zip_reader_end(&(zip->archive));
 	return 0;
 }
@@ -489,6 +516,7 @@ static const luaL_Reg lminiz_inflate_m[] = {
 
 static const luaL_Reg lminiz_f[] = {
 	{ "new_reader", lmz_reader_init },
+	{ "new_reader_memory", lmz_reader_init_mem },
 	{ "new_writer", lmz_writer_init },
 	{ "inflate", ltinfl },
 	{ "deflate", ltdefl },
