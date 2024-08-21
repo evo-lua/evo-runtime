@@ -394,6 +394,7 @@ function evo.buildZipApp(commandName, argv)
 		.. zipFileContents
 		.. ffi.string(signature, ffi.sizeof(signature))
 	C_FileSystem.WriteFile(outputFileName, standaloneExecutableBytes)
+	uv.fs_chmod(outputFileName, tonumber("775", 8)) -- No-op on Windows, but that's OK
 	printf("Created self-contained executable: %s", transform.brightYellow(outputFileName))
 end
 

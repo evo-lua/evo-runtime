@@ -400,8 +400,7 @@ testCases = {
 	-- This relies on the hello-world-app being built first, but the order is not guaranteed
 	["cli-hello-world-app"] = {
 		humanReadableDescription = "Invoking the hello world app should execute the bundled app instead of the runtime CLI with the provided args",
-		programToRun = ffi.os ~= "Windows" and "chmod +x hello-world-app && ./hello-world-app hi"
-			or "hello-world-app.exe hi",
+		programToRun = ffi.os ~= "Windows" and "./hello-world-app hi" or "hello-world-app.exe hi",
 		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
 			assertEquals(observedOutput, "Hello world!\n")
 			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
