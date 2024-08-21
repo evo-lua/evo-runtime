@@ -1,4 +1,10 @@
 local changelog = {
+	["v0.0.20"] = {
+		newFeatures = {
+			"Three more extensions have been added: `table.keys`,`table.values`, and `table.shuffle`",
+			"A new and experimental event-based AsyncFileReader module is now part of the file system API",
+		},
+	},
 	["v0.0.19"] = {
 		newFeatures = {
 			"LuaJIT's built-in CPU profiler can be enabled with the new `profile` command, or loaded as `profiler`",
