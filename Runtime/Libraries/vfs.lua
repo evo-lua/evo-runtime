@@ -24,7 +24,7 @@ local vfs = {
 	]],
 }
 
-function vfs.decode(fileContents)
+function vfs.decode(fileContents) -- TBD vfs.create?
 	validation.validateString(fileContents, "fileContents")
 
 	if #fileContents < ffi_sizeof("lua_zip_signature_t") then
@@ -100,6 +100,27 @@ function vfs.searcher(zipApp, moduleName)
 		local filePath = moduleName:gsub("%.", path.separator) .. ".lua"
 		return vfs.dofile(zipApp, filePath)
 	end
+end
+
+function vfs.dlopen(zipApp, libName)
+
+	-- TODO support libhello.so, hello.dll, hello (FFI.load semantics)
+	local uv = require("uv")
+	local tempDirPath = uv.fs_mkdtemp(path.join(uv.cwd(), "LUAZIP-XXXXXX"))
+	printf("Created temporary DLL/SO directory: %s", tempDirPath)
+	local so = vfs.extract(zipApp, libName) -- TODO portability? see ffi load code, should be consistent - unit test!
+	-- todo if not so then return nil, err -- allow chaining: vfs.dlopen or ffi.load = unit test!
+	local tempLibPath = path.join(tempDirPath, libName)
+	C_FileSystem.WriteFile(tempLibPath, so) -- TBD +x?
+	dump(C_FileSystem.ReadDirectoryTree(tempDirPath)) -- TODO remove
+	local vfsTestLib = ffi.load(tempLibPath)
+
+	-- dump(vfsTestLib)
+	-- local result = vfsTestLib.vfs_import_test(42)
+	-- print(result)
+	C_FileSystem.Delete(tempDirPath)
+
+	return vfsTestLib
 end
 
 ffi.cdef(vfs.cdefs)
