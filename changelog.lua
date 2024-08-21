@@ -3,6 +3,10 @@ local changelog = {
 		newFeatures = {
 			"Three more extensions have been added: `table.keys`,`table.values`, and `table.shuffle`",
 			"A new and experimental event-based AsyncFileReader module is now part of the file system API",
+			"Self-contained executables can now easily load and extract files from the virtual file system",
+		},
+		breakingChanges = {
+			"Due to larger rework in the RML library, the WebGPU render interface has seen significant changes",
 		},
 	},
 	["v0.0.19"] = {
