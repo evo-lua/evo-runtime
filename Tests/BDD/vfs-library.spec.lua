@@ -68,4 +68,39 @@ describe("vfs", function()
 			assertEquals(vfs.dofile(zipApp, path.win32.join("subdirectory", "another-file.lua")), 42)
 		end)
 	end)
+
+	describe("extract", function()
+		local fileContents = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "hello-world-app.bin"))
+		local zipApp = assert(vfs.decode(fileContents))
+
+		it("should throw if an invalid zip app was passed", function()
+			assertThrows(function()
+				vfs.extract(nil, nil)
+			end, "Expected argument zipApp to be a table value, but received a nil value instead")
+		end)
+
+		it("should throw if an invalid file path was passed", function()
+			assertThrows(function()
+				vfs.extract(zipApp, nil)
+			end, "Expected argument filePath to be a string value, but received a nil value instead")
+		end)
+
+		it("should throw if the given file doesn't exist within the archive", function()
+			assertFailure(function()
+				return vfs.extract(zipApp, "this-file-does-not-exist")
+			end, "Failed to extract file this-file-does-not-exist (no such entry exists)")
+		end)
+
+		it("should return the decompressed file contents", function()
+			local filePath = path.join("Tests", "Fixtures", "hello-world-app", "subdirectory", "another-file.lua")
+			local expectedFileContents = C_FileSystem.ReadFile(filePath)
+
+			-- The fixture was apparently generated with different formatter settings - whatever
+			expectedFileContents = expectedFileContents:gsub("\n", "")
+			expectedFileContents = expectedFileContents:gsub("\r", "")
+
+			local vfsPath = path.win32.join("subdirectory", "another-file.lua")
+			assertEquals(vfs.extract(zipApp, vfsPath), expectedFileContents)
+		end)
+	end)
 end)
