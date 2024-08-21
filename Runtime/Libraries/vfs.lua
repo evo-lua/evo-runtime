@@ -1,13 +1,11 @@
 local ffi = require("ffi")
 local miniz = require("miniz")
-local uv = require("uv")
 local validation = require("validation")
 
 local ffi_cast = ffi.cast
 local ffi_sizeof = ffi.sizeof
 local ffi_string = ffi.string
 
-local assert = assert
 local loadstring = loadstring
 local tonumber = tonumber
 
@@ -60,6 +58,8 @@ function vfs.decode(fileContents)
 	local archiveEndOffset = archiveStartOffset + zipApp.signature.archiveSize - 1
 	zipApp.archive = fileContents:sub(archiveStartOffset, archiveEndOffset)
 
+	zipApp.reader = miniz.new_reader_memory(zipApp.archive)
+
 	return zipApp
 end
 
@@ -67,14 +67,7 @@ function vfs.dofile(zipApp, filePath)
 	validation.validateTable(zipApp, "zipApp")
 	validation.validateString(filePath, "filePath")
 
-	local tempFile, tempFilePath = uv.fs_mkstemp("LUAZIP-XXXXXX")
-	C_FileSystem.WriteFile(tempFilePath, zipApp.archive)
-
-	local reader = miniz.new_reader(tempFilePath)
-
-	assert(uv.fs_close(tempFile))
-	assert(uv.fs_unlink(tempFilePath))
-
+	local reader = zipApp.reader
 	for index = 1, reader:get_num_files() do
 		if reader:get_filename(index) == filePath then
 			local fileContents = reader:extract(index)

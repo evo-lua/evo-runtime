@@ -198,6 +198,25 @@ describe("miniz", function()
 		end)
 	end)
 
+	describe("new_reader_memory", function()
+		it("should fail if an invalid buffer was passed", function()
+			local success, failureMessage = miniz.new_reader_memory("Not a ZIP archive")
+			assertNil(success)
+			assertEquals(
+				failureMessage,
+				format("Failed to initialize miniz reader from memory (Last error: %s)", miniz.last_error())
+			)
+		end)
+
+		it("should be able to read a valid ZIP archive", function()
+			local zipBuffer = C_FileSystem.ReadFile(MINIZ_EXAMPLE_ZIP_FILE)
+			local reader = miniz.new_reader_memory(zipBuffer)
+			assertEquals(reader:get_num_files(), 1)
+			assertEquals(reader:get_filename(1), "miniz-poem.txt")
+			assertEquals(reader:locate_file("miniz-poem.txt"), 1)
+		end)
+	end)
+
 	describe("last_error", function()
 		it("should return nil if no error has been set", function()
 			-- Technically, an error may have been set (and not cleared) by a previous test, but that's a no-no and should be caught
