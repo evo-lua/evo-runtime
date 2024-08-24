@@ -103,7 +103,6 @@ function vfs.searcher(zipApp, moduleName)
 end
 
 function vfs.dlopen(zipApp, libName)
-
 	-- TODO support libhello.so, hello.dll, hello (FFI.load semantics)
 	local uv = require("uv")
 	local tempDirPath = uv.fs_mkdtemp(path.join(uv.cwd(), "LUAZIP-XXXXXX"))
@@ -117,6 +116,21 @@ function vfs.dlopen(zipApp, libName)
 	assert(C_FileSystem.Delete(tempDirPath))
 
 	return vfsTestLib
+end
+
+function vfs.dlname(libraryName)
+	validation.validateString(libraryName, "libraryName")
+
+	local extension = string.lower(path.extname(libraryName))
+	if extension == ".dll" or extension == ".so" then
+		return libraryName
+	end
+
+	if ffi.os == "Windows" then
+		return libraryName .. ".dll"
+	else
+		return "lib" .. libraryName .. ".so"
+	end
 end
 
 ffi.cdef(vfs.cdefs)
