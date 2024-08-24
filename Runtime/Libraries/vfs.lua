@@ -110,8 +110,7 @@ function vfs.dlopen(zipApp, libName)
 	local so = vfs.extract(zipApp, libName) -- TODO portability? see ffi load code, should be consistent - unit test!
 	-- todo if not so then return nil, err -- allow chaining: vfs.dlopen or ffi.load = unit test!
 	local tempLibPath = path.join(tempDirPath, libName)
-	C_FileSystem.WriteFile(tempLibPath, so) -- TBD +x?
-	dump(C_FileSystem.ReadDirectoryTree(tempDirPath)) -- TODO remove
+	C_FileSystem.WriteFile(tempLibPath, so)
 	local vfsTestLib = ffi.load(tempLibPath)
 
 	assert(C_FileSystem.Delete(tempLibPath))
