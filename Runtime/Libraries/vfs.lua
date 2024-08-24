@@ -118,7 +118,8 @@ function vfs.dlopen(zipApp, libName)
 	-- dump(vfsTestLib)
 	-- local result = vfsTestLib.vfs_import_test(42)
 	-- print(result)
-	C_FileSystem.Delete(tempDirPath)
+	assert(C_FileSystem.Delete(tempLibPath))
+	assert(C_FileSystem.Delete(tempDirPath))
 
 	return vfsTestLib
 end
