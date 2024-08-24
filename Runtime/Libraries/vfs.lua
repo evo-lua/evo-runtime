@@ -102,13 +102,16 @@ function vfs.searcher(zipApp, moduleName)
 	end
 end
 
-function vfs.dlopen(zipApp, libName)
+function vfs.dlopen(zipApp, libraryName)
+	-- TODO validate, unit test
+
+	-- libraryName = vfs.dlname(libraryName)
 	-- TODO support libhello.so, hello.dll, hello (FFI.load semantics)
 	local uv = require("uv")
 	local tempDirPath = uv.fs_mkdtemp(path.join(uv.cwd(), "LUAZIP-XXXXXX"))
-	local so = vfs.extract(zipApp, libName) -- TODO portability? see ffi load code, should be consistent - unit test!
+	local so = vfs.extract(zipApp, libraryName) -- TODO portability? see ffi load code, should be consistent - unit test!
 	-- todo if not so then return nil, err -- allow chaining: vfs.dlopen or ffi.load = unit test!
-	local tempLibPath = path.join(tempDirPath, libName)
+	local tempLibPath = path.join(tempDirPath, libraryName)
 	C_FileSystem.WriteFile(tempLibPath, so)
 	local vfsTestLib = ffi.load(tempLibPath)
 
