@@ -111,7 +111,7 @@ describe("vfs", function()
 	local inputFilePath = path.join("Tests", "Fixtures", "dlopen.c")
 	local outputFilePath = path.join(appDir, libName) -- TBD win32 = dlopen.dll
 	C_FileSystem.MakeDirectory(appDir)
-	
+
 	-- Not exactly the height of portability, but it matches the assumptions made by the build system
 	local dlibBuildCommand = format("gcc -shared %s -o %s", inputFilePath, outputFilePath)
 	assert(os.execute(dlibBuildCommand))
@@ -119,19 +119,21 @@ describe("vfs", function()
 
 	-- TODO this should likely be an integration test?
 	local appMainPath = path.join(appDir, "main.lua")
-	local scriptCode = format([[
+	local scriptCode = format(
+		[[
 		local vfs = require("vfs")
 		local lib = vfs.dlopen("%s")
 		local result = lib.vfs_dlopen_test(42)
 		assert(result == 42, result)
-	]], libName)
+	]],
+		libName
+	)
 	C_FileSystem.WriteFile(appMainPath, scriptCode)
 
 	local evo = require("evo") -- Very hacky. Can find a cleaner way?
-	evo.buildZipApp("build", { appDir } )
+	evo.buildZipApp("build", { appDir })
 	-- TODO vfs.decode should not be needed, OR store zip app in runtime.vfs and default to using that if first arg is nil - maybe swap args so 2nd is optional?
 	describe("dlopen", function()
-
 		-- it("should throw if an invalid zip app was passed", function()
 		-- 	assertThrows(function()
 		-- 		vfs.extract(nil, nil)
@@ -156,11 +158,11 @@ describe("vfs", function()
 			local zipApp = vfs.decode(appBytes)
 			local lib = vfs.dlopen(zipApp, libName)
 
-			local  cdefs = [[
+			local cdefs = [[
 				uint32_t vfs_dlopen_test(uint32_t input);
 				]]
 			local ffi = require("ffi")
-				ffi.cdef(cdefs)
+			ffi.cdef(cdefs)
 
 			local result = lib.vfs_dlopen_test(42) -- TBD allow loading cdefs from VFS (automatically? -> new issue)
 			-- libhello.so
@@ -170,28 +172,27 @@ describe("vfs", function()
 			-- hello.cdefs OR hello.h - maybe as extra arg? (cdefPath/cdefs?)
 			assertEquals(result, 42 * 2)
 
+			-- 	local filePath = path.join("Tests", "Fixtures", "hello-world-app", "subdirectory", "another-file.lua")
+			-- 	local expectedFileContents = C_FileSystem.ReadFile(filePath)
 
-		-- 	local filePath = path.join("Tests", "Fixtures", "hello-world-app", "subdirectory", "another-file.lua")
-		-- 	local expectedFileContents = C_FileSystem.ReadFile(filePath)
+			-- 	-- The fixture was apparently generated with different formatter settings - whatever
+			-- 	expectedFileContents = expectedFileContents:gsub("\n", "")
+			-- 	expectedFileContents = expectedFileContents:gsub("\r", "")
 
-		-- 	-- The fixture was apparently generated with different formatter settings - whatever
-		-- 	expectedFileContents = expectedFileContents:gsub("\n", "")
-		-- 	expectedFileContents = expectedFileContents:gsub("\r", "")
-
-		-- 	local vfsPath = path.win32.join("subdirectory", "another-file.lua")
-		-- 	assertEquals(vfs.extract(zipApp, vfsPath), expectedFileContents)
+			-- 	local vfsPath = path.win32.join("subdirectory", "another-file.lua")
+			-- 	assertEquals(vfs.extract(zipApp, vfsPath), expectedFileContents)
 		end)
 	end)
 	-- C_FileSystem.Delete(outputFilePath)
 	-- print(appDir)
-	assert(C_FileSystem.Delete(path.basename(appDir)))-- TBD win32 .. ".exe"))
-	assert(C_FileSystem.Delete(path.basename(appDir) .. ".zip"))-- TBD win32 .. ".exe"))
+	assert(C_FileSystem.Delete(path.basename(appDir))) -- TBD win32 .. ".exe"))
+	assert(C_FileSystem.Delete(path.basename(appDir) .. ".zip")) -- TBD win32 .. ".exe"))
 	-- assert(C_FileSystem.Delete(appDir .. ".zip"))
 	assert(C_FileSystem.Delete(appMainPath))
 	assert(C_FileSystem.Delete(outputFilePath))
 	assert(C_FileSystem.Delete(appDir))
 	assert(C_FileSystem.Delete(tmpDirPath))
-	
+
 	describe("dlname", function()
 		it("should throw if an invalid library name was passed", function()
 			assertThrows(function()
@@ -215,5 +216,4 @@ describe("vfs", function()
 			assertEquals(vfs.dlname("foo"), isWindows and "libfoo.dll" or "libfoo.so")
 		end)
 	end)
-
 end)
