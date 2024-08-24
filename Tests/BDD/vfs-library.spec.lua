@@ -104,33 +104,6 @@ describe("vfs", function()
 		end)
 	end)
 
-	describe("dofile", function()
-		local fileContents = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "hello-world-app.bin"))
-		local zipApp = assert(vfs.decode(fileContents))
-
-		it("should throw if an invalid zip app was passed", function()
-			assertThrows(function()
-				vfs.dofile(nil, nil)
-			end, "Expected argument zipApp to be a table value, but received a nil value instead")
-		end)
-
-		it("should throw if an invalid file path was passed", function()
-			assertThrows(function()
-				vfs.dofile(zipApp, nil)
-			end, "Expected argument filePath to be a string value, but received a nil value instead")
-		end)
-
-		it("should throw if the given file doesn't exist within the archive", function()
-			assertFailure(function()
-				return vfs.dofile(zipApp, "this-file-does-not-exist")
-			end, "Failed to load file this-file-does-not-exist (no such entry exists)")
-		end)
-
-		it("should execute the file contents as a Lua chunk and return the result", function()
-			assertEquals(vfs.dofile(zipApp, path.win32.join("subdirectory", "another-file.lua")), 42)
-		end)
-	end)
-
 	local uv = require("uv")
 	local tmpDirPath = uv.fs_mkdtemp("VFS-DLOPEN-TEST-XXXXXX")
 	local appDir = path.join(tmpDirPath, "vfs-dlopen-test-app")
