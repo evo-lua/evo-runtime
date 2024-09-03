@@ -1,5 +1,6 @@
 local ffi = require("ffi")
 local miniz = require("miniz")
+local uv = require("uv")
 local validation = require("validation")
 
 local ffi_cast = ffi.cast
@@ -99,6 +100,22 @@ function vfs.searcher(zipApp, moduleName)
 	return function()
 		local filePath = moduleName:gsub("%.", path.separator) .. ".lua"
 		return vfs.dofile(zipApp, filePath)
+	end
+end
+
+function vfs.dlname(libraryName)
+	validation.validateString(libraryName, "libraryName")
+
+	-- AFAICT there's no reason to support .dylib on macOS? For now, should be safe to assume .so
+	local extension = string.lower(path.extname(libraryName))
+	if extension == ".dll" or extension == ".so" then
+		return libraryName
+	end
+
+	if ffi.os == "Windows" then
+		return libraryName .. ".dll"
+	else
+		return "lib" .. libraryName .. ".so"
 	end
 end
 

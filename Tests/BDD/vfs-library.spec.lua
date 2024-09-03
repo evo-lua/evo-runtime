@@ -1,3 +1,4 @@
+local ffi = require("ffi")
 local vfs = require("vfs")
 
 describe("vfs", function()
@@ -103,4 +104,33 @@ describe("vfs", function()
 			assertEquals(vfs.extract(zipApp, vfsPath), expectedFileContents)
 		end)
 	end)
+
+	describe("dlname", function()
+		it("should throw if an invalid library name was passed", function()
+			assertThrows(function()
+				vfs.dlname(nil)
+			end, "Expected argument libraryName to be a string value, but received a nil value instead")
+		end)
+
+		it("should return the input string if the library name indicates a Windows DLL", function()
+			assertEquals(vfs.dlname("foo.dll"), "foo.dll")
+			assertEquals(vfs.dlname("some/directory/foo.dll"), "some/directory/foo.dll")
+		end)
+
+		it("should return the input string if the library name indicates a shared object file", function()
+			assertEquals(vfs.dlname("libfoo.so"), "libfoo.so")
+			assertEquals(vfs.dlname("some/directory/libfoo.so"), "some/directory/libfoo.so")
+		end)
+
+		it("should be able to recognize valid extensions with inconsistent capitalization", function()
+			assertEquals(vfs.dlname("libfoo.SO"), "libfoo.SO")
+			assertEquals(vfs.dlname("foo.dLL"), "foo.dLL")
+		end)
+
+		it("should adhere to platform-specific conventions if the library name isn't fully qualified", function()
+			local isWindows = ffi.os == "Windows"
+			assertEquals(vfs.dlname("foo"), isWindows and "foo.dll" or "libfoo.so")
+		end)
+	end)
+
 end)
