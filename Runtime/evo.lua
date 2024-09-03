@@ -129,7 +129,7 @@ A list of supported profiling modes and their combinations can be found here: %s
 function evo.run()
 	local executableBytes = C_FileSystem.ReadFile(uv.exepath())
 	local zipApp = vfs.decode(executableBytes)
-	if zipApp then
+	if zipApp then -- TODO eliminate zipApp arg, store in vfs.app
 		-- The CLI args are shifted if not run from the interpreter CLI, which might break standalone apps
 		local correctedArgs = {}
 		for index, arg in ipairs(arg) do
