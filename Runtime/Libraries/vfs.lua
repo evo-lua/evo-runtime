@@ -25,7 +25,7 @@ local vfs = {
 	]],
 }
 
-function vfs.decode(fileContents)
+function vfs.decode(fileContents) -- TBD vfs.create?
 	validation.validateString(fileContents, "fileContents")
 
 	if #fileContents < ffi_sizeof("lua_zip_signature_t") then
