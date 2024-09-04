@@ -143,19 +143,19 @@ describe("vfs", function()
 
 	local uv = require("uv")
 	local directoryTreeBefore = C_FileSystem.ReadDirectory(uv.cwd())
-	
+
 	local tmpDirPath = uv.fs_mkdtemp("VFS-DLOPEN-TEST-XXXXXX")
 	local appDir = path.join(tmpDirPath, "vfs-dlopen-test-app")
 	local libName = "libdlopen.so"
 	local inputFilePath = path.join("Tests", "Fixtures", "dlopen.c")
 	local sharedLibraryPath = path.join(appDir, libName) -- TBD win32 = dlopen.dll
 	C_FileSystem.MakeDirectory(appDir)
-	
+
 	-- Not exactly the height of portability, but it matches the assumptions made by the build system
 	local dlibBuildCommand = format("gcc -shared %s -o %s", inputFilePath, sharedLibraryPath)
 	assert(os.execute(dlibBuildCommand))
 	assertTrue(C_FileSystem.Exists(sharedLibraryPath))
-	
+
 	-- TODO this should likely be an integration test?
 	local appMainPath = path.join(appDir, "main.lua")
 	local scriptCode = format(
@@ -179,13 +179,13 @@ describe("vfs", function()
 	describe("dlopen", function()
 		local appBytes = C_FileSystem.ReadFile(path.basename(appDir)) -- TBD .exe for win32, exeName var
 		local zipApp = vfs.decode(appBytes)
-		
+
 		it("should fail if no library with the given name exists in the archive", function()
 			assertFailure(function()
 				return vfs.dlopen(zipApp, "does-not-exist.so")
 			end, "Failed to extract file does-not-exist.so (no such entry exists)")
 		end)
-		
+
 		it("should fail if the given file path is not a valid object file", function()
 			assertFailure(function()
 				return vfs.dlopen(zipApp, "main.lua.so")
@@ -198,7 +198,7 @@ describe("vfs", function()
 				return vfs.dlopen(zipApp, "invalid")
 			end, format("Failed to extract file %s (no such entry exists)", vfs.dlname("invalid")))
 		end)
-		
+
 		it("should be able to load dynamic libraries that exist in the archive", function()
 			local lib = vfs.dlopen(zipApp, libName)
 
@@ -212,7 +212,7 @@ describe("vfs", function()
 			assertEquals(result, 42 * 2)
 		end)
 	end)
-	
+
 	assert(C_FileSystem.Delete(path.basename(appDir))) -- TBD win32 .. ".exe"))
 	assert(C_FileSystem.Delete(path.basename(appDir) .. ".zip")) -- TBD win32 .. ".exe"))
 	assert(C_FileSystem.Delete(appMainPath))
@@ -220,7 +220,7 @@ describe("vfs", function()
 	assert(C_FileSystem.Delete(sharedLibraryPath))
 	assert(C_FileSystem.Delete(appDir))
 	assert(C_FileSystem.Delete(tmpDirPath))
-	
+
 	local directoryTreeAfter = C_FileSystem.ReadDirectory(uv.cwd())
 	assertEquals(directoryTreeBefore, directoryTreeAfter)
 end)
