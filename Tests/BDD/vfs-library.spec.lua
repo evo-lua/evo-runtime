@@ -175,23 +175,6 @@ describe("vfs", function()
 	evo.buildZipApp("build", { appDir })
 	-- TODO vfs.decode should not be needed, OR store zip app in runtime.vfs and default to using that if first arg is nil - maybe swap args so 2nd is optional?
 	describe("dlopen", function()
-		-- it("should throw if an invalid zip app was passed", function()
-		-- 	assertThrows(function()
-		-- 		vfs.extract(nil, nil)
-		-- 	end, "Expected argument zipApp to be a table value, but received a nil value instead")
-		-- end)
-
-		-- it("should throw if an invalid file path was passed", function()
-		-- 	assertThrows(function()
-		-- 		vfs.extract(zipApp, nil)
-		-- 	end, "Expected argument filePath to be a string value, but received a nil value instead")
-		-- end)
-
-		-- it("should throw if the given file doesn't exist within the archive", function()
-		-- 	assertFailure(function()
-		-- 		return vfs.extract(zipApp, "this-file-does-not-exist")
-		-- 	end, "Failed to extract file this-file-does-not-exist (no such entry exists)")
-		-- end)
 		local appBytes = C_FileSystem.ReadFile(path.basename(appDir)) -- TBD .exe for win32, exeName var
 		local zipApp = vfs.decode(appBytes)
 
@@ -215,7 +198,6 @@ describe("vfs", function()
 		end)
 
 		it("should be able to load dynamic libraries that exist in the archive", function()
-			-- assert(os.execute(appDir))
 			local lib = vfs.dlopen(zipApp, libName)
 
 			local cdefs = [[
@@ -225,22 +207,7 @@ describe("vfs", function()
 			ffi.cdef(cdefs)
 
 			local result = lib.vfs_dlopen_test(42) -- TBD allow loading cdefs from VFS (automatically? -> new issue)
-			-- libhello.so
-			-- libhello.cdefs.lua OR libhello.h (TBD)
-			-- also for windows
-			-- hello.dll
-			-- hello.cdefs OR hello.h - maybe as extra arg? (cdefPath/cdefs?)
 			assertEquals(result, 42 * 2)
-
-			-- 	local filePath = path.join("Tests", "Fixtures", "hello-world-app", "subdirectory", "another-file.lua")
-			-- 	local expectedFileContents = C_FileSystem.ReadFile(filePath)
-
-			-- 	-- The fixture was apparently generated with different formatter settings - whatever
-			-- 	expectedFileContents = expectedFileContents:gsub("\n", "")
-			-- 	expectedFileContents = expectedFileContents:gsub("\r", "")
-
-			-- 	local vfsPath = path.win32.join("subdirectory", "another-file.lua")
-			-- 	assertEquals(vfs.extract(zipApp, vfsPath), expectedFileContents)
 		end)
 	end)
 
