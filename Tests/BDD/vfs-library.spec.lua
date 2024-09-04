@@ -166,7 +166,7 @@ describe("vfs", function()
 		libName
 	)
 	C_FileSystem.WriteFile(appMainPath, scriptCode)
-	
+
 	-- Attempting to ffi.load this should always trigger an error
 	local fakeLibraryPath = appMainPath .. ".so"
 	C_FileSystem.WriteFile(fakeLibraryPath, scriptCode)
@@ -218,5 +218,4 @@ describe("vfs", function()
 	assert(C_FileSystem.Delete(sharedLibraryPath))
 	assert(C_FileSystem.Delete(appDir))
 	assert(C_FileSystem.Delete(tmpDirPath))
-
 end)
