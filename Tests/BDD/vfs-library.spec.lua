@@ -205,7 +205,7 @@ describe("vfs", function()
 			local cdefs = [[
 				uint32_t vfs_dlopen_test(uint32_t input);
 				]]
-			local ffi = require("ffi")
+			-- local ffi = require("ffi")
 			ffi.cdef(cdefs)
 
 			local result = lib.vfs_dlopen_test(42) -- TBD allow loading cdefs from VFS (automatically? -> new issue)
