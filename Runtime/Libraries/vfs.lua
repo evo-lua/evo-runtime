@@ -108,8 +108,8 @@ function vfs.dlopen(zipApp, libraryName)
 
 	libraryName = vfs.dlname(libraryName)
 	local fileContents, errorMessage = vfs.extract(zipApp, libraryName)
-	if not fileContents then return
-		nil, errorMessage
+	if not fileContents then
+		return nil, errorMessage
 	end
 
 	local tempDirectoryPath = uv.fs_mkdtemp(path.join(uv.cwd(), "LUAZIP-XXXXXX"))
