@@ -3,6 +3,13 @@ local ffi = require("ffi")
 local validation = require("validation")
 local validateString = validation.validateString
 
+local function testNilValueCase()
+	local nothing = nil
+	assertThrows(function()
+		validateString(nothing, "nothing")
+	end, "Expected argument nothing to be a string value, but received a nil value instead")
+end
+
 local function testStringValueCase()
 	local str = "hello"
 	assertDoesNotThrow(function()
@@ -53,6 +60,7 @@ local function testStructCase()
 end
 
 local function testValidateString()
+	testNilValueCase()
 	testStringValueCase()
 	testNumberValueCase()
 	testBooleanValueCase()
