@@ -30,7 +30,7 @@ Not all of the included APIs are as user-friendly as I'd like, but that'll chang
 
 ### Integrated C and FFI Bindings
 
-The runtime currently ships with bindings (and, in some cases, additional interoperability layers) for the following libraries:
+The runtime currently ships with bindings (and, in some cases, interoperability layers) for the following libraries:
 
 * [GLFW](https://www.glfw.org/): For portable windowing, user input, and integration with native graphics APIs ([Docs](https://evo-lua.github.io/docs/references/api/bindings/glfw))
 * [iconv](https://www.gnu.org/software/libiconv): Standard toolkit for converting between different character encodings  ([Docs](https://evo-lua.github.io/docs/references/api/bindings/iconv/))
@@ -54,22 +54,22 @@ Note that some of these are still limited to the slower C API, while others make
 
 ### Non-Standard Libraries
 
-There's also a number of standalone - but somewhat experimental - Lua libraries that I'm still iterating on:
+There's also a number of standalone - but somewhat experimental - Lua modules that I'm still iterating on:
 
-* An [assertions](https://evo-lua.github.io/docs/references/api/libraries/assertions/) library that's used by the built-in test runner
+* An [assertions](https://evo-lua.github.io/docs/references/api/libraries/assertions/) library that's heavily used by the built-in test runner
 * A transparent [unit testing library](https://evo-lua.github.io/docs/references/api/libraries/bdd/) that supports several different paradigms and shorthands
 * Some utilities for manipulating [console](https://evo-lua.github.io/docs/references/api/libraries/console/) output
-* Password hashing using Argon2 (via OpenSSL/LibArgon2) lives in the [crypto](https://github.com/evo-lua/evo-runtime/blob/main/Runtime/Libraries/crypto.lua) library
+* Password hashing functions using Argon2 (via OpenSSL/libargon2) live in the [crypto](https://github.com/evo-lua/evo-runtime/blob/main/Runtime/Libraries/crypto.lua) library
 * Event notifications and tracing mechanisms are implemented in the [etrace](https://github.com/evo-lua/evo-runtime/blob/main/Runtime/Libraries/etrace.lua) library
 * A few handy shorthands for typical object-oriented programming tasks can be found in the [oop](https://github.com/evo-lua/evo-runtime/blob/main/Runtime/Libraries/oop.lua) library
-* A part of the NodeJS [path](https://evo-lua.github.io/docs/references/api/libraries/path/) library that handles platform differences and path resolution
+* A port of the NodeJS [path](https://evo-lua.github.io/docs/references/api/libraries/path/) library handles platform differences and path resolution
 * Logging primitives are contained in the [syslog](https://github.com/evo-lua/evo-runtime/blob/main/Runtime/Libraries/syslog.lua) package
 * Colored console output and pretty-printing is possible thanks to the [transform](https://evo-lua.github.io/docs/references/api/libraries/transform/) library
-* Generating UUIDs is made possible by the [uuid](https://evo-lua.github.io/docs/references/api/libraries/uuid/) library
+* Generating UUIDs is made a bit easier by the [uuid](https://evo-lua.github.io/docs/references/api/libraries/uuid/) library, which abstracts the underlying FFI bindings
 * Validation of arguments and standardized error messages are handled by the [validation](https://evo-lua.github.io/docs/references/api/libraries/validation/) library
-* Generating standalone executables and access to the virtual file system is provided via the [vfs](https://evo-lua.github.io/docs/references/api/libraries/vfs/) library
+* Generating standalone executables and access to the virtual file system requires the [vfs](https://evo-lua.github.io/docs/references/api/libraries/vfs/) library
 
-For a comprehensive list of available functions in the latest release, check out the [API documentation](https://evo-lua.github.io/docs/category/api).
+For a comprehensive list of functions available in the latest release, check out the [API documentation](https://evo-lua.github.io/docs/category/api).
 
 ### Extensions
 
