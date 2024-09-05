@@ -37,7 +37,7 @@ Below is a rough outline for the first major release (note that this list doesn'
 * [x] MVP: Experimentation and proof-of-concept (completed in multiple stages)
 * [ ] Alpha: Standard libraries and inclusion of additional bindings (currently in progress; ETA: Q4/2024 - Q1/2025)
   * [ ] Coming Very Soon™: Bindings for [libcurl](https://curl.se/libcurl/)
-  * [ ] Coming Soon™: [SQLite](https://www.sqlite.org/)
+  * [ ] Coming Soon™: Bindings for [SQLite](https://www.sqlite.org/)
   * [ ] Potentially coming in this phase (TBD): Bindings for [C-ARES](https://c-ares.org/)
   * [ ] Potentially coming in this phase (TBD): Bindings for [LibGit2](https://libgit2.org/)
   * [ ] Towards the end: Catching up on the documentation tasks that I've been neglecting (sorry)
