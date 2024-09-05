@@ -136,31 +136,6 @@ It is **generally incompatible** with:
 
 I have *no plans* to support Lua engines other than LuaJIT at this time.
 
-## Why Does This Project Exist?
-
-I started working on Evo because I wanted to write larger applications using Lua, but found the library ecosystem to be lacking.
-
-### Development Timeline
-
-Originally, I used [Luvit](https://luvit.io/) - and still do, occasionally. Unfortunately, it wasn't quite up to the tasks I had in mind. In between attempts to improve its runtime and learning how it works at a deeper level, I created a customized fork called [evo-luvi](https://github.com/evo-lua/evo-luvi) (now obsolete/unmaintained) and even experimented with a [Luvit-inspired runtime built on top of it](https://github.com/evo-lua/evo-legacy) (also abandoned).
-
-As a result of creating these experiments, I gained insights that prompted me to create my own runtime, focusing on slightly different use cases and making some different technology choices. I believe those choices have already more than paid off.
-
-To be clear: It's not my goal to "replace" Luvit, only to provide better runtime support for a select few of my other long-term projects. I still contribute and aim to advance Luvit when I can and I hope that, one day, there will be a modernized version resolving its major issues. And who knows, maybe the knowledge gained from building Evo can carry over when that day finally comes ;)
-
-### Primary Goals
-
-Given the above context, I formulated a set of goals guiding the future development of this platform:
-
-* Jump-start the creation of complex Lua-based applications without having to do the embedding and integration work every time
-* Provide isolated interfaces where possible, so that advanced users who want to build their own environments can still use them
-* For ease of use, integrate developer tools for common tasks like running tests, generating documentation, or profiling/debugging
-* Focus on LuaJIT as the only supported engine to hopefully get the best performance via exclusive features like the FFI
-* Ensure to provide APIs at different levels of abstraction so that users can select the most appropriate one for the task at hand
-* In the long term, consider migrating C API bindings for performance-critical parts to the FFI (or the C++ core if needed)
-
-Basically, if you want to write applications in Lua but you don't know C/C++, you should still be able to get the job done (you'll likely re-evaluate as you naturally gain more experience). If you don't currently need the fine-grained control and superior performance of compiled languages, it should be a sensible idea to at least start prototyping with Evo and then take it from there. If you're already familiar with Lua 5.1/LuaJIT, you shouldn't be subjected to nasty surprises that leave you floundering. And finally, you shouldn't be frustrated by lacking documentation, incomprehensible source code, or untested/broken functionality.
-
 ## Repository Layout
 
 In this repository, you'll find the following important directories:
