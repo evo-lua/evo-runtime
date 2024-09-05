@@ -30,7 +30,7 @@ Not all of the included APIs are as user-friendly as I'd like, but that'll chang
 
 ### Integrated C and FFI Bindings
 
-The runtime currently ships with bindings and, where necessary, additional integration layers for the following libraries:
+The runtime currently ships with bindings and in some cases additional integration layers for the following libraries:
 
 * [GLFW](https://www.glfw.org/): For portable windowing, user input, and integration with native graphics APIs ([Docs](https://evo-lua.github.io/docs/references/api/bindings/glfw))
 * [iconv](https://www.gnu.org/software/libiconv): Standard toolkit for converting between different character encodings  ([Docs](https://evo-lua.github.io/docs/references/api/bindings/iconv/))
@@ -50,7 +50,7 @@ The runtime currently ships with bindings and, where necessary, additional integ
 * [WebView](https://github.com/webview/webview): Integration with native browser engines for cases when you do, in fact, want to use JavaScript ([Docs](https://evo-lua.github.io/docs/references/api/bindings/webview/))
 * [zlib](https://zlib.net/): Fully-featured compression library that complements miniz for more advanced use cases ([Docs](https://evo-lua.github.io/docs/references/api/bindings/zlib/))
 
-Note that some of these are still limited to the slower C API, while others make use of LuaJIT's [Foreign Function Interface](https://luajit.org/ext_ffi.html) already.
+Note that some of these are still limited to the slower C API, while others make use of LuaJIT's [FFI](https://luajit.org/ext_ffi.html) already.
 
 ### Non-Standard Libraries
 
