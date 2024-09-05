@@ -71,14 +71,14 @@ There's also a number of standalone - but somewhat experimental - Lua modules th
 
 For a comprehensive list of functionality available in the latest release, check out the [API documentation](https://evo-lua.github.io/docs/category/api).
 
-### Extensions
+### Builtin Extensions and Global Aliases
 
 There's a number of [nonstandard extensions](https://evo-lua.github.io/docs/references/api/extensions):
 
 * Inspection of Lua tables becomes trivial with the builtin `dump` utility - even without a debugger
 * More efficient power-of-two math and some other operations have been added to the `bit` library
 * Various (non-optimized) utility methods are now part of the `debug`, `string`, and `table` libraries
-* Several commonly used functions are also available as [global aliases](https://evo-lua.github.io/docs/references/api/globals)
+* Several commonly used functions are also available as [global aliases](https://evo-lua.github.io/docs/references/api/globals), which have proved handy so far
 * One of the simplest examples would be the ubiquitous `printf` function, which aliases `print(format(...))`
 
 Extensions like these are usually added for convenience, to make debugging easier, or for performance reasons.
