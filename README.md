@@ -1,15 +1,38 @@
 # evo-runtime
 
-``evo`` is an experimental Lua runtime built on LuaJIT and libuv, with batteries included.
+``evo`` is an standalone Lua runtime built on LuaJIT and libuv, with batteries included.
+
+## Features
+
+Here's a selection of things you can do when running Lua scripts with Evo:
+
+* Networking via UDP, TCP, HTTP/S, and WebSockets
+* File system access, process I/O, and other system-level tasks
+* Make use of the builtin test runner (including assertions library)
+* Create native or web-based UIs and 3D software
+* Data compression, encryption, and basic image processing
+
+Not all of the included APIs are as user-friendly as I'd like, but that'll change.
 
 ## Status
 
-Functional, but not feature complete. See issues and milestones for future plans. Consult the below roadmap for details.
+Functional, but not feature complete. See [issues](https://github.com/evo-lua/evo-runtime/issues) and [milestones](https://github.com/evo-lua/evo-runtime/milestones) for future plans. Quick summary for the impatient:
+
+* Core features: Fully implemented and tested. Package management facilities are still missing
+* Documentation: Exists and is fairly comprehensive, but might be incomplete and poorly structured
+* Dependencies: Currently the runtime is "bloated" on purpose, will streamline this in the Beta phase
+* Interoperability: Selective for now, may consider adding additional integrations later (within reason)
+* Performance optimization and security hardening: Ongoing effort, much room for improvement
+* Usability: Many low-level libraries require a lot of tinkering/domain knowledge; high-level APIs are planned
+
+Evo is a hobbyist project. There may be long periods of time with little to no activity; That's entirely normal and expected.
 
 ### Roadmap
 
+Although I'm developing in my spare time, I don't do so aimlessly. Below is a rough outline up until the first major release.
+
 > [!NOTE]
-> This is NOT reflective of the overall implementation status, but rather a preliminary roadmap from now to `v1.0.0`.
+> This list does NOT describe the overall implementation status, but rather constitutes a preliminary roadmap to `v1.0.0`.
 
 * [x] MVP: Experimentation and proof-of-concept (completed in multiple stages)
 * [ ] Alpha: Standard libraries and inclusion of additional bindings (currently in progress; ETA: Q4/2024 - Q1/2025)
@@ -23,23 +46,12 @@ Functional, but not feature complete. See issues and milestones for future plans
   * [ ] Fixing up the existing developer tools to better support Evo's custom additions is also likely to happen here
   * [ ] In some cases, slow/otherwise problematic C bindings could be replaced with more efficient FFI wrappers
   * [ ] I want to streamline the APIs and fix various inconsistencies in the libraries, which may take place here
+  * [ ] Reviewing and potentially reconsidering some security-critical features is scheduled for this phase, as well
 * [ ] Initial release: Adapting to feedback and potentially optimizing for more use cases (ETA: Q3/2025- Q1/2026)
   * [ ] No timelines or even specific plans here yet, but open for ideas if someone has raised valid concerns
   * [ ] Otherwise I'll just optimize for my own use cases, same as before, which may or may not be useful to others
 
-No promises that the list will always be up-to-date, but it should give you a vague idea of what's left to do.
-
-## Features
-
-Here's a selection of things you can do when running Lua scripts with Evo:
-
-* Networking via UDP, TCP, HTTP/S, and WebSockets
-* File system access, process I/O, and other system-level tasks
-* Make use of the builtin test runner (including assertions library)
-* Create native or web-based UIs and 3D software
-* Data compression, encryption, and basic image processing
-
-Not all of the included APIs are as user-friendly as I'd like, but that'll change.
+No promises that the list will always be up-to-date, but you should now have a general idea what might be next.
 
 ### Integrated C and FFI Bindings
 
