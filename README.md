@@ -28,7 +28,7 @@ Functional, but not feature complete. See [issues](https://github.com/evo-lua/ev
 * Performance optimization and security hardening: Ongoing effort, much room for improvement
 * Usability: Various low-level libraries require a lot of tinkering/domain knowledge; high-level APIs are planned
 
-Evo is a hobbyist project. There may be long periods of time with little to no activity; That's normal and expected.
+Evo is a hobbyist project. There may be long periods of time with little to no activity; that's normal and expected.
 
 ### Roadmap
 
