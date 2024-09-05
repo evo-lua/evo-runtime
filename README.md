@@ -13,12 +13,12 @@ Functional, but not feature complete. See issues and milestones for future plans
   * [ ] Potentially coming in this phase (TBD): Bindings for [C-ARES](https://c-ares.org/)
   * [ ] Potentially coming in this phase (TBD): Bindings for [LibGit2](https://libgit2.org/)
   * [ ] Towards the end: Catching up on the documentation tasks that I've been neglecting (sorry)
-* [ ] Beta: Package management and third-party integrations, streamlining, performance work (ETA: Q1/2025 - Q3/2025)
+* [ ] Beta: Package management and third-party integrations, streamlining, performance (ETA: Q1/2025 - Q3/2025)
   * [ ] Specifics TBD, but the idea is to move bulky libraries out of the runtime while making them easy to install
   * [ ] Fixing up the existing developer tools to better support Evo's custom additions is also likely to happen here
   * [ ] In some cases, slow/otherwise problematic C API bindings will likely be replaced with more efficient FFI bindings
   * [ ] I do want to streamline the APIs and fix various inconsistencies in the libraries, which will likely take place here
-* [ ] Initial release: Adapting to feedback and potentially optimizing for critical use cases (ETA: Q3/2025- Q1/2026)
+* [ ] Initial release: Adapting to feedback and potentially optimizing for more use cases (ETA: Q3/2025- Q1/2026)
   * [ ] No timelines or even specific plans here yet, but open for ideas if someone has raised valid concerns
   * [ ] Otherwise I'll just optimize for my own use cases, same as before, which may or may not be useful to others
 
