@@ -69,11 +69,19 @@ There's also a number of standalone - but somewhat experimental - Lua modules th
 * Validation of arguments and standardized error messages are handled by the [validation](https://evo-lua.github.io/docs/references/api/libraries/validation/) library
 * Generating standalone executables and access to the virtual file system requires the [vfs](https://evo-lua.github.io/docs/references/api/libraries/vfs/) library
 
-For a comprehensive list of functions available in the latest release, check out the [API documentation](https://evo-lua.github.io/docs/category/api).
+For a comprehensive list of functionality available in the latest release, check out the [API documentation](https://evo-lua.github.io/docs/category/api).
 
 ### Extensions
 
-There's a number of [nonstandard extensions](https://evo-lua.github.io/docs/references/api/extensions) that were added for convenience, to make debugging easier, or for performance reasons.
+There's a number of [nonstandard extensions](https://evo-lua.github.io/docs/references/api/extensions):
+
+* Inspection of Lua tables becomes trivial with the builtin `dump` utility - even without a debugger
+* More efficient power-of-two math and some other operations have been added to the `bit` library
+* Various (non-optimized) utility methods are now part of the `debug`, `string`, and `table` libraries
+* Several commonly used functions are also available as [global aliases](https://evo-lua.github.io/docs/references/api/globals)
+* One of the simplest examples would be the ubiquitous `printf` function, which aliases `print(format(...))`
+
+Extensions like these are usually added for convenience, to make debugging easier, or for performance reasons.
 
 ## System Requirements
 
