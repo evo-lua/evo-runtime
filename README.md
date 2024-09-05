@@ -70,7 +70,7 @@ The runtime currently ships with bindings (and, in some cases, interoperability 
 * [RML-UI](https://mikke89.github.io/RmlUiDoc/): Native user interfaces that can be defined via HTML/CSS or entirely managed from Lua ([Docs](https://evo-lua.github.io/docs/references/api/bindings/rml/))
 * [stbi](https://github.com/nothings/stb/tree/master): Widely-used image processing library that supports many popular formats, like PNG, JPG, BMP, etc. ([Docs](https://evo-lua.github.io/docs/references/api/bindings/stbi))
 * [stduuid](https://github.com/mariusbancila/stduuid): Helps generate and validate unique identifiers following the official UUID specification ([Docs](https://evo-lua.github.io/docs/references/api/bindings/stduuid))
-* [Lua-UTF8](https://github.com/starwing/luautf8): Provides methods for dealing with Unicode strings ([Docs](https://evo-lua.github.io/docs/references/api/bindings/utf8))
+* [Lua-UTF8](https://github.com/starwing/luautf8): Provides methods for dealing with unicode strings ([Docs](https://evo-lua.github.io/docs/references/api/bindings/utf8))
 * [WebGPU](https://www.w3.org/TR/webgpu/): Crossplatform graphics API that - despite the name - requires neither a browser nor JavaScript ([Docs](https://evo-lua.github.io/docs/references/api/bindings/webgpu))
 * [WebView](https://github.com/webview/webview): Integration with native browser engines for cases when you do, in fact, want to use JavaScript ([Docs](https://evo-lua.github.io/docs/references/api/bindings/webview/))
 * [zlib](https://zlib.net/): Fully-featured compression library that complements miniz for more advanced use cases ([Docs](https://evo-lua.github.io/docs/references/api/bindings/zlib/))
