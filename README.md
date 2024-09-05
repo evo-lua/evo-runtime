@@ -1,16 +1,19 @@
 # evo-runtime
 
-``evo`` is an standalone Lua runtime built on LuaJIT and libuv, with batteries included.
+``evo`` is a standalone Lua runtime built on LuaJIT and libuv, with batteries included.
 
 ## Features
 
 Here's a selection of things you can do when running Lua scripts with Evo:
 
 * Networking via UDP, TCP, HTTP/S, and WebSockets
-* File system access, process I/O, and other system-level tasks
-* Make use of the builtin test runner (including assertions library)
-* Create native or web-based UIs and 3D software
-* Data compression, encryption, and basic image processing
+* File system access, process I/O, and similar system-level programming tasks
+* Automated testing using the builtin test runner and assertion library
+* Create native or web-based UIs, scriptable from Lua (native) or JavaScript (web)
+* Develop multimedia apps with realtime audio or 3D rendering capabilities
+* Data compression, encryption, and image processing
+* Regular expressions, JSON, charset conversions, UTF8 strings
+* Build and deploy executables that "just work" on the end-user's system
 
 Not all of the included APIs are as user-friendly as I'd like, but that'll change.
 
@@ -23,7 +26,7 @@ Functional, but not feature complete. See [issues](https://github.com/evo-lua/ev
 * Dependencies: Currently the runtime is "bloated" on purpose, will streamline this in the Beta phase
 * Interoperability: Selective for now, may consider adding additional integrations later (within reason)
 * Performance optimization and security hardening: Ongoing effort, much room for improvement
-* Usability: Many low-level libraries require a lot of tinkering/domain knowledge; high-level APIs are planned
+* Usability: Various low-level libraries require a lot of tinkering/domain knowledge; high-level APIs are planned
 
 Evo is a hobbyist project. There may be long periods of time with little to no activity; That's entirely normal and expected.
 
