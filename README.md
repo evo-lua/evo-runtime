@@ -73,7 +73,7 @@ For a comprehensive list of functions available in the latest release, check out
 
 ### Extensions
 
-There's a number of [nonstandard extensions}(https://evo-lua.github.io/docs/references/api/extensions) that were added for convenience, to make debugging easier, or for performance reasons.
+There's a number of [nonstandard extensions](https://evo-lua.github.io/docs/references/api/extensions) that were added for convenience, to make debugging easier, or for performance reasons.
 
 ## System Requirements
 
