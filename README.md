@@ -4,17 +4,25 @@
 
 ## Status
 
-Functional, but not feature complete. See issues and milestones for future plans. Here's a quick summary for the impatient:
+Functional, but not feature complete. See issues and milestones for future plans. Quick summary for the impatient:
 
-* [x] MVP: Experimentation and proof-of-concept (completed in multiple stages lasting from approximately 2021 to 2023)
+* [x] MVP: Experimentation and proof-of-concept (completed in multiple stages)
 * [ ] Alpha: Standard libraries and inclusion of additional bindings (currently in progress; ETA: Q4/2024 - Q1/2025)
-  * [ ] Bindings for [libcurl](https://curl.se/libcurl/)
-  * [ ] Bindings for [SQLite](https://www.sqlite.org/)
-  * [ ] Bindings for [LibGit2](https://libgit2.org/)
-* [ ] Beta: Package management and third-party integrations, followed by streamlining/performance work (ETA: Q1/2025 - Q3/2025)
+  * [ ] Coming Very Soon™: Bindings for [libcurl](https://curl.se/libcurl/)
+  * [ ] Coming Soon™: [SQLite](https://www.sqlite.org/)
+  * [ ] Potentially coming in this phase (TBD): Bindings for [C-ARES](https://c-ares.org/)
+  * [ ] Potentially coming in this phase (TBD): Bindings for [LibGit2](https://libgit2.org/)
+  * [ ] Towards the end: Catching up on the documentation tasks that I've been neglecting (sorry)
+* [ ] Beta: Package management and third-party integrations, streamlining, performance work (ETA: Q1/2025 - Q3/2025)
+  * [ ] Specifics TBD, but the idea is to move bulky libraries out of the runtime while making them easy to install
+  * [ ] Fixing up the existing developer tools to better support Evo's custom additions is also likely to happen here
+  * [ ] In some cases, slow/otherwise problematic C API bindings will likely be replaced with more efficient FFI bindings
+  * [ ] I do want to streamline the APIs and fix various inconsistencies in the libraries, which will likely take place here
 * [ ] Initial release: Adapting to feedback and potentially optimizing for critical use cases (ETA: Q3/2025- Q1/2026)
+  * [ ] No timelines or even specific plans here yet, but open for ideas if someone has raised valid concerns
+  * [ ] Otherwise I'll just optimize for my own use cases, same as before, which may or may not be useful to others
 
-No promises that the list will always be up-to-date, but it should give you a vague idea of the missing core features.
+No promises that the list will always be up-to-date, but it should give you a vague idea of what's left to do.
 
 ## Features
 
