@@ -30,7 +30,7 @@ Not all of the included APIs are as user-friendly as I'd like, but that'll chang
 
 ### Integrated C and FFI Bindings
 
-The runtime currently ships with bindings and in some cases additional integration layers for the following libraries:
+The runtime currently ships with bindings (and, in some cases, additional interoperability layers) for the following libraries:
 
 * [GLFW](https://www.glfw.org/): For portable windowing, user input, and integration with native graphics APIs ([Docs](https://evo-lua.github.io/docs/references/api/bindings/glfw))
 * [iconv](https://www.gnu.org/software/libiconv): Standard toolkit for converting between different character encodings  ([Docs](https://evo-lua.github.io/docs/references/api/bindings/iconv/))
