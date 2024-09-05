@@ -73,10 +73,7 @@ For a comprehensive list of functions available in the latest release, check out
 
 ### Extensions
 
-There's a number of nonstandard extensions (all non-breaking), including but not limited to the following:
-
-* Global `dump` utility to inspect table values and other complex data types
-* More performant bit operations for power-of-two math and other specialized use cases
+There's a number of nonstandard extensions (all non-breaking) added for convenience, easier debugging, or performance reasons.
 
 ## System Requirements
 
