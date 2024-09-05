@@ -54,7 +54,7 @@ Note that some of these are still limited to the slower C API, while others make
 
 ### Non-Standard Libraries
 
-In addition to bindings for third-party libraries, a number of standalone (but somewhat experimental) Lua libraries are also included:
+There's also a number of standalone - but somewhat experimental - Lua libraries that I'm still iterating on:
 
 * An [assertions](https://evo-lua.github.io/docs/references/api/libraries/assertions/) library that's used by the built-in test runner
 * A transparent [unit testing library](https://evo-lua.github.io/docs/references/api/libraries/bdd/) that supports several different paradigms and shorthands
@@ -69,7 +69,7 @@ In addition to bindings for third-party libraries, a number of standalone (but s
 * Validation of arguments and standardized error messages are handled by the [validation](https://evo-lua.github.io/docs/references/api/libraries/validation/) library
 * Generating standalone executables and access to the virtual file system is provided via the [vfs](https://evo-lua.github.io/docs/references/api/libraries/vfs/) library
 
-For a comprehensive list of available functions, check out the [API documentation](https://evo-lua.github.io/docs/category/api) for the latest release.
+For a comprehensive list of available functions in the latest release, check out the [API documentation](https://evo-lua.github.io/docs/category/api).
 
 ### Extensions
 
