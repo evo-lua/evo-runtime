@@ -19,7 +19,7 @@ Not all of the included APIs are as user-friendly as I'd like, but that'll chang
 
 ## Status
 
-Functional, but not feature complete. See [issues](https://github.com/evo-lua/evo-runtime/issues) and [milestones](https://github.com/evo-lua/evo-runtime/milestones) for future plans. Quick summary for the impatient:
+Functional, but not feature complete. See [issues](https://github.com/evo-lua/evo-runtime/issues) and [milestones](https://github.com/evo-lua/evo-runtime/milestones) for details. Quick summary for the impatient:
 
 * Core features: Fully implemented and tested. Package management facilities are still missing
 * Documentation: Exists and is fairly comprehensive, but might be incomplete and poorly structured
@@ -32,7 +32,7 @@ Evo is a hobbyist project. There may be long periods of time with little to no a
 
 ### Roadmap
 
-Although I'm developing in my spare time, I don't do so aimlessly. Below is a rough outline for the first major release.
+Below is a rough outline for the first major release (note that this list doesn't include completed features):
 
 * [x] MVP: Experimentation and proof-of-concept (completed in multiple stages)
 * [ ] Alpha: Standard libraries and inclusion of additional bindings (currently in progress; ETA: Q4/2024 - Q1/2025)
