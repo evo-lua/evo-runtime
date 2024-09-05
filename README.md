@@ -4,7 +4,12 @@
 
 ## Status
 
-Functional, but not feature complete. See issues and milestones for future plans. Quick summary for the impatient:
+Functional, but not feature complete. See issues and milestones for future plans. Consult the below roadmap for details.
+
+### Roadmap
+
+> [!NOTE]
+> This is NOT reflective of the overall implementation status, but rather a preliminary roadmap from now to `v1.0.0`.
 
 * [x] MVP: Experimentation and proof-of-concept (completed in multiple stages)
 * [ ] Alpha: Standard libraries and inclusion of additional bindings (currently in progress; ETA: Q4/2024 - Q1/2025)
