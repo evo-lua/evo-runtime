@@ -37,7 +37,7 @@ using namespace rapidjson;
 struct Key {
 	Key(const char* k, SizeType l)
 		: key(k)
-		, size(l) { }
+		, size(l) {}
 	bool operator<(const Key& rhs) const {
 		return strcmp(key, rhs.key) < 0;
 	}
