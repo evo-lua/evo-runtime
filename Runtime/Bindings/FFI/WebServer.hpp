@@ -43,7 +43,7 @@ struct DeferredEvent {
 	DeferredEvent(Type type, std::string clientID, std::string payload)
 		: type(type)
 		, clientID(std::move(clientID))
-		, payload(std::move(payload)) { }
+		, payload(std::move(payload)) {}
 };
 
 // Template parameters: isUsingSSL
