@@ -1,5 +1,6 @@
 local ffi = require("ffi")
 local miniz = require("miniz")
+local uv = require("uv")
 local validation = require("validation")
 
 local ffi_cast = ffi.cast
@@ -24,7 +25,7 @@ local vfs = {
 	]],
 }
 
-function vfs.decode(fileContents)
+function vfs.decode(fileContents) -- TBD vfs.create?
 	validation.validateString(fileContents, "fileContents")
 
 	if #fileContents < ffi_sizeof("lua_zip_signature_t") then
@@ -99,6 +100,47 @@ function vfs.searcher(zipApp, moduleName)
 	return function()
 		local filePath = moduleName:gsub("%.", path.separator) .. ".lua"
 		return vfs.dofile(zipApp, filePath)
+	end
+end
+
+function vfs.dlopen(zipApp, libraryName)
+	validation.validateString(libraryName, "libraryName")
+
+	libraryName = vfs.dlname(libraryName)
+	local fileContents, errorMessage = vfs.extract(zipApp, libraryName)
+	if not fileContents then
+		return nil, errorMessage
+	end
+
+	local tempDirectoryPath = uv.fs_mkdtemp(path.join(uv.cwd(), "LUAZIP-XXXXXX"))
+	local tempFilePath = path.join(tempDirectoryPath, libraryName)
+	C_FileSystem.WriteFile(tempFilePath, fileContents)
+	local success, libraryOrErrorMessage = pcall(ffi.load, tempFilePath)
+
+	-- Cleanup should never fail, but if it does at least it'll do so loudly
+	assert(C_FileSystem.Delete(tempFilePath))
+	assert(C_FileSystem.Delete(tempDirectoryPath))
+
+	if not success then
+		return nil, libraryOrErrorMessage
+	end
+
+	return libraryOrErrorMessage
+end
+
+function vfs.dlname(libraryName)
+	validation.validateString(libraryName, "libraryName")
+
+	-- AFAICT there's no reason to support .dylib on macOS? For now, should be safe to assume .so
+	local extension = string.lower(path.extname(libraryName))
+	if extension == ".dll" or extension == ".so" then
+		return libraryName
+	end
+
+	if ffi.os == "Windows" then
+		return libraryName .. ".dll"
+	else
+		return "lib" .. libraryName .. ".so"
 	end
 end
 
