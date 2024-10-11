@@ -40,7 +40,7 @@ function runtime.initialize()
 	if uv.constants.SIGPIPE then
 		local sigpipeSignal = uv.new_signal()
 		sigpipeSignal:start("sigpipe")
-		uv.unref(sigpipeSignal)
+		uv.unref(sigpipeSignal) -- TBD messes up luv handling?
 		runtime.signals.SIGPIPE = sigpipeSignal
 	end
 
