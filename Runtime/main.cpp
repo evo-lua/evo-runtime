@@ -33,7 +33,14 @@ int main(int argc, char* argv[]) {
 	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
 	luaVM->SetGlobalArgs(argc, argv);
 
-	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
+	// In order to support multiple guests on the event loop, the runtime itself must own it
+	uv_loop_t sharedEventLoop;
+	int errorCode = uv_loop_init(&sharedEventLoop);
+	if(errorCode > 0) {
+      return luaL_error(L, "Failed to initialize shared event loop (%s: %s)\n", uv_err_name(errorCode), uv_strerror(errorCode));
+    }
+	luv_set_loop(&sharedEventLoop);
+
 	luaVM->LoadPackage("uv", luaopen_luv);
 	luaVM->LoadPackage("lpeg", luaopen_lpeg);
 	luaVM->LoadPackage("miniz", luaopen_miniz);
@@ -66,8 +73,6 @@ int main(int argc, char* argv[]) {
 	runtime_ffi::assignLuaState(luaVM->GetState());
 	rml_ffi::assignLuaState(luaVM->GetState());
 
-	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
-	uv_loop_t* loop = luv_loop(luaVM->GetState());
 	auto uwsEventLoop = uws_ffi::assignEventLoop(loop);
 	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop)); // TODO store in runtime lib, or uws.loop, kinda unsafe though...
 
