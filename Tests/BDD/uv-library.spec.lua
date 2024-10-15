@@ -18,7 +18,7 @@ describe("uv", function()
 				print(handle)
 				error("this is never executed")
 			end)
-			
+
 			print(type(handle))
 			print(handle)
 			uv.run()
@@ -27,5 +27,4 @@ describe("uv", function()
 			end)
 		end)
 	end)
-
 end)
