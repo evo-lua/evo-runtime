@@ -96,6 +96,8 @@ bool LuaVirtualMachine::LoadPackage(std::string packageName, std::optional<lua_C
 	return true;
 }
 
+// bool LuaVirtualMachine::
+
 bool LuaVirtualMachine::DoFile(std::string filePath) {
 	int status = luaL_dofile(m_luaState, filePath.c_str());
 	if(status != LUA_OK) {
