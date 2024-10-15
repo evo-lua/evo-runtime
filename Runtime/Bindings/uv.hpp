@@ -66,6 +66,9 @@ int luaopen_luv_modified(lua_State* L) {
 
 	// TODO save the original walk function to call later
 
+	lua_getfield(L, -1, "walk");
+	lua_setfield(L, -2, "__walk");
+
 	lua_pushcfunction(L, luv_walk_noforeign);
 	lua_setfield(L, -2, "walk");
 
