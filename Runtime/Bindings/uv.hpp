@@ -58,7 +58,7 @@ int luv_walk_noforeign(lua_State* L) {
 	lua_pushstring(L, "uv");
 	lua_call(L, 1, 1); // Load 'uv' module (assumes 1 return value on success)
 
-	lua_getfield(L, -1, "walk"); // Get 'uv.walk'
+	lua_getfield(L, -1, "__walk");
 	lua_pushvalue(L, 1);         // Push the function argument from Lua stack
 	lua_call(L, 1, 0);           // Call 'uv.walk', expecting no return values
 
