@@ -1,6 +1,8 @@
 set -e
 
-echo Building target luajit
+# Beware, the magic Windows globals... This should work on all relevant systems, though?
+NUM_PARALLEL_JOBS=$NUMBER_OF_PROCESSORS
+echo "Building target luajit with $NUM_PARALLEL_JOBS jobs"
 
 LUAJIT_DIR=deps/LuaJIT/LuaJIT
 LUAJIT_SOURCE_DIR=$LUAJIT_DIR/src
@@ -11,7 +13,7 @@ mkdir -p $BUILD_DIR/jit
 cd $LUAJIT_DIR
 
 make clean
-make BUILDMODE=static XCFLAGS=-DLUAJIT_ENABLE_LUA52COMPAT
+make  -j $NUM_PARALLEL_JOBS BUILDMODE=static XCFLAGS=-DLUAJIT_ENABLE_LUA52COMPAT
 
 cd -
 

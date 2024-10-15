@@ -50,6 +50,10 @@ jobs:
       - name: Install Ninja
         run: brew install ninja
 
+        # nproc is used by build scripts to determine the number of parallel jobs
+      - name: Install GNU coreutils
+        run: brew install coreutils
+
       - name: Configure environment
         run: |
           echo "CC=ccache gcc" >> $GITHUB_ENV
@@ -71,10 +75,6 @@ jobs:
 
       - name: Build miniz
         run: deps/miniz-unixbuild.sh && ls ninjabuild-unix
-
-      # Building OpenSSL is extremely slow, so nproc is used to determine the number of parallel jobs
-      - name: Install GNU coreutils
-        run: brew install coreutils
 
       - name: Build openssl
         run: deps/openssl-unixbuild.sh && ls ninjabuild-unix
