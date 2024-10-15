@@ -33,7 +33,7 @@ static void luv_walk_cb_noforeign(uv_handle_t* handle, void* arg) {
 	if(iterator != foreignHandles.end()) {
 		printf("Tagging foreign handle in luv_walk_cb_noforeign: %p -> %p\n", handle, handle->data);
 		// foreignHandles[handle] = handle->data; // Store the foreign handle
-		handle->data = NULL; // Mark it as foreign (or ignored) for luv
+		handle->data = LUVF_EXTERNAL_HANDLE; // NULL; // Mark it as foreign (or ignored) for luv
 	}
 }
 
