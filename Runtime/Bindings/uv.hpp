@@ -30,7 +30,7 @@ static void luv_walk_cb_noforeign_done(uv_handle_t* handle, void* arg) {
 	assert(handle != NULL);
 	assert(handle->data != NULL);
 
-	lua_State* L = (lua_State*)arg;
+	// lua_State* L = (lua_State*)arg;
 
 	printf("Running luv_walk_cb_noforeign_done for handle with data: %p\n", handle->data);
 
@@ -47,11 +47,17 @@ int luv_walk_noforeign(lua_State* L) { // TODO review use of static and extern C
 	printf("luv_walk_noforeign called\n");
 	luaL_checktype(L, 1, LUA_TFUNCTION);
 	
-	// TODO clear map?
+	// TODO clear map or just assert it is empty??
+	uv_walk(luv_loop(L), luv_walk_cb_noforeign, L); // save_foreign_userdata
 
-	uv_walk(luv_loop(L), luv_walk_cb_noforeign, L);
-	// TODO call uv.walk from the saved ref 
-	uv_walk(luv_loop(L), luv_walk_cb_noforeign_done, L);
+	// local uv = require("uv").walk(<function arg 1>)
+	lua_getglobal(L, "require");
+	lua_pushstring(L, "uv");
+	lua_call(L, 1, 1); // TBD should be 1 return always?
+	lua_getfield(L, -1, "walk");
+	lua_call(L, 1, 1); // TBD should be 1 return always?
+	
+	uv_walk(luv_loop(L), luv_walk_cb_noforeign_done, L); // restore_foreign_userdata
 	// TODO call the original function
 	// TODO clear map?
 

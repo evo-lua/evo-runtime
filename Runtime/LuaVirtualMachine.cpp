@@ -8,7 +8,7 @@
 #include "LuaVirtualMachine.hpp"
 
 int onLuaError(lua_State* m_luaState) {
-	lua_pushvalue(m_luaState, LUA_GLOBALSINDEX);
+	lua_pushvalue(m_luaState, LUA_GLOBALSINDEX); // TODO Why not use lua_getglobal instead?
 
 	lua_getfield(m_luaState, -1, "debug");
 	lua_remove(m_luaState, -2);
