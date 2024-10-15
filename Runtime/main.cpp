@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
       return luaL_error(L, "Failed to initialize shared event loop (%s: %s)\n", uv_err_name(errorCode), uv_strerror(errorCode));
     }
 	luv_set_loop(L, &sharedEventLoop);
+	printf("Set up shared event loop: %p\n", sharedEventLoop); // TODO remove
 
 	luaVM->LoadPackage("uv", luaopen_luv);
 	luaVM->LoadPackage("lpeg", luaopen_lpeg);
@@ -72,10 +73,17 @@ int main(int argc, char* argv[]) {
 	luaVM->CreateGlobalNamespace("C_Runtime");
 
 	runtime_ffi::assignLuaState(luaVM->GetState());
+	// runtime_ffi::assignEventLoop(&sharedEventLoop);
+		// Workaround: luv expects all handles to be tagged with its internal userdata
+		// This isn't the case for those managed by uws, which run on the same event loop
+	
 	rml_ffi::assignLuaState(luaVM->GetState());
 
 	auto uwsEventLoop = uws_ffi::assignEventLoop(&sharedEventLoop);
-	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop)); // TODO store in runtime lib, or uws.loop, kinda unsafe though...
+	us_loop_t* usLoop = (us_loop_t *) uwsEventLoop; // TODO static_cast<us_loop_t *>(uwsEventLoop);
+	printf("usLoop: %p\n", usLoop);
+	// luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop)); // TODO store in runtime lib, or uws.loop, kinda unsafe though...
+	// luaVM->AssignGlobalVariable("UV_LOOP", static_cast<void*>(&sharedEventLoop)); // TODO store in runtime lib, or uws.loop, kinda unsafe though...
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
