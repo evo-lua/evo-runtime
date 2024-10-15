@@ -1,9 +1,12 @@
 #include "lua.hpp"
+#include <unordered_map>
+#include <uv.h>
+#include <cassert>
 
 static std::unordered_map<uv_handle_t*, void*> foreignHandles;
 
 extern "C" {
-#include "uv.h"
+
 #include "luv.h"
 
 static void luv_walk_cb_noforeign(uv_handle_t* handle, void* arg) {
@@ -13,68 +16,72 @@ static void luv_walk_cb_noforeign(uv_handle_t* handle, void* arg) {
 	lua_State* L = (lua_State*)arg;
 	printf("Running luv_walk_cb_noforeign for handle with data: %p\n", handle->data);
 
-	lua_getglobal(L, "UWS_EVENT_LOOP"); // TODO use uws.usLoopPointer, or just pass in C++ directly (privately)
+	lua_getglobal(L, "UWS_EVENT_LOOP"); // Retrieve the UWS loop pointer
 	void* usLoopPointer = lua_touserdata(L, -1);
 	assert(usLoopPointer != NULL);
+	lua_pop(L, 1); // Clean up the stack
 
-	if(usLoopPointer == handle->data) { // questionable, need a better solution
+	// Compare the usLoopPointer with handle's data to tag foreign handles
+	if (usLoopPointer == handle->data) {
 		printf("Tagging foreign handle in luv_walk_cb_noforeign: %p -> %p\n", handle, handle->data);
-		// foreignHandles.insert(handle, handle->data); // TBD insert vs emplace vs emplace_hint, tbd can skip if data is always loop (impl detail?)
-		foreignHandles[handle] = handle->data;
-		handle->data = NULL; // TODO LUV_FOREIGN_HANDLE or luv_ignore_handle() / luv_unignore_handle()
+		foreignHandles[handle] = handle->data; // Store the foreign handle
+		handle->data = NULL; // Mark it as foreign (or ignored) for luv
 	}
-
 }
 
 static void luv_walk_cb_noforeign_done(uv_handle_t* handle, void* arg) {
 	assert(handle != NULL);
-	assert(handle->data != NULL);
 
-	// lua_State* L = (lua_State*)arg;
-
-	printf("Running luv_walk_cb_noforeign_done for handle with data: %p\n", handle->data);
-
+	// Check if the handle was tagged as foreign in the previous walk
 	auto iterator = foreignHandles.find(handle);
-	if(iterator != foreignHandles.end()) {
-		// void* userdataPointer = iterator->second();
-		void* userdataPointer = foreignHandles[handle];
-		printf("Restoring tagged foreign handle in luv_walk_cb_noforeign_done: %p -> %p\n", handle,userdataPointer);
-		handle->data = foreignHandles[handle];
+	if (iterator != foreignHandles.end()) {
+		void* userdataPointer = iterator->second;
+		printf("Restoring tagged foreign handle in luv_walk_cb_noforeign_done: %p -> %p\n", handle, userdataPointer);
+		handle->data = userdataPointer; // Restore the handle data
+
+		// Remove the handle from the map after restoring it
+		foreignHandles.erase(iterator);
 	}
 }
 
-int luv_walk_noforeign(lua_State* L) { // TODO review use of static and extern C everywhere
+int luv_walk_noforeign(lua_State* L) {
 	printf("luv_walk_noforeign called\n");
-	luaL_checktype(L, 1, LUA_TFUNCTION);
-	
-	// TODO clear map or just assert it is empty??
-	uv_walk(luv_loop(L), luv_walk_cb_noforeign, L); // save_foreign_userdata
 
-	// local uv = require("uv").walk(<function arg 1>)
+	// Clear the foreignHandles map to ensure it's empty before starting
+	foreignHandles.clear();
+
+	// Perform the first walk to tag foreign handles
+	uv_walk(luv_loop(L), luv_walk_cb_noforeign, L);
+
+	// Call the original 'uv.walk' function from Lua
 	lua_getglobal(L, "require");
 	lua_pushstring(L, "uv");
-	lua_call(L, 1, 1); // TBD should be 1 return always?
-	lua_getfield(L, -1, "walk");
-	lua_call(L, 1, 1); // TBD should be 1 return always?
-	
-	uv_walk(luv_loop(L), luv_walk_cb_noforeign_done, L); // restore_foreign_userdata
-	// TODO call the original function
-	// TODO clear map?
+	lua_call(L, 1, 1); // Load 'uv' module (assumes 1 return value on success)
+
+	lua_getfield(L, -1, "walk"); // Get 'uv.walk'
+	lua_pushvalue(L, 1);         // Push the function argument from Lua stack
+	lua_call(L, 1, 0);           // Call 'uv.walk', expecting no return values
+
+	// Perform the second walk to restore foreign handles
+	uv_walk(luv_loop(L), luv_walk_cb_noforeign_done, L);
+
+	// Ensure the foreignHandles map is cleared after the operation
+	foreignHandles.clear();
 
 	return 0;
 }
 
 int luaopen_luv_modified(lua_State* L) {
 	int success = luaopen_luv(L);
-	if(success != 1) {
+	if (success != 1) {
 		luaL_error(L, "Could not open luv");
 	}
 
-	// TODO save the original walk function to call later
-
+	// Backup the original 'walk' function
 	lua_getfield(L, -1, "walk");
 	lua_setfield(L, -2, "__walk");
 
+	// Replace the 'walk' function with 'luv_walk_noforeign'
 	lua_pushcfunction(L, luv_walk_noforeign);
 	lua_setfield(L, -2, "walk");
 
