@@ -19,6 +19,9 @@ print(handle)
 
 -- uv.run()
 
+print("uv.walk", uv.walk)
+print("uv.__walk", uv.__walk)
+
 uv.walk(function(_)
 	print(_)
 	-- print(_) -- uv_close: Assertion `!uv__is_closing(handle)' faile
