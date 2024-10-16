@@ -24,4 +24,5 @@ echo "Cleanup: Removing llvm.sh"
 echo
 rm -rf llvm.sh
 
+echo Installed autoformatter:
 echo $(clang-format-$EVO_AUTOFORMAT_VERSION --version)
