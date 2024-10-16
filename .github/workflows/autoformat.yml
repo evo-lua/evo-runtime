@@ -51,15 +51,26 @@ jobs:
         if: runner.os == 'Linux'
         run: ./deps/install-clang-format.sh
 
+      # TODO link on windows and macOS
       - name: Install clang-format (via Homebrew)
         if: runner.os == 'macOS'
         run: |
-          set -x
+          set -eu
           brew install llvm@${{ env.EVO_AUTOFORMAT_VERSION }}
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           echo "/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin" >> $GITHUB_PATH
-          ln -s /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin/clang-format /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin/clang-format-${{ env.EVO_AUTOFORMAT_VERSION }}
-          ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
+
+      - name: Create clang-format--${{ env.EVO_AUTOFORMAT_VERSION }} alias (Windows and macOS)
+        if: runner.os != 'Linux'
+        run: |
+          set -eu
+          ln -s $(which clang-format) $(which clang-format)-{ env.EVO_AUTOFORMAT_VERSION }}
+
+      - name: Create clang-format--${{ env.EVO_AUTOFORMAT_VERSION }} alias (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          set -eu
+          ln -s $(which clang-format) $(which clang-format)-{ env.EVO_AUTOFORMAT_VERSION }}
 
       - name: Verify clang-format version
         run: clang-format --version && clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
@@ -69,7 +80,7 @@ jobs:
         run: ./autoformat.sh
         shell: msys2 {0}
 
-      - name: Run autoformat (Linux/MacOS)
+      - name: Run autoformat (Linux and macOS)
         if: runner.os != 'Windows'
         run: ./autoformat.sh
 
