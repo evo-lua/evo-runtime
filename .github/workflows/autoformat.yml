@@ -53,8 +53,17 @@ jobs:
 
       - name: Install clang-format (via Homebrew)
         if: runner.os == 'macOS'
-        run: brew install clang-format-${{ env.EVO_AUTOFORMAT_VERSION }}
+        run: |
+          brew install llvm@${{ env.EVO_AUTOFORMAT_VERSION }}
+#          echo "/opt/homebrew/opt/llvm@$EVO_AUTOFORMAT_VERSION/bin" >> $GITHUB_PATH  # For M1 (ARM)
+#          echo "/usr/local/opt/llvm@$EVO_AUTOFORMAT_VERSION/bin" >> 
+
+ #     - name: Add clang-format-17 to PATH
+  #      run: echo "/usr/local/clang-format-17/bin" >> $GITHUB_PATH
         
+      - name: Verify clang-format version
+        run: clang-format --version
+
       - name: Run autoformat (Windows)
         if: runner.os == 'Windows'
         run: ./autoformat.sh
