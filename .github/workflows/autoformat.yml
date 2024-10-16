@@ -60,7 +60,6 @@ jobs:
           echo "/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin" >> $GITHUB_PATH
           ln -s /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin/clang-format /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin/clang-format-${{ env.EVO_AUTOFORMAT_VERSION }}
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
-          clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
 
       - name: Verify clang-format version
         run: clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
