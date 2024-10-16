@@ -22,6 +22,10 @@ jobs:
     env:
         # Track latest MSYS2 release since the version can't be pinned, yet updates may be ported with some delay
         EVO_AUTOFORMAT_VERSION: 18
+    defaults:
+      if: runner.os == 'Windows'
+      run:
+        shell: msys2 {0}
 
     steps:
       # MSYS needs to be available before running any git commands
@@ -74,7 +78,7 @@ jobs:
           echo $(which clang-format)
           ls -l "$(dirname "$(which clang-format)")"
           ln -s "$(which clang-format)".exe "$(which clang-format)"-${{ env.EVO_AUTOFORMAT_VERSION }}.exe
-        shell: msys2 {0}
+        # shell: msys2 {0}
 
       - name: Verify clang-format version
         run: clang-format --version && clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
@@ -82,7 +86,7 @@ jobs:
       - name: Run autoformat (Windows)
         if: runner.os == 'Windows'
         run: ./autoformat.sh
-        shell: msys2 {0}
+        # shell: msys2 {0}
 
       - name: Run autoformat (Linux/macOS)
         if: runner.os != 'Windows'
