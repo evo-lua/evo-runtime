@@ -1,4 +1,5 @@
-set -e
+#!/bin/bash
+set -euo pipefail
 
 REQUIRED_CLANG_FORMAT_VERSION="17"
 CLANG_FORMAT_DOWNLOAD_URL="https://apt.llvm.org/llvm.sh"
