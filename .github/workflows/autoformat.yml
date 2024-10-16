@@ -21,7 +21,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     env:
         # Track latest MSYS2 release since the version can't be pinned, but updates may be ported with some delay
-        EVO_AUTOFORMAT_VERSION: 17
+        EVO_AUTOFORMAT_VERSION: 18
 
     steps:
       # MSYS needs to be available before running any git commands
