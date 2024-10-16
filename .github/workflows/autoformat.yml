@@ -65,8 +65,8 @@ jobs:
         run: |
           set -eu
           echo $(which clang-format)
-          ls -l $(dirname $(which clang-format))
-          ln -s $(which clang-format) $(which clang-format)-${{ env.EVO_AUTOFORMAT_VERSION }}
+          ls -l "$(dirname "$(which clang-format)")"
+          ln -s "$(which clang-format)" "$(which clang-format)-${{ env.EVO_AUTOFORMAT_VERSION }}"
         shell: bash
 
       - name: Verify clang-format version
