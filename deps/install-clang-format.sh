@@ -13,7 +13,7 @@ echo "You should inspect the contents of llvm.sh (e.g. via cat llvm.sh)"
 echo "Don't blindly run code that was downloaded from the internet"
 echo
 
-echo "The script will now attempt to install clang-format-$REQUIRED_CLANG_FORMAT_VERSION \n"
+echo "The script will now attempt to install clang-format-$REQUIRED_CLANG_FORMAT_VERSION"
 echo
 
 # This should prompt the user, giving them time to inspect llvm.sh if so desired (not in CI runs)
