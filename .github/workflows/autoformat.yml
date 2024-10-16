@@ -62,7 +62,7 @@ jobs:
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
 
       - name: Verify clang-format version
-        run: clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
+        run: clang-format --version && clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
 
       - name: Run autoformat (Windows)
         if: runner.os == 'Windows'
