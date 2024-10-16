@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     env:
-        # Track latest MSYS2 release since the version can't be pinned, but updates may be ported with some delay
+        # Track latest MSYS2 release since the version can't be pinned, yet updates may be ported with some delay
         EVO_AUTOFORMAT_VERSION: 18
 
     steps:
@@ -46,12 +46,11 @@ jobs:
           args: --check . --verbose
           version: v0.20.0 # TBD update?
 
-        # The preinstalled version is positively antique; replace with the latest and greatest (to match MSYS)
+        # The preinstalled version is positively antique; replace with the pinned version (to match MSYS)
       - name: Install clang-format (via APT)
         if: runner.os == 'Linux'
         run: ./deps/install-clang-format.sh
 
-      # TODO link on windows and macOS
       - name: Install clang-format (via Homebrew)
         if: runner.os == 'macOS'
         run: |
@@ -60,14 +59,22 @@ jobs:
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           echo "/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin" >> $GITHUB_PATH
 
-      - name: Create versioned clang-format- alias (Windows and macOS)
-        if: runner.os != 'Linux'
+      - name: Create versioned clang-format alias (macOS)
+        if: runner.os == 'macOS'
         run: |
           set -eu
           echo $(which clang-format)
           ls -l "$(dirname "$(which clang-format)")"
-          ln -s "$(which clang-format)" "$(which clang-format)-${{ env.EVO_AUTOFORMAT_VERSION }}"
-        shell: bash
+          ln -s "$(which clang-format)" "$(which clang-format)"-${{ env.EVO_AUTOFORMAT_VERSION }}
+
+      - name: Create versioned clang-format alias (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          set -eu
+          echo $(which clang-format)
+          ls -l "$(dirname "$(which clang-format)")"
+          ln -s "$(which clang-format)".exe "$(which clang-format)"-${{ env.EVO_AUTOFORMAT_VERSION }}.exe
+        shell: msys2 {0}
 
       - name: Verify clang-format version
         run: clang-format --version && clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
