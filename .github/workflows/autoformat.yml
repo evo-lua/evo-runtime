@@ -38,6 +38,11 @@ jobs:
         with:
           install: git mingw-w64-x86_64-clang
 
+      - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - name: Check out Git repository
         uses: actions/checkout@v4
 
