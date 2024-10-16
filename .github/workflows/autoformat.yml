@@ -53,25 +53,15 @@ jobs:
 
       - name: Install clang-format (via Homebrew)
         if: runner.os == 'macOS'
-# $GITHUB_PATH
         run: |
           set -x
           brew install llvm@${{ env.EVO_AUTOFORMAT_VERSION }}
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
-          echo 'export PATH="/opt/homebrew/opt/llvm@17/bin:$PATH"' >> /Users/runner/.bash_profile
-          source  /Users/runner/.bash_profile
-          echo "/opt/homebrew/opt/llvm@17/bin:$PATH" << $GITHUB_PATH
+          echo "/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin" >> $GITHUB_PATH
           ln -s $(which clang-format) $(which clang-format)-${{ env.EVO_AUTOFORMAT_VERSION }}
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
-#echo "/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin:$PATH" >> $GITHUB_PATH
-      # /Users/runner/.bash_profile
-#          echo "/opt/homebrew/opt/llvm@$EVO_AUTOFORMAT_VERSION/bin" >> $GITHUB_PATH  # For M1 (ARM)
-#          echo "/usr/local/opt/llvm@$EVO_AUTOFORMAT_VERSION/bin" >> 
 
- #     - name: Add clang-format-17 to PATH
-  #      run: echo "/usr/local/clang-format-17/bin" >> $GITHUB_PATH
-        
       - name: Verify clang-format version
         run: clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
 
