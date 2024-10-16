@@ -57,7 +57,7 @@ jobs:
         run: |
           set -x
           brew install llvm@${{ env.EVO_AUTOFORMAT_VERSION }}
-          echo 'export PATH="/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin:$PATH"' >> /Users/runner/.bash_profile
+          echo 'export PATH="/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin:$PATH"' >> $GITHUB_PATH
           ln -s $(which clang-format) $(which clang-format)-${{ env.EVO_AUTOFORMAT_VERSION }}
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
       # /Users/runner/.bash_profile
