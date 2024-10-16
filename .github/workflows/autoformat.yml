@@ -71,7 +71,7 @@ jobs:
   #      run: echo "/usr/local/clang-format-17/bin" >> $GITHUB_PATH
         
       - name: Verify clang-format version
-        run: clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
+        run: /opt/homebrew/opt/llvm@17/bin/clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
 
       - name: Run autoformat (Windows)
         if: runner.os == 'Windows'
