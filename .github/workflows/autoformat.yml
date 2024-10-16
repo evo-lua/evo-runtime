@@ -37,21 +37,16 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           install: git mingw-w64-x86_64-clang
-
-      - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.eol lf
-
+.
       - name: Check out Git repository
         uses: actions/checkout@v4
 
       - name: Set up StyLua
-        uses: JohnnyMorganz/stylua-action@v3.0.0 # TBD update?
+        uses: JohnnyMorganz/stylua-action@v4.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --check . --verbose
-          version: v0.20.0 # TBD update?
+          version: v0.20.0
 
         # The preinstalled version is positively antique; replace with the pinned version (to match MSYS)
       - name: Install clang-format (via APT)
