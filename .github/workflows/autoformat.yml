@@ -54,9 +54,10 @@ jobs:
       - name: Install clang-format (via Homebrew)
         if: runner.os == 'macOS'
         run: |
+          set -x
           brew install llvm@${{ env.EVO_AUTOFORMAT_VERSION }}
-          ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           ln -s $(which clang-format) $(which clang-format)-${{ env.EVO_AUTOFORMAT_VERSION }}
+          ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           echo 'export PATH="/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin:$PATH"' >> /Users/runner/.bash_profile
       # $GITHUB_PATH
       # /Users/runner/.bash_profile
