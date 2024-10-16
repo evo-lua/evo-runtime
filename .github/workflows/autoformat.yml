@@ -19,14 +19,29 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            stylua: stylua-linux.zip
+            shell: bash
+          - os: macos-latest
+            stylua: stylua-macos.zip
+            shell: bash
+          - os: windows-latest
+            stylua: stylua-win64.zip
+            shell: 'msys2 {0}'
+    env:
+        HOMEBREW_LLVM_DIR: "/opt/homebrew/opt/llvm" # Depends on the runner's architecture
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
 
     steps:
-      # MSYS needs to be available before running any git commands
       - name: Install clang-format (via MSYS)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
-          install: git mingw-w64-x86_64-clang
+          install: git mingw-w64-x86_64-clang unzip
+          path-type: inherit # Not ideal, but $GITHUB_PATH doesn't play nice with MSYS otherwise
 
       - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
         run: |
@@ -35,25 +50,48 @@ jobs:
 
       - name: Check out Git repository
         uses: actions/checkout@v4
-
-      - name: Set up StyLua
-        uses: JohnnyMorganz/stylua-action@v3.0.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --check . --verbose
-          version: v0.20.0
+          clean: false
+          fetch-depth: 1
+          submodules: false
 
-        # The preinstalled version is positively antique; replace with the latest and greatest (to match MSYS)
-      - name: Install clang-format (via APT)
+      - name: Load environment variables
+        run: |
+          set -a
+          source .github/autoformat.env
+          cat .github/autoformat.env >> $GITHUB_ENV
+
+      - name: Install stylua
+        run: |
+          wget https://github.com/JohnnyMorganz/StyLua/releases/download/${{ env.EVO_STYLUA_VERSION }}/${{ matrix.stylua }}
+          unzip ${{ matrix.stylua }}
+          chmod +x stylua
+          ls -l
+          echo $(pwd) >> $GITHUB_PATH
+          ./stylua --version
+
+        # The preinstalled version is positively antique; replace with the pinned version (to match MSYS)
+      - name: Install clang-format (Linux)
         if: runner.os == 'Linux'
-        run: ./deps/install-clang-format.sh
+        run: sudo ./deps/install-clang-format.sh
 
-      - name: Install clang-format (via Homebrew)
+      - name: Install clang-format (macOS)
         if: runner.os == 'macOS'
-        run: brew install clang-format
-        
+        run: |
+          set -eu
+          brew install llvm@${{ env.EVO_CLANGFORMAT_VERSION }}
+          ls -l ${{ env.HOMEBREW_LLVM_DIR }}@${{ env.EVO_CLANGFORMAT_VERSION }}/bin
+          echo "${{ env.HOMEBREW_LLVM_DIR }}@${{ env.EVO_CLANGFORMAT_VERSION }}/bin" >> $GITHUB_PATH
+
+      - name: Create versioned clang-format alias
+        if: runner.os != 'Linux'
+        run: ln -s "$(which clang-format)" "$(which clang-format)"-${{ env.EVO_CLANGFORMAT_VERSION }}
+
+      - name: Verify clang-format version
+        run: clang-format --version && clang-format-${{ env.EVO_CLANGFORMAT_VERSION }} --version
+
       - name: Run autoformat
         run: ./autoformat.sh
 
       - name: Check for inconsistent formatting
-        run: git --no-pager diff --exit-code -b . #The -b is for inconsistent newlines, which we ignore (for now)
+        run: git --no-pager diff --exit-code -b .
