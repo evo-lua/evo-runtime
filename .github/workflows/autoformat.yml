@@ -84,7 +84,7 @@ jobs:
         run: ./autoformat.sh
         shell: msys2 {0}
 
-      - name: Run autoformat (Linux and macOS)
+      - name: Run autoformat (Linux/macOS)
         if: runner.os != 'Windows'
         run: ./autoformat.sh
 
