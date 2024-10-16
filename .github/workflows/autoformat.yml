@@ -58,7 +58,7 @@ jobs:
           brew install llvm@${{ env.EVO_AUTOFORMAT_VERSION }}
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           echo "/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin" >> $GITHUB_PATH
-          ln -s $(which clang-format) $(which clang-format)-${{ env.EVO_AUTOFORMAT_VERSION }}
+          ln -s /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin/clang-format /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin/clang-format-${{ env.EVO_AUTOFORMAT_VERSION }}
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
 
