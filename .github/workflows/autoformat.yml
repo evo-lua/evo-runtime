@@ -52,7 +52,13 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install clang-format
         
-      - name: Run autoformat
+      - name: Run autoformat (Windows)
+        if: runner.os == 'Windows'
+        run: ./autoformat.sh
+        shell: msys2 {0}
+
+      - name: Run autoformat (Linux/MacOS)
+        if: runner.os != 'Windows'
         run: ./autoformat.sh
 
       - name: Check for inconsistent formatting # todo remove this, seems obsolete/redundant?
