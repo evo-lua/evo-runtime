@@ -15,11 +15,10 @@ on:
 jobs:
   check-format:
     name: Enforce consistent formatting
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.sys.os }}
     strategy:
       # Questionable approach? See https://github.com/orgs/community/discussions/27143
       matrix:
-        os: ${{ matrix.sys.os }}
         sys:
           - { os: windows-latest, shell: 'msys2 {0}' }
           - { os: ubuntu-latest,  shell: bash }
