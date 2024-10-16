@@ -55,6 +55,8 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install llvm@${{ env.EVO_AUTOFORMAT_VERSION }}
+          echo 'export PATH="/opt/homebrew/opt/llvm@17/bin:$PATH"' >> $GITHUB_PATH
+      # /Users/runner/.bash_profile
 #          echo "/opt/homebrew/opt/llvm@$EVO_AUTOFORMAT_VERSION/bin" >> $GITHUB_PATH  # For M1 (ARM)
 #          echo "/usr/local/opt/llvm@$EVO_AUTOFORMAT_VERSION/bin" >> 
 
