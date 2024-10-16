@@ -64,7 +64,7 @@ jobs:
         if: runner.os != 'Linux'
         run: |
           set -eu
-          ln -s $(which clang-format) $(which clang-format)-{ env.EVO_AUTOFORMAT_VERSION }}
+          ln -s $(which clang-format) $(which clang-format)-{{ env.EVO_AUTOFORMAT_VERSION }}
 
       - name: Verify clang-format version
         run: clang-format --version && clang-format-${{ env.EVO_AUTOFORMAT_VERSION }} --version
