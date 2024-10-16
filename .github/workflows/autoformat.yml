@@ -60,14 +60,8 @@ jobs:
           ls -l /opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin
           echo "/opt/homebrew/opt/llvm@${{ env.EVO_AUTOFORMAT_VERSION }}/bin" >> $GITHUB_PATH
 
-      - name: Create clang-format--${{ env.EVO_AUTOFORMAT_VERSION }} alias (Windows and macOS)
+      - name: Create versioned clang-format- alias (Windows and macOS)
         if: runner.os != 'Linux'
-        run: |
-          set -eu
-          ln -s $(which clang-format) $(which clang-format)-{ env.EVO_AUTOFORMAT_VERSION }}
-
-      - name: Create clang-format--${{ env.EVO_AUTOFORMAT_VERSION }} alias (macOS)
-        if: runner.os == 'macOS'
         run: |
           set -eu
           ln -s $(which clang-format) $(which clang-format)-{ env.EVO_AUTOFORMAT_VERSION }}
