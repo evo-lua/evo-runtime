@@ -53,7 +53,7 @@ jobs:
 
       - name: Install clang-format (via Homebrew)
         if: runner.os == 'macOS'
-        run: brew install clang-format
+        run: brew install clang-format-${{ env.EVO_AUTOFORMAT_VERSION }}
         
       - name: Run autoformat (Windows)
         if: runner.os == 'Windows'
