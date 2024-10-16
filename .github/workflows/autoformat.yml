@@ -45,6 +45,10 @@ jobs:
 
       - name: Check out Git repository
         uses: actions/checkout@v4
+        with:
+          clean: false
+          fetch-depth: 1
+          submodules: false
 
       - name: Set up StyLua
         uses: JohnnyMorganz/stylua-action@v4.0.0
