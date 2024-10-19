@@ -43,3 +43,4 @@ CHANGELOG.MD
 .DS_Store
 .n2_db
 deps/versions.lua
+*.xz
