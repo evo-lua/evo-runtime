@@ -19,15 +19,21 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            stylua: stylua-linux.zip
+            exe: ""
+          - os: macos-latest
+            stylua: stylua-macos.zip
+            exe: ""
+          - os: windows-latest
+            stylua: stylua-win64.zip
+            exe: ".exe"
+    defaults:
+      run:
+        shell: bash
 
     steps:
-      # MSYS needs to be available before running any git commands
-      - name: Install clang-format (via MSYS)
-        if: runner.os == 'Windows'
-        uses: msys2/setup-msys2@v2
-        with:
-          install: git mingw-w64-x86_64-clang
-
       - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
         run: |
           git config --global core.autocrlf false
@@ -35,25 +41,44 @@ jobs:
 
       - name: Check out Git repository
         uses: actions/checkout@v4
-
-      - name: Set up StyLua
-        uses: JohnnyMorganz/stylua-action@v3.0.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --check . --verbose
-          version: v0.20.0
+          fetch-depth: 1
+          submodules: false
 
-        # The preinstalled version is positively antique; replace with the latest and greatest (to match MSYS)
-      - name: Install clang-format (via APT)
-        if: runner.os == 'Linux'
-        run: ./deps/install-clang-format.sh
+      - name: Set up environment
+        run: |
+          set -a
+          source .github/autoformat.env
+          cat .github/autoformat.env >> $GITHUB_ENV
+          echo $(pwd) >> $GITHUB_PATH
 
-      - name: Install clang-format (via Homebrew)
-        if: runner.os == 'macOS'
-        run: brew install clang-format
-        
+      - name: Cache clang-format binary
+        id: cache-clang-format
+        uses: actions/cache@v4
+        with:
+          path: clang-format${{ matrix.exe }}
+          key: clang-format-${{ runner.os }}-${{ env.EVO_CLANGFORMAT_VERSION }}
+          restore-keys: |
+            clang-format-${{ runner.os }}-${{ env.EVO_CLANGFORMAT_VERSION }}
+
+      - name: Install clang-format
+        if: steps.cache-clang-format.outputs.cache-hit != 'true'
+        run: deps/get-clang-format.sh
+  
+      - name: Verify clang-format version
+        run: which clang-format && clang-format --version
+
+      - name: Install stylua
+        run: |
+          curl --location --output ${{ matrix.stylua }} https://github.com/JohnnyMorganz/StyLua/releases/download/${{ env.EVO_STYLUA_VERSION }}/${{ matrix.stylua }}
+          unzip ${{ matrix.stylua }}
+          chmod +x stylua
+
+      - name: Verify stylua version
+        run: which stylua && stylua --version
+
       - name: Run autoformat
         run: ./autoformat.sh
 
       - name: Check for inconsistent formatting
-        run: git --no-pager diff --exit-code -b . #The -b is for inconsistent newlines, which we ignore (for now)
+        run: git --no-pager diff --exit-code -b .
