@@ -38,6 +38,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake mingw-w64-x86_64-rust
+          release: false # Use version from runner images to reduce build times
 
       - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
         run: |
