@@ -198,16 +198,16 @@ jobs:
         # TBD upload as artifact? same as the executable, and possibly libs (DLL only)
 
 # TBD upload binary as well? review storage quotas first...
-      - name: Upload CHANGELOG.MD preview
-        uses: actions/upload-artifact@v4
-        with:
-          name: CHANGELOG-PREVIEW-LINUX.MD
-          path: CHANGELOG.MD
+      # - name: Upload CHANGELOG.MD preview
+        # uses: actions/upload-artifact@v4
+        # with:
+          # name: CHANGELOG-PREVIEW-LINUX.MD
+          # path: CHANGELOG.MD
         
       - name: Generate build summary
         run: |
           echo "## Context" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** ${{ github.ref_name }} (${{ github.ref }})" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:**  $(git branch --show-current) (${{ github.ref }})" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           BUILD_TIME=$(($(date +%s) - ${{ github.event.workflow_run.created_at }}))
           echo "**Build Time:** ${BUILD_TIME} seconds" >> $GITHUB_STEP_SUMMARY
