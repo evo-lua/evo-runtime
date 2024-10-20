@@ -206,24 +206,28 @@ jobs:
         
       - name: Generate build summary
         run: |
-          echo "## Build Stats" >> $GITHUB_STEP_SUMMARY
+          echo "## Context" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }} (${{ github.ref }})" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           BUILD_TIME=$(($(date +%s) - ${{ github.event.workflow_run.created_at }}))
           echo "**Build Time:** ${BUILD_TIME} seconds" >> $GITHUB_STEP_SUMMARY
           echo "**Build Date:** $(date)" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Created at:** ${{ github.event.workflow_run.created_at }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.github.triggering_actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ github.github.action_status }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Caching" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.cache-openssl.outputs.cache-hit }}" == 'true' ]; then
-            echo "- **OpenSSL:** Cache hit" >> $GITHUB_STEP_SUMMARY
-            echo "  Cache key: openssl-${{ steps.revparse.outputs.openssl }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **OpenSSL:** Cache HIT (key: ${{ steps.cache-openssl.key }})" >> $GITHUB_STEP_SUMMARY
           else
-            echo "- **OpenSSL:** Cache miss, rebuilt" >> $GITHUB_STEP_SUMMARY
+            echo "- **OpenSSL:** Cache MISS (full rebuild)" >> $GITHUB_STEP_SUMMARY
           fi
           if [ "${{ steps.cache-wgpu.outputs.cache-hit }}" == 'true' ]; then
             echo "- **WGPU:** Cache hit" >> $GITHUB_STEP_SUMMARY
-            echo "  Cache key: wgpu-${{ steps.revparse.outputs.wgpu }}" >> $GITHUB_STEP_SUMMARY
+            echo "  Cache key: ${{ steps.cache-wgpu.key }}" >> $GITHUB_STEP_SUMMARY
           else
             echo "- **WGPU:** Cache miss, rebuilt" >> $GITHUB_STEP_SUMMARY
           fi
-          echo "## Changelog\n\n" >> $GITHUB_STEP_SUMMARY
+          echo "## Changelog" >> $GITHUB_STEP_SUMMARY
           cat CHANGELOG.MD >> $GITHUB_STEP_SUMMARY
 
 # TODO publish artifacts (changelog/build summary/logs?)
