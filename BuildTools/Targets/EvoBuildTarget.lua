@@ -10,9 +10,9 @@ local EvoBuildTarget = {
 	luaSources = {
 		-- Auto-generated versioning information for embedded libraries
 		"deps/versions.lua",
-		"deps/LuaJIT/LuaJIT/src/jit/p.lua",
-		"deps/LuaJIT/LuaJIT/src/jit/vmdef.lua",
-		"deps/LuaJIT/LuaJIT/src/jit/zone.lua",
+		"deps/luvit/luv/deps/luajit/src/jit/p.lua",
+		"deps/luvit/luv/deps/luajit/src/jit/vmdef.lua",
+		"deps/luvit/luv/deps/luajit/src/jit/zone.lua",
 		-- Integrated third-party code (no build system required)
 		"deps/kikito/inspect.lua/inspect.lua",
 		"deps/roberto-ieru/LPeg/re.lua",
@@ -116,7 +116,7 @@ local EvoBuildTarget = {
 		"deps/gfx-rs/wgpu-native/ffi/webgpu-headers/",
 		"deps/glfw/glfw/include",
 		"deps/LabSound/LabSound/include",
-		"deps/LuaJIT/LuaJIT/src",
+		"deps/luvit/luv/deps/luajit/src",
 		"deps/luvit/luv/src",
 		"deps/luvit/luv/deps/libuv/include",
 		"deps/mariusbancila/stduuid/include",

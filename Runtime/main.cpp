@@ -21,6 +21,7 @@ extern "C" {
 #include "rml_ffi.hpp"
 #include "stbi_ffi.hpp"
 #include "stduuid_ffi.hpp"
+#include "uv.hpp"
 #include "uws_ffi.hpp"
 #include "wgpu_ffi.hpp"
 #include "webview_ffi.hpp"
@@ -31,10 +32,19 @@ int main(int argc, char* argv[]) {
 	std::unique_ptr<LuaVirtualMachine> luaVM = std::make_unique<LuaVirtualMachine>();
 
 	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
+	auto L = luaVM->GetState(); // TODO refactor
 	luaVM->SetGlobalArgs(argc, argv);
 
-	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
-	luaVM->LoadPackage("uv", luaopen_luv);
+	// In order to support multiple guests on the event loop, the runtime itself must own it
+	uv_loop_t sharedEventLoop;
+	int errorCode = uv_loop_init(&sharedEventLoop);
+	if(errorCode > 0) {
+		return luaL_error(L, "Failed to initialize shared event loop (%s: %s)\n", uv_err_name(errorCode), uv_strerror(errorCode));
+	}
+	luv_set_loop(L, &sharedEventLoop);
+	printf("Set up shared event loop: %p\n", &sharedEventLoop); // TODO remove
+
+	luaVM->LoadPackage("uv", luaopen_luv_modified);
 	luaVM->LoadPackage("lpeg", luaopen_lpeg);
 	luaVM->LoadPackage("miniz", luaopen_miniz);
 	luaVM->LoadPackage("openssl", luaopen_openssl);
@@ -64,12 +74,23 @@ int main(int argc, char* argv[]) {
 	luaVM->CreateGlobalNamespace("C_Runtime");
 
 	runtime_ffi::assignLuaState(luaVM->GetState());
+	// runtime_ffi::assignEventLoop(&sharedEventLoop);
+	// Workaround: luv expects all handles to be tagged with its internal userdata
+	// This isn't the case for those managed by uws, which run on the same event loop
+
 	rml_ffi::assignLuaState(luaVM->GetState());
 
-	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
-	uv_loop_t* loop = luv_loop(luaVM->GetState());
-	auto uwsEventLoop = uws_ffi::assignEventLoop(loop);
-	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop));
+#include <unordered_map> // TODO move
+	std::unordered_map<uv_handle_t*, void*> uwsHandles;
+	// Assumes no handles have been created so far (assert/check via uv_loop if needed?)
+	auto uwsEventLoop = uws_ffi::assignEventLoop(&sharedEventLoop);
+
+	uv_walk(&sharedEventLoop, detect_foreign_handles, &uwsHandles); // TODO pass NUL and ref  ptr directly?
+
+	us_loop_t* usLoop = (us_loop_t*)uwsEventLoop; // TODO static_cast<us_loop_t *>(uwsEventLoop);
+	printf("usLoop: %p\n", usLoop);
+	// luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop)); // TODO store in runtime lib, or uws.loop, kinda unsafe though...
+	// luaVM->AssignGlobalVariable("UV_LOOP", static_cast<void*>(&sharedEventLoop)); // TODO store in runtime lib, or uws.loop, kinda unsafe though...
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
@@ -82,7 +103,7 @@ int main(int argc, char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	uv_run(loop, UV_RUN_DEFAULT);
+	uv_run(&sharedEventLoop, UV_RUN_DEFAULT);
 
 	uws_ffi::unassignEventLoop(uwsEventLoop);
 	return EXIT_SUCCESS;

@@ -8,4 +8,23 @@ describe("uv", function()
 			assertNil(libuvErrorMessage) -- Will be ENOBUFFS if the argv memory wasn't set up
 		end)
 	end)
+
+	describe("fs_open", function()
+		it("should not crash", function()
+			local handle
+			handle = uv.fs_open("LICENSE", "r", 438, function(err, fd)
+				print(err, fd)
+				print(type(handle))
+				print(handle)
+				error("this is never executed")
+			end)
+
+			print(type(handle))
+			print(handle)
+			uv.run()
+			uv.walk(function(_)
+				error("this is never executed either")
+			end)
+		end)
+	end)
 end)
