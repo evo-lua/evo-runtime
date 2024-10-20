@@ -211,6 +211,18 @@ jobs:
           echo "**Build Time:** ${BUILD_TIME} seconds" >> $GITHUB_STEP_SUMMARY
           echo "**Build Date:** $(date)" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.cache-openssl.outputs.cache-hit }}" == 'true' ]; then
+            echo "- **OpenSSL:** Cache hit" >> $GITHUB_STEP_SUMMARY
+            echo "  Cache key: openssl-${{ steps.revparse.outputs.openssl }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **OpenSSL:** Cache miss, rebuilt" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ steps.cache-wgpu.outputs.cache-hit }}" == 'true' ]; then
+            echo "- **WGPU:** Cache hit" >> $GITHUB_STEP_SUMMARY
+            echo "  Cache key: wgpu-${{ steps.revparse.outputs.wgpu }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **WGPU:** Cache miss, rebuilt" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "## Changelog\n\n" >> $GITHUB_STEP_SUMMARY
           cat CHANGELOG.MD >> $GITHUB_STEP_SUMMARY
 
