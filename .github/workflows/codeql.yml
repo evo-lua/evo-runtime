@@ -101,13 +101,13 @@ jobs:
           output: sarif-results/${{ matrix.language }}.sarif
 
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: sarif-results/${{ matrix.language }}.sarif
           category: "/language:${{matrix.language}}"
 
       - name: Upload analysis results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sarif-results
           path: sarif-results
