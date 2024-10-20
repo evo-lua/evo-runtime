@@ -107,6 +107,12 @@ local submodules = {
 		abbreviatedName = "lrjson",
 		displayName = "lua-rapidjson",
 	},
+	["lua-utf8"] = {
+		path = "deps/starwing/luautf8",
+		branch = "master",
+		abbreviatedName = "lutf8",
+		displayName = "lua-utf8",
+	},
 	stb = {
 		path = "deps/nothings/stb",
 		branch = "master",

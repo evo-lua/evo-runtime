@@ -66,7 +66,7 @@ local EvoBuildTarget = {
 	cSources = {
 		"Runtime/luajit_repl.c",
 		"Runtime/Bindings/FFI/glfw_webgpu.c",
-		"Runtime/Bindings/lutf8.c",
+		"deps/starwing/luautf8/lutf8lib.c",
 	},
 	cppSources = {
 		"Runtime/main.cpp",
@@ -121,7 +121,6 @@ local EvoBuildTarget = {
 		"deps/luvit/luv/deps/libuv/include",
 		"deps/mariusbancila/stduuid/include",
 		"deps/nothings/stb",
-		"deps/starwing/luautf8", -- unidata.h
 		"deps/webview/webview",
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
