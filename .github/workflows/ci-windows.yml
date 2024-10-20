@@ -37,7 +37,7 @@ jobs:
       - name: Set up MSYS2 environment
         uses: msys2/setup-msys2@v2
         with:
-          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake mingw-w64-x86_64-rust
+          install: git make mingw-w64-x86_64-gcc ninja mingw-w64-x86_64-cmake
 
       - name: Disable autocrlf # Messes up everything on Windows since the formatter applies \n
         run: |
@@ -64,6 +64,51 @@ jobs:
           echo "CC=${SCCACHE_UNIX_PATH} gcc" >> $GITHUB_ENV
           echo "CXX=${SCCACHE_UNIX_PATH} g++" >> $GITHUB_ENV
 
+      - name: Get submodule versions
+        id: revparse
+        run: |
+          echo "openssl=$(git rev-parse HEAD:deps/openssl/openssl)" >> $GITHUB_OUTPUT
+          echo "wgpu=$(git rev-parse HEAD:deps/gfx-rs/wgpu-native)" >> $GITHUB_OUTPUT
+          echo "rml=$(git rev-parse HEAD:deps/mikke89/RmlUi)" >> $GITHUB_OUTPUT
+          echo "labsound=$(git rev-parse HEAD:deps/LabSound/LabSound)" >> $GITHUB_OUTPUT
+          echo "luajit=$(git rev-parse HEAD:deps/LuaJIT/LuaJIT)" >> $GITHUB_OUTPUT
+
+      - name: Cache OpenSSL
+        id: cache-openssl
+        uses: actions/cache@v4
+        with:
+          path: |
+            ninjabuild-windows/libcrypto.a
+            ninjabuild-windows/libssl.a
+          key: openssl-${{ steps.revparse.outputs.openssl }}-${{ hashFiles('deps/openssl-windowsbuild.sh') }}-${{ runner.os }}
+
+      - name: Cache wgpu-native
+        id: cache-wgpu
+        uses: actions/cache@v4
+        with:
+          path: ninjabuild-windows/libwgpu_native.a
+          key: wgpu-${{ steps.revparse.outputs.wgpu }}-${{ hashFiles('deps/wgpu-windowsbuild.sh') }}-${{ runner.os }}
+
+      - name: Cache RML and FreeType
+        id: cache-rml
+        uses: actions/cache@v4
+        with:
+          path: |
+            ninjabuild-windows/libfreetype.a
+            ninjabuild-windows/librmlui.a
+            ninjabuild-windows/librmlui_lua.a
+          key: rml-${{ steps.revparse.outputs.rml }}-freetype-${{ steps.revparse.outputs.freetype }}-${{ steps.revparse.outputs.luajit }}-${{ hashFiles('deps/rml-windowsbuild.sh', 'deps/luajit-windowsbuild.sh') }}-${{ runner.os }}
+
+      - name: Cache LabSound
+        id: cache-labsound
+        uses: actions/cache@v4
+        with:
+          path: |
+            ninjabuild-windows/libLabSound.a
+            ninjabuild-windows/libLabSoundRtAudio.a
+            ninjabuild-windows/libnyquist.a
+          key: labsound-${{ steps.revparse.outputs.labsound }}-${{ hashFiles('deps/labsound-windowsbuild.sh') }}-${{ runner.os }}
+
       - name: Start Windows Audio engine # Required for LabSound tests
         run: net start audiosrv
 
@@ -77,7 +122,11 @@ jobs:
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build wgpu
-        run: deps/wgpu-windowsbuild.sh && ls ninjabuild-windows
+        if: steps.cache-wgpu.outputs.cache-hit != 'true'
+        run: |
+          pacman -S mingw-w64-x86_64-rust --noconfirm
+          deps/wgpu-windowsbuild.sh
+          ls ninjabuild-windows
 
       - name: Build luv and libuv
         run: deps/luv-windowsbuild.sh && ls ninjabuild-windows
@@ -92,6 +141,7 @@ jobs:
         run: deps/rapidjson-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build openssl
+        if: steps.cache-openssl.outputs.cache-hit != 'true'
         run: deps/openssl-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build lua-openssl
@@ -107,9 +157,11 @@ jobs:
         run: deps/uws-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build RmlUI with FreeType
+        if: steps.cache-rml.outputs.cache-hit != 'true'
         run: deps/rml-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build LabSound
+        if: steps.cache-labsound.outputs.cache-hit != 'true'
         run: deps/labsound-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build runtime
