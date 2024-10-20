@@ -1,4 +1,17 @@
 local changelog = {
+	["v0.0.20"] = {
+		breakingChanges = {
+			"Due to a larger rework in the RML library, its WebGPU render interface has seen significant changes",
+		},
+		newFeatures = {
+			"Three more table utilities have been added: `table.keys`,`table.values`, and `table.shuffle`",
+			"A new and experimental event-based AsyncFileReader module is now part of the file system API",
+			"It's now possible to read ZIP archives while avoiding disk I/O via `miniz.new_reader_memory`",
+		},
+		improvements = {
+			"Self-contained executables can now easily `require` scripts and `extract` files from the virtual file system",
+		},
+	},
 	["v0.0.19"] = {
 		newFeatures = {
 			"LuaJIT's built-in CPU profiler can be enabled with the new `profile` command, or loaded as `profiler`",
