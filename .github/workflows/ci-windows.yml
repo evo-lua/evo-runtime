@@ -122,7 +122,7 @@ jobs:
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build wgpu
-        if: steps.cache-wgpu.outputs.cache-hit != 'true'
+        if: steps.cache-wgpu.outputs.cache-hit != 'true' || startsWith(github.ref, 'refs/tags/')
         run: |
           pacman -S mingw-w64-x86_64-rust --noconfirm
           deps/wgpu-windowsbuild.sh
@@ -141,7 +141,7 @@ jobs:
         run: deps/rapidjson-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build openssl
-        if: steps.cache-openssl.outputs.cache-hit != 'true'
+        if: steps.cache-openssl.outputs.cache-hit != 'true' || startsWith(github.ref, 'refs/tags/')
         run: deps/openssl-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build lua-openssl
@@ -157,11 +157,11 @@ jobs:
         run: deps/uws-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build RmlUI with FreeType
-        if: steps.cache-rml.outputs.cache-hit != 'true'
+        if: steps.cache-rml.outputs.cache-hit != 'true' || startsWith(github.ref, 'refs/tags/')
         run: deps/rml-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build LabSound
-        if: steps.cache-labsound.outputs.cache-hit != 'true'
+        if: steps.cache-labsound.outputs.cache-hit != 'true' || startsWith(github.ref, 'refs/tags/')
         run: deps/labsound-windowsbuild.sh && ls ninjabuild-windows
 
       - name: Build runtime
