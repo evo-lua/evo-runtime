@@ -204,6 +204,17 @@ jobs:
           name: CHANGELOG-PREVIEW-LINUX.MD
           path: CHANGELOG.MD
         
+      - name: Generate build summary
+        run: |
+          echo "## Build Stats" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Time:** ${BUILD_TIME} seconds" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Changelog" >> $GITHUB_STEP_SUMMARY
+          tail -n +3 CHANGELOG.MD >> $GITHUB_STEP_SUMMARY
+          BUILD_TIME=$(($(date +%s) - ${{ github.event.workflow_run.created_at }}))
+
+# TODO publish artifacts (changelog/build summary/logs?)
 
       - name: Publish new release
         # Truly "continuous" releases may be overkill here, so better only release tagged versions
