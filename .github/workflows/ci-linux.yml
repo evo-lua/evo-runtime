@@ -63,6 +63,7 @@ jobs:
             echo $DISPLAY
             export DISPLAY=:99.0
             echo $DISPLAY
+            sudo apt-get install at-spi2-core
 
       - name: Generate versions.lua # Required for those libraries that don't export versioning information
         run: deps/discover-submodule-versions.sh && cat deps/versions.lua
