@@ -217,16 +217,16 @@ function C_BuildTools.StringifyChangelogContents(changelogEntry)
 	local changelogCategories = {
 		-- The order that categories appear in is important, so this has to be an array (even if it's more verbose)
 		{
+			name = "Breaking Changes",
+			entries = changelogEntry.breakingChanges,
+		},
+		{
 			name = "New Features",
 			entries = changelogEntry.newFeatures,
 		},
 		{
 			name = "Improvements",
 			entries = changelogEntry.improvements,
-		},
-		{
-			name = "Breaking Changes",
-			entries = changelogEntry.breakingChanges,
 		},
 	}
 
