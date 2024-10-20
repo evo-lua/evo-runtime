@@ -1,9 +1,6 @@
 // The performance impact is irrelevant where deliberately used, but it affects readability
 passedByValue
 
-// Copy/pasted library code (temporary... hopefully)
-*:Runtime/Bindings/lutf8.c
-
 // cppcheck can't find the headers, but it's whatever since GCC checks macros anyway
 unknownMacro:Runtime/luajit_repl.c
 
