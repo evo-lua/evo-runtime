@@ -36,9 +36,10 @@ local C_BuildTools = {
 	GITHUB_REPOSITORY_URL = "https://github.com/evo-lua/evo-runtime",
 	CHANGELOG_FILE_PATH = "CHANGELOG.MD",
 	PROJECT_AUTHORS = {
-		-- This is only useful to exclude myself from the auto-generated changelog. No one cares otherwise - it's the work that matters ;)
-		"Duckwhale", -- The humble author's GitHub name
-		"RDW", -- The humble author's Discord name (stored in my local git config)
+		-- Commits with these names won't be listed as external contributions in the auto-generated changelog
+		"Duckwhale",
+		"RDW",
+		"rdw-software",
 	},
 }
 
@@ -217,16 +218,16 @@ function C_BuildTools.StringifyChangelogContents(changelogEntry)
 	local changelogCategories = {
 		-- The order that categories appear in is important, so this has to be an array (even if it's more verbose)
 		{
+			name = "Breaking Changes",
+			entries = changelogEntry.breakingChanges,
+		},
+		{
 			name = "New Features",
 			entries = changelogEntry.newFeatures,
 		},
 		{
 			name = "Improvements",
 			entries = changelogEntry.improvements,
-		},
-		{
-			name = "Breaking Changes",
-			entries = changelogEntry.breakingChanges,
 		},
 	}
 
