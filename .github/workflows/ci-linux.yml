@@ -60,6 +60,9 @@ jobs:
             export PATH="/usr/lib/ccache:$PATH"
             echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
             echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
+            echo $DISPLAY
+            export DISPLAY=:99.0
+            echo $DISPLAY
 
       - name: Generate versions.lua # Required for those libraries that don't export versioning information
         run: deps/discover-submodule-versions.sh && cat deps/versions.lua
@@ -116,10 +119,10 @@ jobs:
         run: evo Tests/snapshot-test.lua
 
       - name: Run unit tests
-        run: xvfb-run evo Tests/unit-test.lua
+        run: xvfb-run -e /dev/stdout evo Tests/unit-test.lua
 
       - name: Run integration tests
-        run: xvfb-run evo Tests/integration-test.lua
+        run: xvfb-run -e /dev/stdout evo Tests/integration-test.lua
 
       - name: Run benchmarks
         run: evo .github/run-all-benchmarks.lua
