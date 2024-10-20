@@ -210,8 +210,8 @@ jobs:
           echo "**Build Time:** ${BUILD_TIME} seconds" >> $GITHUB_STEP_SUMMARY
           echo "**Build Date:** $(date)" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
-          echo "## Changelog" >> $GITHUB_STEP_SUMMARY
-          tail -n +3 CHANGELOG.MD >> $GITHUB_STEP_SUMMARY
+          echo "## Changelog\n\n" >> $GITHUB_STEP_SUMMARY
+          cat CHANGELOG.MD >> $GITHUB_STEP_SUMMARY
           BUILD_TIME=$(($(date +%s) - ${{ github.event.workflow_run.created_at }}))
 
 # TODO publish artifacts (changelog/build summary/logs?)
