@@ -3,6 +3,7 @@ set -e
 deps/discover-submodule-versions.sh
 
 deps/luajit-unixbuild.sh
+deps/curl-unixbuild.sh
 deps/wgpu-unixbuild.sh
 deps/openssl-unixbuild.sh
 deps/luaopenssl-unixbuild.sh
