@@ -12,6 +12,7 @@ deps/luv-windowsbuild.sh
 deps/miniz-windowsbuild.sh
 deps/uws-windowsbuild.sh
 deps/zlib-windowsbuild.sh
+deps/curl-windowsbuild.sh
 deps/pcre-windowsbuild.sh
 deps/glfw-windowsbuild.sh
 deps/rml-windowsbuild.sh
