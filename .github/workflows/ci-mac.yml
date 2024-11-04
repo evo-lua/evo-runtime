@@ -84,6 +84,9 @@ jobs:
       - name: Build zlib
         run: deps/zlib-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build curl
+        run: deps/curl-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build pcre
         run: deps/pcre-unixbuild.sh && ls ninjabuild-unix
 

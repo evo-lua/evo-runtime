@@ -144,6 +144,9 @@ jobs:
       - name: Build zlib
         run: deps/zlib-windowsbuild.sh && ls ninjabuild-windows
 
+      - name: Build curl
+        run: deps/curl-windowsbuild.sh && ls ninjabuild-windows
+
       - name: Build pcre
         run: deps/pcre-windowsbuild.sh && ls ninjabuild-windows
 
