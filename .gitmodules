@@ -92,3 +92,4 @@
 [submodule "deps/curl/curl"]
 	path = deps/curl/curl
 	url = https://github.com/curl/curl
+	ignore = dirty
