@@ -2,7 +2,7 @@ set -e
 
 echo "Building target curl"
 
-SRC_DIR=deps/luvit/luv
+SRC_DIR=deps/curl/curl
 BUILD_DIR=$SRC_DIR/cmakebuild-unix
 OUT_DIR=ninjabuild-unix
 
