@@ -167,6 +167,12 @@ local submodules = {
 		abbreviatedName = "rjson",
 		displayName = "rapidjson",
 	},
+	curl = {
+		path = "deps/curl/curl",
+		branch = "master",
+		abbreviatedName = "curl",
+		displayName = "curl",
+	}
 }
 
 local SubmoduleUpdater = {}
