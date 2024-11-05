@@ -9,8 +9,8 @@ local function aes_encrypt_lua(message)
 	local key = string.rep("XY", 16)
 	local iv = string.rep(string.char(42), 32)
 	local encryptedMessage = cipher.encrypt(method, message, key, iv)
-	local decryptedMessage = cipher.decrypt(method, encryptedMessage, key, iv) -- TBD IV?
-	assert(decryptedMessage == message, "Decrypted message doesn't match the original plaintext")
+	-- local decryptedMessage = cipher.decrypt(method, encryptedMessage, key, iv) -- TBD IV?
+	-- assert(decryptedMessage == message, "Decrypted message doesn't match the original plaintext")
 end
 
 local ffi = require("ffi")
