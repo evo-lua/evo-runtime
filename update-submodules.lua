@@ -172,7 +172,7 @@ local submodules = {
 		branch = "master",
 		abbreviatedName = "curl",
 		displayName = "curl",
-	}
+	},
 }
 
 local SubmoduleUpdater = {}
