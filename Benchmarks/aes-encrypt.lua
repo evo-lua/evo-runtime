@@ -1,5 +1,6 @@
 local console = require("console")
-local cipher = require('openssl').cipher
+local openssl = require("openssl")
+local cipher = openssl.cipher
 
 local SAMPLE_SIZE = 100000
 
@@ -11,6 +12,37 @@ local function aes_encrypt_lua(message)
 	local decryptedMessage = cipher.decrypt(method, encryptedMessage, key, iv) -- TBD IV?
 	assert(decryptedMessage == message, "Decrypted message doesn't match the original plaintext")
 end
+
+local ffi = require("ffi")
+local libcrypto = ffi.load("crypto")
+ffi.cdef([[
+	// TBD
+	// EVP_MAX_KEY_LENGTH = 64
+	// EVP_MAX_IV_LENGTH = 16
+	// OPENSSL_malloc
+	// OPENSSL_free
+
+	// libcrypto types
+	typedef void* EVP_CIPHER_CTX;
+	typedef void* EVP_CIPHER;
+	typedef void* ENGINE;
+
+	// libcrypto APIs
+	EVP_CIPHER_CTX *EVP_CIPHER_CTX_new(void);
+	const EVP_CIPHER *EVP_get_cipherbyname(const char *name);
+	int EVP_EncryptInit_ex(EVP_CIPHER_CTX *ctx,
+                                  const EVP_CIPHER *cipher, ENGINE *impl,
+                                  const unsigned char *key,
+                                  const unsigned char *iv);
+	int EVP_CIPHER_CTX_set_padding(EVP_CIPHER_CTX *c, int pad);
+	int EVP_CIPHER_CTX_get_block_size(const EVP_CIPHER_CTX *ctx);
+	int EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
+                                 int *outl, const unsigned char *in, int inl);
+	int EVP_EncryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out,
+                                   int *outl);
+	void EVP_CIPHER_CTX_free(EVP_CIPHER_CTX *c);
+]])
+print(libcrypto)
 
 local function aes_encrypt_ffi(plainText)
 
