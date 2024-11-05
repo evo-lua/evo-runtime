@@ -53,6 +53,8 @@ OUT_DIR=ninjabuild-unix
 # -- Features: alt-svc AsynchDNS HSTS HTTP2 HTTPS-proxy IDN IPv6 Largefile libz NTLM SSL threadsafe TLS-SRP UnixSockets
 
 # TODO check Windows build log for unwanted deps
+# -- Found Perl: D:/a/_temp/msys64/usr/bin/perl.exe (found version "5.38.2")
+# Also required for OpenSSL, so begrudgingly accept it's needed?
 
 cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_MODULE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DCMAKE_C_COMPILER=gcc -DBUILD_CURL_EXE=OFF -DCURL_DISABLE_INSTALL=ON
 cmake --build $BUILD_DIR --clean-first
