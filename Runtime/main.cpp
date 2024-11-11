@@ -75,10 +75,8 @@ int main(int argc, char* argv[]) {
 	runtime_ffi::assignLuaState(luaVM->GetState());
 	rml_ffi::assignLuaState(luaVM->GetState());
 
-	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
-	uv_loop_t* loop = luv_loop(luaVM->GetState());
-	auto uwsEventLoop = uws_ffi::assignEventLoop(loop);
 	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop));
+	auto uwsEventLoop = uws_ffi::assignEventLoop(&sharedEventLoop);
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
