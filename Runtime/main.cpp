@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	uv_run(loop, UV_RUN_DEFAULT);
+	uv_run(&sharedEventLoop, UV_RUN_DEFAULT);
 
 	uws_ffi::unassignEventLoop(uwsEventLoop);
 	return EXIT_SUCCESS;
