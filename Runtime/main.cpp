@@ -35,6 +35,14 @@ int main(int argc, char* argv[]) {
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
 	luaVM->LoadPackage("uv", luaopen_luv);
+	// In order to support multiple guests on the event loop, the runtime itself must own it
+	uv_loop_t sharedEventLoop;
+	int errorCode = uv_loop_init(&sharedEventLoop);
+	if(errorCode > 0) {
+		return luaL_error(L, "Failed to initialize shared event loop (%s: %s)\n", uv_err_name(errorCode), uv_strerror(errorCode));
+	}
+	luv_set_loop(L, &sharedEventLoop);
+	printf("Set up shared event loop: %p\n", &sharedEventLoop); // TODO remove
 	luaVM->LoadPackage("lpeg", luaopen_lpeg);
 	luaVM->LoadPackage("miniz", luaopen_miniz);
 	luaVM->LoadPackage("openssl", luaopen_openssl);
