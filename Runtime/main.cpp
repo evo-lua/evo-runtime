@@ -75,8 +75,8 @@ int main(int argc, char* argv[]) {
 	runtime_ffi::assignLuaState(luaVM->GetState());
 	rml_ffi::assignLuaState(luaVM->GetState());
 
-	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop));
 	auto uwsEventLoop = uws_ffi::assignEventLoop(&sharedEventLoop);
+	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop));
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
