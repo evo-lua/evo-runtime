@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
 	std::unique_ptr<LuaVirtualMachine> luaVM = std::make_unique<LuaVirtualMachine>();
 
 	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
+	auto L = luaVM->GetState(); // TODO refactor
 	luaVM->SetGlobalArgs(argc, argv);
 
 	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
