@@ -1,0 +1,112 @@
+From 7c968162d6be7277c7d3d9d11e2217a924b81b15 Mon Sep 17 00:00:00 2001
+From: George Zhao <zhaozg@gmail.com>
+Date: Sat, 9 Nov 2024 14:23:00 +0800
+Subject: [PATCH] try safe handle external handle
+
+---
+ src/handle.c  |  8 ++++++++
+ src/lhandle.c |  7 +++++++
+ src/loop.c    | 14 ++++++++++++--
+ src/luv.c     |  3 +++
+ src/luv.h     |  2 ++
+ 5 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/src/handle.c b/src/handle.c
+index 0977a565..93fee28a 100644
+--- a/src/handle.c
++++ b/src/handle.c
+@@ -118,6 +118,14 @@ static int luv_close(lua_State* L) {
+ static void luv_handle_free(uv_handle_t* handle) {
+   luv_handle_t* data = (luv_handle_t*)handle->data;
+   if (data) {
++    luv_ctx_t *ctx = data->ctx;
++    lua_State *L = ctx->L;
++    // release handle in ht_ref
++    lua_rawgeti(L, LUA_REGISTRYINDEX, ctx->ht_ref);
++    lua_pushnil(L);
++    lua_rawsetp(L, -2, data);
++    lua_pop(L, 1);
++
+     if (data->extra_gc)
+       data->extra_gc(data->extra);
+     free(data);
+diff --git a/src/lhandle.c b/src/lhandle.c
+index 1c4cc800..b95fc576 100644
+--- a/src/lhandle.c
++++ b/src/lhandle.c
+@@ -53,6 +53,13 @@ static luv_handle_t* luv_setup_handle(lua_State* L, luv_ctx_t* ctx) {
+   data->ctx = ctx;
+   data->extra = NULL;
+   data->extra_gc = NULL;
++
++  // record data in ht_ref
++  lua_rawgeti(L, LUA_REGISTRYINDEX, ctx->ht_ref);
++  lua_pushboolean(L, 1);
++  lua_rawsetp(L, -2, data);
++  lua_pop(L, 1);
++
+   return data;
+ }
+ 
+diff --git a/src/loop.c b/src/loop.c
+index ffdb345d..87619c6f 100644
+--- a/src/loop.c
++++ b/src/loop.c
+@@ -90,9 +90,18 @@ static int luv_update_time(lua_State* L) {
+ }
+ 
+ static void luv_walk_cb(uv_handle_t* handle, void* arg) {
+-  lua_State* L = (lua_State*)arg;
++  luv_ctx_t *ctx = (luv_ctx_t*)arg;
++  lua_State* L = ctx->L;
+   luv_handle_t* data = (luv_handle_t*)handle->data;
+ 
++  // only handle internal handle
++  lua_rawgeti(L, LUA_REGISTRYINDEX, ctx->ht_ref);
++  lua_rawgetp(L, -1, data);
++  if (lua_isnil(L, -1)) {
++    lua_pop(L, 2);
++    return;
++  }
++
+   // Sanity check
+   // Most invalid values are large and refs are small, 0x1000000 is arbitrary.
+   assert(data && data->ref < 0x1000000);
+@@ -103,8 +112,9 @@ static void luv_walk_cb(uv_handle_t* handle, void* arg) {
+ }
+ 
+ static int luv_walk(lua_State* L) {
++  luv_ctx_t *ctx = luv_context(L);
+   luaL_checktype(L, 1, LUA_TFUNCTION);
+-  uv_walk(luv_loop(L), luv_walk_cb, L);
++  uv_walk(luv_loop(L), luv_walk_cb, ctx);
+   return 0;
+ }
+ 
+diff --git a/src/luv.c b/src/luv.c
+index 9d602c46..76c8c8b5 100644
+--- a/src/luv.c
++++ b/src/luv.c
+@@ -770,6 +770,9 @@ LUALIB_API luv_ctx_t* luv_context(lua_State* L) {
+     ctx = (luv_ctx_t*)lua_newuserdata(L, sizeof(*ctx));
+     memset(ctx, 0, sizeof(*ctx));
+     lua_rawset(L, LUA_REGISTRYINDEX);
++    // create table to contain internal handle
++    lua_newtable(L);
++    ctx->ht_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+   } else {
+     ctx = (luv_ctx_t*)lua_touserdata(L, -1);
+   }
+diff --git a/src/luv.h b/src/luv.h
+index ad023291..8308acf7 100644
+--- a/src/luv.h
++++ b/src/luv.h
+@@ -100,6 +100,8 @@ typedef struct {
+   luv_CFcpcall thrd_cpcall; /* luv thread c function in protected mode*/
+ 
+   int          mode;        /* the mode used to run the loop (-1 if not running) */
++  int          ht_ref;      /* ref of table which store luv_handle_t pointer,
++                               to distinguish internal or external handle */
+ 
+   void* extra;              /* extra data */
+ } luv_ctx_t;
