@@ -8,4 +8,12 @@ describe("uv", function()
 			assertNil(libuvErrorMessage) -- Will be ENOBUFFS if the argv memory wasn't set up
 		end)
 	end)
+
+	describe("walk", function()
+		it("should not crash when encountering foreign handles", function()
+			uv.walk(function(handle)
+				print(handle) -- Will crash before getting here if luv tries to process a foreign handle
+			end)
+		end)
+	end)
 end)
