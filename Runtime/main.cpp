@@ -31,9 +31,17 @@ int main(int argc, char* argv[]) {
 	std::unique_ptr<LuaVirtualMachine> luaVM = std::make_unique<LuaVirtualMachine>();
 
 	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
+	auto L = luaVM->GetState();
 	luaVM->SetGlobalArgs(argc, argv);
 
-	// luv sets up its metatables when initialized; deferring this may break some internals (not sure why)
+	// In order to support multiple guests on the event loop, the runtime itself must own it
+	uv_loop_t sharedEventLoop;
+	int errorCode = uv_loop_init(&sharedEventLoop);
+	if(errorCode > 0) {
+		return luaL_error(L, "Failed to initialize shared event loop (%s: %s)\n", uv_err_name(errorCode), uv_strerror(errorCode));
+	}
+	luv_set_loop(L, &sharedEventLoop);
+
 	luaVM->LoadPackage("uv", luaopen_luv);
 	luaVM->LoadPackage("lpeg", luaopen_lpeg);
 	luaVM->LoadPackage("miniz", luaopen_miniz);
@@ -63,12 +71,10 @@ int main(int argc, char* argv[]) {
 	// Some namespaces cannot be created from Lua because they store info only available in C++ land (like #defines)
 	luaVM->CreateGlobalNamespace("C_Runtime");
 
-	runtime_ffi::assignLuaState(luaVM->GetState());
-	rml_ffi::assignLuaState(luaVM->GetState());
+	runtime_ffi::assignLuaState(L);
+	rml_ffi::assignLuaState(L);
 
-	// A bit of a hack; Can't use uv_default_loop because luv maintains a separate "default" loop of its own
-	uv_loop_t* loop = luv_loop(luaVM->GetState());
-	auto uwsEventLoop = uws_ffi::assignEventLoop(loop);
+	auto uwsEventLoop = uws_ffi::assignEventLoop(&sharedEventLoop);
 	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop));
 
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
@@ -82,7 +88,7 @@ int main(int argc, char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	uv_run(loop, UV_RUN_DEFAULT);
+	uv_run(&sharedEventLoop, UV_RUN_DEFAULT);
 
 	uws_ffi::unassignEventLoop(uwsEventLoop);
 	return EXIT_SUCCESS;
