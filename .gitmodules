@@ -89,3 +89,8 @@
 [submodule "deps/Tencent/rapidjson"]
 	path = deps/Tencent/rapidjson
 	url = https://github.com/Tencent/rapidjson
+	ignore = dirty
+[submodule "deps/curl/curl"]
+	path = deps/curl/curl
+	url = https://github.com/curl/curl
+	ignore = dirty
