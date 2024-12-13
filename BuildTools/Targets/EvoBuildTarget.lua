@@ -53,6 +53,7 @@ local EvoBuildTarget = {
 		"Runtime/Libraries/bdd.lua",
 		"Runtime/Libraries/console.lua",
 		"Runtime/Libraries/etrace.lua",
+		"Runtime/Libraries/git.lua",
 		"Runtime/Libraries/oop.lua",
 		"Runtime/Libraries/path.lua",
 		"Runtime/Libraries/profiler.lua",

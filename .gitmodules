@@ -1,91 +1,115 @@
-[submodule "deps/LuaJIT/LuaJIT"]
+[submodule "LuaJIT"]
 	path = deps/LuaJIT/LuaJIT
 	url = https://github.com/LuaJIT/LuaJIT
 	ignore = dirty
-[submodule "deps/madler/zlib"]
+	branch = v2.1
+[submodule "zlib"]
 	path = deps/madler/zlib
 	url = https://github.com/madler/zlib
 	ignore = dirty
-[submodule "deps/PCRE2Project/pcre2"]
+	branch = master
+[submodule "pcre2"]
 	path = deps/PCRE2Project/pcre2
 	url = https://github.com/PCRE2Project/pcre2
 	ignore = dirty
-[submodule "deps/openssl/openssl"]
+	branch = master
+[submodule "openssl"]
 	path = deps/openssl/openssl
 	url = https://github.com/openssl/openssl
 	ignore = dirty
-[submodule "deps/richgel999/miniz"]
+	branch = master
+[submodule "miniz"]
 	path = deps/richgel999/miniz
 	url = https://github.com/richgel999/miniz
 	ignore = dirty
-[submodule "deps/luvit/luv"]
+	branch = master
+[submodule "luv"]
 	path = deps/luvit/luv
 	url = https://github.com/luvit/luv
 	ignore = dirty
-[submodule "deps/kikito/inspect.lua"]
+	branch = master
+[submodule "inspect.lua"]
 	path = deps/kikito/inspect.lua
 	url = https://github.com/kikito/inspect.lua.git
 	ignore = dirty
-[submodule "deps/webview/webview"]
+	branch = master
+[submodule "webview"]
 	path = deps/webview/webview
 	url = https://github.com/webview/webview
 	ignore = dirty
-[submodule "deps/uNetworking/uWebSockets"]
+	branch = master
+[submodule "uWebSockets"]
 	path = deps/uNetworking/uWebSockets
 	url = https://github.com/uNetworking/uWebSockets.git
 	ignore = dirty
-[submodule "deps/zhaog/lua-openssl"]
+	branch = master
+[submodule "lua-openssl"]
 	path = deps/zhaog/lua-openssl
 	url = https://github.com/zhaozg/lua-openssl
 	ignore = dirty
-[submodule "deps/mariusbancila/stduuid"]
+	branch = master
+[submodule "stduuid"]
 	path = deps/mariusbancila/stduuid
 	url = https://github.com/mariusbancila/stduuid
 	ignore = dirty
-[submodule "deps/brimworks/lua-zlib"]
+	branch = master
+[submodule "lua-zlib"]
 	path = deps/brimworks/lua-zlib
 	url = https://github.com/brimworks/lua-zlib
 	ignore = dirty
-[submodule "deps/xpol/lua-rapidjson"]
+	branch = master
+[submodule "lua-rapidjson"]
 	path = deps/xpol/lua-rapidjson
 	url = https://github.com/xpol/lua-rapidjson.git
 	ignore = dirty
-[submodule "deps/nothings/stb"]
+	branch = master
+[submodule "stb"]
 	path = deps/nothings/stb
 	url = https://github.com/nothings/stb.git
 	ignore = dirty
-[submodule "deps/rrthomas/lrexlib"]
+	branch = master
+[submodule "lrexlib"]
 	path = deps/rrthomas/lrexlib
 	url = https://github.com/rrthomas/lrexlib
 	ignore = dirty
-[submodule "deps/glfw/glfw"]
+	branch = master
+[submodule "glfw"]
 	path = deps/glfw/glfw
 	url = https://github.com/glfw/glfw/
 	ignore = dirty
-[submodule "deps/gfx-rs/wgpu-native"]
+	branch = master
+[submodule "wgpu-native"]
 	path = deps/gfx-rs/wgpu-native
 	url = https://github.com/gfx-rs/wgpu-native.git
 	ignore = dirty
-[submodule "deps/mikke89/RmlUi"]
+	branch = trunk
+[submodule "RmlUi"]
 	path = deps/mikke89/RmlUi
 	url = https://github.com/mikke89/RmlUi.git
 	ignore = dirty
-[submodule "deps/freetype/freetype"]
+	branch = master
+[submodule "freetype"]
 	path = deps/freetype/freetype
 	url = https://github.com/freetype/freetype.git
 	ignore = dirty
-[submodule "deps/LabSound/LabSound"]
+	branch = master
+[submodule "LabSound"]
 	path = deps/LabSound/LabSound
 	url = https://github.com/LabSound/LabSound.git
 	ignore = dirty
-[submodule "deps/roberto-ieru/LPeg"]
+	branch = main
+[submodule "LPeg"]
 	path = deps/roberto-ieru/LPeg
 	url = https://github.com/roberto-ieru/LPeg
 	ignore = dirty
-[submodule "deps/starwing/luautf8"]
+	branch = master
+[submodule "luautf8"]
 	path = deps/starwing/luautf8
 	url = https://github.com/starwing/luautf8
 	ignore = dirty
-[submodule "deps/Tencent/rapidjson"]
+	branch = master
+[submodule "rapidjson"]
 	path = deps/Tencent/rapidjson
 	url = https://github.com/Tencent/rapidjson
+	ignore = dirty
+	branch = master

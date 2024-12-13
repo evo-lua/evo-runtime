@@ -7,6 +7,7 @@ local specFiles = {
 	"Tests/BDD/debug-library.spec.lua",
 	"Tests/BDD/etrace-library.spec.lua",
 	"Tests/BDD/evo-library.spec.lua",
+	"Tests/BDD/git-library.spec.lua",
 	"Tests/BDD/glfw-library.spec.lua",
 	"Tests/BDD/iconv-library.spec.lua",
 	"Tests/BDD/interop-library.spec.lua",
