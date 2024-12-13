@@ -9,18 +9,13 @@ local string_match = string.match
 local table_concat = table.concat
 local table_insert = table.insert
 
+local git = require("git")
 local transform = require("transform")
 local bold = transform.bold
 local cyan = transform.cyan
 local green = transform.green
 local red = transform.red
 local yellow = transform.yellow
-
-local nonstandardBranches = {
-	["deps/LuaJIT/LuaJIT"] = "v2.1",
-	["deps/gfx-rs/wgpu-native"] = "trunk",
-	["deps/LabSound/LabSound"] = "main",
-}
 
 local function shell_exec(cmd)
 	local file = assert(io.popen(cmd, "r"))
@@ -98,11 +93,14 @@ function SubmoduleUpdateChecker:GetUpdatedSubmoduleStatus()
 	local status = shell_exec("git submodule status")
 	local lines = string.explode(status, "\n")
 
+	local gitmodulesFileContent = C_FileSystem.ReadFile(".gitmodules")
+	local submodules = git.modules(gitmodulesFileContent)
+
 	for _, line in ipairs(lines) do
 		local checkedOutCommitHash, submodulePath, checkedOutVersionTag =
 			string_match(line, "%s?[%+%-U]?([0-9a-z]+).*(deps/%S+).*%((.*)%)")
 
-		local branch = nonstandardBranches[submodulePath] or "master"
+		local branch = submodules[submodulePath].branch
 		printf("Fetching changes from %s for submodule %s ...", bold("origin/" .. branch), bold(submodulePath))
 		printf("Checked out at commit %s (tagged as %s)\n", bold(checkedOutVersionTag), bold(checkedOutCommitHash))
 
