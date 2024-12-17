@@ -10,14 +10,6 @@ local transform = require("transform")
 local cyan = transform.cyan
 local green = transform.green
 
-local function table_keys(t)
-	local keys = {}
-	for k, _ in pairs(t) do
-		table.insert(keys, k)
-	end
-	return keys
-end
-
 local function shell_exec(cmd)
 	local file = assert(io.popen(cmd, "r"))
 	local output = file:read("*all")
@@ -95,7 +87,7 @@ local submodules = git.modules(gitmodulesFileContents)
 local submoduleToUpdate = submodules[submoduleID] or submodules[submoduleID:lower()]
 if not submoduleToUpdate then
 	printf("Cannot upgrade submodule (invalid submodule ID: %s)", submoduleID)
-	printf("Valid submodule IDs are: %s", table.concat(table_keys(submodules), ", "))
+	printf("Valid submodule IDs are: %s", table.concat(table.keys(submodules), ", "))
 	os.exit(1)
 end
 
