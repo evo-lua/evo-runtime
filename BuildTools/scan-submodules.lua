@@ -100,7 +100,8 @@ function SubmoduleUpdateChecker:GetUpdatedSubmoduleStatus()
 		local checkedOutCommitHash, submodulePath, checkedOutVersionTag =
 			string_match(line, "%s?[%+%-U]?([0-9a-z]+).*(deps/%S+).*%((.*)%)")
 
-		local branch = submodules[submodulePath].branch
+		local submoduleName = path.basename(submodulePath)
+		local branch = submodules[submoduleName].branch
 		printf("Fetching changes from %s for submodule %s ...", bold("origin/" .. branch), bold(submodulePath))
 		printf("Checked out at commit %s (tagged as %s)\n", bold(checkedOutVersionTag), bold(checkedOutCommitHash))
 
