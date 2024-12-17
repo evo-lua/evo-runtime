@@ -39,7 +39,6 @@ public:
 
 		auto uwsEventLoop = uws_ffi::assignEventLoop(&m_uvMainLoop);
 		assert(uwsEventLoop != nullptr);
-		m_mainThreadVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop));
 		m_uwsMainLoop = uwsEventLoop;
 	}
 
