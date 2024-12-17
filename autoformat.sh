@@ -14,7 +14,7 @@ echo
 
 echo "Formatting Lua sources ..."
 
-stylua . --verbose
+stylua . --verbose --syntax luajit
 
 echo "Discovering C/C++ sources ..."
 
