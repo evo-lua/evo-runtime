@@ -58,6 +58,9 @@ jobs:
         run: |
           echo "CC=ccache gcc" >> $GITHUB_ENV
           echo "CXX=ccache g++" >> $GITHUB_ENV
+          gcc --version
+          ccache gcc --version
+          ccache g++ --version
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 
