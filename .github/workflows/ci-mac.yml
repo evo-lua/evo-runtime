@@ -126,7 +126,7 @@ jobs:
 
       # GitHub adds a heading of their own, so remove the duplicate
       - name: Generate CHANGELOG.MD
-        run: evo create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
+        run: evo BuildTools/create-changelog.lua && tail -n +3 CHANGELOG.MD > CHANGELOG-GITHUB.MD && mv CHANGELOG-GITHUB.MD CHANGELOG.MD
 
       - name: Publish new release
         # Truly "continuous" releases may be overkill here, so better only release tagged versions

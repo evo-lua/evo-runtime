@@ -9,14 +9,7 @@ local path = require("path")
 local transform = require("transform")
 local cyan = transform.cyan
 local green = transform.green
-
-local function table_keys(t)
-	local keys = {}
-	for k, _ in pairs(t) do
-		table.insert(keys, k)
-	end
-	return keys
-end
+local red = transform.red
 
 local function shell_exec(cmd)
 	local file = assert(io.popen(cmd, "r"))
@@ -84,18 +77,30 @@ function SubmoduleUpdater:CommitLatestChangesForSubmodule(submodule)
 	shell_exec(command)
 end
 
-local submoduleID = arg[1]
-if not submoduleID then
-	print("Please specify a submodule to update")
-	os.exit(1)
+function SubmoduleUpdater:GetHelpText(submodules)
+	local sortedKeys = table.keys(submodules)
+	table.sort(sortedKeys)
+
+	local indent = "  "
+	local readableList = indent .. table.concat(sortedKeys, "\n" .. indent)
+
+	return "Valid submodule IDs:\n\n" .. readableList:lower()
 end
 
 local gitmodulesFileContents = C_FileSystem.ReadFile(".gitmodules")
 local submodules = git.modules(gitmodulesFileContents)
+
+local submoduleID = arg[1]
+if not submoduleID then
+	print(red("Please specify a submodule to update!\n"))
+	print(SubmoduleUpdater:GetHelpText(submodules))
+	os.exit(1)
+end
+
 local submoduleToUpdate = submodules[submoduleID] or submodules[submoduleID:lower()]
 if not submoduleToUpdate then
-	printf("Cannot upgrade submodule (invalid submodule ID: %s)", submoduleID)
-	printf("Valid submodule IDs are: %s", table.concat(table_keys(submodules), ", "))
+	printf(red("Cannot upgrade submodule %s (invalid submodule ID)\n"), submoduleID)
+	print(SubmoduleUpdater:GetHelpText(submodules))
 	os.exit(1)
 end
 

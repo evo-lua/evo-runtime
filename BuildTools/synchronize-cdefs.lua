@@ -16,7 +16,7 @@ local function discoverBindings(dir)
 	return luaModules
 end
 
-local function string_explode_with_newlines(fileContents)
+local function stringExplodeWithNewlines(fileContents)
 	-- string.explode skips empty lines and so cannot be used here
 	local lines = {}
 	for line in string.gmatch(fileContents, "([^\n]*)\n?") do
@@ -30,7 +30,7 @@ local function updateTypeDefinitions(binding)
 	printf("Updating cdefs for %s (package name: %s)", transform.green(fileSystemPath), transform.blue(binding))
 	local moduleFileContents = C_FileSystem.ReadFile(fileSystemPath)
 
-	local lines = string_explode_with_newlines(moduleFileContents)
+	local lines = stringExplodeWithNewlines(moduleFileContents)
 	local cdefsStart, cdefsEnd
 	printf("Processed %d lines ", #lines)
 	for lineNumber, line in ipairs(lines) do
@@ -58,7 +58,7 @@ local function updateTypeDefinitions(binding)
 
 	local updatedAliases = hasAliases and C_FileSystem.ReadFile(aliasedDefinitionsPath) or ""
 	local updatedDefinitions = C_FileSystem.ReadFile(exportDefinitionsPath)
-	local cdefLines = string_explode_with_newlines(updatedAliases .. "\n" .. updatedDefinitions)
+	local cdefLines = stringExplodeWithNewlines(updatedAliases .. "\n" .. updatedDefinitions)
 	printf(
 		"Updating with cdefs found in %s and %s (%d lines)",
 		exportDefinitionsPath,
