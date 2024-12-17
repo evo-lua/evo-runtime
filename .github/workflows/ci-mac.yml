@@ -51,7 +51,9 @@ jobs:
         run: brew install ninja
 
       - name: Install LLVM
-        run: brew install llvm
+        run: | 
+          brew install llvm
+          echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> /Users/runner/.bash_profile
 
         # nproc is used by build scripts to determine the number of parallel jobs
       - name: Install GNU coreutils
@@ -60,7 +62,7 @@ jobs:
       - name: Configure environment
         run: |
           echo "CC=ccache clang" >> $GITHUB_ENV
-          echo "CXX=ccache clang" >> $GITHUB_ENV
+          echo "CXX=ccache clang++" >> $GITHUB_ENV
           clang --version
           clang++ --version
           gcc --version
