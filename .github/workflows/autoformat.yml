@@ -21,13 +21,13 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            stylua: stylua-linux.zip
+            stylua: stylua-linux-x86_64.zip
             exe: ""
           - os: macos-latest
-            stylua: stylua-macos.zip
+            stylua: stylua-macos-x86_64.zip
             exe: ""
           - os: windows-latest
-            stylua: stylua-win64.zip
+            stylua: stylua-windows-x86_64.zip
             exe: ".exe"
     defaults:
       run:
