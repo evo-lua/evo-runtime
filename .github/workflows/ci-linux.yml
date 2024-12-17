@@ -25,6 +25,8 @@ jobs:
     if: github.event.pull_request.draft == false
     name: Build for Linux
     runs-on: ubuntu-latest
+    compiler: gcc
+	gcc: 14 # TODO Get it from build.env
 
     steps:
       - name: Check out Git repository
