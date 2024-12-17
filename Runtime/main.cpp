@@ -26,21 +26,17 @@ extern "C" {
 #include "webview_ffi.hpp"
 
 #include "LuaVirtualMachine.hpp"
+#include "SharedEventLoop.hpp"
 
 int main(int argc, char* argv[]) {
-	std::unique_ptr<LuaVirtualMachine> luaVM = std::make_unique<LuaVirtualMachine>();
+	std::shared_ptr<LuaVirtualMachine> luaVM = std::make_shared<LuaVirtualMachine>();
 
 	argv = uv_setup_args(argc, argv); // Required on Linux (see https://github.com/libuv/libuv/issues/2845)
 	auto L = luaVM->GetState();
 	luaVM->SetGlobalArgs(argc, argv);
 
 	// In order to support multiple guests on the event loop, the runtime itself must own it
-	uv_loop_t sharedEventLoop;
-	int errorCode = uv_loop_init(&sharedEventLoop);
-	if(errorCode > 0) {
-		return luaL_error(L, "Failed to initialize shared event loop (%s: %s)\n", uv_err_name(errorCode), uv_strerror(errorCode));
-	}
-	luv_set_loop(L, &sharedEventLoop);
+	std::unique_ptr<SharedEventLoop> sharedEventLoop = std::make_unique<SharedEventLoop>(luaVM);
 
 	luaVM->LoadPackage("uv", luaopen_luv);
 	luaVM->LoadPackage("lpeg", luaopen_lpeg);
@@ -74,9 +70,6 @@ int main(int argc, char* argv[]) {
 	runtime_ffi::assignLuaState(L);
 	rml_ffi::assignLuaState(L);
 
-	auto uwsEventLoop = uws_ffi::assignEventLoop(&sharedEventLoop);
-	luaVM->AssignGlobalVariable("UWS_EVENT_LOOP", static_cast<void*>(uwsEventLoop));
-
 	std::string mainChunk = "local evo = require('evo'); return evo.run()";
 	std::string chunkName = "=(Lua entry point, at " FROM_HERE ")";
 
@@ -84,12 +77,10 @@ int main(int argc, char* argv[]) {
 	if(!success) {
 		std::cerr << "\t" << FROM_HERE << ": in function 'main'" << std::endl;
 
-		uws_ffi::unassignEventLoop(uwsEventLoop);
 		return EXIT_FAILURE;
 	}
 
-	uv_run(&sharedEventLoop, UV_RUN_DEFAULT);
+	sharedEventLoop->RunMainLoopUntilDone();
 
-	uws_ffi::unassignEventLoop(uwsEventLoop);
 	return EXIT_SUCCESS;
 }
