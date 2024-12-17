@@ -62,7 +62,7 @@ jobs:
 
         # Can't actually be used on CI runners, but we need the headers for embedding webview
       - name: Install WebKitGTK
-        run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
+        run: sudo apt-get install gtk+-3.0-dev webkit2gtk-1.0-dev --yes
 
       - name: Install PulseAudio
         run: sudo apt-get install pulseaudio libpulse-dev --yes

@@ -24,7 +24,7 @@ jobs:
   build:
     if: github.event.pull_request.draft == false
     name: Build for Linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Check out Git repository
@@ -47,7 +47,7 @@ jobs:
 
       # Can't actually be used on CI runners, but we need the headers for embedding webview
       - name: Install WebKitGTK
-        run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.0-dev --yes
+        run: sudo apt-get install gtk+-3.0-dev webkit2gtk-4.1-dev --yes
 
       - name: Install PulseAudio
         run: sudo apt-get install pulseaudio libpulse-dev --yes
@@ -58,10 +58,12 @@ jobs:
       - name: Configure environment
             # export PATH="/usr/lib/ccache:$PATH"
         run: |
-            echo "CC=ccache gcc" >> $GITHUB_ENV
-            echo "CXX=ccache g++" >> $GITHUB_ENV
+            echo "CC=ccache gcc-14" >> $GITHUB_ENV
+            echo "CXX=ccache g++-14" >> $GITHUB_ENV
             gcc --version
+            gcc-14 --version
             g++ --version
+            g++-14 --version
             /usr/lib/ccache/gcc --version
             /usr/lib/ccache/g++ --version
             echo $DISPLAY

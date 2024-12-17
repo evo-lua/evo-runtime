@@ -27,15 +27,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-14]
+        os: [macos-15]
         include:
-          - os: macos-latest
+          - os: macos-15
             arch: x64
-          - os: macos-14
+          - os: macos-15
             arch: M1
-    env:
-        MACOSX_DEPLOYMENT_TARGET: 10.13
-        HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 # Prevent brew updates in the ccache setup step (~2GB download ...)
 
     steps:
       - name: Check out Git repository
@@ -56,11 +53,15 @@ jobs:
 
       - name: Configure environment
         run: |
-          echo "CC=ccache gcc" >> $GITHUB_ENV
-          echo "CXX=ccache g++" >> $GITHUB_ENV
-          gcc --version
-          ccache gcc --version
-          ccache g++ --version
+            set -a
+            source .github/macosbuild.env
+            cat .github/macosbuild.env >> $GITHUB_ENV
+            LLVM_BINARY_PATH=$(brew --prefix llvm@$EVO_LLVM_VERSION)/bin
+            echo "CC=ccache $LLVM_BINARY_PATH/clang" >> $GITHUB_ENV
+            echo "CXX=ccache $LLVM_BINARY_PATH/clang++" >> $GITHUB_ENV
+            clang --version
+            clang++ --version
+
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 
