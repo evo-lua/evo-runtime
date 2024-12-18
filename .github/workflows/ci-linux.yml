@@ -56,10 +56,16 @@ jobs:
         run:  pulseaudio --start --load="module-null-sink" --exit-idle-time=-1
 
       - name: Configure environment
+            # export PATH="/usr/lib/ccache:$PATH"
         run: |
-            export PATH="/usr/lib/ccache:$PATH"
-            echo "CC=/usr/lib/ccache/gcc" >> $GITHUB_ENV
-            echo "CXX=/usr/lib/ccache/g++" >> $GITHUB_ENV
+            echo "CC=ccache gcc-12" >> $GITHUB_ENV
+            echo "CXX=ccache g++-12" >> $GITHUB_ENV
+            gcc --version
+            gcc-12 --version
+            g++ --version
+            g++-12 --version
+            /usr/lib/ccache/gcc --version
+            /usr/lib/ccache/g++ --version
             echo $DISPLAY
             export DISPLAY=:99.0
             echo $DISPLAY

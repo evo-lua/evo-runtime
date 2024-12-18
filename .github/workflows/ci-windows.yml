@@ -50,7 +50,7 @@ jobs:
           submodules: recursive
           fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
 
-      - name: Set up sccache
+      - name: Set up sccache # TODO check summary, try ccache?
         uses: mozilla-actions/sccache-action@v0.0.6
 
       - name: Download Webview2 SDK
@@ -63,6 +63,8 @@ jobs:
           echo "SCCACHE_UNIX_PATH=$SCCACHE_UNIX_PATH" >> $GITHUB_ENV
           echo "CC=${SCCACHE_UNIX_PATH} gcc" >> $GITHUB_ENV
           echo "CXX=${SCCACHE_UNIX_PATH} g++" >> $GITHUB_ENV
+          gcc --version
+          g++ --version
 
       - name: Get submodule versions
         id: revparse

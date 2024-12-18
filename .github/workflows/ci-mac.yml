@@ -50,14 +50,25 @@ jobs:
       - name: Install Ninja
         run: brew install ninja
 
+      - name: Install LLVM
+        run: | 
+          brew install llvm
+          echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> /Users/runner/.bash_profile
+
         # nproc is used by build scripts to determine the number of parallel jobs
       - name: Install GNU coreutils
         run: brew install coreutils
 
       - name: Configure environment
         run: |
-          echo "CC=ccache gcc" >> $GITHUB_ENV
-          echo "CXX=ccache g++" >> $GITHUB_ENV
+          echo "CC=ccache clang" >> $GITHUB_ENV
+          echo "CXX=ccache clang++" >> $GITHUB_ENV
+          clang --version
+          clang++ --version
+          gcc --version
+          g++ --version
+          ccache clang --version
+          ccache clang++ --version
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 
