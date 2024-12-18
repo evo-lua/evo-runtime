@@ -58,12 +58,12 @@ jobs:
       - name: Configure environment
             # export PATH="/usr/lib/ccache:$PATH"
         run: |
-            echo "CC=ccache gcc-14" >> $GITHUB_ENV
-            echo "CXX=ccache g++-14" >> $GITHUB_ENV
+            echo "CC=ccache gcc-12" >> $GITHUB_ENV
+            echo "CXX=ccache g++-12" >> $GITHUB_ENV
             gcc --version
-            gcc-14 --version
+            gcc-12 --version
             g++ --version
-            g++-14 --version
+            g++-12 --version
             /usr/lib/ccache/gcc --version
             /usr/lib/ccache/g++ --version
             echo $DISPLAY
