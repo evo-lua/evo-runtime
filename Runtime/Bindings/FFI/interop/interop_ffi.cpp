@@ -6,7 +6,7 @@ std::queue<deferred_event_t>* queue_create() {
 	return new std::queue<deferred_event_t>();
 }
 
-size_t queue_size(std::queue<deferred_event_t>* queue) {
+size_t queue_size(const std::queue<deferred_event_t>* queue) {
 	if(!queue) return 0;
 
 	return queue->size();

@@ -49,6 +49,8 @@ typedef struct {
 	size_t num_bytes_used;
 } luajit_stringbuffer_t;
 
+typedef void (*stbi_write_callback_t)(void*, void*, int);
+
 struct static_stbi_exports_table {
 	const char* (*stbi_version)(void);
 
