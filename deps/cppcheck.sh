@@ -9,4 +9,4 @@ IGNORE_LIST=".cppcheck"
 
 RELEVANT_FILES=$(find $SRC_DIRS -type f \( -name '*.c' -o -name '*.cpp' \))
 
-cppcheck --enable=all --error-exitcode=127 --suppressions-list=$IGNORE_LIST $INCLUDE_DIRS $RELEVANT_FILES
+cppcheck --enable=all --check-level=exhaustive --error-exitcode=127 --suppressions-list=$IGNORE_LIST $INCLUDE_DIRS $RELEVANT_FILES
