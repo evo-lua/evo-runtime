@@ -27,12 +27,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-14]
         include:
-          - os: macos-latest
-            arch: x64
-          - os: macos-14
-            arch: M1
+          - os: macos-15
+            arch: [x64, M1]
     env:
         MACOSX_DEPLOYMENT_TARGET: 10.13
         HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 # Prevent brew updates in the ccache setup step (~2GB download ...)

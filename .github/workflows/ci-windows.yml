@@ -24,7 +24,7 @@ jobs:
   build:
     if: github.event.pull_request.draft == false
     name: Build for Windows
-    runs-on: windows-latest
+    runs-on: windows-2025
     env:
       SCCACHE_GHA_ENABLED: "true"
 
