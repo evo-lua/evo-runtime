@@ -109,9 +109,6 @@ jobs:
             ninjabuild-windows/libnyquist.a
           key: labsound-${{ steps.revparse.outputs.labsound }}-${{ hashFiles('deps/labsound-windowsbuild.sh') }}-${{ runner.os }}
 
-      - name: Start Windows Audio engine # Required for LabSound tests
-        run: net start audiosrv
-
       - name: Set up virtual audio device # Required for LabSound tests
         uses: LABSN/sound-ci-helpers@v1
 
