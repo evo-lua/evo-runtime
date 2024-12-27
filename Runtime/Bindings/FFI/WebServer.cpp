@@ -165,7 +165,7 @@ void WebServer::OnWebSocketOpen(auto* websocket) {
 
 	m_deferredEventsQueue.emplace(DeferredEvent::Type::OPEN, clientID, "");
 
-	PerSocketData* perSocketData = websocket->getUserData();
+	const PerSocketData* perSocketData = websocket->getUserData();
 	m_websocketClientsMap[perSocketData->clientID] = websocket;
 }
 

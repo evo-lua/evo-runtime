@@ -1,13 +1,15 @@
 // The performance impact is irrelevant where deliberately used, but it affects readability
 passedByValue
 
+// Includes are neither found nor required
+missingIncludeSystem
+missingInclude
+
 // cppcheck can't find the headers, but it's whatever since GCC checks macros anyway
 unknownMacro:Runtime/luajit_repl.c
 
 // Debug functions left in on purpose
 unusedFunction:Runtime/LuaVirtualMachine.cpp
-// Callback-based interface (hooks that will be called by RML)
-unusedFunction:Runtime/Bindings/FFI/RmlUi_Renderer_WebGPU.cpp
 
 // FFI exports used from Lua, which cppcheck can't see
 unusedStructMember:Runtime/Bindings/FFI/cpp/cpp_exports.hpp

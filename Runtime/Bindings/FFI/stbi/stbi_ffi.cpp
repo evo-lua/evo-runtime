@@ -69,7 +69,7 @@ bool stbi_image_free(stbi_image_t* image) {
 	return true;
 }
 
-static void append_to_buffer(void* context, void* chunk, int chunk_size) {
+static void append_to_buffer(void* context, const void* chunk, int chunk_size) {
 	luajit_stringbuffer_t* result = static_cast<luajit_stringbuffer_t*>(context);
 
 	bool hasBufferEnoughSpace = result->num_bytes_used + chunk_size <= result->capacity;
@@ -89,7 +89,8 @@ size_t stbi_encode_bmp(stbi_image_t* image, uint8_t* buffer, const size_t buffer
 	if(!image->data) return 0;
 
 	luajit_stringbuffer_t result = { buffer, buffer_size, 0 };
-	stbi_write_bmp_to_func(append_to_buffer, &result, image->width, image->height, image->channels, image->data);
+	auto write_callback = reinterpret_cast<stbi_write_callback_t>(append_to_buffer);
+	stbi_write_bmp_to_func(write_callback, &result, image->width, image->height, image->channels, image->data);
 
 	return result.num_bytes_used;
 }
@@ -100,7 +101,8 @@ size_t stbi_encode_png(stbi_image_t* image, uint8_t* buffer, const size_t buffer
 	if(!image->data) return 0;
 
 	luajit_stringbuffer_t result = { buffer, buffer_size, 0 };
-	stbi_write_png_to_func(append_to_buffer, &result, image->width, image->height, image->channels, image->data, stride);
+	auto write_callback = reinterpret_cast<stbi_write_callback_t>(append_to_buffer);
+	stbi_write_png_to_func(write_callback, &result, image->width, image->height, image->channels, image->data, stride);
 
 	return result.num_bytes_used;
 }
@@ -113,7 +115,8 @@ size_t stbi_encode_jpg(stbi_image_t* image, uint8_t* buffer, const size_t buffer
 	if(quality < 0 || quality > 100) quality = 100;
 
 	luajit_stringbuffer_t result = { buffer, buffer_size, 0 };
-	stbi_write_jpg_to_func(append_to_buffer, &result, image->width, image->height, image->channels, image->data, quality);
+	auto write_callback = reinterpret_cast<stbi_write_callback_t>(append_to_buffer);
+	stbi_write_jpg_to_func(write_callback, &result, image->width, image->height, image->channels, image->data, quality);
 
 	return result.num_bytes_used;
 }
@@ -124,7 +127,8 @@ size_t stbi_encode_tga(stbi_image_t* image, uint8_t* buffer, const size_t buffer
 	if(!image->data) return 0;
 
 	luajit_stringbuffer_t result = { buffer, buffer_size, 0 };
-	stbi_write_tga_to_func(append_to_buffer, &result, image->width, image->height, image->channels, image->data);
+	auto write_callback = reinterpret_cast<stbi_write_callback_t>(append_to_buffer);
+	stbi_write_tga_to_func(write_callback, &result, image->width, image->height, image->channels, image->data);
 
 	return result.num_bytes_used;
 }

@@ -2,17 +2,17 @@
 
 #include <queue>
 
-std::queue<deferred_event_t>* queue_create() {
+deferred_event_queue_t queue_create() {
 	return new std::queue<deferred_event_t>();
 }
 
-size_t queue_size(std::queue<deferred_event_t>* queue) {
+size_t queue_size(const deferred_event_queue_t queue) {
 	if(!queue) return 0;
 
 	return queue->size();
 }
 
-bool queue_push_event(std::queue<deferred_event_t>* queue, deferred_event_t event) {
+bool queue_push_event(deferred_event_queue_t queue, deferred_event_t event) {
 	if(!queue) return false;
 
 	queue->push(event);
@@ -20,7 +20,7 @@ bool queue_push_event(std::queue<deferred_event_t>* queue, deferred_event_t even
 	return true;
 }
 
-deferred_event_t queue_pop_event(std::queue<deferred_event_t>* queue) {
+deferred_event_t queue_pop_event(deferred_event_queue_t queue) {
 	if(queue->empty()) {
 		error_event_t error_details;
 		error_details.type = ERROR_EVENT;
@@ -36,7 +36,7 @@ deferred_event_t queue_pop_event(std::queue<deferred_event_t>* queue) {
 	return event;
 }
 
-void queue_destroy(std::queue<deferred_event_t>* queue) {
+void queue_destroy(deferred_event_queue_t queue) {
 	delete queue;
 }
 

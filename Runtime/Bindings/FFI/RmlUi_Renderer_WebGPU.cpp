@@ -203,7 +203,7 @@ Rml::TextureHandle RenderInterface_WebGPU::LoadTexture(Rml::Vector2i& textureDim
 
 	// Should probably defer this for async/background loading (later)
 	int inputChannels;
-	unsigned char* rgbaImageBytes = stbi_load(source.c_str(), &textureDimensions.x, &textureDimensions.y, &inputChannels, CONVERT_TO_RGB_WITH_ALPHA);
+	unsigned const char* rgbaImageBytes = stbi_load(source.c_str(), &textureDimensions.x, &textureDimensions.y, &inputChannels, CONVERT_TO_RGB_WITH_ALPHA);
 	if(!rgbaImageBytes) return false;
 
 	WGPUTexture wgpuTexture = CreateTexture(rgbaImageBytes, textureDimensions.x, textureDimensions.y);

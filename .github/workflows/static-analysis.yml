@@ -20,7 +20,7 @@ jobs:
     name: Lint codebase
     runs-on: ubuntu-22.04
     env:
-        CPPCHECK_VERSION: 2.10.3
+        CPPCHECK_VERSION: 2.16.0
     steps:
 
       # LuaRocks needs the 5.1 headers to compile LuaCheck later, so we download them, too
