@@ -199,7 +199,7 @@ local EvoBuildTarget = {
 			"dl",
 			"pthread",
 			"uuid",
-			"webkit2gtk-4.0",
+			"webkit2gtk-4.1",
 			"gtk-3",
 			"gdk-3",
 			"z",

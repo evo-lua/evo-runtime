@@ -101,12 +101,12 @@ function BuildTarget:ProcessNativeSources()
 	-- On Linux, we need a lot of extra libraries, which could be anywhere
 	-- The good news is that pkg-config should help discover them more or less reliably
 	if isUnix then
-		local webviewIncludeFlags = NinjaBuildTools.DiscoverIncludeDirectories("gtk+-3.0 webkit2gtk-4.0")
+		local webviewIncludeFlags = NinjaBuildTools.DiscoverIncludeDirectories("gtk+-3.0 webkit2gtk-4.1")
 		for k, includeDir in ipairs(webviewIncludeFlags) do
 			table.insert(self.includeDirectories, includeDir)
 		end
 
-		local webviewLibFlags = NinjaBuildTools.DiscoverSharedLibraries("gtk+-3.0 webkit2gtk-4.0")
+		local webviewLibFlags = NinjaBuildTools.DiscoverSharedLibraries("gtk+-3.0 webkit2gtk-4.1")
 		for _, libraryFlag in string.gmatch(webviewLibFlags, "-l(%w+)%s") do
 			table.insert(self.sharedLibraries.Linux, libraryFlag)
 		end
