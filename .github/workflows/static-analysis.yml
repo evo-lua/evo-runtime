@@ -19,39 +19,48 @@ jobs:
   luacheck:
     name: Lint codebase
     runs-on: ubuntu-24.04
-    env:
-        CPPCHECK_VERSION: 2.16.0
     steps:
+
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Set up environment
+        run: |
+          set -a
+          source .github/static-analysis.env
+          cat .github/static-analysis.env >> $GITHUB_ENV
+          echo $(pwd) >> $GITHUB_PATH
 
       # LuaRocks needs the 5.1 headers to compile LuaCheck later, so we download them, too
       - name: Install LuaJIT
         run: sudo apt-get install luajit libluajit-5.1-dev
 
       - name: Download LuaRocks
-        run: wget https://luarocks.org/releases/luarocks-3.9.1.tar.gz
+        run: wget https://luarocks.org/releases/luarocks-$EVO_LUAROCKS_VERSION.tar.gz
 
       - name: Unpack LuaRocks release
-        run: tar zxpf luarocks-3.9.1.tar.gz
+        run: tar zxpf luarocks-$EVO_LUAROCKS_VERSION.tar.gz
 
       - name: Install LuaRocks
-        run: cd luarocks-3.9.1 && ./configure && make && sudo make install
+        run: |
+            cd luarocks-$EVO_LUAROCKS_VERSION
+            ./configure
+            make
+            sudo make install
+            cd -
+            rm -rfv luarocks-$EVO_LUAROCKS_VERSION
 
       - name: Install LuaCheck
-        run: sudo luarocks install luacheck
-
-      # We don't want LuaCheck to analyze LuaRocks itself
-      # Ironically, it fails when doing that, but that's not useful here
-      - name: Change to temporary directory
-        run: mkdir temp && cd temp
-
-      - name: Check out Git repository
-        uses: actions/checkout@v4
+        run: sudo luarocks install luacheck $EVO_LUACHECK_VERSION
 
       - name: Run luacheck
         run: luacheck .
 
       - name: Install selene
-        run: cargo install selene
+        run: cargo install selene@$EVO_SELENE_VERSION
 
       - name: Run selene
         run: selene .
@@ -62,7 +71,7 @@ jobs:
           git clone --depth 1 https://github.com/danmar/cppcheck.git
           cd cppcheck
           git fetch --tags
-          git checkout $CPPCHECK_VERSION
+          git checkout $EVO_CPPCHECK_VERSION
           mkdir build
           cd build
           cmake ..
