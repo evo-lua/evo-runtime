@@ -35,21 +35,18 @@ jobs:
         HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 # Prevent brew updates in the ccache setup step (~2GB download ...)
 
     steps:
+        # nproc is used to determine the number of parallel jobs
+      - name: Install GNU coreutils
+        run: brew install coreutils
+
       - name: Check out Git repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: "0" # Required so that git describe actually works (and we can embed the version tag)
+        run: cd .. && git clone https://github.com/evo-lua/evo-runtime --recursive --jobs=$(nproc)
 
       - name: Set up ccache
         uses: hendrikmuhs/ccache-action@v1.2
 
       - name: Install Ninja
         run: brew install ninja
-
-        # nproc is used by build scripts to determine the number of parallel jobs
-      - name: Install GNU coreutils
-        run: brew install coreutils
 
       - name: Configure environment
         run: |
