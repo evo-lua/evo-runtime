@@ -33,7 +33,8 @@ jobs:
           - os: macos-15
             arch: M1
     env:
-        MACOSX_DEPLOYMENT_TARGET: 15.3
+        MACOSX_DEPLOYMENT_TARGET: 13.3
+        HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 # Prevent brew updates in the ccache setup step (~2GB download ...)
 
     steps:
         # nproc is used to determine the number of parallel jobs
@@ -43,12 +44,16 @@ jobs:
       - name: Check out Git repository
         run: cd .. && git clone https://github.com/evo-lua/evo-runtime --recursive --jobs=$(nproc)
 
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
       - name: Install Ninja
         run: brew install ninja
 
       - name: Configure environment
         run: |
-          echo | clang -dM -E - | grep __apple_build_version__
+          echo "CC=ccache gcc" >> $GITHUB_ENV
+          echo "CXX=ccache g++" >> $GITHUB_ENV
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 

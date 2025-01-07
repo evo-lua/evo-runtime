@@ -175,7 +175,8 @@ function BuildTarget:ProcessLuaSources()
 	local objectFiles = self.objectFiles
 
 	for index, luaSourceFilePath in ipairs(self.luaSources) do
-		local outputFile = string.format("%s/%s.%s", self.BUILD_DIR, luaSourceFilePath, "c")
+		local outputFile =
+			string.format("%s/%s.%s", self.BUILD_DIR, luaSourceFilePath, ".cpp")
 		ninjaFile:AddBuildEdge(outputFile, "bcsave " .. luaSourceFilePath)
 		table.insert(objectFiles, outputFile)
 	end
