@@ -48,12 +48,7 @@ jobs:
             rm -rfv luarocks-$EVO_LUAROCKS_VERSION
 
       - name: Install LuaCheck
-        run: sudo luarocks install luacheck
-
-      # We don't want LuaCheck to analyze LuaRocks itself
-      # Ironically, it fails when doing that, but that's not useful here
-      - name: Change to temporary directory
-        run: mkdir temp && cd temp
+        run: sudo luarocks install luacheck $EVO_LUACHECK_VERSION
 
       - name: Check out Git repository
         uses: actions/checkout@v4
