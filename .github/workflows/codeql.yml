@@ -47,6 +47,13 @@ jobs:
           fetch-depth: 1
           submodules: recursive
 
+      - name: Set up environment
+        run: |
+          set -a
+          source .github/codeql.env
+          cat .github/codeql.env >> $GITHUB_ENV
+          echo $(pwd) >> $GITHUB_PATH
+
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL scan
         uses: github/codeql-action/init@v3
