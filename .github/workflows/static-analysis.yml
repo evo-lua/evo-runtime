@@ -21,6 +21,12 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
 
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
       - name: Set up environment
         run: |
           set -a
@@ -49,9 +55,6 @@ jobs:
 
       - name: Install LuaCheck
         run: sudo luarocks install luacheck $EVO_LUACHECK_VERSION
-
-      - name: Check out Git repository
-        uses: actions/checkout@v4
 
       - name: Run luacheck
         run: luacheck .
