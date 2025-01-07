@@ -354,7 +354,7 @@ local testCases = {
 			profilingResults = profilingResults:gsub("\r\n", "\n") -- LuaJIT opens the file in text mode
 			assertEquals(observedOutput, expectedOutput)
 			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
-			assertEquals(profilingResults, "[No samples collected]\n[No samples collected]\n")
+			assertEquals(profilingResults, "[No samples collected]\n")
 		end,
 	},
 	["cli-debug-events"] = {
