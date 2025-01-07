@@ -56,7 +56,7 @@ jobs:
         run: luacheck .
 
       - name: Install selene
-        run: cargo install selene
+        run: cargo install selene@$EVO_SELENE_VERSION
 
       - name: Run selene
         run: selene .
