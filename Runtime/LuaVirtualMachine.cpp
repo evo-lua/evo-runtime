@@ -140,16 +140,6 @@ void LuaVirtualMachine::CreateGlobalNamespace(std::string name) {
 	lua_setglobal(m_luaState, name.c_str());
 }
 
-void LuaVirtualMachine::AssignGlobalVariable(std::string key, std::string value) {
-	lua_pushstring(m_luaState, value.c_str());
-	lua_setglobal(m_luaState, key.c_str());
-}
-
-void LuaVirtualMachine::AssignGlobalVariable(std::string key, void* lightUserdataPointer) {
-	lua_pushlightuserdata(m_luaState, lightUserdataPointer);
-	lua_setglobal(m_luaState, key.c_str());
-}
-
 bool LuaVirtualMachine::CheckStack() {
 	// The most basic of checks, to make sure all symmetrical PUSH/POP operations are in alignment...
 	if(m_relativeStackOffset != 0) {
