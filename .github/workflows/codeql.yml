@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout Git repository
-        run: cd .. && git clone https://github.com/evo-lua/evo-runtime --recursive --jobs=$(nproc)
+        run: cd .. && git clone https://github.com/evo-lua/evo-runtime --recurse-submodules --shallow-submodules --depth=1 --tags --jobs=$(nproc)
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL scan

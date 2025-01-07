@@ -45,7 +45,7 @@ jobs:
           git config --global core.eol lf
 
       - name: Check out Git repository
-        run: cd .. && git clone https://github.com/evo-lua/evo-runtime --recursive --jobs=$(nproc)
+        run: cd .. && git clone https://github.com/evo-lua/evo-runtime --recurse-submodules --shallow-submodules --depth=1 --tags --jobs=$(nproc)
 
       - name: Set up sccache
         uses: mozilla-actions/sccache-action@v0.0.6
