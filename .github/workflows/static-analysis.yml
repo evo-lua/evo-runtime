@@ -19,9 +19,14 @@ jobs:
   luacheck:
     name: Lint codebase
     runs-on: ubuntu-24.04
-    env:
-        CPPCHECK_VERSION: 2.16.0
     steps:
+
+      - name: Set up environment
+        run: |
+          set -a
+          source .github/static-analysis.env
+          cat .github/static-analysis.env >> $GITHUB_ENV
+          echo $(pwd) >> $GITHUB_PATH
 
       # LuaRocks needs the 5.1 headers to compile LuaCheck later, so we download them, too
       - name: Install LuaJIT
@@ -62,7 +67,7 @@ jobs:
           git clone --depth 1 https://github.com/danmar/cppcheck.git
           cd cppcheck
           git fetch --tags
-          git checkout $CPPCHECK_VERSION
+          git checkout $EVO_CPPCHECK_VERSION
           mkdir build
           cd build
           cmake ..
