@@ -23,15 +23,15 @@ local C_BuildTools = {
 		CPP_COMPILER = "g++",
 		COMPILER_FLAGS_CPP = DEFAULT_COMPILER_FLAGS
 			.. " -std=c++20"
-			.. (isMacOS and " -Wl,-ld64 -Wl,-no_deduplicate" or ""),
+			.. (isMacOS and " -Wl,-ld_classic -Wl,-no_deduplicate" or ""),
 		-- Forced ObjC compilation should be removed once glfw3webgpu is merged into the GLFW core library
 		COMPILER_FLAGS_C = DEFAULT_COMPILER_FLAGS
 			.. " -std=c11"
-			.. (isMacOS and " -ObjC -Wl,-ld64 -Wl,-no_deduplicate" or ""),
+			.. (isMacOS and " -ObjC -Wl,-ld_classic -Wl,-no_deduplicate" or ""),
 		C_LINKER = "gcc",
 		CPP_LINKER = "g++",
 		-- Must export the entry point of bytecode objects so that LuaJIT can load them via require()
-		LINKER_FLAGS = isWindows and "-Wl,--export-all-symbols" or "-rdynamic -no_deduplicate -ld64",
+		LINKER_FLAGS = isWindows and "-Wl,--export-all-symbols" or "-rdynamic -no_deduplicate -Wl,-ld_classic",
 		C_ARCHIVER = "ar",
 		CPP_ARCHIVER = "ar",
 		ARCHIVER_FLAGS = "-rcs",
