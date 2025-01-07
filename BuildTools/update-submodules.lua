@@ -84,7 +84,7 @@ function SubmoduleUpdater:GetHelpText(submodules)
 	local indent = "  "
 	local readableList = indent .. table.concat(sortedKeys, "\n" .. indent)
 
-	return "Valid submodule IDs:\n\n" .. readableList:lower()
+	return "Valid submodule IDs:\n\n" .. readableList
 end
 
 local gitmodulesFileContents = C_FileSystem.ReadFile(".gitmodules")
@@ -97,7 +97,7 @@ if not submoduleID then
 	os.exit(1)
 end
 
-local submoduleToUpdate = submodules[submoduleID] or submodules[submoduleID:lower()]
+local submoduleToUpdate = submodules[submoduleID]
 if not submoduleToUpdate then
 	printf(red("Cannot upgrade submodule %s (invalid submodule ID)\n"), submoduleID)
 	print(SubmoduleUpdater:GetHelpText(submodules))
