@@ -27,8 +27,14 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - name: Update git config
+        run: git config --global submodule.fetchJobs $(nproc) && git config --global --list
+
       - name: Check out Git repository
-        run: cd .. && git clone https://github.com/evo-lua/evo-runtime --recursive --jobs=$(nproc)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
 
       - name: Set up ccache
         uses: hendrikmuhs/ccache-action@v1.2
