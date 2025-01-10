@@ -26,7 +26,7 @@ local window = glfw.bindings.glfw_create_window(640, 480, "WebGPU Surface Test",
 assert(window, "Failed to create window")
 
 print("Requesting adapter...")
-local surface = glfw.bindings.glfw_get_wgpu_surface(instance, window)
+local surface = glfw.bindings.glfw_create_window_wgpu_surface(instance, window)
 assert(surface, "Failed to create WebGPU surface")
 
 local adapterOpts = ffi.new("WGPURequestAdapterOptions")

@@ -2,7 +2,7 @@ struct static_glfw_exports_table {
 	const char* (*glfw_version)(void);
 	int (*glfw_find_constant)(const char* name);
 
-	WGPUSurface (*glfw_get_wgpu_surface)(WGPUInstance instance, GLFWwindow* window);
+	WGPUSurface (*glfw_create_window_wgpu_surface)(WGPUInstance instance, GLFWwindow* window);
 
 	int (*glfw_init)(void);
 	void (*glfw_terminate)(void);

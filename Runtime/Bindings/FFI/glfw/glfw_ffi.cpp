@@ -230,7 +230,7 @@ namespace glfw_ffi {
 		exports.glfw_version = glfw_version;
 		exports.glfw_find_constant = glfw_find_constant;
 
-		exports.glfw_get_wgpu_surface = glfwGetWGPUSurface;
+		exports.glfw_create_window_wgpu_surface = glfwCreateWindowWGPUSurface;
 
 		exports.glfw_init = glfwInit;
 		exports.glfw_terminate = glfwTerminate;

@@ -6,7 +6,7 @@ describe("glfw", function()
 			local exportedApiSurface = {
 				"glfw_version",
 				"glfw_find_constant",
-				"glfw_get_wgpu_surface",
+				"glfw_create_window_wgpu_surface",
 				"glfw_init",
 				"glfw_terminate",
 				"glfw_poll_events",

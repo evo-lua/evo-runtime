@@ -68,7 +68,7 @@ describe("runtime", function()
 			assertSubmoduleVersion(runtime.submodules["deps/zhaog/lua-openssl"])
 			assertSubmoduleVersion(runtime.submodules["deps/Tencent/rapidjson"])
 
-			assertEquals(table.count(runtime.submodules), 23)
+			assertEquals(table.count(runtime.submodules), 24)
 		end)
 	end)
 end)

@@ -32,7 +32,7 @@ local function createDevice(window)
 		error("Could not initialize WebGPU!")
 	end
 
-	local surface = glfw.bindings.glfw_get_wgpu_surface(instance, window)
+	local surface = glfw.bindings.glfw_create_window_wgpu_surface(instance, window)
 	assert(surface, "Failed to create WebGPU surface")
 
 	local adapterOptions = ffi.new("WGPURequestAdapterOptions")

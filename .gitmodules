@@ -113,3 +113,8 @@
 	url = https://github.com/Tencent/rapidjson
 	ignore = dirty
 	branch = master
+[submodule "glfw3webgpu"]
+	path = deps/eliemichel/glfw3webgpu
+	url = https://github.com/eliemichel/glfw3webgpu
+	ignore = dirty
+	branch = main
