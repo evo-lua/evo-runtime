@@ -2,18 +2,10 @@ name: Static Analysis
 
 on:
   pull_request:
-    paths-ignore:
-      - '**.md'
-      - 'changelog.lua'
-      - '.gitignore'
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - 'changelog.lua'
-      - '.gitignore'
 
 jobs:
   luacheck:
