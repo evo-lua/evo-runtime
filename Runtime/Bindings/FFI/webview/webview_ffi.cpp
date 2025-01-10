@@ -3,6 +3,7 @@
 
 #include "webview.h"
 #include "webview_exports.h"
+#include "webview_ffi.hpp"
 
 #ifdef __unix__
 #include "webview_unix.hpp"
@@ -109,7 +110,7 @@ namespace webview_ffi {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
 	}
 
-	// Unfortunatly this is currently required, but it's an implementation detail and not part of the public API
+	// Note: This is an implementation detail and not part of the public API
 	auto unwrapResult(auto result) {
 		result.ensure_ok();
 		return result.value();
