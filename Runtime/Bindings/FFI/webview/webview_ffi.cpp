@@ -43,7 +43,7 @@ namespace webview_ffi {
 		return w;
 	}
 
-	void webview_destroy(webview_t w) {
+	webview_error_t webview_destroy(webview_t w) {
 		delete static_cast<WebviewBrowserEngine*>(w);
 	}
 
@@ -51,11 +51,11 @@ namespace webview_ffi {
 		static_cast<WebviewBrowserEngine*>(w)->toggleFullScreen();
 	}
 
-	void webview_run(webview_t w) {
+	webview_error_t webview_run(webview_t w) {
 		static_cast<WebviewBrowserEngine*>(w)->run();
 	}
 
-	void webview_terminate(webview_t w) {
+	webview_error_t webview_terminate(webview_t w) {
 		static_cast<WebviewBrowserEngine*>(w)->terminate();
 	}
 
@@ -68,32 +68,32 @@ namespace webview_ffi {
 		return unwrapResult(static_cast<WebviewBrowserEngine*>(w)->window());
 	}
 
-	void webview_set_title(webview_t w, const char* title) {
+	webview_error_t webview_set_title(webview_t w, const char* title) {
 		static_cast<WebviewBrowserEngine*>(w)->set_title(title);
 	}
 
-	void webview_set_size(webview_t w, int width, int height,
+	webview_error_t webview_set_size(webview_t w, int width, int height,
 		webview_hint_t hints) {
 		static_cast<WebviewBrowserEngine*>(w)->set_size(width, height, hints);
 	}
 
-	void webview_navigate(webview_t w, const char* url) {
+	webview_error_t webview_navigate(webview_t w, const char* url) {
 		static_cast<WebviewBrowserEngine*>(w)->navigate(url);
 	}
 
-	void webview_set_html(webview_t w, const char* html) {
+	webview_error_t webview_set_html(webview_t w, const char* html) {
 		static_cast<WebviewBrowserEngine*>(w)->set_html(html);
 	}
 
-	void webview_init(webview_t w, const char* js) {
+	webview_error_t webview_init(webview_t w, const char* js) {
 		static_cast<WebviewBrowserEngine*>(w)->init(js);
 	}
 
-	void webview_eval(webview_t w, const char* js) {
+	webview_error_t webview_eval(webview_t w, const char* js) {
 		static_cast<WebviewBrowserEngine*>(w)->eval(js);
 	}
 
-	void webview_bind(webview_t w, const char* name,
+	webview_error_t webview_bind(webview_t w, const char* name,
 		void (*fn)(const char* seq, const char* req,
 			void* arg),
 		void* arg) {
@@ -105,11 +105,11 @@ namespace webview_ffi {
 			arg);
 	}
 
-	void webview_unbind(webview_t w, const char* name) {
+	webview_error_t webview_unbind(webview_t w, const char* name) {
 		static_cast<WebviewBrowserEngine*>(w)->unbind(name);
 	}
 
-	void webview_return(webview_t w, const char* seq, int status,
+	webview_error_t webview_return(webview_t w, const char* seq, int status,
 		const char* result) {
 		static_cast<WebviewBrowserEngine*>(w)->resolve(seq, status, result);
 	}
