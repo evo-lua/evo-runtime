@@ -2,15 +2,10 @@ name: Autoformat
 
 on:
   pull_request:
-    paths-ignore:
-      - "README.MD"
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches:
       - main
-    paths-ignore:
-      - "README.MD"
-      - '.gitignore'
 
 jobs:
   check-format:
