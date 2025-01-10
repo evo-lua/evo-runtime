@@ -41,7 +41,7 @@ namespace webview_ffi {
 		}
 
 		void toggleFullScreen() {
-			id nsWindow = (id)window();
+			id nsWindow = (id)unwrapResult(window());
 
 			((void (*)(id, SEL, id))objc_msgSend)(nsWindow, sel_registerName("toggleFullScreen:"), nullptr);
 		}
@@ -54,7 +54,7 @@ namespace webview_ffi {
 			if(!iconImage) return false;
 
 			// 10.13 and earlier: Set icon in the window's title bar (now deprecated)
-			id nsWindow = (id)window();
+			id nsWindow = (id)unwrapResult(window());
 			if(nsWindow) {
 				id fileURL = ((id(*)(id, SEL, id))objc_msgSend)("NSURL"_cls, "fileURLWithPath:"_sel, iconImagePath);
 				((void (*)(id, SEL, id))objc_msgSend)(nsWindow, "setRepresentedURL:"_sel, fileURL);
