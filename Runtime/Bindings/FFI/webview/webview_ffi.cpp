@@ -3,6 +3,15 @@
 
 #include "webview.h"
 #include "webview_exports.h"
+#include "webview_ffi.hpp"
+
+namespace webview_ffi {
+	// Note: This is an implementation detail and not part of the public API
+	auto unwrapResult(auto result) {
+		result.ensure_ok();
+		return result.value();
+	}
+}
 
 #ifdef __unix__
 #include "webview_unix.hpp"
@@ -27,7 +36,7 @@ namespace webview_ffi {
 
 	webview_t webview_create(bool debug, void* wnd) {
 		auto w = new WebviewBrowserEngine(debug, wnd);
-		if(!w->window()) {
+		if(unwrapResult(w->window())) {
 			delete w;
 			return nullptr;
 		}
@@ -56,7 +65,7 @@ namespace webview_ffi {
 	}
 
 	void* webview_get_window(webview_t w) {
-		return static_cast<WebviewBrowserEngine*>(w)->window();
+		return unwrapResult(static_cast<WebviewBrowserEngine*>(w)->window());
 	}
 
 	void webview_set_title(webview_t w, const char* title) {

@@ -122,7 +122,6 @@ local EvoBuildTarget = {
 		"deps/luvit/luv/deps/libuv/include",
 		"deps/mariusbancila/stduuid/include",
 		"deps/nothings/stb",
-		"deps/webview/webview",
 		"deps/openssl/openssl/include",
 		"deps/zhaog/lua-openssl/deps/auxiliar",
 		"deps/zhaog/lua-openssl/src",
@@ -133,6 +132,7 @@ local EvoBuildTarget = {
 		"deps/xpol/lua-rapidjson/rapidjson/include",
 		"deps/mikke89/RmlUi/Backends",
 		"deps/mikke89/RmlUi/Include",
+		"deps/webview/webview/core/include",
 	},
 	staticLibraries = {
 		"libluajit.a",
