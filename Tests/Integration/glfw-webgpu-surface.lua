@@ -84,18 +84,18 @@ local function inspectAdapter(adapter)
 	print("\tmaxComputeWorkgroupSizeZ: ", limits.limits.maxComputeWorkgroupSizeZ)
 	print("\tmaxComputeWorkgroupsPerDimension: ", limits.limits.maxComputeWorkgroupsPerDimension)
 
-	local properties = ffi.new("WGPUAdapterProperties")
-	wgpu.bindings.wgpu_adapter_get_properties(adapter, properties)
+	local adapterInfo = ffi.new("WGPUAdapterInfo")
+	wgpu.bindings.wgpu_adapter_get_info(adapter, adapterInfo)
 
-	print("Adapter properties:")
-	print("\tvendorID: ", properties.vendorID)
-	print("\tdeviceID: ", properties.deviceID)
-	print("\tname: ", ffi.string(properties.name))
-	if properties.driverDescription then
-		print("\tdriverDescription: ", ffi.string(properties.driverDescription))
-	end
-	print("\tadapterType: ", properties.adapterType)
-	print("\tbackendType: ", properties.backendType)
+	print("Adapter info:")
+	print("\tvendorID: ", adapterInfo.vendorID)
+	print("\tdeviceID: ", adapterInfo.deviceID)
+	print("\tdescription: ", ffi.string(adapterInfo.description))
+	print("\tadapterType: ", adapterInfo.adapterType)
+	print("\tbackendType: ", adapterInfo.backendType)
+	print("\tarchitecture: ", ffi.string(adapterInfo.architecture))
+	print("\tdevice: ", ffi.string(adapterInfo.device))
+	print("\tvendor: ", ffi.string(adapterInfo.vendor))
 end
 
 inspectAdapter(requestedAdapter)
