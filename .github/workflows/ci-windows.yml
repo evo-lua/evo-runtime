@@ -121,6 +121,9 @@ jobs:
       - name: Build luajit
         run: deps/luajit-windowsbuild.sh && ls ninjabuild-windows
 
+      - name: Build webview
+        run: deps/webview-windowsbuild.sh && ls ninjabuild-windows
+
       - name: Build wgpu
         if: steps.cache-wgpu.outputs.cache-hit != 'true' || startsWith(github.ref, 'refs/tags/')
         run: |

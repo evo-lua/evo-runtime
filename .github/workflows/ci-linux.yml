@@ -71,6 +71,9 @@ jobs:
       - name: Build luajit
         run: deps/luajit-unixbuild.sh && ls ninjabuild-unix
 
+      - name: Build webview
+        run: deps/webview-unixbuild.sh && ls ninjabuild-unix
+
       - name: Build wgpu
         run: deps/wgpu-unixbuild.sh && ls ninjabuild-unix
 
