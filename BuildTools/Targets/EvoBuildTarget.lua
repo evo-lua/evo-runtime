@@ -133,6 +133,7 @@ local EvoBuildTarget = {
 		"deps/xpol/lua-rapidjson/rapidjson/include",
 		"deps/mikke89/RmlUi/Backends",
 		"deps/mikke89/RmlUi/Include",
+		"deps/webview/webview/core/include",
 	},
 	staticLibraries = {
 		"libluajit.a",
