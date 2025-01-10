@@ -29,5 +29,5 @@ LIBRARY_INCLUDES="$LUAJIT_INCLUDES $FREETYPE_INCLUDES"
 cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja $FEATURE_FLAGS -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ $LIBRARY_INCLUDES -DCMAKE_BUILD_TYPE=Release
 cmake --build $BUILD_DIR --clean-first
 
-cp $BUILD_DIR/Source/Core/librmlui.a $OUT_DIR
-cp $BUILD_DIR/Source/Lua/librmlui_lua.a $OUT_DIR
+cp $BUILD_DIR/librmlui.a $OUT_DIR
+cp $BUILD_DIR/librmlui_lua.a $OUT_DIR
