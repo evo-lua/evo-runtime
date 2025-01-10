@@ -9,13 +9,15 @@ struct static_wgpu_exports_table {
 
 	// Methods of Adapter
 	size_t (*wgpu_adapter_enumerate_features)(WGPUAdapter adapter, WGPUFeatureName* features);
+	void (*wgpu_adapter_get_info)(WGPUAdapter adapter, WGPUAdapterInfo* info);
 	WGPUBool (*wgpu_adapter_get_limits)(WGPUAdapter adapter, WGPUSupportedLimits* limits);
-	void (*wgpu_adapter_get_properties)(WGPUAdapter adapter, WGPUAdapterProperties* properties);
 	WGPUBool (*wgpu_adapter_has_feature)(WGPUAdapter adapter, WGPUFeatureName feature);
-	void (*wgpu_adapter_request_adapter_info)(WGPUAdapter adapter, WGPUAdapterRequestAdapterInfoCallback callback, void* userdata);
 	void (*wgpu_adapter_request_device)(WGPUAdapter adapter, WGPUDeviceDescriptor const* descriptor /* nullable */, WGPUAdapterRequestDeviceCallback callback, void* userdata);
 	void (*wgpu_adapter_reference)(WGPUAdapter adapter);
 	void (*wgpu_adapter_release)(WGPUAdapter adapter);
+
+	// Methods of AdapterInfo
+	void (*wgpu_adapter_info_free_members)(WGPUAdapterInfo adapterInfo);
 
 	// Methods of BindGroup
 	void (*wgpu_bind_group_set_label)(WGPUBindGroup bindGroup, char const* label);
@@ -105,7 +107,6 @@ struct static_wgpu_exports_table {
 	void (*wgpu_device_pop_error_scope)(WGPUDevice device, WGPUErrorCallback callback, void* userdata);
 	void (*wgpu_device_push_error_scope)(WGPUDevice device, WGPUErrorFilter filter);
 	void (*wgpu_device_set_label)(WGPUDevice device, char const* label);
-	void (*wgpu_device_set_uncaptured_error_callback)(WGPUDevice device, WGPUErrorCallback callback, void* userdata);
 	void (*wgpu_device_reference)(WGPUDevice device);
 	void (*wgpu_device_release)(WGPUDevice device);
 
@@ -206,7 +207,6 @@ struct static_wgpu_exports_table {
 	void (*wgpu_surface_configure)(WGPUSurface surface, WGPUSurfaceConfiguration const* config);
 	void (*wgpu_surface_get_capabilities)(WGPUSurface surface, WGPUAdapter adapter, WGPUSurfaceCapabilities* surfaceCapabilities);
 	void (*wgpu_surface_get_current_texture)(WGPUSurface surface, WGPUSurfaceTexture* surfaceTexture);
-	WGPUTextureFormat (*wgpu_surface_get_preferred_format)(WGPUSurface surface, WGPUAdapter adapter);
 	void (*wgpu_surface_present)(WGPUSurface surface);
 	void (*wgpu_surface_set_label)(WGPUSurface surface, char const* label);
 	void (*wgpu_surface_unconfigure)(WGPUSurface surface);

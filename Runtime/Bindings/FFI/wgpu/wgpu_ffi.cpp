@@ -18,13 +18,15 @@ namespace wgpu_ffi {
 
 			// Adapter
 			.wgpu_adapter_enumerate_features = wgpuAdapterEnumerateFeatures,
+			.wgpu_adapter_get_info = wgpuAdapterGetInfo,
 			.wgpu_adapter_get_limits = wgpuAdapterGetLimits,
-			.wgpu_adapter_get_properties = wgpuAdapterGetProperties,
 			.wgpu_adapter_has_feature = wgpuAdapterHasFeature,
-			.wgpu_adapter_request_adapter_info = wgpuAdapterRequestAdapterInfo,
 			.wgpu_adapter_request_device = wgpuAdapterRequestDevice,
 			.wgpu_adapter_reference = wgpuAdapterReference,
 			.wgpu_adapter_release = wgpuAdapterRelease,
+
+			// AdapterInfo
+			.wgpu_adapter_info_free_members = wgpuAdapterInfoFreeMembers,
 
 			// BindGroup
 			.wgpu_bind_group_set_label = wgpuBindGroupSetLabel,
@@ -114,7 +116,6 @@ namespace wgpu_ffi {
 			.wgpu_device_pop_error_scope = wgpuDevicePopErrorScope,
 			.wgpu_device_push_error_scope = wgpuDevicePushErrorScope,
 			.wgpu_device_set_label = wgpuDeviceSetLabel,
-			.wgpu_device_set_uncaptured_error_callback = wgpuDeviceSetUncapturedErrorCallback,
 			.wgpu_device_reference = wgpuDeviceReference,
 			.wgpu_device_release = wgpuDeviceRelease,
 
@@ -215,7 +216,6 @@ namespace wgpu_ffi {
 			.wgpu_surface_configure = wgpuSurfaceConfigure,
 			.wgpu_surface_get_capabilities = wgpuSurfaceGetCapabilities,
 			.wgpu_surface_get_current_texture = wgpuSurfaceGetCurrentTexture,
-			.wgpu_surface_get_preferred_format = wgpuSurfaceGetPreferredFormat,
 			.wgpu_surface_present = wgpuSurfacePresent,
 			.wgpu_surface_set_label = wgpuSurfaceSetLabel,
 			.wgpu_surface_unconfigure = wgpuSurfaceUnconfigure,
