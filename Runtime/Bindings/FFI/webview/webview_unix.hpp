@@ -12,7 +12,7 @@ namespace webview_ffi {
 		}
 
 		void toggleFullScreen() {
-			GtkWindow* gtkWindow = GTK_WINDOW(window());
+			GtkWindow* gtkWindow = GTK_WINDOW(unwrapResult(window()));
 			GdkWindow* gdkWindow = gtk_widget_get_window(GTK_WIDGET(gtkWindow));
 			GdkWindowState state = gdk_window_get_state(gdkWindow);
 
@@ -25,7 +25,7 @@ namespace webview_ffi {
 			GdkPixbuf* pixelBuffer = gdk_pixbuf_new_from_file(iconPath, &error);
 
 			if(pixelBuffer != NULL) {
-				gtk_window_set_icon(GTK_WINDOW(window()), pixelBuffer);
+				gtk_window_set_icon(GTK_WINDOW(unwrapResult(window())), pixelBuffer);
 				g_object_unref(pixelBuffer);
 				return true;
 			} else {

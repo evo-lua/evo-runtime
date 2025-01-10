@@ -38,7 +38,7 @@ namespace webview_ffi {
 		}
 
 		void toggleFullScreen() {
-			HWND nativeWindowHandle = (HWND)window();
+			HWND nativeWindowHandle = (HWND)unwrapResult(window());
 			DWORD windowStyle = GetWindowLong(nativeWindowHandle, GWL_STYLE);
 
 			bool isInWindowedMode = (windowStyle & WS_OVERLAPPEDWINDOW);
@@ -47,7 +47,7 @@ namespace webview_ffi {
 		}
 
 		bool setAppIcon(const char* iconPath) {
-			HWND nativeWindowHandle = (HWND)window();
+			HWND nativeWindowHandle = (HWND)unwrapResult(window());
 			HICON icon = (HICON)LoadImage(nullptr, iconPath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 			if(icon) {
 				SendMessage(nativeWindowHandle, WM_SETICON, ICON_BIG, (LPARAM)icon);

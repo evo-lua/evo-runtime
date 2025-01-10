@@ -27,7 +27,7 @@ namespace webview_ffi {
 
 	webview_t webview_create(bool debug, void* wnd) {
 		auto w = new WebviewBrowserEngine(debug, wnd);
-		if(!w->window()) {
+		if(unwrapResult(w->window())) {
 			delete w;
 			return nullptr;
 		}
@@ -56,7 +56,7 @@ namespace webview_ffi {
 	}
 
 	void* webview_get_window(webview_t w) {
-		return static_cast<WebviewBrowserEngine*>(w)->window();
+		return unwrapResult(static_cast<WebviewBrowserEngine*>(w)->window());
 	}
 
 	void webview_set_title(webview_t w, const char* title) {
@@ -107,6 +107,12 @@ namespace webview_ffi {
 
 	bool webview_set_icon(webview_t w, const char* file_path) {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
+	}
+
+	// Unfortunatly this is currently required, but it's an implementation detail and not part of the public API
+	auto unwrapResult(auto result) {
+		result.ensure_ok();
+		return result.value();
 	}
 
 	void* getExportsTable() {
