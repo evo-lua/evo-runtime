@@ -15,3 +15,4 @@ deps/pcre-unixbuild.sh
 deps/glfw-unixbuild.sh
 deps/rml-unixbuild.sh
 deps/labsound-unixbuild.sh
+deps/webview-unixbuild.sh
