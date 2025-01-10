@@ -5,6 +5,14 @@
 #include "webview_exports.h"
 #include "webview_ffi.hpp"
 
+namespace webview_ffi {
+	// Note: This is an implementation detail and not part of the public API
+	auto unwrapResult(auto result) {
+		result.ensure_ok();
+		return result.value();
+	}
+}
+
 #ifdef __unix__
 #include "webview_unix.hpp"
 #endif
@@ -108,12 +116,6 @@ namespace webview_ffi {
 
 	bool webview_set_icon(webview_t w, const char* file_path) {
 		return static_cast<WebviewBrowserEngine*>(w)->setAppIcon(file_path);
-	}
-
-	// Note: This is an implementation detail and not part of the public API
-	auto unwrapResult(auto result) {
-		result.ensure_ok();
-		return result.value();
 	}
 
 	void* getExportsTable() {
