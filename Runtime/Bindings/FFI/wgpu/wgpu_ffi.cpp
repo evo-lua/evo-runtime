@@ -249,11 +249,14 @@ namespace wgpu_ffi {
 			.wgpu_generate_report = wgpuGenerateReport,
 			.wgpu_instance_enumerate_adapters = wgpuInstanceEnumerateAdapters,
 			.wgpu_queue_submit_for_index = wgpuQueueSubmitForIndex,
+			.wgpu_device_create_shader_module_spirv = wgpuDeviceCreateShaderModuleSpirV,
 			.wgpu_device_poll = wgpuDevicePoll,
 			.wgpu_set_log_callback = wgpuSetLogCallback,
 			.wgpu_set_log_level = wgpuSetLogLevel,
 			.wgpu_get_version = wgpuGetVersion,
+			.wgpu_compute_pass_encoder_set_push_constants = wgpuComputePassEncoderSetPushConstants,
 			.wgpu_render_pass_encoder_set_push_constants = wgpuRenderPassEncoderSetPushConstants,
+			.wgpu_render_bundle_encoder_set_push_constants = wgpuRenderBundleEncoderSetPushConstants,
 			.wgpu_render_pass_encoder_multi_draw_indirect = wgpuRenderPassEncoderMultiDrawIndirect,
 			.wgpu_render_pass_encoder_multi_draw_indexed_indirect = wgpuRenderPassEncoderMultiDrawIndexedIndirect,
 			.wgpu_render_pass_encoder_multi_draw_indirect_count = wgpuRenderPassEncoderMultiDrawIndirectCount,
@@ -262,7 +265,8 @@ namespace wgpu_ffi {
 			.wgpu_compute_pass_encoder_end_pipeline_statistics_query = wgpuComputePassEncoderEndPipelineStatisticsQuery,
 			.wgpu_render_pass_encoder_begin_pipeline_statistics_query = wgpuRenderPassEncoderBeginPipelineStatisticsQuery,
 			.wgpu_render_pass_encoder_end_pipeline_statistics_query = wgpuRenderPassEncoderEndPipelineStatisticsQuery,
-
+			.wgpu_compute_pass_encoder_write_timestamp = wgpuComputePassEncoderWriteTimestamp,
+			.wgpu_render_pass_encoder_write_timestamp = wgpuRenderPassEncoderWriteTimestamp,
 		};
 
 		return &exports;

@@ -241,7 +241,7 @@ struct static_wgpu_exports_table {
 	size_t (*wgpu_instance_enumerate_adapters)(WGPUInstance instance, WGPUInstanceEnumerateAdapterOptions const* options, WGPUAdapter* adapters);
 
 	WGPUSubmissionIndex (*wgpu_queue_submit_for_index)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const* commands);
-
+	WGPUShaderModule (*wgpu_device_create_shader_module_spirv)(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const* descriptor);
 	WGPUBool (*wgpu_device_poll)(WGPUDevice device, WGPUBool wait, WGPUWrappedSubmissionIndex const* wrappedSubmissionIndex);
 
 	void (*wgpu_set_log_callback)(WGPULogCallback callback, void* userdata);
@@ -250,8 +250,9 @@ struct static_wgpu_exports_table {
 
 	uint32_t (*wgpu_get_version)(void);
 
+	void (*wgpu_compute_pass_encoder_set_push_constants)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const* data);
 	void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
-
+	void (*wgpu_render_bundle_encoder_set_push_constants)(WGPURenderBundleEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
 	void (*wgpu_render_pass_encoder_multi_draw_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 	void (*wgpu_render_pass_encoder_multi_draw_indexed_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 
@@ -262,4 +263,6 @@ struct static_wgpu_exports_table {
 	void (*wgpu_compute_pass_encoder_end_pipeline_statistics_query)(WGPUComputePassEncoder computePassEncoder);
 	void (*wgpu_render_pass_encoder_begin_pipeline_statistics_query)(WGPURenderPassEncoder renderPassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
 	void (*wgpu_render_pass_encoder_end_pipeline_statistics_query)(WGPURenderPassEncoder renderPassEncoder);
+	void (*wgpu_compute_pass_encoder_write_timestamp)(WGPUComputePassEncoder computePassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
+	void (*wgpu_render_pass_encoder_write_timestamp)(WGPURenderPassEncoder renderPassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
 };
