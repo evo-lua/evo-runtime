@@ -180,6 +180,7 @@ local EvoBuildTarget = {
 			"wmcodecdspuuid",
 			"mfuuid",
 			"ksuser",
+			"oleaut32",
 		},
 		OSX = {
 			"m",

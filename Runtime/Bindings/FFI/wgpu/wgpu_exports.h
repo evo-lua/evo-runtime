@@ -9,13 +9,15 @@ struct static_wgpu_exports_table {
 
 	// Methods of Adapter
 	size_t (*wgpu_adapter_enumerate_features)(WGPUAdapter adapter, WGPUFeatureName* features);
+	void (*wgpu_adapter_get_info)(WGPUAdapter adapter, WGPUAdapterInfo* info);
 	WGPUBool (*wgpu_adapter_get_limits)(WGPUAdapter adapter, WGPUSupportedLimits* limits);
-	void (*wgpu_adapter_get_properties)(WGPUAdapter adapter, WGPUAdapterProperties* properties);
 	WGPUBool (*wgpu_adapter_has_feature)(WGPUAdapter adapter, WGPUFeatureName feature);
-	void (*wgpu_adapter_request_adapter_info)(WGPUAdapter adapter, WGPUAdapterRequestAdapterInfoCallback callback, void* userdata);
 	void (*wgpu_adapter_request_device)(WGPUAdapter adapter, WGPUDeviceDescriptor const* descriptor /* nullable */, WGPUAdapterRequestDeviceCallback callback, void* userdata);
 	void (*wgpu_adapter_reference)(WGPUAdapter adapter);
 	void (*wgpu_adapter_release)(WGPUAdapter adapter);
+
+	// Methods of AdapterInfo
+	void (*wgpu_adapter_info_free_members)(WGPUAdapterInfo adapterInfo);
 
 	// Methods of BindGroup
 	void (*wgpu_bind_group_set_label)(WGPUBindGroup bindGroup, char const* label);
@@ -105,7 +107,6 @@ struct static_wgpu_exports_table {
 	void (*wgpu_device_pop_error_scope)(WGPUDevice device, WGPUErrorCallback callback, void* userdata);
 	void (*wgpu_device_push_error_scope)(WGPUDevice device, WGPUErrorFilter filter);
 	void (*wgpu_device_set_label)(WGPUDevice device, char const* label);
-	void (*wgpu_device_set_uncaptured_error_callback)(WGPUDevice device, WGPUErrorCallback callback, void* userdata);
 	void (*wgpu_device_reference)(WGPUDevice device);
 	void (*wgpu_device_release)(WGPUDevice device);
 
@@ -206,7 +207,6 @@ struct static_wgpu_exports_table {
 	void (*wgpu_surface_configure)(WGPUSurface surface, WGPUSurfaceConfiguration const* config);
 	void (*wgpu_surface_get_capabilities)(WGPUSurface surface, WGPUAdapter adapter, WGPUSurfaceCapabilities* surfaceCapabilities);
 	void (*wgpu_surface_get_current_texture)(WGPUSurface surface, WGPUSurfaceTexture* surfaceTexture);
-	WGPUTextureFormat (*wgpu_surface_get_preferred_format)(WGPUSurface surface, WGPUAdapter adapter);
 	void (*wgpu_surface_present)(WGPUSurface surface);
 	void (*wgpu_surface_set_label)(WGPUSurface surface, char const* label);
 	void (*wgpu_surface_unconfigure)(WGPUSurface surface);
@@ -241,7 +241,7 @@ struct static_wgpu_exports_table {
 	size_t (*wgpu_instance_enumerate_adapters)(WGPUInstance instance, WGPUInstanceEnumerateAdapterOptions const* options, WGPUAdapter* adapters);
 
 	WGPUSubmissionIndex (*wgpu_queue_submit_for_index)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const* commands);
-
+	WGPUShaderModule (*wgpu_device_create_shader_module_spirv)(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const* descriptor);
 	WGPUBool (*wgpu_device_poll)(WGPUDevice device, WGPUBool wait, WGPUWrappedSubmissionIndex const* wrappedSubmissionIndex);
 
 	void (*wgpu_set_log_callback)(WGPULogCallback callback, void* userdata);
@@ -250,8 +250,9 @@ struct static_wgpu_exports_table {
 
 	uint32_t (*wgpu_get_version)(void);
 
+	void (*wgpu_compute_pass_encoder_set_push_constants)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const* data);
 	void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
-
+	void (*wgpu_render_bundle_encoder_set_push_constants)(WGPURenderBundleEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
 	void (*wgpu_render_pass_encoder_multi_draw_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 	void (*wgpu_render_pass_encoder_multi_draw_indexed_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 
@@ -262,4 +263,6 @@ struct static_wgpu_exports_table {
 	void (*wgpu_compute_pass_encoder_end_pipeline_statistics_query)(WGPUComputePassEncoder computePassEncoder);
 	void (*wgpu_render_pass_encoder_begin_pipeline_statistics_query)(WGPURenderPassEncoder renderPassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
 	void (*wgpu_render_pass_encoder_end_pipeline_statistics_query)(WGPURenderPassEncoder renderPassEncoder);
+	void (*wgpu_compute_pass_encoder_write_timestamp)(WGPUComputePassEncoder computePassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
+	void (*wgpu_render_pass_encoder_write_timestamp)(WGPURenderPassEncoder renderPassEncoder, WGPUQuerySet querySet, uint32_t queryIndex);
 };
