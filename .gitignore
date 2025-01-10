@@ -42,4 +42,5 @@ build.ninja
 CHANGELOG.MD
 .DS_Store
 .n2_db
+.ninja_lock
 deps/versions.lua
