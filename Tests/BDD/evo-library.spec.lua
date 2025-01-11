@@ -21,6 +21,7 @@ describe("evo", function()
 			local hasRuntimeVersion = (runtimeVersion ~= nil)
 			local hasEngineVersion = (engineVersion ~= nil)
 			local hasEmbeddedLibraryVersions = {
+				curl = (capturedOutput:match("curl" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
 				glfw = (capturedOutput:match("glfw" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
 				labsound = (capturedOutput:match("labsound" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
 				libuv = (capturedOutput:match("libuv" .. WHITESPACE .. VERSION .. WHITESPACE .. HASH) ~= nil),
@@ -41,6 +42,7 @@ describe("evo", function()
 
 			assertTrue(hasRuntimeVersion)
 			assertTrue(hasEngineVersion)
+			assertTrue(hasEmbeddedLibraryVersions.curl)
 			assertTrue(hasEmbeddedLibraryVersions.glfw)
 			assertTrue(hasEmbeddedLibraryVersions.labsound)
 			assertTrue(hasEmbeddedLibraryVersions.lpeg)
