@@ -77,6 +77,8 @@ jobs:
           path: |
             ninjabuild-windows/libcrypto.a
             ninjabuild-windows/libssl.a
+            deps/openssl/openssl/include/crypto/*
+            deps/openssl/openssl/include/openssl/*
           key: openssl-${{ steps.revparse.outputs.openssl }}-${{ hashFiles('deps/openssl-windowsbuild.sh') }}-${{ runner.os }}
 
       - name: Cache wgpu-native
