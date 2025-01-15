@@ -11,6 +11,7 @@ deps/luv-unixbuild.sh
 deps/miniz-unixbuild.sh
 deps/uws-unixbuild.sh
 deps/zlib-unixbuild.sh
+deps/curl-unixbuild.sh
 deps/pcre-unixbuild.sh
 deps/glfw-unixbuild.sh
 deps/rml-unixbuild.sh

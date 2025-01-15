@@ -21,6 +21,7 @@ end
 
 local assertions = require("assertions")
 local crypto = require("crypto")
+local curl = require("curl")
 local etrace = require("etrace")
 local glfw = require("glfw")
 local jit = require("jit")
@@ -222,6 +223,7 @@ function evo.getVersionText()
 	local semanticLpegVersionString = string.match(lpeg.version, "LPeg%s([%d%.]+)")
 
 	local embeddedLibraryVersions = {
+		curl = curl.version(),
 		glfw = glfw.version(),
 		labsound = labsound.version(),
 		libuv = uv.version_string(),
@@ -238,6 +240,7 @@ function evo.getVersionText()
 		webview = webview.version(),
 		zlib = semanticZlibVersionString,
 		-- Since the ordering of pairs isn't well-defined, enforce alphabetic order for the CLI output
+		"curl",
 		"glfw",
 		"labsound",
 		"libuv",
@@ -255,6 +258,7 @@ function evo.getVersionText()
 		"zlib",
 	}
 	local submodulePaths = {
+		curl = "deps/curl/curl",
 		glfw = "deps/glfw/glfw",
 		labsound = "deps/LabSound/LabSound",
 		libuv = "deps/luvit/luv", -- Always tracks the libuv version

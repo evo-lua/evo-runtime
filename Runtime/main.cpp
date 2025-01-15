@@ -12,6 +12,7 @@ extern "C" {
 #include "macros.hpp"
 #include "crypto_ffi.hpp"
 #include "cpp_ffi.hpp"
+#include "curl_ffi.hpp"
 #include "glfw_ffi.hpp"
 #include "iconv_ffi.hpp"
 #include "interop_ffi.hpp"
@@ -52,6 +53,7 @@ int main(int argc, char* argv[]) {
 	luaVM->LoadPackage("bindings");
 	luaVM->BindStaticLibraryExports("cpp", cpp_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("crypto", crypto_ffi::getExportsTable());
+	luaVM->BindStaticLibraryExports("curl", curl_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("glfw", glfw_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("iconv", iconv_ffi::getExportsTable());
 	luaVM->BindStaticLibraryExports("interop", interop_ffi::getExportsTable());

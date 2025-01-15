@@ -118,3 +118,8 @@
 	url = https://github.com/eliemichel/glfw3webgpu
 	ignore = dirty
 	branch = main
+[submodule "curl"]
+	path = deps/curl/curl
+	url = https://github.com/curl/curl
+	ignore = dirty
+	branch = master

@@ -17,5 +17,5 @@ make -j $NUM_PARALLEL_JOBS
 
 cd -
 
-mv $OPENSSL_DIR/libcrypto.a $BUILD_DIR
-mv $OPENSSL_DIR/libssl.a $BUILD_DIR
+cp $OPENSSL_DIR/libcrypto.a $BUILD_DIR
+cp $OPENSSL_DIR/libssl.a $BUILD_DIR

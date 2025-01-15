@@ -33,6 +33,7 @@ local EvoBuildTarget = {
 		"Runtime/API/Networking/WebSocketServer.lua",
 		"Runtime/Bindings/FFI/cpp/cpp.lua",
 		"Runtime/Bindings/FFI/crypto/crypto.lua",
+		"Runtime/Bindings/FFI/curl/curl.lua",
 		"Runtime/Bindings/FFI/glfw/glfw.lua",
 		"Runtime/Bindings/FFI/iconv/iconv.lua",
 		"Runtime/Bindings/FFI/interop/interop.lua",
@@ -74,6 +75,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/FFI/cpp/cpp_ffi.cpp",
 		"Runtime/Bindings/FFI/crypto/crypto_argon2.cpp",
 		"Runtime/Bindings/FFI/crypto/crypto_ffi.cpp",
+		"Runtime/Bindings/FFI/curl/curl_ffi.cpp",
 		"Runtime/Bindings/FFI/glfw/glfw_ffi.cpp",
 		"Runtime/Bindings/FFI/iconv/iconv_ffi.cpp",
 		"Runtime/Bindings/FFI/interop/interop_ffi.cpp",
@@ -100,6 +102,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/FFI",
 		"Runtime/Bindings/FFI/cpp",
 		"Runtime/Bindings/FFI/crypto",
+		"Runtime/Bindings/FFI/curl",
 		"Runtime/Bindings/FFI/glfw",
 		"Runtime/Bindings/FFI/iconv",
 		"Runtime/Bindings/FFI/interop",
@@ -112,6 +115,7 @@ local EvoBuildTarget = {
 		"Runtime/Bindings/FFI/wgpu",
 		"Runtime/Bindings/FFI/webview",
 		"deps",
+		"deps/curl/curl/include/curl",
 		"deps/eliemichel/glfw3webgpu",
 		"deps/gfx-rs/wgpu-native/ffi",
 		"deps/gfx-rs/wgpu-native/ffi/webgpu-headers/",
@@ -154,6 +158,7 @@ local EvoBuildTarget = {
 		"libLabSound.a",
 		"libLabSoundRtAudio.a",
 		"libnyquist.a",
+		"libcurl.a",
 	},
 	sharedLibraries = {
 		Windows = {
@@ -194,6 +199,7 @@ local EvoBuildTarget = {
 			"WebKit",
 			"Accelerate",
 			"CoreAudio",
+			"SystemConfiguration",
 		},
 		Linux = {
 			"m",
