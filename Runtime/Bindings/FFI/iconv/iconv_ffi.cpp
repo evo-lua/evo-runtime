@@ -50,6 +50,9 @@ namespace iconv_ffi {
 	void* getExportsTable() {
 		static struct static_iconv_exports_table exports = {
 			.iconv_convert = &iconv_convert,
+			.iconv_open = &iconv_open,
+			.iconv_close = &iconv_close,
+			.iconv = &iconv,
 		};
 
 		return &exports;
