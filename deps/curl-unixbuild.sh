@@ -6,8 +6,8 @@ BUILD_DIR=$SRC_DIR/cmakebuild-unix
 OUT_DIR=$(pwd)/ninjabuild-unix
 
 # Enabled features: OpenSSL and zlib are essential and already included, anyway
-OPENSSL_DIR=$(pwd)/deps/openssl/openssl
-OPENSSL_INCLUDE_DIR=$OPENSSL_DIR/include
+OPENSSL_DIR=$OUT_DIR
+OPENSSL_INCLUDE_DIR=$(pwd)/deps/openssl/openssl/include
 STATIC_OPENSSL_FLAGS="-DCURL_USE_OPENSSL=ON -DOPENSSL_INCLUDE_DIR=$OPENSSL_INCLUDE_DIR -DOPENSSL_USE_STATIC_LIBS=ON -DOPENSSL_ROOT_DIR=$OPENSSL_DIR"
 
 ZLIB_INCLUDE_DIR=$(pwd)/deps/madler/zlib # Only required for wolfSSL - but better safe than sorry?
