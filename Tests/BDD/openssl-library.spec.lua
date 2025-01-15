@@ -37,14 +37,14 @@ describe("openssl", function()
 	it("should export all openssl functions", function()
 		for _, functionName in ipairs(exportedFunctions) do
 			local exportedFunction = openssl[functionName]
-			assertEquals(type(exportedFunction), "function", "Should export function " .. functionName)
+			assert(type(exportedFunction) == "function", "Should export function " .. functionName)
 		end
 	end)
 
 	it("should export all openssl namespaces", function()
 		for _, namespace in ipairs(exportedNamespaces) do
 			local exportedNamespace = openssl[namespace]
-			assertEquals(type(exportedNamespace), "table", "Should export namespace " .. namespace)
+			assert(type(exportedNamespace) == "table", "Should export namespace " .. namespace)
 		end
 	end)
 end)
