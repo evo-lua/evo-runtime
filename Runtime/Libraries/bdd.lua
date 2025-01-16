@@ -1,4 +1,5 @@
 local buffer = require("string.buffer")
+local etrace = require("etrace")
 local transform = require("transform")
 local uv = require("uv")
 local validation = require("validation")
@@ -35,16 +36,32 @@ local bdd = {
 	DETAILED_REPORTING_MODE = "DETAILED",
 	reportingMode = "DETAILED",
 	errorDetails = {},
+	events = { -- TBD strip transform codes from reported messages? meh
+		"BDD_RUNNER_START",
+		"BDD_EXECUTE_SPEC",
+		"BDD_RUNNER_DONE",
+		"BDD_ERROR_PUSH",
+		"BDD_SECTION_START",
+		"BDD_SECTION_DONE",
+		"BDD_SPECFILE_DO",
+		"BDD_SPECFILE_ERROR",
+		"BDD_SPECFILE_OK",
+		"BDD_REPORT_APPEND",
+		"BDD_SUBSECTION_START",
+		"BDD_SUBSECTION_DONE",
+		"BDD_FULL_RESET",
+	},
 }
 
 function bdd.startTestRunner(specFiles)
 	validateTable(specFiles, "specFiles")
+	etrace.register(bdd.events) -- TODO idempotent or assume test runner is started only once (beware: parallel execution - same context or different one?)
 
 	if #specFiles == 0 then
 		error("No test cases to run", 0)
 	end
 
-	bdd.reset()
+	bdd.reset() -- if not idempotent, reset etrace/re-register events here
 
 	if bdd.isBasicReportingMode() then
 		local numSpecFiles = tostring(#specFiles)
@@ -53,12 +70,15 @@ function bdd.startTestRunner(specFiles)
 	end
 
 	bdd.startTime = uv.hrtime()
+	EVENT("BDD_RUNNER_START", { startTime = startTime, specFiles = specFiles })
 
 	for _, specFile in ipairs(specFiles) do
+		EVENT("BDD_EXECUTE_SPEC", { startTime = startTime, specFiles = specFiles })
 		bdd.executeSpecFile(specFile)
 	end
 
 	bdd.endTime = uv.hrtime()
+	EVENT("BDD_RUNNER_DONE", { endTime = endTime, numFailedTests = bdd.numFailedTests }) -- numFailedTests redundant if part of API?
 
 	if bdd.isBasicReportingMode() then
 		bdd.report("")
@@ -97,6 +117,7 @@ function bdd.getHumanReadableTime(highResolutionTime)
 end
 
 local function errorHandler(errorMessage)
+	EVENT("BDD_ERROR_PUSH", { message = errorMessage })
 	if errorMessage == "" then
 		return
 	end
@@ -118,14 +139,16 @@ function bdd.executeSpecFile(specFile)
 	end
 
 	bdd.lastExecutedSpecFile = specFile
-
+	EVENT("BDD_SPECFILE_DO", { specFile = specFile, fileStats = fileStats })
 	local success, errorDetails = xpcall(dofile, errorHandler, specFile)
 	if not success then
+		EVENT("BDD_SPECFILE_ERROR", { specFile = specFile, errorDetails = errorDetails })
 		errorMessage = errorDetails.message
 		errorDetails.specFile = specFile
 		table_insert(bdd.errorDetails, errorDetails)
 	end
 
+	EVENT("BDD_SPECFILE_OK", { specFile = specFile })
 	if bdd.isBasicReportingMode() then
 		if success then
 			bdd.report(green("PASS" .. "\t" .. specFile))
@@ -172,6 +195,7 @@ function bdd.isDetailedReportingMode()
 end
 
 function bdd.report(message)
+	EVENT("BDD_REPORT_APPEND", { message = message }) -- TBD too verbose? may need different log levels/review later
 	bdd.reportBuffer:put(message)
 	bdd.reportBuffer:put("\n") -- For print-like semantics
 end
@@ -183,7 +207,8 @@ end
 function bdd.startSection(label, testFunction)
 	validateString(label, "label")
 	validateFunction(testFunction, "testFunction")
-
+	EVENT("BDD_SECTION_START", { label = label }) -- TBD also add setup/teardown fnc
+	-- TODO warn if before/after has no IT block? OR fix it.. (separate issue)
 	if not bdd.isDetailedReportingMode() then
 		local warningString = format(
 			'WARNING: Encountered BDD-style section with label "%s", but reporting mode is not %s',
@@ -209,11 +234,13 @@ function bdd.startSection(label, testFunction)
 	bdd.registeredTeardownFunctions = teardownStackSnapshot
 
 	bdd.reportIndentationLevel = bdd.reportIndentationLevel - 1
+	EVENT("BDD_SECTION_DONE", { label = label }) -- TBD why no errorDetails here? (there was an issue already IIRC)
 end
 
 function bdd.startSubsection(label, testFunction)
 	validateString(label, "label")
 	validateFunction(testFunction, "testFunction")
+	EVENT("BDD_SUBSECTION_START", { label = label })
 
 	if not bdd.isDetailedReportingMode() then
 		local warningString = format(
@@ -235,6 +262,7 @@ function bdd.startSubsection(label, testFunction)
 		teardownFunction()
 	end
 
+	EVENT("BDD_SUBSECTION_DONE", { label = label, success = success, errorDetails = errorDetails })
 	if success then
 		bdd.reportPassingSubsection(label)
 		bdd.numCompletedTests = bdd.numCompletedTests + 1
@@ -275,6 +303,7 @@ function bdd.reportFailingSubsection(label)
 end
 
 function bdd.reset()
+	EVENT("BDD_FULL_RESET")
 	bdd.lastExecutedSpecFile = nil
 
 	bdd.numCompletedTests = 0
