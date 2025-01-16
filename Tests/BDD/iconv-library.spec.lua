@@ -88,13 +88,13 @@ describe("iconv", function()
 
 			it("should indicate an error if the requested conversion isn't supported", function()
 				local descriptor = iconv.bindings.iconv_open("Not-a-real-encoding", "UTF-8")
-				assertEquals(ffi.cast("size_t", descriptor), iconv.ERROR_CONVERSION_FAILED)
+				assertEquals(ffi.cast("size_t", descriptor), iconv.bindings.CHARSET_CONVERSION_FAILED)
 				iconv.bindings.iconv_close(descriptor)
 			end)
 
 			it("should return a valid handle if the conversion is supported", function()
 				local descriptor = iconv.bindings.iconv_open("CP949", "UTF-8")
-				assertFalse(ffi.cast("size_t", descriptor) == iconv.ERROR_CONVERSION_FAILED)
+				assertFalse(ffi.cast("size_t", descriptor) == iconv.bindings.CHARSET_CONVERSION_FAILED)
 				iconv.bindings.iconv_close(descriptor)
 			end)
 		end)
@@ -102,7 +102,7 @@ describe("iconv", function()
 		describe("iconv", function()
 			it("should be able to convert Windows encodings to UTF-8", function()
 				local descriptor = iconv.bindings.iconv_open("UTF-8", "CP949")
-				assert(descriptor ~= iconv.ERROR_CONVERSION_FAILED, "Failed to create conversion descriptor")
+				assert(descriptor ~= iconv.bindings.CHARSET_CONVERSION_FAILED, "Failed to create conversion descriptor")
 
 				local input = "\192\175\192\250\192\206\197\205\198\228\192\204\189\186"
 				local inputSize = ffi.new("size_t[1]", #input)
@@ -114,7 +114,7 @@ describe("iconv", function()
 				local outputRef = ffi.new("char*[1]", outputBuffer)
 
 				local result = iconv.bindings.iconv(descriptor, inputRef, inputSize, outputRef, outputSize)
-				assert(result ~= iconv.ERROR_CONVERSION_FAILED, "Conversion failed")
+				assert(result ~= iconv.bindings.CHARSET_CONVERSION_FAILED, "Conversion failed")
 
 				local convertedSize = 256 - outputSize[0]
 				local converted = ffi.string(outputBuffer, convertedSize)

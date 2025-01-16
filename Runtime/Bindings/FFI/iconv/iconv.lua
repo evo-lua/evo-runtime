@@ -7,9 +7,7 @@ local ffi_string = ffi.string
 local tonumber = tonumber
 local tostring = tostring
 
-local iconv = {
-	ERROR_CONVERSION_FAILED = ffi.cast("size_t", -1ULL),
-}
+local iconv = {}
 
 iconv.cdefs = [[
 typedef void* iconv_t;
@@ -24,6 +22,9 @@ struct static_iconv_exports_table {
 	iconv_t (*iconv_open)(const char* input_encoding, const char* output_encoding);
 	int (*iconv_close)(iconv_t conversion_descriptor);
 	size_t (*iconv)(iconv_t conversion_descriptor, char** input, size_t* input_size, char** output, size_t* output_size);
+
+	// Shared constants
+	size_t CHARSET_CONVERSION_FAILED;
 };
 
 ]]
