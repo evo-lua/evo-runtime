@@ -71,6 +71,58 @@ describe("iconv", function()
 				assertEquals(numBytesWritten, 12)
 			end)
 		end)
+
+		describe("iconv_open", function()
+			local descriptors = {}
+			before(function()
+				descriptors.valid = iconv.bindings.iconv_open("CP949", "UTF-8")
+				descriptors.invalid = iconv.bindings.iconv_open("Not-a-real-encoding", "UTF-8")
+				assertEquals(table.count(descriptors), 2)
+			end)
+
+			after(function()
+				for label, descriptor in pairs(descriptors) do
+					iconv.try_close(descriptor)
+				end
+			end)
+
+			it("should indicate an error if the requested conversion isn't supported", function()
+				local descriptor = iconv.bindings.iconv_open("Not-a-real-encoding", "UTF-8")
+				assertEquals(ffi.cast("size_t", descriptor), iconv.bindings.CHARSET_CONVERSION_FAILED)
+				iconv.try_close(descriptor)
+			end)
+
+			it("should return a valid handle if the conversion is supported", function()
+				local descriptor = iconv.bindings.iconv_open("CP949", "UTF-8")
+				assertFalse(ffi.cast("size_t", descriptor) == iconv.bindings.CHARSET_CONVERSION_FAILED)
+				iconv.try_close(descriptor)
+			end)
+		end)
+
+		describe("iconv", function()
+			it("should be able to convert Windows encodings to UTF-8", function()
+				local descriptor = iconv.bindings.iconv_open("UTF-8", "CP949")
+				assert(descriptor ~= iconv.bindings.CHARSET_CONVERSION_FAILED, "Failed to create conversion descriptor")
+
+				local input = "\192\175\192\250\192\206\197\205\198\228\192\204\189\186"
+				local inputSize = ffi.new("size_t[1]", #input)
+				local inputBuffer = ffi.new("char[?]", #input, input)
+				local inputRef = ffi.new("char*[1]", inputBuffer)
+
+				local outputSize = ffi.new("size_t[1]", 256)
+				local outputBuffer = ffi.new("char[256]")
+				local outputRef = ffi.new("char*[1]", outputBuffer)
+
+				local result = iconv.bindings.iconv(descriptor, inputRef, inputSize, outputRef, outputSize)
+				assert(result ~= iconv.bindings.CHARSET_CONVERSION_FAILED, "Conversion failed")
+
+				local convertedSize = 256 - outputSize[0]
+				local converted = ffi.string(outputBuffer, convertedSize)
+				assertEquals(converted, "유저인터페이스")
+
+				iconv.bindings.iconv_close(descriptor)
+			end)
+		end)
 	end)
 
 	describe("convert", function()

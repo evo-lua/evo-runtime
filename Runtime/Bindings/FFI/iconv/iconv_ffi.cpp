@@ -18,7 +18,7 @@ iconv_result_t iconv_convert(char* input, size_t input_length, const char* input
 	size_t num_input_bytes_left = input_length;
 
 	iconv_t conversion_descriptor = iconv_open(output_encoding, input_encoding);
-	if(conversion_descriptor == (iconv_t)-1) {
+	if(reinterpret_cast<size_t>(conversion_descriptor) == iconv_ffi::CHARSET_CONVERSION_FAILED) {
 		result.message = strerror(errno);
 		result.status_code = errno;
 		result.num_bytes_written = 0;
@@ -50,6 +50,12 @@ namespace iconv_ffi {
 	void* getExportsTable() {
 		static struct static_iconv_exports_table exports = {
 			.iconv_convert = &iconv_convert,
+			.iconv_open = &iconv_open,
+			.iconv_close = &iconv_close,
+			.iconv = &iconv,
+
+			// Shared constants
+			.CHARSET_CONVERSION_FAILED = CHARSET_CONVERSION_FAILED,
 		};
 
 		return &exports;
