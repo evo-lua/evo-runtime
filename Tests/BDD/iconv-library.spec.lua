@@ -82,20 +82,20 @@ describe("iconv", function()
 
 			after(function()
 				for label, descriptor in pairs(descriptors) do
-					iconv.bindings.iconv_close(descriptor) -- NOOP if invalid
+					iconv.try_close(descriptor)
 				end
 			end)
 
 			it("should indicate an error if the requested conversion isn't supported", function()
 				local descriptor = iconv.bindings.iconv_open("Not-a-real-encoding", "UTF-8")
 				assertEquals(ffi.cast("size_t", descriptor), iconv.bindings.CHARSET_CONVERSION_FAILED)
-				iconv.bindings.iconv_close(descriptor)
+				iconv.try_close(descriptor)
 			end)
 
 			it("should return a valid handle if the conversion is supported", function()
 				local descriptor = iconv.bindings.iconv_open("CP949", "UTF-8")
 				assertFalse(ffi.cast("size_t", descriptor) == iconv.bindings.CHARSET_CONVERSION_FAILED)
-				iconv.bindings.iconv_close(descriptor)
+				iconv.try_close(descriptor)
 			end)
 		end)
 
