@@ -7,7 +7,9 @@ local ffi_string = ffi.string
 local tonumber = tonumber
 local tostring = tostring
 
-local iconv = {}
+local iconv = {
+	ERROR_CONVERSION_FAILED = ffi.cast("size_t", -1ULL),
+}
 
 iconv.cdefs = [[
 typedef void* iconv_t;
