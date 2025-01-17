@@ -103,6 +103,31 @@ function vfs.searcher(zipApp, moduleName)
 	end
 end
 
+function vfs.dlopen(zipApp, libraryName)
+	validation.validateString(libraryName, "libraryName")
+
+	libraryName = vfs.dlname(libraryName)
+	local fileContents, errorMessage = vfs.extract(zipApp, libraryName)
+	if not fileContents then
+		return nil, errorMessage
+	end
+
+	local tempDirectoryPath = uv.fs_mkdtemp(path.join(uv.cwd(), "LUAZIP-XXXXXX"))
+	local tempFilePath = path.join(tempDirectoryPath, libraryName)
+	C_FileSystem.WriteFile(tempFilePath, fileContents)
+	local success, libraryOrErrorMessage = pcall(ffi.load, tempFilePath)
+
+	-- Cleanup should never fail, but if it does at least it'll do so loudly
+	assert(C_FileSystem.Delete(tempFilePath))
+	assert(C_FileSystem.Delete(tempDirectoryPath))
+
+	if not success then
+		return nil, libraryOrErrorMessage
+	end
+
+	return libraryOrErrorMessage
+end
+
 function vfs.dlname(libraryName)
 	validation.validateString(libraryName, "libraryName")
 
