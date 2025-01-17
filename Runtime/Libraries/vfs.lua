@@ -23,6 +23,7 @@ local vfs = {
 		} lua_zip_signature_t;
 		#pragma pack(pop)
 	]],
+	cachedAppBundles = {},
 }
 
 function vfs.decode(fileContents)

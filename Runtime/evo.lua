@@ -146,6 +146,9 @@ function evo.run()
 		-- For security and performance reasons, prefer loading from the VFS in case of conflicts
 		table.insert(package.searchers, 1, vfsSearcher)
 
+		-- Avoid having to decode archives multiple times (the design could use some refinement)
+		vfs.cachedAppBundles[uv.exepath()] = zipApp
+
 		return vfs.dofile(zipApp, evo.DEFAULT_ENTRY_POINT)
 	end
 
