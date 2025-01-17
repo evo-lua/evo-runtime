@@ -421,16 +421,16 @@ testCases = {
 		humanReadableDescription = "Invoking the test command without args should run test.lua if it exists",
 		programToRun = "evo test",
 		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
-			local expectedOutput = "Hello from test.lua (app args: 0, nil)\n"
+			local expectedOutput = "Hello from test.lua (app args: 0, nil, nil)\n"
 			assertEquals(observedOutput, expectedOutput)
 			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
 		end,
 	},
 	["cli-test-noargs-forward"] = {
 		humanReadableDescription = "Invoking the test command without args but with app args should run test.lua and forward the app args",
-		programToRun = "evo test --integration",
+		programToRun = "evo test --integration --asdf",
 		onExit = function(observedOutput, status, terminationReason, exitCodeOrSignalID)
-			local expectedOutput = "Hello from test.lua (app args: 1, integration)\n"
+			local expectedOutput = "Hello from test.lua (app args: 2, integration, asdf)\n"
 			assertEquals(observedOutput, expectedOutput)
 			assertExitSuccess(observedOutput, status, terminationReason, exitCodeOrSignalID)
 		end,
@@ -441,7 +441,7 @@ C_FileSystem.WriteFile("conflicting.lua", "return {checksum=0}")
 C_FileSystem.WriteFile("main.lua", "print('Hello from main.lua')")
 C_FileSystem.WriteFile(
 	"test.lua",
-	"assertEquals(42, 42); printf('Hello from test.lua (app args: %d, %s)', #arg, tostring(arg[1]))"
+	"assertEquals(42, 42); printf('Hello from test.lua (app args: %d, %s, %s)', #arg, tostring(arg[1]), tostring(arg[2]))"
 )
 
 C_Runtime.RunSnapshotTests(testCases)
