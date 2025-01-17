@@ -6,7 +6,8 @@ OUT_DIR=ninjabuild-unix
 SRC_DIR=deps/madler/zlib
 BUILD_DIR=$SRC_DIR/cmakebuild-unix
 
-cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_SHARED_LIBS=ON -DCMAKE_C_COMPILER=gcc
+ZLIB_BUILD_FLAGS="-DZLIB_BUILD_EXAMPLES=OFF -DSKIP_INSTALL_ALL=ON"
+cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_SHARED_LIBS=ON -DCMAKE_C_COMPILER=gcc $ZLIB_BUILD_FLAGS
 cmake --build $BUILD_DIR --clean-first
 
 cp $BUILD_DIR/libz.a $OUT_DIR/zlibstatic.a
