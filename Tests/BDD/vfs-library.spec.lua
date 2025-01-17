@@ -134,6 +134,12 @@ describe("vfs", function()
 	end)
 
 	describe("dlopen", function()
+		it("should fail if no app bundle was provided", function()
+			assertFailure(function()
+				return vfs.dlopen(nil, "foo")
+			end, vfs.errorStrings.MISSING_APP_BUNDLE)
+		end)
+
 		it("should throw if an invalid library name was passed", function()
 			assertThrows(function()
 				vfs.dlopen({}, nil)

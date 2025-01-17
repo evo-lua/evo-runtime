@@ -24,6 +24,9 @@ local vfs = {
 		#pragma pack(pop)
 	]],
 	cachedAppBundles = {},
+	errorStrings = {
+		MISSING_APP_BUNDLE = "Not a LUAZIP app bundle",
+	},
 }
 
 function vfs.decode(fileContents)
@@ -105,6 +108,11 @@ function vfs.searcher(zipApp, moduleName)
 end
 
 function vfs.dlopen(zipApp, libraryName)
+	if not zipApp then
+		-- Ensure it's a NOOP if run from a regular script file that may also be bundled
+		return nil, vfs.errorStrings.MISSING_APP_BUNDLE
+	end
+
 	validation.validateString(libraryName, "libraryName")
 
 	libraryName = vfs.dlname(libraryName)
