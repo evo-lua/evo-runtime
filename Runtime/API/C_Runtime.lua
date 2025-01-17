@@ -81,13 +81,16 @@ end
 
 local function shell_exec(command, environmentVariables)
 	environmentVariables = environmentVariables or {}
-	local tempFile = os.tmpname()
+	local tempFile, tempFileName = uv.fs_mkstemp("evo-runtime-test-XXXXXX")
+	assert(tempFile, tempFileName)
+	-- An open FD may block the spawned process from writing on Windows
+	assert(uv.fs_close(tempFile))
 
 	for name, value in pairs(environmentVariables) do
 		printf("Setting environment variable %s to %s", name, value)
 		uv.os_setenv(name, value)
 	end
-	local commandWithRedirection = command .. " > " .. tempFile .. " 2>&1"
+	local commandWithRedirection = command .. " > " .. tempFileName .. " 2>&1"
 
 	-- Somewhat sketchy, but portable enough for this use case?
 	local success, terminationReason, exitCode = os.execute(commandWithRedirection)
@@ -97,12 +100,8 @@ local function shell_exec(command, environmentVariables)
 		uv.os_unsetenv(name, value)
 	end
 
-	local file = io.open(tempFile, "rb")
-	local output = file:read("*all")
-	file:close()
-
-	os.remove(tempFile)
-
+	local output = C_FileSystem.ReadFile(tempFileName)
+	C_FileSystem.Delete(tempFileName) -- FD already closed, so manual cleanup is required
 	if ffi.os == "Windows" then
 		-- Have to normalize to get rid of MS idiosyncracies
 		output = output:gsub("%s?\r\n", "\n")
