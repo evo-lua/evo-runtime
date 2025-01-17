@@ -15,7 +15,7 @@ describe("vfs", function()
 			end, "Failed to decode LUAZIP buffer (input size is too small)")
 		end)
 
-		it("should fail if the given file sn't a valid LUAZIP file", function()
+		it("should fail if the given file isn't a valid LUAZIP file", function()
 			assertFailure(function()
 				local fileContents = C_FileSystem.ReadFile(path.join("Tests", "Fixtures", "miniz-poem.zip"))
 				return vfs.decode(fileContents)
