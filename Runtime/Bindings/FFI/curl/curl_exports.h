@@ -3,6 +3,7 @@ struct static_curl_exports_table {
 	CURLversion CURLVERSION_NOW;
 	curl_version_info_data* (*curl_version_info)(CURLversion);
 
+	// urlapi.h
 	CURLU (*curl_url)(void);
 	void (*curl_url_cleanup)(CURLU);
 	CURLUcode (*curl_url_set)(CURLU* url,
