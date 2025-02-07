@@ -133,7 +133,7 @@ function curl.version_info(age)
 		version = cstring_unwrap(versionInfo.version),
 		version_num = tonumber(versionInfo.version_num),
 		host = cstring_unwrap(versionInfo.host),
-		features = tonumber(versionInfo.features), -- TBD tostring?
+		features = tonumber(versionInfo.features),
 		ssl_version = cstring_unwrap(versionInfo.ssl_version),
 		libz_version = cstring_unwrap(versionInfo.libz_version),
 		protocols = curl.unpack(versionInfo.protocols),
