@@ -136,20 +136,22 @@ typedef enum {
 	CURLUPART_ZONEID /* added in 7.65.0 */
 } CURLUPart;
 
-typedef void* CURLU;
+typedef void* url_ptr_t;
+typedef const void* url_cptr_t;
 
 struct static_curl_exports_table {
 	// curl.h
 	CURLversion CURLVERSION_NOW;
 	curl_version_info_data* (*curl_version_info)(CURLversion);
 
-	CURLU (*curl_url)(void);
-	void (*curl_url_cleanup)(CURLU);
-	CURLUcode (*curl_url_set)(CURLU* url,
+	// urlapi.h
+	url_ptr_t (*curl_url)(void);
+	void (*curl_url_cleanup)(url_ptr_t);
+	CURLUcode (*curl_url_set)(url_ptr_t url,
 		CURLUPart part,
 		const char* content,
 		unsigned int flags);
-	CURLUcode (*curl_url_get)(const CURLU* url,
+	CURLUcode (*curl_url_get)(url_cptr_t url,
 		CURLUPart part,
 		char** content,
 		unsigned int flags);
