@@ -69,7 +69,7 @@ describe("curl", function()
 	describe("bindings", function()
 		it("should export all of the URL parsing APIs", function()
 			local handle = curl.bindings.curl_url()
-			assertEquals(handle, 42)
+			assertEquals(handle, ffi.NULL)
 
 			local URL = "http://asdf.com/hello/123.html"
 			local status = curl.bindings.curl_url_set(handle, ffi.C.CURLUPART_URL, URL, 0)
