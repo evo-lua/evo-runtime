@@ -74,11 +74,11 @@ describe("curl", function()
 
 			local URL = "http://asdf.com/hello/123.html"
 			local status = curl.bindings.curl_url_set(handle, ffi.C.CURLUPART_URL, URL, 0)
-			-- assertEquals(status, ffi.C.CURLUE_OK) -- should probably be auto-converted (?)
+			-- assertEquals(status, ffi.C.CURLUE_OK) -- should probably be auto-converted (use as test case?)
 			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
 
-			-- These ergonomics are... not great
-			local host = ffi.new("char*") -- TODO curl_free it?
+			-- These ergonomics are... not great -> cstring.ref / ffi.ref for all types?
+			local host = ffi.new("char*")
 			local hostPtr = ffi.new("char*[1]")
 			hostPtr[0] = host
 			ffi.gc(host, curl.bindings.curl_free)
@@ -87,7 +87,7 @@ describe("curl", function()
 			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
 			assertEquals(ffi.string(hostPtr[0]), "asdf.com")
 
-			local path = ffi.new("char*") -- TODO curl_free it?
+			local path = ffi.new("char*")
 			local pathPtr = ffi.new("char*[1]")
 			pathPtr[0] = path
 			ffi.gc(path, curl.bindings.curl_free)
