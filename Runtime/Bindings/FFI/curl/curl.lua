@@ -86,10 +86,73 @@ struct curl_version_info_data {
 };
 typedef struct curl_version_info_data curl_version_info_data;
 
+typedef enum {
+	CURLUE_OK,
+	CURLUE_BAD_HANDLE, /* 1 */
+	CURLUE_BAD_PARTPOINTER, /* 2 */
+	CURLUE_MALFORMED_INPUT, /* 3 */
+	CURLUE_BAD_PORT_NUMBER, /* 4 */
+	CURLUE_UNSUPPORTED_SCHEME, /* 5 */
+	CURLUE_URLDECODE, /* 6 */
+	CURLUE_OUT_OF_MEMORY, /* 7 */
+	CURLUE_USER_NOT_ALLOWED, /* 8 */
+	CURLUE_UNKNOWN_PART, /* 9 */
+	CURLUE_NO_SCHEME, /* 10 */
+	CURLUE_NO_USER, /* 11 */
+	CURLUE_NO_PASSWORD, /* 12 */
+	CURLUE_NO_OPTIONS, /* 13 */
+	CURLUE_NO_HOST, /* 14 */
+	CURLUE_NO_PORT, /* 15 */
+	CURLUE_NO_QUERY, /* 16 */
+	CURLUE_NO_FRAGMENT, /* 17 */
+	CURLUE_NO_ZONEID, /* 18 */
+	CURLUE_BAD_FILE_URL, /* 19 */
+	CURLUE_BAD_FRAGMENT, /* 20 */
+	CURLUE_BAD_HOSTNAME, /* 21 */
+	CURLUE_BAD_IPV6, /* 22 */
+	CURLUE_BAD_LOGIN, /* 23 */
+	CURLUE_BAD_PASSWORD, /* 24 */
+	CURLUE_BAD_PATH, /* 25 */
+	CURLUE_BAD_QUERY, /* 26 */
+	CURLUE_BAD_SCHEME, /* 27 */
+	CURLUE_BAD_SLASHES, /* 28 */
+	CURLUE_BAD_USER, /* 29 */
+	CURLUE_LACKS_IDN, /* 30 */
+	CURLUE_TOO_LARGE, /* 31 */
+	CURLUE_LAST
+} CURLUcode;
+
+typedef enum {
+	CURLUPART_URL,
+	CURLUPART_SCHEME,
+	CURLUPART_USER,
+	CURLUPART_PASSWORD,
+	CURLUPART_OPTIONS,
+	CURLUPART_HOST,
+	CURLUPART_PORT,
+	CURLUPART_PATH,
+	CURLUPART_QUERY,
+	CURLUPART_FRAGMENT,
+	CURLUPART_ZONEID /* added in 7.65.0 */
+} CURLUPart;
+
+typedef void* CURLU;
+
 struct static_curl_exports_table {
 	// curl.h
 	CURLversion CURLVERSION_NOW;
 	curl_version_info_data* (*curl_version_info)(CURLversion);
+
+	CURLU (*curl_url)(void);
+	void (*curl_url_cleanup)(CURLU);
+	CURLUcode (*curl_url_set)(CURLU* url,
+		CURLUPart part,
+		const char* content,
+		unsigned int flags);
+	CURLUcode (*curl_url_get)(const CURLU* url,
+		CURLUPart part,
+		char** content,
+		unsigned int flags);
 };
 
 ]]
