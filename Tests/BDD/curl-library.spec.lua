@@ -71,8 +71,7 @@ describe("curl", function()
 			local handle = curl.bindings.curl_url()
 			assertEquals(handle, 42)
 
-			local status =
-				curl.bindings.curl_url_set(handle, ffi.C.CURLUPART_URL, "http://example.com/path/index.html", 0)
+			local status = curl.bindings.curl_url_set(handle, ffi.C.CURLUPART_URL, "http://asdf.com/hello/123.html", 0)
 			assertEquals(status, ffi.C.CURLUE_OK)
 
 			local host = ffi.new("char*")
