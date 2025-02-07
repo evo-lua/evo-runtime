@@ -1,4 +1,5 @@
 local curl = require("curl")
+local ffi = require("ffi")
 local crypto = require("crypto")
 local zlib = require("zlib")
 
@@ -69,20 +70,21 @@ describe("curl", function()
 	describe("bindings", function()
 		it("should export all of the URL parsing APIs", function()
 			local handle = curl.bindings.curl_url()
-			assertEquals(handle, ffi.NULL)
+			assert(handle)
 
 			local URL = "http://asdf.com/hello/123.html"
 			local status = curl.bindings.curl_url_set(handle, ffi.C.CURLUPART_URL, URL, 0)
-			assertEquals(status, ffi.C.CURLUE_OK)
+			-- assertEquals(status, ffi.C.CURLUE_OK) -- should probably be auto-converted (?)
+			assertEquals(status, tonumber(ffi.C.CURLUE_OK))
 
 			local host = ffi.new("char*")
 			status = curl.bindings.curl_url_get(h, ffi.C.CURLUPART_HOST, host, 0)
-			assertEquals(status, ffi.C.CURLUE_OK)
+			assertEquals(status, tonumber(ffi.C.CURLUE_OK))
 			assertEquals(ffi.string(host), "meep")
-
+			
 			local path = ffi.new("char*")
 			status = curl.bindings.curl_url_get(h, ffi.C.CURLUPART_PATH, path, 0)
-			assertEquals(status, ffi.C.CURLUE_OK)
+			assertEquals(status, tonumber(ffi.C.CURLUE_OK))
 			assertEquals(ffi.string(path), "meep")
 
 			curl.bindings.curl_url_cleanup(handle)
