@@ -68,7 +68,7 @@ describe("curl", function()
 	end)
 
 	describe("bindings", function()
-		it("should export all of the URL parsing APIs", function()
+		it("should export the URL parsing APIs", function()
 			local handle = curl.bindings.curl_url()
 			assert(handle)
 
