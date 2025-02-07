@@ -81,15 +81,16 @@ describe("curl", function()
 			local host = ffi.new("char*") -- TODO curl_free it?
 			local hostPtr = ffi.new("char*[1]")
 			hostPtr[0] = host
+			ffi.gc(host, curl.bindings.curl_free)
 
 			status = curl.bindings.curl_url_get(handle, ffi.C.CURLUPART_HOST, hostPtr, 0)
 			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
 			assertEquals(ffi.string(hostPtr[0]), "asdf.com")
-			curl.bindings.curl_free(host)
 
 			local path = ffi.new("char*") -- TODO curl_free it?
 			local pathPtr = ffi.new("char*[1]")
 			pathPtr[0] = path
+			ffi.gc(path, curl.bindings.curl_free)
 
 			status = curl.bindings.curl_url_get(handle, ffi.C.CURLUPART_PATH, pathPtr, 0)
 			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
