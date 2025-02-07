@@ -7,6 +7,7 @@ namespace curl_ffi {
 			// curl.h
 			.CURLVERSION_NOW = CURLVERSION_NOW,
 			.curl_version_info = curl_version_info,
+			.curl_free = curl_free,
 			// urlapi.h
 			.curl_url = curl_url,
 			.curl_url_cleanup = curl_url_cleanup,
