@@ -75,17 +75,23 @@ describe("curl", function()
 			local URL = "http://asdf.com/hello/123.html"
 			local status = curl.bindings.curl_url_set(handle, ffi.C.CURLUPART_URL, URL, 0)
 			-- assertEquals(status, ffi.C.CURLUE_OK) -- should probably be auto-converted (?)
-			assertEquals(status, tonumber(ffi.C.CURLUE_OK))
+			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
 
-			local host = ffi.new("char*")
-			status = curl.bindings.curl_url_get(h, ffi.C.CURLUPART_HOST, host, 0)
-			assertEquals(status, tonumber(ffi.C.CURLUE_OK))
-			assertEquals(ffi.string(host), "meep")
-			
-			local path = ffi.new("char*")
-			status = curl.bindings.curl_url_get(h, ffi.C.CURLUPART_PATH, path, 0)
-			assertEquals(status, tonumber(ffi.C.CURLUE_OK))
-			assertEquals(ffi.string(path), "meep")
+			-- These ergonomics are... not great
+			local host = ffi.new("char*") -- TODO curl_free it?
+			local hostPtr = ffi.new("char*[1]")
+			hostPtr[0] = host
+
+			status = curl.bindings.curl_url_get(handle, ffi.C.CURLUPART_HOST, hostPtr, 0)
+			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
+			assertEquals(ffi.string(hostPtr[0]), "asdf.com")
+
+			local path = ffi.new("char*") -- TODO curl_free it?
+			local pathPtr = ffi.new("char*[1]")
+			pathPtr[0] = path
+			status = curl.bindings.curl_url_get(handle, ffi.C.CURLUPART_PATH, pathPtr, 0)
+			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
+			assertEquals(ffi.string(pathPtr[0]), "/hello/123.html")
 
 			curl.bindings.curl_url_cleanup(handle)
 		end)
