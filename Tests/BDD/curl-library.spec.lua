@@ -94,7 +94,7 @@ describe("curl", function()
 			status = curl.bindings.curl_url_get(handle, ffi.C.CURLUPART_PATH, pathPtr, 0)
 			assertEquals(tonumber(status), ffi.C.CURLUE_OK)
 			assertEquals(ffi.string(pathPtr[0]), "/hello/123.html")
-			curl.bindings.curl_free(host)
+			curl.bindings.curl_free(path)
 
 			curl.bindings.curl_url_cleanup(handle)
 		end)
