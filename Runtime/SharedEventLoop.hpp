@@ -3,6 +3,8 @@
 #include "LuaVirtualMachine.hpp"
 #include "uws_ffi.hpp"
 
+#include "curl.h"
+
 #include <cassert>
 #include <format>
 #include <memory>
@@ -40,11 +42,18 @@ public:
 		auto uwsEventLoop = uws_ffi::assignEventLoop(&m_uvMainLoop);
 		assert(uwsEventLoop != nullptr);
 		m_uwsMainLoop = uwsEventLoop;
+
+		CURLcode status = curl_global_init(CURL_GLOBAL_ALL);
+		if(status != CURLE_OK) {
+			auto message = format("Failed to initialize libcurl environment ({})", curl_easy_strerror(status));
+			throw runtime_error(message);
+		}
 	}
 
 	~SharedEventLoop() {
 		luv_set_loop(m_mainThreadVM->GetState(), nullptr);
 		uws_ffi::unassignEventLoop(m_uwsMainLoop);
+		curl_global_cleanup();
 	}
 
 	void RunMainLoopUntilDone() {
