@@ -12,13 +12,13 @@ iconv_result_t iconv_convert(iconv_request_t* request) {
 	// if(conversion_details->output == nullptr || conversion_details->input == nullptr) return EINVAL;
 	// if(conversion_details->output_size == 0) return E2BIG;
 
-	request->handle = iconv_open(request->output->encoding, request->input->encoding);
+	request->handle = iconv_open(request->output.encoding, request->input.encoding);
 	if(reinterpret_cast<size_t>(request->handle) == INVALID_ICONV_HANDLE) {
 		return CharsetConversionFailure;
 	}
 
-	auto result = iconv(request->handle, &conversion_details->input, &request->input.remainder, &conversion_details->output, &request->output.remainder);
-	if(result ==INVALID_ICONV_HANDLE {
+	auto result = iconv(request->handle, &request->input.buffer, &request->input.remaining, &request->output.buffer, &request->output.remaining);
+	if(result == INVALID_ICONV_HANDLE) {
 		iconv_close(request->handle);
 		return CharsetConversionFailure;
 	}
@@ -36,9 +36,6 @@ namespace iconv_ffi {
 			.iconv_open = &iconv_open,
 			.iconv_close = &iconv_close,
 			.iconv = &iconv,
-
-			// Shared constants
-			.CHARSET_CONVERSION_FAILED = CHARSET_CONVERSION_FAILED,
 		};
 
 		return &exports;
