@@ -33,7 +33,7 @@ math.randomseed(os.clock())
 local availableBenchmarks = {
 	function()
 		console.startTimer("[Base64] Encoding with LuaOpenSSL")
-		for i = 1, SAMPLE_SIZE, 1 do
+		for i = 1, SAMPLE_SIZE, 1 do -- TBD what about the remaining inputs? That doesn't seem right...
 			openssl.base64(inputs[i])
 		end
 		console.stopTimer("[Base64] Encoding with LuaOpenSSL")
