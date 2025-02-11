@@ -128,5 +128,6 @@ typedef enum {
 	CURLUPART_ZONEID /* added in 7.65.0 */
 } CURLUPart;
 
-typedef void* url_ptr_t;
-typedef const void* url_cptr_t;
+typedef struct CURLU* url_ptr_t;
+typedef struct const CURLU* url_cptr_t;
+
