@@ -18,7 +18,7 @@ iconv_result_t iconv_convert(char* input, size_t input_length, const char* input
 	size_t num_input_bytes_left = input_length;
 
 	iconv_t conversion_descriptor = iconv_open(output_encoding, input_encoding);
-	if(reinterpret_cast<size_t>(conversion_descriptor) == iconv_ffi::CHARSET_CONVERSION_FAILED) {
+	if(reinterpret_cast<size_t>(conversion_descriptor) == CHARSET_CONVERSION_FAILURE) {
 		result.message = strerror(errno);
 		result.status_code = errno;
 		result.num_bytes_written = 0;
@@ -39,7 +39,7 @@ iconv_result_t iconv_convert(char* input, size_t input_length, const char* input
 	const size_t num_processed_bytes = output_size - num_output_bytes_left;
 
 	result.message = strerror(0);
-	result.status_code = 0;
+	result.status_code = CHARSET_CONVERSION_SUCCESS;
 	result.num_bytes_written = num_processed_bytes;
 
 	return result;
@@ -53,9 +53,6 @@ namespace iconv_ffi {
 			.iconv_open = &iconv_open,
 			.iconv_close = &iconv_close,
 			.iconv = &iconv,
-
-			// Shared constants
-			.CHARSET_CONVERSION_FAILED = CHARSET_CONVERSION_FAILED,
 		};
 
 		return &exports;
