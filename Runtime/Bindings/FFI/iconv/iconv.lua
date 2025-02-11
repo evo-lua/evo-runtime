@@ -12,20 +12,29 @@ local iconv = {}
 iconv.cdefs = [[
 typedef void* iconv_t;
 typedef enum {
-	CharsetConversionSuccess = 0,
-	CharsetConversionFailure = 1,
+	CharsetConversionSuccess,
+	CharsetConversionFailure,
+	InvalidConversionRequest,
+	InvalidConversionDescriptor,
+	ForwardedSystemError,
+	ConversionDescriptorClosed,
+	InvalidInputBuffer,
+	InvalidOutputBuffer
 } iconv_result_t;
 
-typedef struct iconv_progress_t {
+// Alias for now, replace with enum later
+typedef const char* iconv_encoding_t;
+
+typedef struct iconv_memory_t {
+	iconv_encoding_t charset;
 	char* buffer;
 	size_t length;
 	size_t remaining;
-	const char* encoding;
-} iconv_progress_t;
+} iconv_memory_t;
 
 typedef struct iconv_request_t {
-	iconv_progress_t input;
-	iconv_progress_t output;
+	iconv_memory_t input;
+	iconv_memory_t output;
 	iconv_t handle;
 } iconv_request_t;
 
@@ -34,7 +43,7 @@ struct static_iconv_exports_table {
 	iconv_t (*iconv_open)(const char* input_encoding, const char* output_encoding);
 	int (*iconv_close)(iconv_t conversion_descriptor);
 	size_t (*iconv)(iconv_t conversion_descriptor, char** input, size_t* input_size, char** output, size_t* output_size);
-	int (*iconv_try_close)(iconv_request_t* request);
+	iconv_result_t (*iconv_try_close)(iconv_request_t* request);
 };
 
 ]]
