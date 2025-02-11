@@ -17,7 +17,7 @@ iconv.cdefs = [[
 typedef void* iconv_t;
 typedef enum {
 	CHARSET_CONVERSION_SUCCESS = 0,
-	CHARSET_CONVERSION_FAILURE = (size_t)-1,
+	CHARSET_CONVERSION_FAILURE = 1,
 } CharsetConversionStatus;
 
 typedef struct iconv_result_t {
@@ -71,16 +71,16 @@ function iconv.convert(input, inputEncoding, outputEncoding)
 	local numBytesWritten = tonumber(result.num_bytes_written)
 	outputBuffer:commit(numBytesWritten)
 
-	if tonumber(result.status_code) ~= 0 then
-		local errorMessage = ffi_string(result.message)
-		return nil, errorMessage
+	local message = ffi_strerror(result.status_code)
+	if tonumber(result.status_code) ~= ffi.C.CHARSET_CONVERSION_SUCCESS then
+		return nil, message
 	end
 
-	return tostring(outputBuffer), ffi_strerror(0)
+	return tostring(outputBuffer), message
 end
 
 function iconv.try_close(descriptor)
-	if ffi.cast("size_t", descriptor) ~= ffi.C.CHARSET_CONVERSION_FAILURE then
+	if ffi.cast("size_t", descriptor) == CHARSET_CONVERSION_SUCCESS then
 		-- Guard this because MINGW64's iconv can't handle closing invalid descriptors
 		return iconv.bindings.iconv_close(descriptor)
 	end

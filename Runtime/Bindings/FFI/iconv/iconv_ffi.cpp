@@ -4,6 +4,9 @@
 
 #include <iconv.h>
 
+// constexpr size_t CHARSET_CONVERSION_FAILURE = (size_t)-1;
+// constexpr size_t CHARSET_CONVERSION_SUCCESS = 0;
+
 iconv_result_t iconv_convert(char* input, size_t input_length, const char* input_encoding, const char* output_encoding, char* output, size_t output_size) {
 
 	iconv_result_t result {
@@ -38,7 +41,7 @@ iconv_result_t iconv_convert(char* input, size_t input_length, const char* input
 
 	const size_t num_processed_bytes = output_size - num_output_bytes_left;
 
-	result.message = strerror(0);
+	result.message = strerror(CHARSET_CONVERSION_SUCCESS);
 	result.status_code = CHARSET_CONVERSION_SUCCESS;
 	result.num_bytes_written = num_processed_bytes;
 

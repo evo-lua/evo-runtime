@@ -1,7 +1,7 @@
 typedef enum {
 	CHARSET_CONVERSION_SUCCESS = 0,
-	CHARSET_CONVERSION_FAILURE = (size_t)-1,
-} CharsetConversionStatus;
+	CHARSET_CONVERSION_FAILURE = 1,
+} CharsetConversionResult;
 
 typedef struct iconv_result_t {
 	uint8_t status_code;
