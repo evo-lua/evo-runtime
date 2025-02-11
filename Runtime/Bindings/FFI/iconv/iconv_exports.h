@@ -1,7 +1,6 @@
-typedef struct iconv_result_t {
-	uint8_t status_code;
-	size_t num_bytes_written;
-	const char* message;
+typedef enum {
+	CharsetConversionSuccess = 0,
+	CharsetConversionFailure = 1,
 } iconv_result_t;
 
 struct static_iconv_exports_table {
@@ -9,7 +8,4 @@ struct static_iconv_exports_table {
 	iconv_t (*iconv_open)(const char* input_encoding, const char* output_encoding);
 	int (*iconv_close)(iconv_t conversion_descriptor);
 	size_t (*iconv)(iconv_t conversion_descriptor, char** input, size_t* input_size, char** output, size_t* output_size);
-
-	// Shared constants
-	size_t CHARSET_CONVERSION_FAILED;
 };

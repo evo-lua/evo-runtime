@@ -18,7 +18,7 @@ typedef void* iconv_t;
 typedef struct iconv_result_t {
 	uint8_t status_code;
 	size_t num_bytes_written;
-	const char* message;
+	// const char* message;
 } iconv_result_t;
 
 struct static_iconv_exports_table {
