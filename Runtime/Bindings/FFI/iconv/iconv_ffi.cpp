@@ -6,6 +6,19 @@
 
 constexpr size_t INVALID_ICONV_HANDLE = static_cast<size_t>(-1);
 
+iconv_result_t iconv_try_close(iconv_request_t* request) {
+	if(request == nullptr) return InvalidConversionRequest;
+	if(request->handle == nullptr) return InvalidConversionDescriptor;
+
+	// MINGW64's iconv implementation can't handle closing invalid descriptors
+	if(request == INVALID_ICONV_HANDLE) return InvalidConversionDescriptor;
+
+	int result = iconv_close(request->handle);
+	if(result != 0) return ForwardedSystemError;
+
+	return ConversionDescriptorClosed;
+}
+
 iconv_result_t iconv_convert(iconv_request_t* request) {
 
 	// if(conversion_details == nullptr) return EINVAL;
@@ -36,6 +49,7 @@ namespace iconv_ffi {
 			.iconv_open = &iconv_open,
 			.iconv_close = &iconv_close,
 			.iconv = &iconv,
+			.iconv_try_close = &iconv_try_close,
 		};
 
 		return &exports;

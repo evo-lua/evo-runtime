@@ -7,11 +7,7 @@ local ffi_string = ffi.string
 local tonumber = tonumber
 local tostring = tostring
 
-local iconv = {
-	errorMessages = {
-		INVALID_CONVERSION_HANDLE = "Cannot close an invalid iconv_t descriptor",
-	},
-}
+local iconv = {}
 
 iconv.cdefs = [[
 typedef void* iconv_t;
@@ -38,6 +34,7 @@ struct static_iconv_exports_table {
 	iconv_t (*iconv_open)(const char* input_encoding, const char* output_encoding);
 	int (*iconv_close)(iconv_t conversion_descriptor);
 	size_t (*iconv)(iconv_t conversion_descriptor, char** input, size_t* input_size, char** output, size_t* output_size);
+	int (*iconv_try_close)(iconv_request_t* request);
 };
 
 ]]
@@ -86,13 +83,8 @@ function iconv.convert(input, inputEncoding, outputEncoding)
 	return tostring(outputBuffer), ffi_strerror(0)
 end
 
-function iconv.try_close(descriptor)
-	if ffi.cast("size_t", descriptor) ~= iconv.bindings.CHARSET_CONVERSION_FAILED then
-		-- Guard this because MINGW64's iconv can't handle closing invalid descriptors
-		return iconv.bindings.iconv_close(descriptor)
-	end
-
-	return nil, iconv.errorMessages.INVALID_CONVERSION_HANDLE
+function iconv.try_close(request)
+	return iconv.bindings.iconv_try_close(request)
 end
 
 return iconv
