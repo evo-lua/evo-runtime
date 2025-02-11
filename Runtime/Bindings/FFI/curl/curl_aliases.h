@@ -131,3 +131,22 @@ typedef enum {
 typedef struct CURLU* url_ptr_t;
 typedef struct const CURLU* url_cptr_t;
 
+typedef enum {
+	CURLU_DEFAULT_FEATURES = 0 << 0,
+	CURLU_DEFAULT_PORT = (1 << 0),
+	CURLU_NO_DEFAULT_PORT = (1 << 1),
+	CURLU_DEFAULT_SCHEME = (1 << 2),
+	CURLU_NON_SUPPORT_SCHEME = (1 << 3),
+	CURLU_PATH_AS_IS = (1 << 4),
+	CURLU_DISALLOW_USER = (1 << 5),
+	CURLU_URLDECODE = (1 << 6),
+	CURLU_URLENCODE = (1 << 7),
+	CURLU_APPENDQUERY = (1 << 8),
+	CURLU_GUESS_SCHEME = (1 << 9),
+	CURLU_NO_AUTHORITY = (1 << 10),
+	CURLU_ALLOW_SPACE = (1 << 11),
+	CURLU_PUNYCODE = (1 << 12),
+	CURLU_PUNY2IDN = (1 << 13),
+	CURLU_GET_EMPTY = (1 << 14),
+	CURLU_NO_GUESS_SCHEME = (1 << 15),
+} CURLUFeatureFlags;
