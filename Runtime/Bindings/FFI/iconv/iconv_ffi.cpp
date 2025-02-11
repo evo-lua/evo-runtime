@@ -6,14 +6,9 @@
 
 #include <iconv.h>
 
-// constexpr size_t INVALID_POINTER_ADDRESS = SIZE_MAX;
-constexpr size_t INVALID_CONVERSION_HANDLE = SIZE_MAX;
-// constexpr iconv_t INVALID_CONVERSION_HANDLE = static_cast<iconv_t>(SIZE_MAX);
-// constexpr iconv_t INVALID_CONVERSION_HANDLE = reinterpret_cast<iconv_t>(-1);
-// constexpr iconv_t INVALID_CONVERSION_HANDLE = reinterpret_cast<iconv_t>(static_cast<uintptr_t>(-1));
-// constexpr iconv_t INVALID_CONVERSION_HANDLE = reinterpret_cast<iconv_t>(-1LL);
 
 inline bool sanity_check_descriptor(const iconv_t& handle) {
+	constexpr size_t INVALID_CONVERSION_HANDLE = SIZE_MAX;
 	return reinterpret_cast<size_t>(handle) != INVALID_CONVERSION_HANDLE;
 }
 
