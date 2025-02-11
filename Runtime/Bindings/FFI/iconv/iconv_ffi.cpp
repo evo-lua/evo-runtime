@@ -1,11 +1,9 @@
 #include "iconv_ffi.hpp"
 #include <iostream>
-// #include <limits>
 #include <stdint.h>
 #include <string.h>
 
 #include <iconv.h>
-
 
 inline bool sanity_check_descriptor(const iconv_t& handle) {
 	constexpr size_t INVALID_CONVERSION_HANDLE = SIZE_MAX;
