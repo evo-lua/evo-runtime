@@ -11,7 +11,7 @@ local iconv = {}
 
 iconv.cdefs = [[
 typedef void* iconv_t;
-typedef enum {
+typedef enum iconv_result_t {
 	CharsetConversionSuccess,
 	CharsetConversionFailure,
 	InvalidConversionRequest,
