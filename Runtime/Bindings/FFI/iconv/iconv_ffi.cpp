@@ -19,18 +19,18 @@ inline bool sanity_check_buffer(const iconv_memory_t& workload) {
 }
 
 iconv_result_t iconv_try_close(iconv_request_t* request) {
-	if(request == nullptr) return InvalidConversionRequest;
-	if(request->handle == nullptr) return InvalidConversionDescriptor;
+	if(request == nullptr) return ICONV_INVALID_REQUEST;
+	if(request->handle == nullptr) return ICONV_INVALID_HANDLE;
 
 	// MINGW64's iconv implementation can't handle closing invalid descriptors
 	if(!sanity_check_descriptor(request->handle)) {
-		return InvalidConversionDescriptor;
+		return ICONV_INVALID_HANDLE;
 	}
 
 	int result = iconv_close(request->handle);
-	if(result != 0) return ForwardedSystemError;
+	if(result != 0) return ICONV_CHECK_ERRNO;
 
-	return ConversionDescriptorClosed;
+	return ICONV_RESULT_OK;
 }
 
 iconv_result_t iconv_convert(iconv_request_t* request) {
@@ -46,21 +46,20 @@ iconv_result_t iconv_convert(iconv_request_t* request) {
 	};
 
 	request->handle = iconv_open(request->input.charset, request->output.charset);
-	if(!sanity_check_descriptor(request->handle)) {
+	if(!ICONV_INVALID_HANDLE(request->handle)) {
 		return InvalidConversionDescriptor;
 	}
 
 	iconv(request->handle, &request->input.buffer, &request->input.remaining, &request->output.buffer, &request->output.remaining);
 	if(!sanity_check_descriptor(request->handle)) {
-		// The descriptor was valid before, so the conversion couldn't be completed
-		// Although iconv supports streaming, this particular API does not (user must restart)
+		// The handle was valid before, so the request couldn't be completed (caller should retry)
 		iconv_try_close(request);
-		return CharsetConversionFailure; // TODO return system error directly?
+		return ICONV_CHECK_ERRNO;
 	}
 	iconv_close(request->handle);
 	// *output = '\0'; // Null-terminate the output buffer
 
-	return CharsetConversionSuccess;
+	return ICONV_RESULT_OK;
 }
 
 // #include <string>
