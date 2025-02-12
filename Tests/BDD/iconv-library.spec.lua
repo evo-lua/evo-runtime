@@ -5,24 +5,6 @@ local function ffi_strerror(errno)
 	return ffi.string(ffi.C.strerror(errno))
 end
 
--- -- local platformSpecificErrorCodes = {
--- -- 	OSX = {
--- -- 		EINVAL = 22,
--- -- 		EILSEQ = 92,
--- -- 	},
--- -- 	Linux = {
--- -- 		EINVAL = 22,
--- -- 		EILSEQ = 84,
--- -- 	},
--- -- 	Windows = {
--- -- 		EINVAL = 22,
--- -- 		EILSEQ = 42,
--- -- 	},
--- -- }
--- -- local SUCCESS = 0
--- -- local EINVAL = platformSpecificErrorCodes[ffi.os].EINVAL
--- -- local EILSEQ = platformSpecificErrorCodes[ffi.os].EILSEQ
-
 -- TODO strerror test: from 0 to MAX (ipairs) get errstring
 
 describe("iconv", function()
