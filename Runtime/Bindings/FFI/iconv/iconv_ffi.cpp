@@ -47,18 +47,60 @@ iconv_result_t iconv_convert(iconv_request_t* request) {
 
 	request->handle = iconv_open(request->input.charset, request->output.charset);
 	if(!sanity_check_descriptor(request->handle)) {
-		return CharsetConversionFailure;
+		return InvalidConversionDescriptor;
 	}
 
 	iconv(request->handle, &request->input.buffer, &request->input.remaining, &request->output.buffer, &request->output.remaining);
 	if(!sanity_check_descriptor(request->handle)) {
+		// The descriptor was valid before, so the conversion couldn't be completed
+		// Although iconv supports streaming, this particular API does not (user must restart)
 		iconv_try_close(request);
-		return InvalidConversionDescriptor;
+		return CharsetConversionFailure; 
 	}
 	iconv_close(request->handle);
 	// *output = '\0'; // Null-terminate the output buffer
 
 	return CharsetConversionSuccess;
+}
+
+#include <string>
+#include <unordered_map>
+
+const std::unordered_map<iconv_result_t, const char*> iconv_message_strings = {
+	
+	{ CharsetConversionSuccess, "CharsetConversionSuccess" },
+	{ CharsetConversionFailure, "CharsetConversionFailure" },
+	{ InvalidConversionRequest, "InvalidConversionRequest" },
+	{ InvalidConversionDescriptor, "InvalidConversionDescriptor" },
+	{ InvalidInputBuffer, "Success" },
+	{ InvalidOutputBuffer, "Success" },
+	{ ConversionDescriptorClosed, "Success" },
+	{ CharsetConversionSuccess, "Success" },
+	// { ForwardedSystemError, "" },
+	typedef enum iconv_result_t {
+		CharsetConversionSuccess,
+		CharsetConversionFailure,
+		InvalidConversionRequest,
+		InvalidConversionDescriptor,
+		ForwardedSystemError,
+		ConversionDescriptorClosed,
+		InvalidInputBuffer,
+		InvalidOutputBuffer
+	} iconv_result_t;
+};
+
+const char* iconv_strerror(iconv_result_t status) {
+	if(status == ForwardedSystemError) {
+		return strerror(errno);
+	}
+
+	auto iterator = iconv_message_strings.find(status);
+		bool found = iterator != iconv_message_strings.end();
+	
+
+		if(found) return iterator->second;
+		else return "Not an error";
+	}
 }
 
 namespace iconv_ffi {
@@ -70,6 +112,7 @@ namespace iconv_ffi {
 			.iconv_close = &iconv_close,
 			.iconv = &iconv,
 			.iconv_try_close = &iconv_try_close,
+			.iconv_strerror = &iconv_strerror,
 		};
 
 		return &exports;
