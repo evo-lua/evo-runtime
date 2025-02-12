@@ -55,7 +55,7 @@ iconv_result_t iconv_convert(iconv_request_t* request) {
 		// The descriptor was valid before, so the conversion couldn't be completed
 		// Although iconv supports streaming, this particular API does not (user must restart)
 		iconv_try_close(request);
-		return CharsetConversionFailure; 
+		return CharsetConversionFailure;  // TODO return system error directly?
 	}
 	iconv_close(request->handle);
 	// *output = '\0'; // Null-terminate the output buffer
@@ -67,26 +67,27 @@ iconv_result_t iconv_convert(iconv_request_t* request) {
 #include <unordered_map>
 
 const std::unordered_map<iconv_result_t, const char*> iconv_message_strings = {
-	
-	{ CharsetConversionSuccess, "CharsetConversionSuccess" },
-	{ CharsetConversionFailure, "CharsetConversionFailure" },
+	{ ICONV_RESULT_OK, "OK: Not an error" }, // Nondescript on purpose - use the other values for specific errors
+	// { ICONV_CONVERSION_FINISHED, "Charset conversion completed" },
+	{ CharsetConversionFailure, "Charset conversion failed:" },
 	{ InvalidConversionRequest, "InvalidConversionRequest" },
 	{ InvalidConversionDescriptor, "InvalidConversionDescriptor" },
-	{ InvalidInputBuffer, "Success" },
+	{ InvalidInputBuffer, "The provided input buffer is invalid or " },
 	{ InvalidOutputBuffer, "Success" },
 	{ ConversionDescriptorClosed, "Success" },
 	{ CharsetConversionSuccess, "Success" },
-	// { ForwardedSystemError, "" },
-	typedef enum iconv_result_t {
-		CharsetConversionSuccess,
-		CharsetConversionFailure,
-		InvalidConversionRequest,
-		InvalidConversionDescriptor,
-		ForwardedSystemError,
-		ConversionDescriptorClosed,
-		InvalidInputBuffer,
-		InvalidOutputBuffer
-	} iconv_result_t;
+	{ ICONV_CHECK_ERRNO, "Forwarded system error: Use errno and strerror to retrieve it" },
+	{ ICONV_RESULT_LAST, "Unknown or invalid result: This should never happen"},
+	CharsetConversionSuccess, // ICONV_CONVERSION_SUCCEEDED
+	CharsetConversionFailure, // ICONV_CONVERSION_FAILED
+	InvalidConversionRequest, // ICONV_INVALID_REQUEST
+	InvalidConversionDescriptor, // ICONV_INVALID_DESCRIPTOR
+	ForwardedSystemError, // ICONV_CHECK_ERRNO
+	ConversionDescriptorClosed, // ICONV_DESCRIPTOR_CLOSED
+	InvalidInputBuffer, // ICONV_INVALID_INPUT
+	InvalidOutputBuffer, // ICONV_INVALID_OUTPUT
+	ICONV_CHECK_ERRNO,
+	ICONV_RESULT_LAST,
 };
 
 const char* iconv_strerror(iconv_result_t status) {
