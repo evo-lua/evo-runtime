@@ -35,19 +35,19 @@ iconv_result_t iconv_try_close(iconv_request_t* request) {
 
 iconv_result_t iconv_convert(iconv_request_t* request) {
 
-	if(request == nullptr) return InvalidConversionRequest;
+	if(request == nullptr) return ICONV_INVALID_REQUEST;
 
 	if(!sanity_check_buffer(request->input)) {
-		return InvalidInputBuffer;
+		return ICONV_INVALID_INPUT;
 	};
 
 	if(!sanity_check_buffer(request->output)) {
-		return InvalidOutputBuffer;
+		return ICONV_INVALID_OUTPUT;
 	};
 
 	request->handle = iconv_open(request->input.charset, request->output.charset);
-	if(!ICONV_INVALID_HANDLE(request->handle)) {
-		return InvalidConversionDescriptor;
+	if(!sanity_check_descriptor(request->handle)) {
+		return ICONV_INVALID_HANDLE;
 	}
 
 	iconv(request->handle, &request->input.buffer, &request->input.remaining, &request->output.buffer, &request->output.remaining);
@@ -89,8 +89,7 @@ constexpr std::array<const char*, ICONV_RESULT_LAST + 1> iconv_error_strings { {
 	"Unknown or invalid result: This should never happen" // ICONV_RESULT_LAST
 } };
 
-	const char
-	* iconv_strerror(iconv_result_t status) {
+const char* iconv_strerror(iconv_result_t status) {
 	status = std::min(status, ICONV_RESULT_LAST);
 	return iconv_error_strings[status];
 }
