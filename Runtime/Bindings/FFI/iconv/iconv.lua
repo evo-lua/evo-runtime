@@ -12,14 +12,14 @@ local iconv = {}
 iconv.cdefs = [[
 typedef void* iconv_t;
 typedef enum iconv_result_t {
-	CharsetConversionSuccess,
-	CharsetConversionFailure,
-	InvalidConversionRequest,
-	InvalidConversionDescriptor,
-	ForwardedSystemError,
-	ConversionDescriptorClosed,
-	InvalidInputBuffer,
-	InvalidOutputBuffer
+	ICONV_RESULT_OK,
+	ICONV_INVALID_REQUEST,
+	ICONV_INVALID_HANDLE,
+	ICONV_CONVERSION_FAILED,
+	ICONV_INVALID_INPUT,
+	ICONV_INVALID_OUTPUT,
+	ICONV_CHECK_ERRNO,
+	ICONV_RESULT_LAST,
 } iconv_result_t;
 
 // Alias for now, replace with enum later
@@ -44,6 +44,7 @@ struct static_iconv_exports_table {
 	int (*iconv_close)(iconv_t conversion_descriptor);
 	size_t (*iconv)(iconv_t conversion_descriptor, char** input, size_t* input_size, char** output, size_t* output_size);
 	iconv_result_t (*iconv_try_close)(iconv_request_t* request);
+	const char* (*iconv_strerror)(iconv_result_t status);
 };
 
 ]]
@@ -94,6 +95,10 @@ end
 
 function iconv.try_close(request)
 	return iconv.bindings.iconv_try_close(request)
+end
+
+function iconv.strerror(result)
+	return ffi.string(iconv.bindings.iconv_strerror(result))
 end
 
 return iconv
