@@ -10,14 +10,23 @@ end
 describe("iconv", function()
 	describe("bindings", function()
 		describe("iconv_convert", function()
-			it("should return zero if the conversation failed with an error", function()
+			it("should fail if an empty input buffer was provided", function()
 				local inputBuffer = buffer.new()
+				local readCursor, inputSize = inputBuffer:ref()
 				local outputBuffer = buffer.new(1024)
-				local ptr, len = outputBuffer:reserve(1024)
+				local writeCursor, outputSize = outputBuffer:reserve(1024)
 
-				local request = ffi.new("iconv_request_t")
+				local request = ffi.new("iconv_request_t") -- TODO table { input = { buffer = inputBuffer}}
+				request.input.charset = "CP949"
+				request.input.buffer = readCursor
+				request.input.length = inputSize
+				request.input.remaining = inputSize
+				request.output.buffer = writeCursor
+				request.output.length = outputSize
+				request.output.remaining = outputSize
+				request.output.charset = "UTF-8"
 				local result = iconv.bindings.iconv_convert(request)
-				assertEquals(iconv.strerror(result), iconv.strerror(ffi.C.ICONV_RESULT_OK))
+				assertEquals(iconv.strerror(result), iconv.strerror(ffi.C.ICONV_INVALID_INPUT))
 				-- local result = iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
 				-- 				assertEquals(tonumber(result.status_code), EINVAL)
 				-- 				assertEquals(ffi.string(result.message), ffi_strerror(EINVAL))
