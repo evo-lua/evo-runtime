@@ -30,7 +30,7 @@ describe("iconv", function()
 				-- local result = iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
 				-- 				assertEquals(tonumber(result.status_code), EINVAL)
 				-- 				assertEquals(ffi.string(result.message), ffi_strerror(EINVAL))
-				-- 				assertEquals(tonumber(result.num_bytes_written), 0)
+								assertEquals(tonumber(request.input.remaining), inputSize)
 			end)
 
 			it("should be able to convert Windows encodings to UTF-8", function()
