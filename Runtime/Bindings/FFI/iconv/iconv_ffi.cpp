@@ -55,7 +55,7 @@ iconv_result_t iconv_convert(iconv_request_t* request) {
 		// The descriptor was valid before, so the conversion couldn't be completed
 		// Although iconv supports streaming, this particular API does not (user must restart)
 		iconv_try_close(request);
-		return CharsetConversionFailure;  // TODO return system error directly?
+		return CharsetConversionFailure; // TODO return system error directly?
 	}
 	iconv_close(request->handle);
 	// *output = '\0'; // Null-terminate the output buffer
@@ -63,45 +63,37 @@ iconv_result_t iconv_convert(iconv_request_t* request) {
 	return CharsetConversionSuccess;
 }
 
-#include <string>
-#include <unordered_map>
+// #include <string>
+// #include <unordered_map>
 
-const std::unordered_map<iconv_result_t, const char*> iconv_message_strings = {
-	{ ICONV_RESULT_OK, "OK: Not an error" }, // Nondescript on purpose - use the other values for specific errors
-	// { ICONV_CONVERSION_FINISHED, "Charset conversion completed" },
-	{ CharsetConversionFailure, "Charset conversion failed:" },
-	{ InvalidConversionRequest, "InvalidConversionRequest" },
-	{ InvalidConversionDescriptor, "InvalidConversionDescriptor" },
-	{ InvalidInputBuffer, "The provided input buffer is invalid or " },
-	{ InvalidOutputBuffer, "Success" },
-	{ ConversionDescriptorClosed, "Success" },
-	{ CharsetConversionSuccess, "Success" },
-	{ ICONV_CHECK_ERRNO, "Forwarded system error: Use errno and strerror to retrieve it" },
-	{ ICONV_RESULT_LAST, "Unknown or invalid result: This should never happen"},
-	CharsetConversionSuccess, // ICONV_CONVERSION_SUCCEEDED
-	CharsetConversionFailure, // ICONV_CONVERSION_FAILED
-	InvalidConversionRequest, // ICONV_INVALID_REQUEST
-	InvalidConversionDescriptor, // ICONV_INVALID_DESCRIPTOR
-	ForwardedSystemError, // ICONV_CHECK_ERRNO
-	ConversionDescriptorClosed, // ICONV_DESCRIPTOR_CLOSED
-	InvalidInputBuffer, // ICONV_INVALID_INPUT
-	InvalidOutputBuffer, // ICONV_INVALID_OUTPUT
-	ICONV_CHECK_ERRNO,
-	ICONV_RESULT_LAST,
-};
+// constexpr std::unordered_map<iconv_result_t, const char*> iconv_error_strings = {
+// 	{ ICONV_RESULT_OK, "Success: Not an error" },
+// 	{ ICONV_INVALID_REQUEST, "Failed: Invalid conversion request" },
+// 	{ ICONV_INVALID_HANDLE, "Failed: Not a valid conversion descriptor" },
+// 	{ ICONV_CONVERSION_FAILED, "Failed: Charset conversion failed" },
+// 	{ ICONV_INVALID_INPUT, "Failed: The provided input buffer is invalid, incomplete, or has been corrupted" },
+// 	{ ICONV_INVALID_OUTPUT, "Failed: The provided output buffer is invalid, incomplete, or has been corrupted" },
+// 	{ ICONV_CHECK_ERRNO, "Failed: Use errno and strerror to retrieve the last system-level error" },
+// 	{ ICONV_RESULT_LAST, "Unknown or invalid result: This should never happen" },
+// };
 
-const char* iconv_strerror(iconv_result_t status) {
-	if(status == ForwardedSystemError) {
-		return strerror(errno);
-	}
+#include <array>
 
-	auto iterator = iconv_message_strings.find(status);
-		bool found = iterator != iconv_message_strings.end();
-	
+constexpr std::array<const char*, ICONV_RESULT_LAST + 1> iconv_error_strings { {
+	"Success: Not an error", // ICONV_RESULT_OK
+	"Failed: Invalid conversion request", // ICONV_INVALID_REQUEST
+	"Failed: Not a valid conversion descriptor", // ICONV_INVALID_HANDLE
+	"Failed: Charset conversion failed", // ICONV_CONVERSION_FAILED
+	"Failed: The provided input buffer is invalid, incomplete, or has been corrupted", // ICONV_INVALID_INPUT
+	"Failed: The provided output buffer is invalid, incomplete, or has been corrupted", // ICONV_INVALID_OUTPUT
+	"Failed: Use errno and strerror to retrieve the last system-level error", // ICONV_CHECK_ERRNO
+	"Unknown or invalid result: This should never happen" // ICONV_RESULT_LAST
+} };
 
-		if(found) return iterator->second;
-		else return "Not an error";
-	}
+	const char
+	* iconv_strerror(iconv_result_t status) {
+	status = std::min(status, ICONV_RESULT_LAST);
+	return iconv_error_strings[status];
 }
 
 namespace iconv_ffi {
