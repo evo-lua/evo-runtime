@@ -17,7 +17,7 @@ describe("iconv", function()
 
 				local request = ffi.new("iconv_request_t")
 				local result = iconv.bindings.iconv_convert(request)
-				assertEquals(iconv.strerror(result), iconv.strerror(ffi.C.CharsetConversionSuccess))
+				assertEquals(iconv.strerror(result), iconv.strerror(ffi.C.ICONV_RESULT_OK))
 				-- local result = iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
 				-- 				assertEquals(tonumber(result.status_code), EINVAL)
 				-- 				assertEquals(ffi.string(result.message), ffi_strerror(EINVAL))
