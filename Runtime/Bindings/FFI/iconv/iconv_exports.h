@@ -1,15 +1,12 @@
 typedef enum iconv_result_t {
 	ICONV_RESULT_OK,
-	CharsetConversionSuccess, // ICONV_CONVERSION_SUCCEEDED
-	CharsetConversionFailure, // ICONV_CONVERSION_FAILED
-	InvalidConversionRequest, // ICONV_INVALID_REQUEST
-	InvalidConversionDescriptor, // ICONV_INVALID_DESCRIPTOR
-	ForwardedSystemError, // ICONV_CHECK_ERRNO
-	ConversionDescriptorClosed, // ICONV_DESCRIPTOR_CLOSED
-	InvalidInputBuffer, // ICONV_INVALID_INPUT
-	InvalidOutputBuffer, // ICONV_INVALID_OUTPUT
+	ICONV_INVALID_REQUEST,
+	ICONV_INVALID_HANDLE,
+	ICONV_CONVERSION_FAILED,
+	ICONV_INVALID_INPUT,
+	ICONV_INVALID_OUTPUT,
 	ICONV_CHECK_ERRNO,
-	ICONV_RESULT_LAST, /
+	ICONV_RESULT_LAST,
 } iconv_result_t;
 
 // Alias for now, replace with enum later
