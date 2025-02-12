@@ -7,6 +7,34 @@ end
 
 -- TODO strerror test: from 0 to MAX (ipairs) get errstring
 
+local function assertConversionResult(input, from, to)
+	local inputBuffer = buffer.new():set(input)
+	local readCursor, inputSize = inputBuffer:ref()
+	local outputBuffer = buffer.new(inputSize * 4)
+	local writeCursor, outputSize = outputBuffer:reserve(inputSize * 4)
+
+	local request = ffi.new("iconv_request_t", {
+		request = {
+			input = {
+				charset = from,
+				buffer = readCursor,
+				length = inputSize,
+				remaining = inputSize,
+			},
+			output = {
+				charset = to,
+				buffer = writeCursor,
+				length = outputSize,
+				remaining = outputSize,
+			}
+		}
+
+	}) 
+	local result = iconv.bindings.iconv_convert(request)
+	assertEquals(iconv.strerror(result), iconv.strerror(ffi.C.ICONV_INVALID_INPUT))
+	assertEquals(tonumber(request.input.remaining), inputSize)
+end
+
 describe("iconv", function()
 	describe("bindings", function()
 		describe("iconv_convert", function()
@@ -39,11 +67,11 @@ describe("iconv", function()
 			end)
 
 			it("should be able to convert Windows encodings to UTF-8", function()
-				-- 				local inputBuffer = ffi.new("char[15]", "\192\175\192\250\192\206\197\205\198\228\192\204\189\186\0")
-				-- 				local outputBuffer = buffer.new(1024)
-				-- 				local ptr, len = outputBuffer:reserve(1024)
-				-- 				assertEquals(len, 1024)
-				-- 				local result = iconv.bindings.iconv_convert(inputBuffer, 14, "CP949", "UTF-8", ptr, len)
+								local inputBuffer = ffi.new("char[15]", "\192\175\192\250\192\206\197\205\198\228\192\204\189\186\0")
+								local outputBuffer = buffer.new(1024)
+								local ptr, len = outputBuffer:reserve(1024)
+								assertEquals(len, 1024)
+								local result = iconv.bindings.iconv_convert(inputBuffer, 14, "CP949", "UTF-8", ptr, len)
 				-- 				local numBytesWritten = tonumber(result.num_bytes_written)
 				-- 				outputBuffer:commit(numBytesWritten)
 
