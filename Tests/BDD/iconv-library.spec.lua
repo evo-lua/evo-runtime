@@ -1,126 +1,135 @@
 local ffi = require("ffi")
 local iconv = require("iconv")
 
-local function ffi_strerror(errno)
-	return ffi.string(ffi.C.strerror(errno))
-end
+local EOF_SYMBOL = "\0"
+local UTF_MAX_BYTES_PER_CODEPOINT = 4
+local function assertConversionResult(options)
+	local readBuffer = buffer.new(#options.input)
+	readBuffer:set(options.input)
+	local readCursor, inputSize = readBuffer:ref()
+	assertEquals(inputSize, #options.input)
 
-local platformSpecificErrorCodes = {
-	OSX = {
-		EINVAL = 22,
-		EILSEQ = 92,
-	},
-	Linux = {
-		EINVAL = 22,
-		EILSEQ = 84,
-	},
-	Windows = {
-		EINVAL = 22,
-		EILSEQ = 42,
-	},
-}
-local SUCCESS = 0
-local EINVAL = platformSpecificErrorCodes[ffi.os].EINVAL
-local EILSEQ = platformSpecificErrorCodes[ffi.os].EILSEQ
+	local maxRequiredWriteBufferSize = inputSize * UTF_MAX_BYTES_PER_CODEPOINT + #EOF_SYMBOL
+	local writeBuffer = buffer.new(maxRequiredWriteBufferSize)
+	local writeCursor, writeBufferCapacity = writeBuffer:reserve(maxRequiredWriteBufferSize)
+	assertTrue(writeBufferCapacity > maxRequiredWriteBufferSize)
+	assertTrue(writeBufferCapacity > #options.input)
+
+	local request = ffi.new("iconv_request_t", {
+		input = {
+			charset = options.from,
+			buffer = readCursor,
+			length = inputSize,
+			remaining = inputSize,
+		},
+		output = {
+			charset = options.to,
+			buffer = writeCursor,
+			length = writeBufferCapacity,
+			remaining = writeBufferCapacity,
+		},
+		handle = nil,
+	})
+
+	local status = iconv.bindings.iconv_convert(request)
+	status = tonumber(status)
+	assertEquals(status, options.expected.result)
+	assertEquals(iconv.strerror(status), iconv.strerror(options.expected.result))
+
+	local numBytesRead = tonumber(request.input.length - request.input.remaining)
+	assertEquals(tonumber(request.input.remaining), 0)
+	assertEquals(numBytesRead, inputSize)
+
+	local numBytesWritten = tonumber(request.output.length - request.output.remaining)
+	assertEquals(numBytesWritten, #options.expected.output)
+	assertEquals(tonumber(request.output.length), writeBufferCapacity)
+	assertEquals(tonumber(request.output.remaining), writeBufferCapacity - #options.expected.output)
+
+	writeBuffer:commit(numBytesWritten) -- NOOP if zero
+	assertEquals(#writeBuffer, #options.expected.output)
+	assertEquals(tostring(writeBuffer), options.expected.output)
+end
 
 describe("iconv", function()
 	describe("bindings", function()
 		describe("iconv_convert", function()
-			it("should return zero if the conversation failed with an error", function()
-				local inputBuffer = buffer.new()
-				local outputBuffer = buffer.new(1024)
-				local ptr, len = outputBuffer:reserve(1024)
-				local result = iconv.bindings.iconv_convert(inputBuffer, #inputBuffer, "CP949", "UTF-8", ptr, len)
-				assertEquals(tonumber(result.status_code), EINVAL)
-				assertEquals(ffi.string(result.message), ffi_strerror(EINVAL))
-				assertEquals(tonumber(result.num_bytes_written), 0)
+			it("should be a NOOP if an empty input buffer was provided", function()
+				assertConversionResult({
+					input = "",
+					from = "CP949",
+					to = "UTF-8",
+					expected = {
+						result = ffi.C.ICONV_RESULT_OK,
+						output = "",
+					},
+				})
 			end)
 
 			it("should be able to convert Windows encodings to UTF-8", function()
-				local inputBuffer = ffi.new("char[15]", "\192\175\192\250\192\206\197\205\198\228\192\204\189\186\0")
-				local outputBuffer = buffer.new(1024)
-				local ptr, len = outputBuffer:reserve(1024)
-				assertEquals(len, 1024)
-				local result = iconv.bindings.iconv_convert(inputBuffer, 14, "CP949", "UTF-8", ptr, len)
-				local numBytesWritten = tonumber(result.num_bytes_written)
-				outputBuffer:commit(numBytesWritten)
-
-				assertEquals(tostring(outputBuffer), "유저인터페이스")
-				assertEquals(tonumber(result.status_code), SUCCESS)
-				assertEquals(ffi.string(result.message), ffi_strerror(SUCCESS))
-				assertEquals(numBytesWritten, 21)
-			end)
-
-			it("should be able to deal with unterminated string literals without crashing", function()
-				local badInput = ffi.new("char[5]")
-				badInput[0] = 65 -- 'A'
-				badInput[1] = 66 -- 'B'
-				badInput[2] = 67 -- 'C'
-				badInput[3] = 68 -- 'D'
-				badInput[4] = 69 -- 'E' (Note: No null terminator)
-
-				local outputBuffer = buffer.new(1024)
-				local ptr, len = outputBuffer:reserve(1024)
-
-				local result = iconv.bindings.iconv_convert(badInput, 5, "UTF-8", "UTF-16", ptr, len)
-				local numBytesWritten = tonumber(result.num_bytes_written)
-				outputBuffer:commit(numBytesWritten)
-
-				assertEquals(tonumber(result.status_code), SUCCESS)
-				assertEquals(ffi.string(result.message), ffi_strerror(SUCCESS))
-				assertEquals(numBytesWritten, 12)
+				assertConversionResult({
+					input = "\192\175\192\250\192\206\197\205\198\228\192\204\189\186",
+					from = "CP949",
+					to = "UTF-8",
+					expected = {
+						result = ffi.C.ICONV_RESULT_OK,
+						output = "유저인터페이스",
+					},
+				})
 			end)
 		end)
 
 		describe("iconv_open", function()
-			local descriptors = {}
-			before(function()
-				descriptors.valid = iconv.bindings.iconv_open("CP949", "UTF-8")
-				descriptors.invalid = iconv.bindings.iconv_open("Not-a-real-encoding", "UTF-8")
-				assertEquals(table.count(descriptors), 2)
-			end)
-
-			after(function()
-				for label, descriptor in pairs(descriptors) do
-					iconv.try_close(descriptor)
-				end
-			end)
+			local function resetErrNo()
+				ffi.errno(0)
+			end
+			before(resetErrNo)
+			after(resetErrNo)
 
 			it("should indicate an error if the requested conversion isn't supported", function()
 				local descriptor = iconv.bindings.iconv_open("Not-a-real-encoding", "UTF-8")
-				assertEquals(ffi.cast("size_t", descriptor), iconv.bindings.CHARSET_CONVERSION_FAILED)
-				iconv.try_close(descriptor)
+				assertFalse(iconv.bindings.iconv_check_result(descriptor))
+				assertFalse(ffi.errno() == 0)
 			end)
 
 			it("should return a valid handle if the conversion is supported", function()
 				local descriptor = iconv.bindings.iconv_open("CP949", "UTF-8")
-				assertFalse(ffi.cast("size_t", descriptor) == iconv.bindings.CHARSET_CONVERSION_FAILED)
-				iconv.try_close(descriptor)
+				ffi.errno(0)
+				assertTrue(iconv.bindings.iconv_check_result(descriptor))
+				assertEquals(ffi.errno(), 0)
+				iconv.bindings.iconv_close(descriptor)
+				assertEquals(ffi.errno(), 0)
 			end)
 		end)
 
 		describe("iconv", function()
 			it("should be able to convert Windows encodings to UTF-8", function()
 				local descriptor = iconv.bindings.iconv_open("UTF-8", "CP949")
-				assert(descriptor ~= iconv.bindings.CHARSET_CONVERSION_FAILED, "Failed to create conversion descriptor")
+				assertTrue(iconv.bindings.iconv_check_result(descriptor))
 
 				local input = "\192\175\192\250\192\206\197\205\198\228\192\204\189\186"
 				local inputSize = ffi.new("size_t[1]", #input)
-				local inputBuffer = ffi.new("char[?]", #input, input)
-				local inputRef = ffi.new("char*[1]", inputBuffer)
+				local readBuffer = ffi.new("char[?]", #input, input)
+				local inputRef = ffi.new("char*[1]", readBuffer)
 
 				local outputSize = ffi.new("size_t[1]", 256)
 				local outputBuffer = ffi.new("char[256]")
 				local outputRef = ffi.new("char*[1]", outputBuffer)
 
-				local result = iconv.bindings.iconv(descriptor, inputRef, inputSize, outputRef, outputSize)
-				assert(result ~= iconv.bindings.CHARSET_CONVERSION_FAILED, "Conversion failed")
+				ffi.errno(0)
+				iconv.bindings.iconv(descriptor, inputRef, inputSize, outputRef, outputSize)
+				assertEquals(ffi.errno(), 0)
 
-				local convertedSize = 256 - outputSize[0]
-				local converted = ffi.string(outputBuffer, convertedSize)
-				assertEquals(converted, "유저인터페이스")
+				local numBytesWritten = #input - tonumber(inputSize[0])
+				assertEquals(tonumber(inputSize[0]), 0)
+				assertEquals(numBytesWritten, #input)
 
-				iconv.bindings.iconv_close(descriptor)
+				local expectedOutput = "유저인터페이스"
+				assertEquals(tonumber(outputSize[0]), 256 - #expectedOutput)
+				local converted = ffi.string(outputBuffer)
+				assertEquals(converted, expectedOutput)
+
+				local status = iconv.bindings.iconv_close(descriptor)
+				assertEquals(status, 0)
 			end)
 		end)
 	end)
@@ -128,37 +137,43 @@ describe("iconv", function()
 	describe("convert", function()
 		it("should be able to convert Windows encodings to UTF-8", function()
 			local input = "\192\175\192\250\192\206\197\205\198\228\192\204\189\186"
-			local output, message = iconv.convert(input, "CP949", "UTF-8")
+			local output, result = iconv.convert(input, "CP949", "UTF-8")
 			assertEquals(output, "유저인터페이스")
-			assertEquals(message, ffi_strerror(SUCCESS))
+			assertEquals(result, iconv.strerror(ffi.C.ICONV_RESULT_OK))
 		end)
 
-		it("should fail gracefully if an empty string was passed", function()
-			local input = ""
-			assertFailure(function()
-				return iconv.convert(input, "CP949", "UTF-8")
-			end, ffi_strerror(EINVAL))
+		it("should be a NOOP if an empty string was passed", function()
+			local output, result = iconv.convert("", "CP949", "UTF-8")
+			assertEquals(output, "")
+			assertEquals(result, iconv.strerror(ffi.C.ICONV_RESULT_OK))
 		end)
 
-		it("should fail gracefully if given the wrong input encoding", function()
+		it("should fail if the input string isn't given in the input encoding", function()
 			local input = "유저인터페이스"
 			assertFailure(function()
 				return iconv.convert(input, "CP949", "UTF-8")
-			end, ffi_strerror(EILSEQ))
+			end, iconv.strerror(ffi.C.ICONV_CONVERSION_FAILED))
 		end)
 
-		it("should fail gracefully if given an invalid input encoding", function()
+		it("should fail if the input string was truncated", function()
+			local input = "\192\175\192\250\192\206\197\205\198\228\192\204\189" -- Note: Final byte missing
+			assertFailure(function()
+				return iconv.convert(input, "CP949", "UTF-8")
+			end, iconv.strerror(ffi.C.ICONV_INCOMPLETE_INPUT))
+		end)
+
+		it("should fail if given an invalid input encoding", function()
 			local input = "유저인터페이스"
 			assertFailure(function()
 				return iconv.convert(input, "INVALID_ENCODING", "UTF-8")
-			end, ffi_strerror(EINVAL))
+			end, iconv.strerror(ffi.C.ICONV_CONVERSION_FAILED))
 		end)
 
-		it("should fail gracefully if given an invalid output encoding", function()
+		it("should fail if given an invalid output encoding", function()
 			local input = "유저인터페이스"
 			assertFailure(function()
 				return iconv.convert(input, "UTF-8", "INVALID_ENCODING")
-			end, ffi_strerror(EINVAL))
+			end, iconv.strerror(ffi.C.ICONV_CONVERSION_FAILED))
 		end)
 
 		it("should throw if a non-string input was passed", function()
@@ -186,13 +201,6 @@ describe("iconv", function()
 			local expectedErrorMessage =
 				"Expected argument outputEncoding to be a string value, but received a number value instead"
 			assertThrows(convertWithInvalidOutputEncoding, expectedErrorMessage)
-		end)
-
-		it("should be able to deal with large inputs", function()
-			local largeInput = string.rep("A", 1000000)
-			local output, message = iconv.convert(largeInput, "UTF-8", "CP949")
-			assertEquals(largeInput, output)
-			assertEquals(message, ffi_strerror(SUCCESS))
 		end)
 	end)
 end)
