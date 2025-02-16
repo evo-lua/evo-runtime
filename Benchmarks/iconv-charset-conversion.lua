@@ -68,7 +68,15 @@ local availableBenchmarks = {
 }
 
 table.shuffle(availableBenchmarks)
+jit.off()
+print("Running benchmarks with JIT=OFF")
+for _, benchmark in ipairs(availableBenchmarks) do
+	benchmark()
+end
 
+table.shuffle(availableBenchmarks)
+print("Running benchmarks with JIT=ON")
+jit.on()
 for _, benchmark in ipairs(availableBenchmarks) do
 	benchmark()
 end
