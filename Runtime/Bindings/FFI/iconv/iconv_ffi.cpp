@@ -97,7 +97,7 @@ namespace iconv_ffi {
 		}
 		auto result = iconv_try_close(request);
 		ASSUME(result == ICONV_RESULT_OK, "Closing a valid handle should never fail");
-		return ICONV_RESULT_OK;
+		return result;
 	}
 
 	void* getExportsTable() {
