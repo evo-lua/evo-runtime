@@ -203,4 +203,55 @@ describe("iconv", function()
 			assertThrows(convertWithInvalidOutputEncoding, expectedErrorMessage)
 		end)
 	end)
+
+	describe("strerror", function()
+		it("should return human-readable error strings for all known result types", function()
+			local firstValidOffset = tonumber(ffi.C.ICONV_RESULT_OK)
+			local lastValidOffset = tonumber(ffi.C.ICONV_RESULT_LAST)
+
+			local numCheckedMembers = 0
+			for relativeOffset = firstValidOffset, lastValidOffset do
+				local nextOffset = firstValidOffset + relativeOffset
+				local messageString = iconv.strerror(nextOffset)
+				assertEquals(type(messageString), "string")
+				numCheckedMembers = numCheckedMembers + 1
+			end
+
+			assertEquals(numCheckedMembers, lastValidOffset + 1)
+		end)
+
+		it("should clamp error numbers to the last valid result type", function()
+			local firstValidOffset = tonumber(ffi.C.ICONV_RESULT_OK)
+			local lastValidOffset = tonumber(ffi.C.ICONV_RESULT_LAST)
+			local lastMessageString = iconv.strerror(lastValidOffset)
+
+			local numCheckedMembers = 0
+			for relativeOffset = lastValidOffset, 255 do
+				local nextOffset = firstValidOffset + relativeOffset
+				local messageString = iconv.strerror(nextOffset)
+				assertEquals(type(messageString), "string")
+				assertEquals(messageString, lastMessageString)
+				numCheckedMembers = numCheckedMembers + 1
+			end
+
+			assertEquals(numCheckedMembers, 255 - lastValidOffset + 1)
+		end)
+
+		it("should map negative error numbers to the last valid result type", function()
+			local firstValidOffset = tonumber(ffi.C.ICONV_RESULT_OK)
+			local lastValidOffset = tonumber(ffi.C.ICONV_RESULT_LAST)
+			local lastMessageString = iconv.strerror(lastValidOffset)
+
+			local numCheckedMembers = 0
+			for relativeOffset = firstValidOffset + 1, 255 do
+				local nextOffset = firstValidOffset - relativeOffset
+				local messageString = iconv.strerror(nextOffset)
+				assertEquals(type(messageString), "string")
+				assertEquals(messageString, lastMessageString)
+				numCheckedMembers = numCheckedMembers + 1
+			end
+
+			assertEquals(numCheckedMembers, 255)
+		end)
+	end)
 end)

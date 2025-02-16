@@ -29,6 +29,7 @@ namespace iconv_ffi {
 	}
 
 	const char* iconv_strerror(iconv_result_t status) {
+		if(status < ICONV_RESULT_OK) status = ICONV_RESULT_LAST;
 		status = std::min(status, ICONV_RESULT_LAST);
 		// Compilation seems to always fail for nontrivial initializers, but maybe that'll change in the future...
 		ASSUME(iconv_error_strings[status] != nullptr, "Error strings should be defined for all possible results");
