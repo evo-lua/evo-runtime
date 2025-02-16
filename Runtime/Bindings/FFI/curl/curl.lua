@@ -1,8 +1,10 @@
 local ffi = require("ffi")
-local ffi_string = ffi.string
+
+local cast = ffi.cast
 
 local curl = {
 	MAX_CSTRING_LIST_SIZE = 256,
+	metatypes = {},
 }
 
 curl.cdefs = [[
@@ -86,16 +88,135 @@ struct curl_version_info_data {
 };
 typedef struct curl_version_info_data curl_version_info_data;
 
+typedef enum {
+	CURLUE_OK,
+	CURLUE_BAD_HANDLE, /* 1 */
+	CURLUE_BAD_PARTPOINTER, /* 2 */
+	CURLUE_MALFORMED_INPUT, /* 3 */
+	CURLUE_BAD_PORT_NUMBER, /* 4 */
+	CURLUE_UNSUPPORTED_SCHEME, /* 5 */
+	CURLUE_URLDECODE, /* 6 */
+	CURLUE_OUT_OF_MEMORY, /* 7 */
+	CURLUE_USER_NOT_ALLOWED, /* 8 */
+	CURLUE_UNKNOWN_PART, /* 9 */
+	CURLUE_NO_SCHEME, /* 10 */
+	CURLUE_NO_USER, /* 11 */
+	CURLUE_NO_PASSWORD, /* 12 */
+	CURLUE_NO_OPTIONS, /* 13 */
+	CURLUE_NO_HOST, /* 14 */
+	CURLUE_NO_PORT, /* 15 */
+	CURLUE_NO_QUERY, /* 16 */
+	CURLUE_NO_FRAGMENT, /* 17 */
+	CURLUE_NO_ZONEID, /* 18 */
+	CURLUE_BAD_FILE_URL, /* 19 */
+	CURLUE_BAD_FRAGMENT, /* 20 */
+	CURLUE_BAD_HOSTNAME, /* 21 */
+	CURLUE_BAD_IPV6, /* 22 */
+	CURLUE_BAD_LOGIN, /* 23 */
+	CURLUE_BAD_PASSWORD, /* 24 */
+	CURLUE_BAD_PATH, /* 25 */
+	CURLUE_BAD_QUERY, /* 26 */
+	CURLUE_BAD_SCHEME, /* 27 */
+	CURLUE_BAD_SLASHES, /* 28 */
+	CURLUE_BAD_USER, /* 29 */
+	CURLUE_LACKS_IDN, /* 30 */
+	CURLUE_TOO_LARGE, /* 31 */
+	CURLUE_LAST
+} CURLUcode;
+
+typedef enum {
+	CURLUPART_URL,
+	CURLUPART_SCHEME,
+	CURLUPART_USER,
+	CURLUPART_PASSWORD,
+	CURLUPART_OPTIONS,
+	CURLUPART_HOST,
+	CURLUPART_PORT,
+	CURLUPART_PATH,
+	CURLUPART_QUERY,
+	CURLUPART_FRAGMENT,
+	CURLUPART_ZONEID /* added in 7.65.0 */
+} CURLUPart;
+
+typedef struct CURLU* url_ptr_t;
+typedef struct const CURLU* url_cptr_t;
+
+typedef enum {
+	CURLU_DEFAULT_FEATURES = 0 << 0,
+	CURLU_DEFAULT_PORT = (1 << 0),
+	CURLU_NO_DEFAULT_PORT = (1 << 1),
+	CURLU_DEFAULT_SCHEME = (1 << 2),
+	CURLU_NON_SUPPORT_SCHEME = (1 << 3),
+	CURLU_PATH_AS_IS = (1 << 4),
+	CURLU_DISALLOW_USER = (1 << 5),
+	CURLU_URLDECODE = (1 << 6),
+	CURLU_URLENCODE = (1 << 7),
+	CURLU_APPENDQUERY = (1 << 8),
+	CURLU_GUESS_SCHEME = (1 << 9),
+	CURLU_NO_AUTHORITY = (1 << 10),
+	CURLU_ALLOW_SPACE = (1 << 11),
+	CURLU_PUNYCODE = (1 << 12),
+	CURLU_PUNY2IDN = (1 << 13),
+	CURLU_GET_EMPTY = (1 << 14),
+	CURLU_NO_GUESS_SCHEME = (1 << 15),
+} CURLUFeatureFlags;
+
 struct static_curl_exports_table {
-	// curl.h
+	// Exports from curl.h
 	CURLversion CURLVERSION_NOW;
 	curl_version_info_data* (*curl_version_info)(CURLversion);
+	void (*curl_free)(void*);
+
+	// Exports from urlapi.h
+	url_ptr_t (*curl_url)(void);
+	void (*curl_url_cleanup)(url_ptr_t handle);
+	url_ptr_t (*curl_url_dup)(url_cptr_t handle);
+	CURLUcode (*curl_url_get)(url_cptr_t handle,
+		CURLUPart what,
+		char** part,
+		unsigned int flags);
+	CURLUcode (*curl_url_set)(url_ptr_t handle,
+		CURLUPart what,
+		const char* part,
+		unsigned int flags);
+	const char* (*curl_url_strerror)(CURLUcode errno);
 };
 
 ]]
 
 function curl.initialize()
 	ffi.cdef(curl.cdefs)
+
+	curl.parts = {
+		url = ffi.C.CURLUPART_URL,
+		scheme = ffi.C.CURLUPART_SCHEME,
+		user = ffi.C.CURLUPART_USER,
+		password = ffi.C.CURLUPART_PASSWORD,
+		options = ffi.C.CURLUPART_OPTIONS,
+		host = ffi.C.CURLUPART_HOST,
+		port = ffi.C.CURLUPART_PORT,
+		path = ffi.C.CURLUPART_PATH,
+		query = ffi.C.CURLUPART_QUERY,
+		fragment = ffi.C.CURLUPART_FRAGMENT,
+		zone = ffi.C.CURLUPART_ZONEID,
+	}
+
+	local url = {}
+
+	function url:set(...)
+		return curl.url_set(self, ...)
+	end
+
+	function url:get(...)
+		return curl.url_get(self, ...)
+	end
+
+	function url:dup(...)
+		return curl.url_dup(self, ...)
+	end
+
+	url.__index = url
+	curl.metatypes.CURLU = ffi.metatype("struct CURLU", url)
 end
 
 function curl.unpack(cstrings)
@@ -107,7 +228,7 @@ function curl.unpack(cstrings)
 			break
 		end
 
-		local key = ffi_string(cstring)
+		local key = ffi.string(cstring)
 		entries[key] = true
 
 		index = index + 1
@@ -121,7 +242,62 @@ local function cstring_unwrap(cstring)
 		return tostring(ffi.NULL)
 	end
 
-	return ffi_string(cstring)
+	return ffi.string(cstring)
+end
+
+function curl.free(pointer)
+	curl.bindings.curl_free(pointer)
+end
+
+function curl.url(href)
+	local handle = curl.bindings.curl_url()
+	ffi.gc(handle, curl.bindings.curl_url_cleanup)
+	handle = cast("struct CURLU*", handle)
+
+	if type(href) == "string" then
+		handle:set("url", href)
+	end
+
+	return handle
+end
+
+function curl.url_dup(handle)
+	local duplicatedHandle = curl.bindings.curl_url_dup(handle)
+	ffi.gc(duplicatedHandle, curl.bindings.curl_url_cleanup)
+	return cast("struct CURLU*", duplicatedHandle)
+end
+
+local where = ffi.new("char*[1]")
+function curl.url_get(handle, what, how)
+	what = what or "url"
+	what = curl.parts[what] or curl.parts.url
+	how = how or ffi.C.CURLU_DEFAULT_FEATURES
+
+	local status = curl.bindings.curl_url_get(handle, what, where, how)
+	if status ~= ffi.C.CURLUE_OK then
+		return nil, curl.url_strerror(status)
+	end
+
+	local result = ffi.string(where[0])
+	curl.free(where[0])
+	return result
+end
+
+function curl.url_set(handle, what, part, how)
+	what = what or "url"
+	part = part and tostring(part) or ffi.NULL
+	how = how or ffi.C.CURLU_DEFAULT_FEATURES
+
+	local status = curl.bindings.curl_url_set(handle, curl.parts[what], part, how)
+	if status ~= ffi.C.CURLUE_OK then
+		return nil, curl.url_strerror(status)
+	end
+
+	return true
+end
+
+function curl.url_strerror(errorCode)
+	return ffi.string(curl.bindings.curl_url_strerror(errorCode))
 end
 
 function curl.version_info(age)
