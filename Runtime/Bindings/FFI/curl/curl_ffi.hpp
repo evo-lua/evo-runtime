@@ -1,5 +1,6 @@
 #pragma once
 
+#define CURL_STATICLIB
 #include "curl.h"
 
 typedef CURLU* url_ptr_t;

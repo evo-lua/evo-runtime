@@ -1,4 +1,3 @@
-#include "curl.h"
 #include "curl_ffi.hpp"
 
 namespace curl_ffi {

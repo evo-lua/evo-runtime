@@ -1,9 +1,8 @@
 #pragma once
 
 #include "LuaVirtualMachine.hpp"
+#include "curl_ffi.hpp"
 #include "uws_ffi.hpp"
-
-#include "curl.h"
 
 #include <cassert>
 #include <format>
