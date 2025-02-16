@@ -15,7 +15,7 @@ namespace iconv_ffi {
 		return reinterpret_cast<size_t>(handle) != ICONV_INVALID_HANDLE;
 	}
 
-	inline bool sanity_check_buffer(iconv_memory_t* workload) {
+	inline bool sanity_check_buffer(const iconv_memory_t* workload) {
 		if(workload->buffer == nullptr) return false;
 
 		ASSUME(workload->remaining >= workload->length, "Cursors should never escape the memory field");
