@@ -163,7 +163,7 @@ typedef enum {
 
 struct static_curl_exports_table {
 	// Exports from curl.h
-	CURLversion CURLVERSION_NOW;
+	CURLversion (*curl_version_now)(void);
 	curl_version_info_data* (*curl_version_info)(CURLversion);
 	void (*curl_free)(void*);
 
@@ -179,7 +179,7 @@ struct static_curl_exports_table {
 		CURLUPart what,
 		const char* part,
 		unsigned int flags);
-	const char* (*curl_url_strerror)(CURLUcode errno);
+	const char* (*curl_url_strerror)(CURLUcode status);
 };
 
 ]]
@@ -301,7 +301,7 @@ function curl.url_strerror(errorCode)
 end
 
 function curl.version_info(age)
-	age = age or curl.bindings.CURLVERSION_NOW
+	age = age or curl.bindings.curl_version_now()
 	local versionInfo = curl.bindings.curl_version_info(age)
 
 	local infoTable = {
@@ -340,9 +340,9 @@ function curl.version_info(age)
 end
 
 function curl.version(age)
-	age = age or curl.bindings.CURLVERSION_NOW
+	age = age or curl.bindings.curl_version_now()
 	local infoTable = curl.version_info(age)
-	return infoTable.version, infoTable.version_num, tonumber(curl.bindings.CURLVERSION_NOW)
+	return infoTable.version, infoTable.version_num, tonumber(curl.bindings.curl_version_now())
 end
 
 return curl

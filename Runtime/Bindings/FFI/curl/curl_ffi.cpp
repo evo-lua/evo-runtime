@@ -1,10 +1,14 @@
 #include "curl_ffi.hpp"
 
 namespace curl_ffi {
+	CURLversion curl_version_now() {
+		return CURLVERSION_NOW;
+	}
+
 	void* getExportsTable() {
 		static struct static_curl_exports_table exports = {
 			// Exports from curl.h
-			.CURLVERSION_NOW = CURLVERSION_NOW,
+			.curl_version_now = curl_version_now,
 			.curl_version_info = curl_version_info,
 			.curl_free = curl_free,
 

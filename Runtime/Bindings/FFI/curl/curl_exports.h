@@ -1,6 +1,6 @@
 struct static_curl_exports_table {
 	// Exports from curl.h
-	CURLversion CURLVERSION_NOW;
+	CURLversion (*curl_version_now)(void);
 	curl_version_info_data* (*curl_version_info)(CURLversion);
 	void (*curl_free)(void*);
 
