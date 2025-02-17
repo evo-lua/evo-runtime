@@ -336,7 +336,7 @@ describe("curl", function()
 			assertEquals(versionInfo.version, versionString)
 			assertEquals(versionInfo.version_num, versionNumber)
 			assertEquals(versionInfo.age, revision)
-			assertEquals(versionInfo.age, tonumber(curl.bindings.CURLVERSION_NOW))
+			assertEquals(versionInfo.age, tonumber(curl.bindings.curl_version_now()))
 
 			assertTrue(type(versionNumber) == "number")
 			local firstMatchedCharacterIndex, lastMatchedCharacterIndex = string.find(versionString, "%d+.%d+.%d+")
