@@ -7,6 +7,21 @@ local jit = require("jit")
 jit.off(curl.free) -- Hacky; no proper way to test cleanup is actually performed yet
 
 describe("curl", function()
+	describe("easy_init", function()
+		it("should attach a GC finalizer to the returned handle", function()
+			assertCallsFunction(function()
+				curl.easy_init()
+			end, ffi.gc)
+		end)
+	end)
+
+	describe("easy_setopt", function()
+		it("should be able to set the URL", function()
+			local easy = curl.easy_init()
+			assert(easy)
+		end)
+	end)
+
 	describe("url", function()
 		it("should attach a GC finalizer to the returned handle", function()
 			assertCallsFunction(function()
