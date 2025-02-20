@@ -473,15 +473,15 @@ function curl.initialize()
 		return curl.curl_easy_perform(self, ...)
 	end
 
-function easy:recv(...)
-	return curl.curl_easy_recv(self, ...)
-end
+	function easy:recv(...)
+		return curl.curl_easy_recv(self, ...)
+	end
 
-		function easy:reset(...)
+	function easy:reset(...)
 		return curl.curl_easy_reset(self, ...)
 	end
 
-function easy:send(...)
+	function easy:send(...)
 		return curl.curl_easy_send(self, ...)
 	end
 	function easy:setopt(...)
