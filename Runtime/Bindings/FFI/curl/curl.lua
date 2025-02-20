@@ -423,46 +423,109 @@ function curl.initialize()
 
 	local easy = {}
 
-	-- void (*curl_easy_cleanup)(CURL* handle);
-	-- CURL* (*curl_easy_duphandle)(CURL* handle);
-	-- char* (*curl_easy_escape)(CURL* handle, const char* string, int length);
-	-- // CURLcode (*curl_easy_getinfo)(CURL* handle, CURLINFO info, ...);
-	-- CURLHcode (*curl_easy_header)(CURL* handle,
-	-- 	const char* name,
-	-- 	size_t index,
-	-- 	unsigned int origin,
-	-- 	int request,
-	-- 	struct curl_header** hout);
-	-- CURL* (*curl_easy_init)(void);
-	-- struct curl_header* (*curl_easy_nextheader)(CURL* handle,
-	-- 	unsigned int origin,
-	-- 	int request,
-	-- 	struct curl_header* prev);
-	-- // const struct curl_easyoption* (*curl_easy_option_by_id)(CURLoption id);
-	-- const struct curl_easyoption* (*curl_easy_option_by_name)(const char* name);
-	-- const struct curl_easyoption* (*curl_easy_option_next)(const struct curl_easyoption* prev);
-	-- CURLcode (*curl_easy_pause)(CURL* handle, int bitmask);
-	-- CURLcode (*curl_easy_perform)(CURL* handle);
-	-- CURLcode (*curl_easy_recv)(CURL* handle, void* buffer, size_t buflen, size_t* n);
-	-- void (*curl_easy_reset)(CURL* handle);
-	-- CURLcode (*curl_easy_send)(CURL* handle, const void* buffer, size_t buflen, size_t* n);
-	-- CURLcode (*curl_easy_setopt)(CURL* handle, const struct curl_easyoption* option, ...);
-	-- CURLcode (*curl_easy_ssls_import)(CURL* handle,
-	-- 	const char* session_key,
-	-- 	const unsigned char* shmac,
-	-- 	size_t shmac_len,
-	-- 	const unsigned char* sdata,
-	-- 	size_t sdata_len);
-	-- CURLcode (*curl_easy_ssls_export)(CURL* handle,
-	-- 	curl_ssls_export_cb* export_fn,
-	-- 	void* userptr);
-	-- const char* (*curl_easy_strerror)(CURLcode status);
-	-- char* (*curl_easy_unescape)(CURL* handle, const char* input,
-	-- 	int inlength, int* outlength);
-	-- CURLcode (*curl_easy_upkeep)(CURL* handle);
+	function easy:cleanup(...)
+		return curl.curl_easy_cleanup(self, ...)
+	end
+
+	function easy:duphandle(...)
+		return curl.curl_easy_duphandle(self, ...)
+	end
+
+	function easy:escape(...)
+		return curl.curl_easy_escape(self, ...)
+	end
+
+	-- function easy:getinfo(...)
+	-- 	return curl.curl_easy_getinfo(self, ...)
+	-- end
+
+	function easy:header(...)
+		return curl.curl_easy_header(self, ...)
+	end
+	function easy:init(...)
+		return curl.curl_easy_init(self, ...)
+	end
+
+	function easy:nextheader(...)
+		return curl.curl_easy_nextheader(self, ...)
+	end
+	function easy:AAAAAAAAAAAAAAA(...)
+		return curl.BBBBBBBBBBB(self, ...)
+	end
+
+	-- function easy:option_by_id(...)
+	-- 	return curl.curl_easy_option_by_id(self, ...)
+	-- end
+
+	function easy:option_by_name(...)
+		return curl.curl_easy_option_by_name(self, ...)
+	end
+
+	function easy:option_next(...)
+		return curl.curl_easy_option_next(self, ...)
+	end
+
+	function easy:pause(...)
+		return curl.curl_easy_pause(self, ...)
+	end
+
+	function easy:perform(...)
+		return curl.curl_easy_perform(self, ...)
+	end
+
+function easy:recv(...)
+	return curl.curl_easy_recv(self, ...)
+end
+
+		function easy:reset(...)
+		return curl.curl_easy_reset(self, ...)
+	end
+
+function easy:send(...)
+		return curl.curl_easy_send(self, ...)
+	end
+	function easy:setopt(...)
+		return curl.curl_easy_setopt(self, ...)
+	end
+
+	function easy:ssls_import(...)
+		return curl.curl_easy_ssls_import(self, ...)
+	end
+
+	function easy:AAAAAAAAAAAAAAA(...)
+		return curl.BBBBBBBBBBB(self, ...)
+	end
+
+	function easy:AAAAAAAAAAAAAAA(...)
+		return curl.BBBBBBBBBBB(self, ...)
+	end
+
+	function easy:AAAAAAAAAAAAAAA(...)
+		return curl.BBBBBBBBBBB(self, ...)
+	end
+
+	function easy:ssls_export(...)
+		return curl.curl_easy_ssls_export(self, ...)
+	end
+
+	function easy:AAAAAAAAAAAAAAA(...)
+		return curl.BBBBBBBBBBB(self, ...)
+	end
+
+	function easy:strerror(...) -- curl.easy_strerror ?
+		return curl.curl_easy_strerror(self, ...)
+	end
+
+	function easy:unescape(...)
+		return curl.curl_easy_unescape(self, ...)
+	end
+
+	function easy:upkeep(...)
+		return curl.curl_easy_upkeep(self, ...)
+	end
 
 	easy.__index = easy
-	curl.metatypes.CURL = ffi.metatype("struct CURL", url)
+	curl.metatypes.CURL = ffi.metatype("struct CURL", easy)
 end
 
 function curl.unpack(cstrings)
