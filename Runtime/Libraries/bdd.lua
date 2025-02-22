@@ -15,7 +15,6 @@ local validateTable = validation.validateTable
 local dofile = dofile
 local print = print
 
-local debug_traceback = debug.traceback
 local format = string.format
 local string_rep = string.rep
 local table_insert = table.insert
@@ -101,10 +100,11 @@ local function errorHandler(errorMessage)
 		return
 	end
 
+	local stackTrace = debug.traceback(errorMessage, 3)
 	-- Level 3 strips this error handler and the [C] error call
 	return {
-		stackTrace = debug_traceback(errorMessage, 3),
 		message = debug.tostring(errorMessage),
+		stackTrace = debug.tostring(stackTrace),
 	}
 end
 

@@ -12,7 +12,8 @@ local DEFAULT_OPTIONS = {
 	indent = "\t",
 	silent = false,
 }
-local LUAJIT_BUILTIN_PATTERN = "%[?builtin#(%d+)%]?"
+local LUAJIT_BUILTIN_TOSTRING_PATTERN = "builtin#(%d+)"
+local LUAJIT_BUILTIN_TRACEBACK_PATTERN = "%[builtin#(%d+)%]"
 
 local function dump(object, options)
 	if type(object) == "userdata" then
@@ -52,9 +53,15 @@ end
 
 function debug.tostring(what)
 	local stringified = tostring(what)
-	return stringified:gsub(LUAJIT_BUILTIN_PATTERN, function(builtinID)
+	stringified = stringified:gsub(LUAJIT_BUILTIN_TOSTRING_PATTERN, function(builtinID)
 		return vmdef.ffnames[tonumber(builtinID)]
 	end)
+
+	stringified = stringified:gsub(LUAJIT_BUILTIN_TRACEBACK_PATTERN, function(builtinID)
+		return vmdef.ffnames[tonumber(builtinID)]
+	end)
+
+	return stringified
 end
 
 debug.dump = dump

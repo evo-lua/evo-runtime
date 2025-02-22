@@ -299,9 +299,15 @@ local function testDetailedFailingSectionsCase()
 	assertEquals(errorDetails[3].message, "meep")
 	assertEquals(type(errorDetails[3].stackTrace), "string")
 
+	local expectedMessage = "This reference should be resolved to 'function: tostring'"
 	assertEquals(errorDetails[4].specFile, "Tests/Fixtures/failing-sections.spec.lua")
-	assertEquals(errorDetails[4].message, "This reference should be resolved to 'function: tostring'")
+	assertEquals(errorDetails[4].message, expectedMessage)
 	assertEquals(type(errorDetails[4].stackTrace), "string")
+	assertEquals(errorDetails[4].stackTrace:sub(1, #expectedMessage), expectedMessage)
+
+	local LUAJIT_BUILTIN_PATTERN = "%[?builtin#(%d+)%]?"
+	assertNil(errorDetails[4].stackTrace:find(LUAJIT_BUILTIN_PATTERN))
+	assert(errorDetails[4].stackTrace:find("%[dofile%]"))
 end
 
 local function testSetupTeardownHookNestingCase()

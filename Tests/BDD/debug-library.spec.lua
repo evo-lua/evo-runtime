@@ -32,7 +32,7 @@ describe("debug", function()
 	end)
 
 	describe("tostring", function()
-		it("should translate VM builtins to human-readable names", function()
+		it("should translate VM builtins in tostring format to human-readable names", function()
 			local arbitraryBuiltinFunction = ffi.gc
 			local builtinID = assert(table_find(vmdef.ffnames, "ffi.gc"))
 
@@ -42,6 +42,14 @@ describe("debug", function()
 
 			local debugName = debug.tostring(arbitraryBuiltinFunction)
 			local expectedDebugName = "function: ffi.gc"
+			assertEquals(debugName, expectedDebugName)
+		end)
+
+		it("should translate VM builtins in traceback format to human-readable names", function()
+			local builtinID = assert(table_find(vmdef.ffnames, "dofile"))
+			local defaultName = format("[builtin#%d]:", builtinID)
+			local debugName = debug.tostring(defaultName)
+			local expectedDebugName = "[dofile]:"
 			assertEquals(debugName, expectedDebugName)
 		end)
 	end)
