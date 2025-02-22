@@ -492,24 +492,8 @@ function curl.initialize()
 		return curl.curl_easy_ssls_import(self, ...)
 	end
 
-	function easy:AAAAAAAAAAAAAAA(...)
-		return curl.BBBBBBBBBBB(self, ...)
-	end
-
-	function easy:AAAAAAAAAAAAAAA(...)
-		return curl.BBBBBBBBBBB(self, ...)
-	end
-
-	function easy:AAAAAAAAAAAAAAA(...)
-		return curl.BBBBBBBBBBB(self, ...)
-	end
-
 	function easy:ssls_export(...)
 		return curl.curl_easy_ssls_export(self, ...)
-	end
-
-	function easy:AAAAAAAAAAAAAAA(...)
-		return curl.BBBBBBBBBBB(self, ...)
 	end
 
 	function easy:strerror(...) -- curl.easy_strerror ?
@@ -552,6 +536,12 @@ local function cstring_unwrap(cstring)
 	end
 
 	return ffi.string(cstring)
+end
+
+function curl.easy_init()
+	local handle = curl.bindings.curl_easy_init()
+
+	return handle
 end
 
 function curl.free(pointer)
