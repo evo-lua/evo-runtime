@@ -6,6 +6,11 @@
 typedef CURLU* url_ptr_t;
 typedef const CURLU* url_cptr_t;
 
+extern "C" {
+	#include "curl_exports.h"
+}
+
+
 // typedef enum {
 // 	/* This is the FILE * or void * the regular output should be written to. */
 // 	CURLOPT(CURLOPT_WRITEDATA, CURLOPTTYPE_CBPOINT, 1),
@@ -1123,8 +1128,6 @@ typedef const CURLU* url_cptr_t;
 
 // 	CURLOPT_LASTENTRY /* the last unused */
 //   } CURLoption;
-
-#include "curl_exports.h"
 
 namespace curl_ffi {
 	void* getExportsTable();

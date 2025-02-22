@@ -355,7 +355,7 @@ struct static_curl_exports_table {
 	CURLcode (*curl_easy_recv)(CURL* handle, void* buffer, size_t buflen, size_t* n);
 	void (*curl_easy_reset)(CURL* handle);
 	CURLcode (*curl_easy_send)(CURL* handle, const void* buffer, size_t buflen, size_t* n);
-	CURLcode (*curl_easy_setopt)(CURL* handle, const struct curl_easyoption* option, ...);
+	CURLcode (*curl_easy_setopt)(CURL* handle, const struct curl_easyoption* option, va_list);
 	CURLcode (*curl_easy_ssls_import)(CURL* handle,
 		const char* session_key,
 		const unsigned char* shmac,
@@ -544,6 +544,17 @@ function curl.easy_init()
 	return handle
 end
 
+function curl.easy_setopt(handle, name, value)
+	local option = curl.bindings.curl_easy_option_by_name(name)
+	assert(option ~= ffi.NULL, "Invalid option name: " .. name) -- TBD
+
+	local status = curl.bindings.curl_easy_setopt(handle, option, value)
+	if status ~= ffi.C.CURLUE_OK then
+		-- return nil, curl.curl_easy_strerror(status) -- TBD
+	end
+
+	return status
+end
 function curl.free(pointer)
 	curl.bindings.curl_free(pointer)
 end

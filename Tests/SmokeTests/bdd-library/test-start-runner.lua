@@ -389,6 +389,10 @@ local function testSetupTeardownHookNestingCase()
 	_G.CALLSTACK = nil -- Is it a crime if there aren't any witnesses?
 end
 
+function testInvalidErrorDetailsAfterThrownException()
+
+end
+
 local function testStartTestRunner()
 	testNoFilesCase()
 	testInvalidFileCase()
@@ -407,6 +411,7 @@ local function testStartTestRunner()
 	testDetailedPassingTestCase()
 	testDetailedFailingTestCase()
 	testSetupTeardownHookNestingCase()
+	testInvalidErrorDetailsAfterThrownException()
 end
 
 testStartTestRunner()
