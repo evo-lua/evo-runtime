@@ -442,9 +442,9 @@ function curl.initialize()
 	function easy:header(...)
 		return curl.curl_easy_header(self, ...)
 	end
-	function easy:init(...)
-		return curl.curl_easy_init(self, ...)
-	end
+	-- function easy:init(...)
+		-- return curl.curl_easy_init(self, ...)
+	-- end
 
 	function easy:nextheader(...)
 		return curl.curl_easy_nextheader(self, ...)
@@ -540,7 +540,7 @@ end
 
 function curl.easy_init()
 	local handle = curl.bindings.curl_easy_init()
-
+	ffi.gc(handle, curl.bindings.curl_easy_cleanup)
 	return handle
 end
 
