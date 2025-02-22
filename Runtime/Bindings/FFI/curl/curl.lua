@@ -355,7 +355,7 @@ struct static_curl_exports_table {
 	CURLcode (*curl_easy_recv)(CURL* handle, void* buffer, size_t buflen, size_t* n);
 	void (*curl_easy_reset)(CURL* handle);
 	CURLcode (*curl_easy_send)(CURL* handle, const void* buffer, size_t buflen, size_t* n);
-	CURLcode (*curl_easy_setopt)(CURL* handle, const struct curl_easyoption* option, va_list);
+	CURLcode (*curl_easy_setopt)(CURL* handle, const struct curl_easyoption* option, ...);
 	CURLcode (*curl_easy_ssls_import)(CURL* handle,
 		const char* session_key,
 		const unsigned char* shmac,
@@ -443,7 +443,7 @@ function curl.initialize()
 		return curl.curl_easy_header(self, ...)
 	end
 	-- function easy:init(...)
-		-- return curl.curl_easy_init(self, ...)
+	-- return curl.curl_easy_init(self, ...)
 	-- end
 
 	function easy:nextheader(...)
