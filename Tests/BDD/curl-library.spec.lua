@@ -17,8 +17,8 @@ describe("curl", function()
 
 	describe("easy_setopt", function()
 		it("should be able to set the URL", function()
-			local easy = curl.easy_init()
-			assert(easy)
+			local easy = assert(curl.easy_init())
+			assert(curl.easy_setopt(easy, "url", "http://localhost:8080"))
 		end)
 	end)
 
