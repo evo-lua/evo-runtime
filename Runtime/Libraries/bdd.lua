@@ -103,8 +103,8 @@ local function errorHandler(errorMessage)
 
 	-- Level 3 strips this error handler and the [C] error call
 	return {
-		message = errorMessage,
 		stackTrace = debug_traceback(errorMessage, 3),
+		message = debug.tostring(errorMessage),
 	}
 end
 
