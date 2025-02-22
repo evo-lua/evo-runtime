@@ -1,3 +1,14 @@
+local ffi = require("ffi")
+local vmdef = require("vmdef")
+
+local function table_find(where, what)
+	for key, value in pairs(where) do
+		if value == what then
+			return key
+		end
+	end
+end
+
 describe("debug", function()
 	describe("sbuf", function()
 		it("should return a human-readable representation if an empty buffer was passed", function()
@@ -17,6 +28,29 @@ describe("debug", function()
 			assertEquals(type(temporaryFileHandle), "userdata")
 			assertEquals(debug.sbuf(temporaryFileHandle), tostring(temporaryFileHandle))
 			temporaryFileHandle:close()
+		end)
+	end)
+
+	describe("tostring", function()
+		it("should translate VM builtins in tostring format to human-readable names", function()
+			local arbitraryBuiltinFunction = ffi.gc
+			local builtinID = assert(table_find(vmdef.ffnames, "ffi.gc"))
+
+			local defaultName = tostring(arbitraryBuiltinFunction)
+			local expectedDefaultName = "function: builtin#" .. builtinID
+			assertEquals(defaultName, expectedDefaultName)
+
+			local debugName = debug.tostring(arbitraryBuiltinFunction)
+			local expectedDebugName = "function: ffi.gc"
+			assertEquals(debugName, expectedDebugName)
+		end)
+
+		it("should translate VM builtins in traceback format to human-readable names", function()
+			local builtinID = assert(table_find(vmdef.ffnames, "dofile"))
+			local defaultName = format("[builtin#%d]:", builtinID)
+			local debugName = debug.tostring(defaultName)
+			local expectedDebugName = "[dofile]:"
+			assertEquals(debugName, expectedDebugName)
 		end)
 	end)
 end)

@@ -1,6 +1,8 @@
 local inspect = require("inspect")
+local vmdef = require("vmdef")
 
 local print = print
+local tostring = tostring
 local format = string.format
 local tinsert = table.insert
 
@@ -10,6 +12,8 @@ local DEFAULT_OPTIONS = {
 	indent = "\t",
 	silent = false,
 }
+local LUAJIT_BUILTIN_TOSTRING_PATTERN = "builtin#(%d+)"
+local LUAJIT_BUILTIN_TRACEBACK_PATTERN = "%[builtin#(%d+)%]"
 
 local function dump(object, options)
 	if type(object) == "userdata" then
@@ -45,6 +49,19 @@ function debug.sbuf(sbuf)
 	local isEmpty = (#sbuf == 0)
 	local bytes = isEmpty and "" or table.concat(hexBytes, " ")
 	return format("%s [%s]", "Buffer", bytes)
+end
+
+function debug.tostring(what)
+	local stringified = tostring(what)
+	stringified = stringified:gsub(LUAJIT_BUILTIN_TOSTRING_PATTERN, function(builtinID)
+		return vmdef.ffnames[tonumber(builtinID)]
+	end)
+
+	stringified = stringified:gsub(LUAJIT_BUILTIN_TRACEBACK_PATTERN, function(builtinID)
+		return vmdef.ffnames[tonumber(builtinID)]
+	end)
+
+	return stringified
 end
 
 debug.dump = dump
