@@ -4,7 +4,7 @@ local ffi = require("ffi")
 local error = error
 local pairs = pairs
 local pcall = pcall
-local tostring = tostring
+local tostring = debug.tostring
 local type = type
 local format = string.format
 local debug_getinfo = debug.getinfo
@@ -99,7 +99,7 @@ function assertions.assertCallsFunction(codeUnderTest, targetFunction)
 	codeUnderTest()
 	debug_sethook()
 	if calledFn ~= targetFunction then
-		error("ASSERTION FAILURE: Expected function " .. tostring(targetFunction) .. " to be called but it was not", 0)
+		error("ASSERTION FAILURE: Expected " .. tostring(targetFunction) .. " to be called but it was not", 0)
 	end
 end
 

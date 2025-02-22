@@ -10,9 +10,9 @@ end
 local function testDifferentFunctionsCase()
 	local success, errorMessage = pcall(assertEqualFunctions, print, tostring)
 	local expectedErrorMessage = "^ASSERTION FAILURE: Expected "
-		.. tostring(tostring)
+		.. debug.tostring(tostring)
 		.. " but got "
-		.. tostring(print)
+		.. debug.tostring(print)
 		.. "$"
 
 	assert(not success, "assertEqualFunctions(print, tostring) should throw")
