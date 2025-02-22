@@ -1,6 +1,8 @@
 local inspect = require("inspect")
+local vmdef = require("vmdef")
 
 local print = print
+local tostring = tostring
 local format = string.format
 local tinsert = table.insert
 
@@ -10,6 +12,7 @@ local DEFAULT_OPTIONS = {
 	indent = "\t",
 	silent = false,
 }
+local LUAJIT_BUILTIN_PATTERN = "%[?builtin#(%d+)%]?"
 
 local function dump(object, options)
 	if type(object) == "userdata" then
@@ -45,6 +48,13 @@ function debug.sbuf(sbuf)
 	local isEmpty = (#sbuf == 0)
 	local bytes = isEmpty and "" or table.concat(hexBytes, " ")
 	return format("%s [%s]", "Buffer", bytes)
+end
+
+function debug.tostring(what)
+	local stringified = tostring(what)
+	return stringified:gsub(LUAJIT_BUILTIN_PATTERN, function(builtinID)
+		return vmdef.ffnames[tonumber(builtinID)]
+	end)
 end
 
 debug.dump = dump
