@@ -301,6 +301,27 @@ typedef enum {
 	CURLU_NO_GUESS_SCHEME = (1 << 15),
 } CURLUFeatureFlags;
 
+// Exported from options.h
+
+typedef enum {
+	CURLOT_LONG, /* long (a range of values) */
+	CURLOT_VALUES, /*      (a defined set or bitmask) */
+	CURLOT_OFF_T, /* curl_off_t (a range of values) */
+	CURLOT_OBJECT, /* pointer (void *) */
+	CURLOT_STRING, /*         (char * to null-terminated buffer) */
+	CURLOT_SLIST, /*         (struct curl_slist *) */
+	CURLOT_CBPTR, /*         (void * passed as-is to a callback) */
+	CURLOT_BLOB, /* blob (struct curl_blob *) */
+	CURLOT_FUNCTION /* function pointer */
+} curl_easytype;
+
+struct curl_easyoption {
+	const char* name;
+	CURLoption id;
+	curl_easytype type;
+	unsigned int flags;
+};
+
 // Exported from easy.h
 typedef CURLcode curl_ssls_export_cb(CURL* handle,
 	void* userptr,
