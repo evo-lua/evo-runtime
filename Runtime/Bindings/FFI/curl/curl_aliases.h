@@ -294,23 +294,23 @@ typedef enum {
 // Exported from options.h
 
 typedef enum {
-	CURLOT_LONG,    /* long (a range of values) */
-	CURLOT_VALUES,  /*      (a defined set or bitmask) */
-	CURLOT_OFF_T,   /* curl_off_t (a range of values) */
-	CURLOT_OBJECT,  /* pointer (void *) */
-	CURLOT_STRING,  /*         (char * to null-terminated buffer) */
-	CURLOT_SLIST,   /*         (struct curl_slist *) */
-	CURLOT_CBPTR,   /*         (void * passed as-is to a callback) */
-	CURLOT_BLOB,    /* blob (struct curl_blob *) */
+	CURLOT_LONG, /* long (a range of values) */
+	CURLOT_VALUES, /*      (a defined set or bitmask) */
+	CURLOT_OFF_T, /* curl_off_t (a range of values) */
+	CURLOT_OBJECT, /* pointer (void *) */
+	CURLOT_STRING, /*         (char * to null-terminated buffer) */
+	CURLOT_SLIST, /*         (struct curl_slist *) */
+	CURLOT_CBPTR, /*         (void * passed as-is to a callback) */
+	CURLOT_BLOB, /* blob (struct curl_blob *) */
 	CURLOT_FUNCTION /* function pointer */
-  } curl_easytype;
+} curl_easytype;
 
 struct curl_easyoption {
-	const char *name;
+	const char* name;
 	CURLoption id;
 	curl_easytype type;
 	unsigned int flags;
-  };
+};
 
 // Exported from easy.h
 typedef CURLcode curl_ssls_export_cb(CURL* handle,
@@ -325,8 +325,7 @@ typedef CURLcode curl_ssls_export_cb(CURL* handle,
 	const char* alpn,
 	size_t earlydata_max);
 
-
-	// Exported from header.h
+// Exported from header.h
 typedef enum {
 	CURLHE_OK,
 	CURLHE_BADINDEX, /* header exists but not with this index */
