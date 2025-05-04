@@ -27,7 +27,7 @@ jobs:
           - os: macos-15
             arch: M1
     env:
-        MACOSX_DEPLOYMENT_TARGET: 13.3
+        MACOSX_DEPLOYMENT_TARGET: 13.4
         HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1 # Prevent brew updates in the ccache setup step (~2GB download ...)
 
     steps:
