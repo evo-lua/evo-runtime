@@ -10,4 +10,4 @@ cmake -S $SRC_DIR -B $BUILD_DIR -G Ninja -DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_L
 cmake --build $BUILD_DIR --clean-first
 
 cp $BUILD_DIR/libpcre2-8.a $OUT_DIR
-cp $BUILD_DIR/pcre2.h $OUT_DIR
+cp $BUILD_DIR/interface/pcre2.h $OUT_DIR
