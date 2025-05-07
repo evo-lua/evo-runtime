@@ -230,7 +230,7 @@ function bdd.startSubsection(label, testFunction)
 	end
 
 	local success, errorDetails = xpcall(testFunction, errorHandler)
-
+	print(success, errorDetails)
 	for _, teardownFunction in ipairs(bdd.registeredTeardownFunctions) do
 		teardownFunction()
 	end
