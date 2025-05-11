@@ -5,7 +5,7 @@ local format = string.format
 local isWindows = (ffi.os == "Windows")
 local isMacOS = (ffi.os == "OSX")
 
-local GCC_RELEASE_FLAGS = "-O3 -DNDEBUG"
+local GCC_RELEASE_FLAGS = "-O0 -DNDEBUG"
 local GCC_DEBUG_FLAGS = "" -- None, for now (add -g -ggdb here as needed)
 local GCC_DIAGNOSTICS_FLAGS =
 	"-Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -fvisibility=hidden -fno-strict-aliasing -fdiagnostics-color -Wfatal-errors"
