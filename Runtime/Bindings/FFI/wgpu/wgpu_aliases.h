@@ -1421,10 +1421,9 @@ typedef void (*WGPUProcTextureViewRelease)(WGPUTextureView textureView);
 typedef enum WGPUNativeSType {
 	// Start at 0003 since that's allocated range for wgpu-native
 	WGPUSType_DeviceExtras = 0x00030001,
-	WGPUSType_RequiredLimitsExtras = 0x00030002,
+	WGPUSType_NativeLimits = 0x00030002,
 	WGPUSType_PipelineLayoutExtras = 0x00030003,
 	WGPUSType_ShaderModuleGLSLDescriptor = 0x00030004,
-	WGPUSType_SupportedLimitsExtras = 0x00030005,
 	WGPUSType_InstanceExtras = 0x00030006,
 	WGPUSType_BindGroupEntryExtras = 0x00030007,
 	WGPUSType_BindGroupLayoutEntryExtras = 0x00030008,
