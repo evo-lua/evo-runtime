@@ -679,7 +679,6 @@ typedef enum WGPUTextureUsage {
 	WGPUTextureUsage_RenderAttachment = 0x00000010,
 	WGPUTextureUsage_Force32 = 0x7FFFFFFF
 } WGPUTextureUsage;
-typedef WGPUFlags WGPUTextureUsageFlags;
 
 typedef void (*WGPUProc)(void);
 typedef void (*WGPUBufferMapCallback)(WGPUMapAsyncStatus status, WGPUStringView message, WGPU_NULLABLE void* userdata1, WGPU_NULLABLE void* userdata2) WGPU_FUNCTION_ATTRIBUTE;
@@ -1088,22 +1087,21 @@ typedef struct WGPUSamplerDescriptor {
 	uint16_t maxAnisotropy;
 } WGPUSamplerDescriptor;
 
-typedef struct WGPUShaderModuleCompilationHint {
+typedef struct WGPUShaderModuleDescriptor {
 	WGPUChainedStruct const* nextInChain;
-	WGPUStringView entryPoint;
-	WGPUPipelineLayout layout;
-} WGPUShaderModuleCompilationHint;
+    WGPUStringView label;
+} WGPUShaderModuleDescriptor WGPU_STRUCTURE_ATTRIBUTE;
 
-typedef struct WGPUShaderModuleSPIRVDescriptor {
+typedef struct WGPUShaderSourceSPIRV {
 	WGPUChainedStruct chain;
 	uint32_t codeSize;
 	uint32_t const* code;
-} WGPUShaderModuleSPIRVDescriptor;
+} WGPUShaderSourceSPIRV;
 
-typedef struct WGPUShaderModuleWGSLDescriptor {
+typedef struct WGPUShaderSourceWGSL {
 	WGPUChainedStruct chain;
 	WGPUStringView code;
-} WGPUShaderModuleWGSLDescriptor;
+} WGPUShaderSourceWGSL;
 
 typedef struct WGPUStencilFaceState {
 	WGPUCompareFunction compare;
@@ -1119,9 +1117,19 @@ typedef struct WGPUStorageTextureBindingLayout {
 	WGPUTextureViewDimension viewDimension;
 } WGPUStorageTextureBindingLayout;
 
+typedef struct WGPUSupportedFeatures {
+    size_t featureCount;
+    WGPUFeatureName const * features;
+} WGPUSupportedFeatures WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUSupportedWGSLLanguageFeatures {
+    size_t featureCount;
+    WGPUWGSLLanguageFeatureName const * features;
+} WGPUSupportedWGSLLanguageFeatures WGPU_STRUCTURE_ATTRIBUTE;
+
 typedef struct WGPUSurfaceCapabilities {
 	WGPUChainedStructOut* nextInChain;
-	WGPUTextureUsageFlags usages;
+	WGPUTextureUsage usages;
 	size_t formatCount;
 	WGPUTextureFormat const* formats;
 	size_t presentModeCount;
@@ -1134,12 +1142,12 @@ typedef struct WGPUSurfaceConfiguration {
 	WGPUChainedStruct const* nextInChain;
 	WGPUDevice device;
 	WGPUTextureFormat format;
-	WGPUTextureUsageFlags usage;
+	WGPUTextureUsage usage;
+	uint32_t width;
+	uint32_t height;
 	size_t viewFormatCount;
 	WGPUTextureFormat const* viewFormats;
 	WGPUCompositeAlphaMode alphaMode;
-	uint32_t width;
-	uint32_t height;
 	WGPUPresentMode presentMode;
 } WGPUSurfaceConfiguration;
 
@@ -1148,44 +1156,39 @@ typedef struct WGPUSurfaceDescriptor {
 	WGPUStringView label;
 } WGPUSurfaceDescriptor;
 
-typedef struct WGPUSurfaceDescriptorFromAndroidNativeWindow {
+typedef struct WGPUSurfaceSourceAndroidNativeWindow {
 	WGPUChainedStruct chain;
 	void* window;
-} WGPUSurfaceDescriptorFromAndroidNativeWindow;
+} WGPUSurfaceSourceAndroidNativeWindow;
 
-typedef struct WGPUSurfaceDescriptorFromCanvasHTMLSelector {
-	WGPUChainedStruct chain;
-	WGPUStringView selector;
-} WGPUSurfaceDescriptorFromCanvasHTMLSelector;
-
-typedef struct WGPUSurfaceDescriptorFromMetalLayer {
+typedef struct WGPUSurfaceSourceMetalLayer {
 	WGPUChainedStruct chain;
 	void* layer;
-} WGPUSurfaceDescriptorFromMetalLayer;
+} WGPUSurfaceSourceMetalLayer;
 
-typedef struct WGPUSurfaceDescriptorFromWaylandSurface {
+typedef struct WGPUSurfaceSourceWaylandSurface {
 	WGPUChainedStruct chain;
 	void* display;
 	void* surface;
-} WGPUSurfaceDescriptorFromWaylandSurface;
+} WGPUSurfaceSourceWaylandSurface;
 
-typedef struct WGPUSurfaceDescriptorFromWindowsHWND {
+typedef struct WGPUSurfaceSourceWindowsHWND {
 	WGPUChainedStruct chain;
 	void* hinstance;
 	void* hwnd;
-} WGPUSurfaceDescriptorFromWindowsHWND;
+} WGPUSurfaceSourceWindowsHWND;
 
-typedef struct WGPUSurfaceDescriptorFromXcbWindow {
+typedef struct WGPUSurfaceSourceXCBWindow {
 	WGPUChainedStruct chain;
 	void* connection;
 	uint32_t window;
-} WGPUSurfaceDescriptorFromXcbWindow;
+} WGPUSurfaceSourceXCBWindow;
 
-typedef struct WGPUSurfaceDescriptorFromXlibWindow {
+typedef struct WGPUSurfaceSourceXlibWindow {
 	WGPUChainedStruct chain;
 	void* display;
 	uint64_t window;
-} WGPUSurfaceDescriptorFromXlibWindow;
+} WGPUSurfaceSourceXlibWindow;
 
 typedef struct WGPUSurfaceTexture {
 	WGPUTexture texture;
@@ -1332,7 +1335,7 @@ typedef struct WGPUSupportedLimits {
 typedef struct WGPUTextureDescriptor {
 	WGPUChainedStruct const* nextInChain;
 	WGPUStringView label;
-	WGPUTextureUsageFlags usage;
+	WGPUTextureUsage usage;
 	WGPUTextureDimension dimension;
 	WGPUExtent3D size;
 	WGPUTextureFormat format;
@@ -1644,7 +1647,7 @@ typedef WGPUTextureFormat (*WGPUProcTextureGetFormat)(WGPUTexture texture);
 typedef uint32_t (*WGPUProcTextureGetHeight)(WGPUTexture texture);
 typedef uint32_t (*WGPUProcTextureGetMipLevelCount)(WGPUTexture texture);
 typedef uint32_t (*WGPUProcTextureGetSampleCount)(WGPUTexture texture);
-typedef WGPUTextureUsageFlags (*WGPUProcTextureGetUsage)(WGPUTexture texture);
+typedef WGPUTextureUsage (*WGPUProcTextureGetUsage)(WGPUTexture texture);
 typedef uint32_t (*WGPUProcTextureGetWidth)(WGPUTexture texture);
 typedef void (*WGPUProcTextureSetLabel)(WGPUTexture texture, WGPUStringView label);
 typedef void (*WGPUProcTextureReference)(WGPUTexture texture);
