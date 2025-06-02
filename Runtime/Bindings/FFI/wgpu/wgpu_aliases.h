@@ -1,5 +1,5 @@
 // WebGPU API (from webgpu.h)
-typedef uint32_t WGPUFlags;
+typedef uint64_t WGPUFlags;
 typedef uint32_t WGPUBool;
 
 typedef struct WGPUAdapterImpl* WGPUAdapter;
@@ -24,6 +24,26 @@ typedef struct WGPUShaderModuleImpl* WGPUShaderModule;
 typedef struct WGPUSurfaceImpl* WGPUSurface;
 typedef struct WGPUTextureImpl* WGPUTexture;
 typedef struct WGPUTextureViewImpl* WGPUTextureView;
+
+// Questionable translation from #defines (this could certainly be improved)
+typedef enum WGPUSharedConstants {
+	uint32_t WGPU_ARRAY_LAYER_COUNT_UNDEFINED = UINT32_MAX;
+	uint32_t WGPU_COPY_STRIDE_UNDEFINED = UINT32_MAX;
+	uint32_t WGPU_DEPTH_SLICE_UNDEFINED = UINT32_MAX;
+	uint32_t WGPU_LIMIT_U32_UNDEFINED = UINT32_MAX;
+	uint64_t WGPU_LIMIT_U64_UNDEFINED = UINT64_MAX;
+	uint32_t WGPU_MIP_LEVEL_COUNT_UNDEFINED = UINT32_MAX;
+	uint32_t WGPU_QUERY_SET_INDEX_UNDEFINED = UINT32_MAX;
+	size_t WGPU_WHOLE_MAP_SIZE = SIZE_MAX;
+	uint64_t WGPU_WHOLE_SIZE = UINT64_MAX;
+
+	size_t WGPU_STRLEN SIZE_MAX;
+} WGPUSharedConstants;
+
+typedef struct WGPUStringView {
+    char const *  data;
+    size_t length;
+} WGPUStringView;
 
 typedef enum WGPUAdapterType {
 	WGPUAdapterType_DiscreteGPU = 0x00000000,
