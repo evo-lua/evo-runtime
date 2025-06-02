@@ -651,7 +651,6 @@ typedef enum WGPUColorWriteMask {
 	WGPUColorWriteMask_All = 0x0000000F, // WGPUColorWriteMask_None | WGPUColorWriteMask_Red | WGPUColorWriteMask_Green | WGPUColorWriteMask_Blue | WGPUColorWriteMask_Alpha
 	WGPUColorWriteMask_Force32 = 0x7FFFFFFF
 } WGPUColorWriteMask;
-typedef WGPUFlags WGPUColorWriteMaskFlags;
 
 typedef enum WGPUMapMode {
 	WGPUMapMode_None = 0x00000000,
@@ -1338,7 +1337,7 @@ typedef struct WGPUColorTargetState {
 	WGPUChainedStruct const* nextInChain;
 	WGPUTextureFormat format;
 	WGPUBlendState const* blend;
-	WGPUColorWriteMaskFlags writeMask;
+	WGPUColorWriteMask writeMask;
 } WGPUColorTargetState;
 
 typedef struct WGPUComputePipelineDescriptor {
@@ -1418,15 +1417,16 @@ typedef struct WGPURenderPipelineDescriptor {
 } WGPURenderPipelineDescriptor;
 
 typedef WGPUInstance (*WGPUProcCreateInstance)(WGPUInstanceDescriptor const* descriptor);
-typedef WGPUProc (*WGPUProcGetProcAddress)(WGPUDevice device, WGPUStringView procName);
+typedef WGPUStatus (*WGPUProcGetInstanceCapabilities)(WGPUInstanceCapabilities * capabilities) WGPU_FUNCTION_ATTRIBUTE;
+typedef WGPUProc (*WGPUProcGetProcAddress)(WGPUStringView procName) WGPU_FUNCTION_ATTRIBUTE;
 
 // Procs of Adapter
-typedef size_t (*WGPUProcAdapterEnumerateFeatures)(WGPUAdapter adapter, WGPUFeatureName* features);
-typedef void (*WGPUProcAdapterGetInfo)(WGPUAdapter adapter, WGPUAdapterInfo* info);
-typedef WGPUBool (*WGPUProcAdapterGetLimits)(WGPUAdapter adapter, WGPUSupportedLimits* limits);
+typedef void (*WGPUProcAdapterGetFeatures)(WGPUAdapter adapter, WGPUSupportedFeatures * features) WGPU_FUNCTION_ATTRIBUTE;
+typedef WGPUStatus (*WGPUProcAdapterGetInfo)(WGPUAdapter adapter, WGPUAdapterInfo * info) WGPU_FUNCTION_ATTRIBUTE;
+typedef WGPUStatus (*WGPUProcAdapterGetLimits)(WGPUAdapter adapter, WGPULimits * limits) WGPU_FUNCTION_ATTRIBUTE;
 typedef WGPUBool (*WGPUProcAdapterHasFeature)(WGPUAdapter adapter, WGPUFeatureName feature);
-typedef void (*WGPUProcAdapterRequestDevice)(WGPUAdapter adapter, WGPUDeviceDescriptor const* descriptor, WGPUAdapterRequestDeviceCallback callback, void* userdata);
-typedef void (*WGPUProcAdapterReference)(WGPUAdapter adapter);
+typedef WGPUFuture (*WGPUProcAdapterRequestDevice)(WGPUAdapter adapter, WGPU_NULLABLE WGPUDeviceDescriptor const * descriptor, WGPURequestDeviceCallbackInfo callbackInfo) WGPU_FUNCTION_ATTRIBUTE;
+typedef void (*WGPUProcAdapterAddRef)(WGPUAdapter adapter) WGPU_FUNCTION_ATTRIBUTE;
 typedef void (*WGPUProcAdapterRelease)(WGPUAdapter adapter);
 
 // Procs of AdapterInfo
@@ -1434,7 +1434,7 @@ typedef void (*WGPUProcAdapterInfoFreeMembers)(WGPUAdapterInfo adapterInfo);
 
 // Procs of BindGroup
 typedef void (*WGPUProcBindGroupSetLabel)(WGPUBindGroup bindGroup, WGPUStringView label);
-typedef void (*WGPUProcBindGroupReference)(WGPUBindGroup bindGroup);
+typedef void (*WGPUProcBindGroupAddRef)(WGPUBindGroup bindGroup) WGPU_FUNCTION_ATTRIBUTE;
 typedef void (*WGPUProcBindGroupRelease)(WGPUBindGroup bindGroup);
 
 // Procs of BindGroupLayout
