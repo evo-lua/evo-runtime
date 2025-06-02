@@ -225,7 +225,7 @@ struct static_wgpu_exports_table {
 	uint32_t (*wgpu_texture_get_height)(WGPUTexture texture);
 	uint32_t (*wgpu_texture_get_mip_level_count)(WGPUTexture texture);
 	uint32_t (*wgpu_texture_get_sample_count)(WGPUTexture texture);
-	WGPUTextureUsageFlags (*wgpu_texture_get_usage)(WGPUTexture texture);
+	WGPUTextureUsage (*wgpu_texture_get_usage)(WGPUTexture texture);
 	uint32_t (*wgpu_texture_get_width)(WGPUTexture texture);
 	void (*wgpu_texture_set_label)(WGPUTexture texture, char const* label);
 	void (*wgpu_texture_reference)(WGPUTexture texture);
