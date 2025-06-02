@@ -574,7 +574,7 @@ typedef enum WGPUShaderStage {
 	WGPUShaderStage_Compute = 0x00000004,
 	WGPUShaderStage_Force32 = 0x7FFFFFFF
 } WGPUShaderStage;
-typedef WGPUFlags WGPUShaderStageFlags;
+typedef WGPUFlags WGPUShaderStage;
 
 typedef enum WGPUTextureUsage {
 	WGPUTextureUsage_None = 0x00000000,
@@ -1004,7 +1004,7 @@ typedef struct WGPUBindGroupDescriptor {
 typedef struct WGPUBindGroupLayoutEntry {
 	WGPUChainedStruct const* nextInChain;
 	uint32_t binding;
-	WGPUShaderStageFlags visibility;
+	WGPUShaderStage visibility;
 	WGPUBufferBindingLayout buffer;
 	WGPUSamplerBindingLayout sampler;
 	WGPUTextureBindingLayout texture;
@@ -1549,22 +1549,13 @@ typedef struct WGPUDeviceExtras {
 } WGPUDeviceExtras;
 
 typedef struct WGPUNativeLimits {
+	WGPUChainedStructOut chain;
 	uint32_t maxPushConstantSize;
 	uint32_t maxNonSamplerBindings;
 } WGPUNativeLimits;
 
-typedef struct WGPURequiredLimitsExtras {
-	WGPUChainedStruct chain;
-	WGPUNativeLimits limits;
-} WGPURequiredLimitsExtras;
-
-typedef struct WGPUSupportedLimitsExtras {
-	WGPUChainedStructOut chain;
-	WGPUNativeLimits limits;
-} WGPUSupportedLimitsExtras;
-
 typedef struct WGPUPushConstantRange {
-	WGPUShaderStageFlags stages;
+	WGPUShaderStage stages;
 	uint32_t start;
 	uint32_t end;
 } WGPUPushConstantRange;
