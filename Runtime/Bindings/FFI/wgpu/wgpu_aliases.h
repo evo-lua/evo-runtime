@@ -36,7 +36,7 @@ typedef enum WGPUSharedConstants {
 	uint32_t WGPU_QUERY_SET_INDEX_UNDEFINED = UINT32_MAX;
 	size_t WGPU_WHOLE_MAP_SIZE = SIZE_MAX;
 	uint64_t WGPU_WHOLE_SIZE = UINT64_MAX;
-
+	// WGPUStringView
 	size_t WGPU_STRLEN SIZE_MAX;
 } WGPUSharedConstants;
 
