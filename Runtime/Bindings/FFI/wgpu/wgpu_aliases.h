@@ -420,16 +420,18 @@ typedef enum WGPUSurfaceGetCurrentTextureStatus {
 } WGPUSurfaceGetCurrentTextureStatus;
 
 typedef enum WGPUTextureAspect {
-	WGPUTextureAspect_All = 0x00000000,
-	WGPUTextureAspect_StencilOnly = 0x00000001,
-	WGPUTextureAspect_DepthOnly = 0x00000002,
+   WGPUTextureAspect_Undefined = 0x00000000,
+    WGPUTextureAspect_All = 0x00000001,
+    WGPUTextureAspect_StencilOnly = 0x00000002,
+    WGPUTextureAspect_DepthOnly = 0x00000003
 	WGPUTextureAspect_Force32 = 0x7FFFFFFF
 } WGPUTextureAspect;
 
 typedef enum WGPUTextureDimension {
-	WGPUTextureDimension_1D = 0x00000000,
-	WGPUTextureDimension_2D = 0x00000001,
-	WGPUTextureDimension_3D = 0x00000002,
+   WGPUTextureDimension_Undefined = 0x00000000,
+    WGPUTextureDimension_1D = 0x00000001,
+    WGPUTextureDimension_2D = 0x00000002,
+    WGPUTextureDimension_3D = 0x00000003,
 	WGPUTextureDimension_Force32 = 0x7FFFFFFF
 } WGPUTextureDimension;
 
@@ -534,12 +536,13 @@ typedef enum WGPUTextureFormat {
 } WGPUTextureFormat;
 
 typedef enum WGPUTextureSampleType {
-	WGPUTextureSampleType_Undefined = 0x00000000,
-	WGPUTextureSampleType_Float = 0x00000001,
-	WGPUTextureSampleType_UnfilterableFloat = 0x00000002,
-	WGPUTextureSampleType_Depth = 0x00000003,
-	WGPUTextureSampleType_Sint = 0x00000004,
-	WGPUTextureSampleType_Uint = 0x00000005,
+    WGPUTextureSampleType_BindingNotUsed = 0x00000000,
+	  WGPUTextureSampleType_Undefined = 0x00000001,
+    WGPUTextureSampleType_Float = 0x00000002,
+    WGPUTextureSampleType_UnfilterableFloat = 0x00000003,
+    WGPUTextureSampleType_Depth = 0x00000004,
+    WGPUTextureSampleType_Sint = 0x00000005,
+    WGPUTextureSampleType_Uint = 0x00000006,
 	WGPUTextureSampleType_Force32 = 0x7FFFFFFF
 } WGPUTextureSampleType;
 
@@ -555,55 +558,74 @@ typedef enum WGPUTextureViewDimension {
 } WGPUTextureViewDimension;
 
 typedef enum WGPUVertexFormat {
-	WGPUVertexFormat_Undefined = 0x00000000,
-	WGPUVertexFormat_Uint8x2 = 0x00000001,
-	WGPUVertexFormat_Uint8x4 = 0x00000002,
-	WGPUVertexFormat_Sint8x2 = 0x00000003,
-	WGPUVertexFormat_Sint8x4 = 0x00000004,
-	WGPUVertexFormat_Unorm8x2 = 0x00000005,
-	WGPUVertexFormat_Unorm8x4 = 0x00000006,
-	WGPUVertexFormat_Snorm8x2 = 0x00000007,
-	WGPUVertexFormat_Snorm8x4 = 0x00000008,
-	WGPUVertexFormat_Uint16x2 = 0x00000009,
-	WGPUVertexFormat_Uint16x4 = 0x0000000A,
-	WGPUVertexFormat_Sint16x2 = 0x0000000B,
-	WGPUVertexFormat_Sint16x4 = 0x0000000C,
-	WGPUVertexFormat_Unorm16x2 = 0x0000000D,
-	WGPUVertexFormat_Unorm16x4 = 0x0000000E,
-	WGPUVertexFormat_Snorm16x2 = 0x0000000F,
-	WGPUVertexFormat_Snorm16x4 = 0x00000010,
-	WGPUVertexFormat_Float16x2 = 0x00000011,
-	WGPUVertexFormat_Float16x4 = 0x00000012,
-	WGPUVertexFormat_Float32 = 0x00000013,
-	WGPUVertexFormat_Float32x2 = 0x00000014,
-	WGPUVertexFormat_Float32x3 = 0x00000015,
-	WGPUVertexFormat_Float32x4 = 0x00000016,
-	WGPUVertexFormat_Uint32 = 0x00000017,
-	WGPUVertexFormat_Uint32x2 = 0x00000018,
-	WGPUVertexFormat_Uint32x3 = 0x00000019,
-	WGPUVertexFormat_Uint32x4 = 0x0000001A,
-	WGPUVertexFormat_Sint32 = 0x0000001B,
-	WGPUVertexFormat_Sint32x2 = 0x0000001C,
-	WGPUVertexFormat_Sint32x3 = 0x0000001D,
-	WGPUVertexFormat_Sint32x4 = 0x0000001E,
+	 WGPUVertexFormat_Uint8 = 0x00000001,
+    WGPUVertexFormat_Uint8x2 = 0x00000002,
+    WGPUVertexFormat_Uint8x4 = 0x00000003,
+    WGPUVertexFormat_Sint8 = 0x00000004,
+    WGPUVertexFormat_Sint8x2 = 0x00000005,
+    WGPUVertexFormat_Sint8x4 = 0x00000006,
+    WGPUVertexFormat_Unorm8 = 0x00000007,
+    WGPUVertexFormat_Unorm8x2 = 0x00000008,
+    WGPUVertexFormat_Unorm8x4 = 0x00000009,
+    WGPUVertexFormat_Snorm8 = 0x0000000A,
+    WGPUVertexFormat_Snorm8x2 = 0x0000000B,
+    WGPUVertexFormat_Snorm8x4 = 0x0000000C,
+    WGPUVertexFormat_Uint16 = 0x0000000D,
+    WGPUVertexFormat_Uint16x2 = 0x0000000E,
+    WGPUVertexFormat_Uint16x4 = 0x0000000F,
+    WGPUVertexFormat_Sint16 = 0x00000010,
+    WGPUVertexFormat_Sint16x2 = 0x00000011,
+    WGPUVertexFormat_Sint16x4 = 0x00000012,
+    WGPUVertexFormat_Unorm16 = 0x00000013,
+    WGPUVertexFormat_Unorm16x2 = 0x00000014,
+    WGPUVertexFormat_Unorm16x4 = 0x00000015,
+    WGPUVertexFormat_Snorm16 = 0x00000016,
+    WGPUVertexFormat_Snorm16x2 = 0x00000017,
+    WGPUVertexFormat_Snorm16x4 = 0x00000018,
+    WGPUVertexFormat_Float16 = 0x00000019,
+    WGPUVertexFormat_Float16x2 = 0x0000001A,
+    WGPUVertexFormat_Float16x4 = 0x0000001B,
+    WGPUVertexFormat_Float32 = 0x0000001C,
+    WGPUVertexFormat_Float32x2 = 0x0000001D,
+    WGPUVertexFormat_Float32x3 = 0x0000001E,
+    WGPUVertexFormat_Float32x4 = 0x0000001F,
+    WGPUVertexFormat_Uint32 = 0x00000020,
+    WGPUVertexFormat_Uint32x2 = 0x00000021,
+    WGPUVertexFormat_Uint32x3 = 0x00000022,
+    WGPUVertexFormat_Uint32x4 = 0x00000023,
+    WGPUVertexFormat_Sint32 = 0x00000024,
+    WGPUVertexFormat_Sint32x2 = 0x00000025,
+    WGPUVertexFormat_Sint32x3 = 0x00000026,
+    WGPUVertexFormat_Sint32x4 = 0x00000027,
+    WGPUVertexFormat_Unorm10_10_10_2 = 0x00000028,
+    WGPUVertexFormat_Unorm8x4BGRA = 0x00000029,
 	WGPUVertexFormat_Force32 = 0x7FFFFFFF
 } WGPUVertexFormat;
 
 typedef enum WGPUVertexStepMode {
-	WGPUVertexStepMode_Vertex = 0x00000000,
-	WGPUVertexStepMode_Instance = 0x00000001,
-	WGPUVertexStepMode_VertexBufferNotUsed = 0x00000002,
+    WGPUVertexStepMode_VertexBufferNotUsed = 0x00000000,
+	 WGPUVertexStepMode_Undefined = 0x00000001,
+    WGPUVertexStepMode_Vertex = 0x00000002,
+    WGPUVertexStepMode_Instance = 0x00000003,
 	WGPUVertexStepMode_Force32 = 0x7FFFFFFF
 } WGPUVertexStepMode;
 
-typedef enum WGPUWGSLFeatureName {
-	WGPUWGSLFeatureName_Undefined = 0x00000000,
-	WGPUWGSLFeatureName_ReadonlyAndReadwriteStorageTextures = 0x00000001,
-	WGPUWGSLFeatureName_Packed4x8IntegerDotProduct = 0x00000002,
-	WGPUWGSLFeatureName_UnrestrictedPointerParameters = 0x00000003,
-	WGPUWGSLFeatureName_PointerCompositeAccess = 0x00000004,
-	WGPUWGSLFeatureName_Force32 = 0x7FFFFFFF
-} WGPUWGSLFeatureName;
+typedef enum WGPUWGSLLanguageFeatureName {
+    WGPUWGSLLanguageFeatureName_ReadonlyAndReadwriteStorageTextures = 0x00000001,
+    WGPUWGSLLanguageFeatureName_Packed4x8IntegerDotProduct = 0x00000002,
+    WGPUWGSLLanguageFeatureName_UnrestrictedPointerParameters = 0x00000003,
+    WGPUWGSLLanguageFeatureName_PointerCompositeAccess = 0x00000004,
+    WGPUWGSLLanguageFeatureName_Force32 = 0x7FFFFFFF
+} WGPUWGSLLanguageFeatureName;
+
+typedef enum WGPUWaitStatus {
+    WGPUWaitStatus_Success = 0x00000001,
+    WGPUWaitStatus_TimedOut = 0x00000002,
+    WGPUWaitStatus_UnsupportedTimeout = 0x00000003,
+    WGPUWaitStatus_UnsupportedCount = 0x00000004,
+    WGPUWaitStatus_UnsupportedMixedSources = 0x00000005,
+    WGPUWaitStatus_Force32 = 0x7FFFFFFF
+} WGPUWaitStatus;
 
 typedef enum WGPUBufferUsage {
 	WGPUBufferUsage_None = 0x00000000,
