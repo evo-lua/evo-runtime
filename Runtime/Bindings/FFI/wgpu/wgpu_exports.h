@@ -35,7 +35,7 @@ struct static_wgpu_exports_table {
 	WGPUBufferMapState (*wgpu_buffer_get_map_state)(WGPUBuffer buffer);
 	void* (*wgpu_buffer_get_mapped_range)(WGPUBuffer buffer, size_t offset, size_t size);
 	uint64_t (*wgpu_buffer_get_size)(WGPUBuffer buffer);
-	WGPUBufferUsageFlags (*wgpu_buffer_get_usage)(WGPUBuffer buffer);
+	WGPUBufferUsage (*wgpu_buffer_get_usage)(WGPUBuffer buffer);
 	void (*wgpu_buffer_map_async)(WGPUBuffer buffer, WGPUMapModeFlags mode, size_t offset, size_t size, WGPUBufferMapAsyncCallback callback, void* userdata);
 	void (*wgpu_buffer_set_label)(WGPUBuffer buffer, char const* label);
 	void (*wgpu_buffer_unmap)(WGPUBuffer buffer);
