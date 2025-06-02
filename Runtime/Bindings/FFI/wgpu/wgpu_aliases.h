@@ -1568,26 +1568,21 @@ typedef struct WGPUPipelineLayoutExtras {
 
 typedef uint64_t WGPUSubmissionIndex;
 
-typedef struct WGPUWrappedSubmissionIndex {
-	WGPUQueue queue;
-	WGPUSubmissionIndex submissionIndex;
-} WGPUWrappedSubmissionIndex;
-
 typedef struct WGPUShaderDefine {
-	char const* name;
-	char const* value;
+	WGPUStringView name;
+	WGPUStringView value;
 } WGPUShaderDefine;
 
 typedef struct WGPUShaderModuleGLSLDescriptor {
 	WGPUChainedStruct chain;
 	WGPUShaderStage stage;
-	char const* code;
+	WGPUStringView code;
 	uint32_t defineCount;
 	WGPUShaderDefine* defines;
 } WGPUShaderModuleGLSLDescriptor;
 
 typedef struct WGPUShaderModuleDescriptorSpirV {
-	char const* label;
+	WGPUStringView label;
 	uint32_t sourceSize;
 	uint32_t const* source;
 } WGPUShaderModuleDescriptorSpirV;
@@ -1596,7 +1591,6 @@ typedef struct WGPURegistryReport {
 	size_t numAllocated;
 	size_t numKeptFromUser;
 	size_t numReleasedFromUser;
-	size_t numError;
 	size_t elementSize;
 } WGPURegistryReport;
 
@@ -1612,6 +1606,7 @@ typedef struct WGPUHubReport {
 	WGPURegistryReport renderBundles;
 	WGPURegistryReport renderPipelines;
 	WGPURegistryReport computePipelines;
+	WGPURegistryReport pipelineCaches;
 	WGPURegistryReport querySets;
 	WGPURegistryReport buffers;
 	WGPURegistryReport textures;
