@@ -1616,11 +1616,7 @@ typedef struct WGPUHubReport {
 
 typedef struct WGPUGlobalReport {
 	WGPURegistryReport surfaces;
-	WGPUBackendType backendType;
-	WGPUHubReport vulkan;
-	WGPUHubReport metal;
-	WGPUHubReport dx12;
-	WGPUHubReport gl;
+    WGPUHubReport hub;
 } WGPUGlobalReport;
 
 typedef struct WGPUInstanceEnumerateAdapterOptions {
@@ -1654,7 +1650,7 @@ typedef struct WGPUSurfaceConfigurationExtras {
 	uint32_t desiredMaximumFrameLatency;
 } WGPUSurfaceConfigurationExtras;
 
-typedef void (*WGPULogCallback)(WGPULogLevel level, char const* message, void* userdata);
+typedef void (*WGPULogCallback)(WGPULogLevel level, WGPUStringView message, void* userdata);
 
 typedef enum WGPUNativeTextureFormat {
 	// From Features::TEXTURE_FORMAT_16BIT_NORM
