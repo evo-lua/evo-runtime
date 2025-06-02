@@ -758,6 +758,85 @@ typedef struct WGPUChainedStructOut {
 	WGPUSType sType;
 } WGPUChainedStructOut;
 
+typedef struct WGPUBufferMapCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPUBufferMapCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUBufferMapCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUCompilationInfoCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPUCompilationInfoCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUCompilationInfoCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUCreateComputePipelineAsyncCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPUCreateComputePipelineAsyncCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUCreateComputePipelineAsyncCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUCreateRenderPipelineAsyncCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPUCreateRenderPipelineAsyncCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUCreateRenderPipelineAsyncCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUDeviceLostCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPUDeviceLostCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUDeviceLostCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUPopErrorScopeCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPUPopErrorScopeCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUPopErrorScopeCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUQueueWorkDoneCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPUQueueWorkDoneCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUQueueWorkDoneCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPURequestAdapterCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPURequestAdapterCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPURequestAdapterCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPURequestDeviceCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUCallbackMode mode;
+    WGPURequestDeviceCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPURequestDeviceCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUUncapturedErrorCallbackInfo {
+    WGPUChainedStruct const * nextInChain;
+    WGPUUncapturedErrorCallback callback;
+    WGPU_NULLABLE void* userdata1;
+    WGPU_NULLABLE void* userdata2;
+} WGPUUncapturedErrorCallbackInfo WGPU_STRUCTURE_ATTRIBUTE;
+
 typedef struct WGPUAdapterInfo {
 	WGPUChainedStructOut* nextInChain;
 	char const* vendor;
