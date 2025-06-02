@@ -1495,7 +1495,6 @@ typedef enum WGPUInstanceBackend {
 	WGPUInstanceBackend_Secondary = WGPUInstanceBackend_GL | WGPUInstanceBackend_DX11,
 	WGPUInstanceBackend_Force32 = 0x7FFFFFFF
 } WGPUInstanceBackend;
-typedef WGPUFlags WGPUInstanceBackendFlags;
 
 typedef enum WGPUInstanceFlag {
 	WGPUInstanceFlag_Default = 0x00000000,
@@ -1504,7 +1503,6 @@ typedef enum WGPUInstanceFlag {
 	WGPUInstanceFlag_DiscardHalLabels = 1 << 2,
 	WGPUInstanceFlag_Force32 = 0x7FFFFFFF
 } WGPUInstanceFlag;
-typedef WGPUFlags WGPUInstanceFlags;
 
 typedef enum WGPUDx12Compiler {
 	WGPUDx12Compiler_Undefined = 0x00000000,
@@ -1537,17 +1535,17 @@ typedef enum WGPUNativeQueryType {
 
 typedef struct WGPUInstanceExtras {
 	WGPUChainedStruct chain;
-	WGPUInstanceBackendFlags backends;
-	WGPUInstanceFlags flags;
+	WGPUInstanceBackend backends;
+	WGPUInstanceFlag flags;
 	WGPUDx12Compiler dx12ShaderCompiler;
 	WGPUGles3MinorVersion gles3MinorVersion;
-	const char* dxilPath;
-	const char* dxcPath;
+	WGPUStringView dxilPath;
+	WGPUStringView dxcPath;
 } WGPUInstanceExtras;
 
 typedef struct WGPUDeviceExtras {
 	WGPUChainedStruct chain;
-	const char* tracePath;
+	WGPUStringView tracePath;
 } WGPUDeviceExtras;
 
 typedef struct WGPUNativeLimits {
@@ -1641,7 +1639,7 @@ typedef struct WGPUGlobalReport {
 
 typedef struct WGPUInstanceEnumerateAdapterOptions {
 	WGPUChainedStruct const* nextInChain;
-	WGPUInstanceBackendFlags backends;
+	WGPUInstanceBackend backends;
 } WGPUInstanceEnumerateAdapterOptions;
 
 typedef struct WGPUBindGroupEntryExtras {
