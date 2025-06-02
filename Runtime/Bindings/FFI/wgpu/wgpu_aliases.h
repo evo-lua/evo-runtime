@@ -46,17 +46,18 @@ typedef struct WGPUStringView {
 } WGPUStringView;
 
 typedef enum WGPUAdapterType {
-	WGPUAdapterType_DiscreteGPU = 0x00000000,
-	WGPUAdapterType_IntegratedGPU = 0x00000001,
-	WGPUAdapterType_CPU = 0x00000002,
-	WGPUAdapterType_Unknown = 0x00000003,
+   WGPUAdapterType_DiscreteGPU = 0x00000001,
+    WGPUAdapterType_IntegratedGPU = 0x00000002,
+    WGPUAdapterType_CPU = 0x00000003,
+    WGPUAdapterType_Unknown = 0x00000004,
 	WGPUAdapterType_Force32 = 0x7FFFFFFF
 } WGPUAdapterType;
 
 typedef enum WGPUAddressMode {
-	WGPUAddressMode_Repeat = 0x00000000,
-	WGPUAddressMode_MirrorRepeat = 0x00000001,
-	WGPUAddressMode_ClampToEdge = 0x00000002,
+    WGPUAddressMode_Undefined = 0x00000000,
+    WGPUAddressMode_ClampToEdge = 0x00000001,
+    WGPUAddressMode_Repeat = 0x00000002,
+    WGPUAddressMode_MirrorRepeat = 0x00000003,
 	WGPUAddressMode_Force32 = 0x7FFFFFFF
 } WGPUAddressMode;
 
@@ -74,84 +75,86 @@ typedef enum WGPUBackendType {
 } WGPUBackendType;
 
 typedef enum WGPUBlendFactor {
-	WGPUBlendFactor_Zero = 0x00000000,
-	WGPUBlendFactor_One = 0x00000001,
-	WGPUBlendFactor_Src = 0x00000002,
-	WGPUBlendFactor_OneMinusSrc = 0x00000003,
-	WGPUBlendFactor_SrcAlpha = 0x00000004,
-	WGPUBlendFactor_OneMinusSrcAlpha = 0x00000005,
-	WGPUBlendFactor_Dst = 0x00000006,
-	WGPUBlendFactor_OneMinusDst = 0x00000007,
-	WGPUBlendFactor_DstAlpha = 0x00000008,
-	WGPUBlendFactor_OneMinusDstAlpha = 0x00000009,
-	WGPUBlendFactor_SrcAlphaSaturated = 0x0000000A,
-	WGPUBlendFactor_Constant = 0x0000000B,
-	WGPUBlendFactor_OneMinusConstant = 0x0000000C,
+    WGPUBlendFactor_Undefined = 0x00000000,
+    WGPUBlendFactor_Zero = 0x00000001,
+    WGPUBlendFactor_One = 0x00000002,
+    WGPUBlendFactor_Src = 0x00000003,
+    WGPUBlendFactor_OneMinusSrc = 0x00000004,
+    WGPUBlendFactor_SrcAlpha = 0x00000005,
+    WGPUBlendFactor_OneMinusSrcAlpha = 0x00000006,
+    WGPUBlendFactor_Dst = 0x00000007,
+    WGPUBlendFactor_OneMinusDst = 0x00000008,
+    WGPUBlendFactor_DstAlpha = 0x00000009,
+    WGPUBlendFactor_OneMinusDstAlpha = 0x0000000A,
+    WGPUBlendFactor_SrcAlphaSaturated = 0x0000000B,
+    WGPUBlendFactor_Constant = 0x0000000C,
+    WGPUBlendFactor_OneMinusConstant = 0x0000000D,
+    WGPUBlendFactor_Src1 = 0x0000000E,
+    WGPUBlendFactor_OneMinusSrc1 = 0x0000000F,
+    WGPUBlendFactor_Src1Alpha = 0x00000010,
+    WGPUBlendFactor_OneMinusSrc1Alpha = 0x00000011,
 	WGPUBlendFactor_Force32 = 0x7FFFFFFF
 } WGPUBlendFactor;
 
 typedef enum WGPUBlendOperation {
-	WGPUBlendOperation_Add = 0x00000000,
-	WGPUBlendOperation_Subtract = 0x00000001,
-	WGPUBlendOperation_ReverseSubtract = 0x00000002,
-	WGPUBlendOperation_Min = 0x00000003,
-	WGPUBlendOperation_Max = 0x00000004,
+    WGPUBlendOperation_Undefined = 0x00000000,
+    WGPUBlendOperation_Add = 0x00000001,
+    WGPUBlendOperation_Subtract = 0x00000002,
+    WGPUBlendOperation_ReverseSubtract = 0x00000003,
+    WGPUBlendOperation_Min = 0x00000004,
+    WGPUBlendOperation_Max = 0x00000005,
 	WGPUBlendOperation_Force32 = 0x7FFFFFFF
 } WGPUBlendOperation;
 
 typedef enum WGPUBufferBindingType {
-	WGPUBufferBindingType_Undefined = 0x00000000,
-	WGPUBufferBindingType_Uniform = 0x00000001,
-	WGPUBufferBindingType_Storage = 0x00000002,
-	WGPUBufferBindingType_ReadOnlyStorage = 0x00000003,
+    WGPUBufferBindingType_BindingNotUsed = 0x00000000,
+	    WGPUBufferBindingType_Undefined = 0x00000001,
+    WGPUBufferBindingType_Uniform = 0x00000002,
+    WGPUBufferBindingType_Storage = 0x00000003,
+    WGPUBufferBindingType_ReadOnlyStorage = 0x00000004,
 	WGPUBufferBindingType_Force32 = 0x7FFFFFFF
 } WGPUBufferBindingType;
 
-typedef enum WGPUBufferMapAsyncStatus {
-	WGPUBufferMapAsyncStatus_Success = 0x00000000,
-	WGPUBufferMapAsyncStatus_ValidationError = 0x00000001,
-	WGPUBufferMapAsyncStatus_Unknown = 0x00000002,
-	WGPUBufferMapAsyncStatus_DeviceLost = 0x00000003,
-	WGPUBufferMapAsyncStatus_DestroyedBeforeCallback = 0x00000004,
-	WGPUBufferMapAsyncStatus_UnmappedBeforeCallback = 0x00000005,
-	WGPUBufferMapAsyncStatus_MappingAlreadyPending = 0x00000006,
-	WGPUBufferMapAsyncStatus_OffsetOutOfRange = 0x00000007,
-	WGPUBufferMapAsyncStatus_SizeOutOfRange = 0x00000008,
-	WGPUBufferMapAsyncStatus_Force32 = 0x7FFFFFFF
-} WGPUBufferMapAsyncStatus;
-
 typedef enum WGPUBufferMapState {
-	WGPUBufferMapState_Unmapped = 0x00000000,
-	WGPUBufferMapState_Pending = 0x00000001,
-	WGPUBufferMapState_Mapped = 0x00000002,
+   WGPUBufferMapState_Unmapped = 0x00000001,
+    WGPUBufferMapState_Pending = 0x00000002,
+    WGPUBufferMapState_Mapped = 0x00000003,
 	WGPUBufferMapState_Force32 = 0x7FFFFFFF
 } WGPUBufferMapState;
+
+typedef enum WGPUCallbackMode {
+	    WGPUCallbackMode_WaitAnyOnly = 0x00000001,
+    WGPUCallbackMode_AllowProcessEvents = 0x00000002,
+	    WGPUCallbackMode_AllowSpontaneous = 0x00000003,
+		    WGPUCallbackMode_Force32 = 0x7FFFFFFF
+			} WGPUCallbackMode;
+
 
 typedef enum WGPUCompareFunction {
 	WGPUCompareFunction_Undefined = 0x00000000,
 	WGPUCompareFunction_Never = 0x00000001,
 	WGPUCompareFunction_Less = 0x00000002,
-	WGPUCompareFunction_LessEqual = 0x00000003,
-	WGPUCompareFunction_Greater = 0x00000004,
-	WGPUCompareFunction_GreaterEqual = 0x00000005,
-	WGPUCompareFunction_Equal = 0x00000006,
-	WGPUCompareFunction_NotEqual = 0x00000007,
+   WGPUCompareFunction_Equal = 0x00000003,
+    WGPUCompareFunction_LessEqual = 0x00000004,
+    WGPUCompareFunction_Greater = 0x00000005,
+    WGPUCompareFunction_NotEqual = 0x00000006,
+    WGPUCompareFunction_GreaterEqual = 0x00000007,
 	WGPUCompareFunction_Always = 0x00000008,
 	WGPUCompareFunction_Force32 = 0x7FFFFFFF
 } WGPUCompareFunction;
 
 typedef enum WGPUCompilationInfoRequestStatus {
-	WGPUCompilationInfoRequestStatus_Success = 0x00000000,
-	WGPUCompilationInfoRequestStatus_Error = 0x00000001,
-	WGPUCompilationInfoRequestStatus_DeviceLost = 0x00000002,
-	WGPUCompilationInfoRequestStatus_Unknown = 0x00000003,
+  WGPUCompilationInfoRequestStatus_Success = 0x00000001,
+    WGPUCompilationInfoRequestStatus_InstanceDropped = 0x00000002,
+    WGPUCompilationInfoRequestStatus_Error = 0x00000003,
+    WGPUCompilationInfoRequestStatus_Unknown = 0x00000004,
 	WGPUCompilationInfoRequestStatus_Force32 = 0x7FFFFFFF
 } WGPUCompilationInfoRequestStatus;
 
 typedef enum WGPUCompilationMessageType {
-	WGPUCompilationMessageType_Error = 0x00000000,
-	WGPUCompilationMessageType_Warning = 0x00000001,
-	WGPUCompilationMessageType_Info = 0x00000002,
+  WGPUCompilationMessageType_Error = 0x00000001,
+    WGPUCompilationMessageType_Warning = 0x00000002,
+    WGPUCompilationMessageType_Info = 0x00000003,
 	WGPUCompilationMessageType_Force32 = 0x7FFFFFFF
 } WGPUCompilationMessageType;
 
@@ -165,44 +168,51 @@ typedef enum WGPUCompositeAlphaMode {
 } WGPUCompositeAlphaMode;
 
 typedef enum WGPUCreatePipelineAsyncStatus {
-	WGPUCreatePipelineAsyncStatus_Success = 0x00000000,
-	WGPUCreatePipelineAsyncStatus_ValidationError = 0x00000001,
-	WGPUCreatePipelineAsyncStatus_InternalError = 0x00000002,
-	WGPUCreatePipelineAsyncStatus_DeviceLost = 0x00000003,
-	WGPUCreatePipelineAsyncStatus_DeviceDestroyed = 0x00000004,
+    WGPUCreatePipelineAsyncStatus_Success = 0x00000001,
+    WGPUCreatePipelineAsyncStatus_InstanceDropped = 0x00000002,
+    WGPUCreatePipelineAsyncStatus_ValidationError = 0x00000003,
+    WGPUCreatePipelineAsyncStatus_InternalError = 0x00000004,
 	WGPUCreatePipelineAsyncStatus_Unknown = 0x00000005,
 	WGPUCreatePipelineAsyncStatus_Force32 = 0x7FFFFFFF
 } WGPUCreatePipelineAsyncStatus;
 
 typedef enum WGPUCullMode {
-	WGPUCullMode_None = 0x00000000,
-	WGPUCullMode_Front = 0x00000001,
-	WGPUCullMode_Back = 0x00000002,
+   WGPUCullMode_Undefined = 0x00000000,
+    WGPUCullMode_None = 0x00000001,
+    WGPUCullMode_Front = 0x00000002,
+    WGPUCullMode_Back = 0x00000003,
 	WGPUCullMode_Force32 = 0x7FFFFFFF
 } WGPUCullMode;
 
 typedef enum WGPUDeviceLostReason {
 	WGPUDeviceLostReason_Unknown = 0x00000001,
 	WGPUDeviceLostReason_Destroyed = 0x00000002,
+	   WGPUDeviceLostReason_InstanceDropped = 0x00000003,
+    WGPUDeviceLostReason_FailedCreation = 0x00000004,
 	WGPUDeviceLostReason_Force32 = 0x7FFFFFFF
 } WGPUDeviceLostReason;
 
 typedef enum WGPUErrorFilter {
-	WGPUErrorFilter_Validation = 0x00000000,
-	WGPUErrorFilter_OutOfMemory = 0x00000001,
-	WGPUErrorFilter_Internal = 0x00000002,
+   WGPUErrorFilter_Validation = 0x00000001,
+    WGPUErrorFilter_OutOfMemory = 0x00000002,
+    WGPUErrorFilter_Internal = 0x00000003,
 	WGPUErrorFilter_Force32 = 0x7FFFFFFF
 } WGPUErrorFilter;
 
 typedef enum WGPUErrorType {
-	WGPUErrorType_NoError = 0x00000000,
-	WGPUErrorType_Validation = 0x00000001,
-	WGPUErrorType_OutOfMemory = 0x00000002,
-	WGPUErrorType_Internal = 0x00000003,
-	WGPUErrorType_Unknown = 0x00000004,
-	WGPUErrorType_DeviceLost = 0x00000005,
+    WGPUErrorType_NoError = 0x00000001,
+    WGPUErrorType_Validation = 0x00000002,
+    WGPUErrorType_OutOfMemory = 0x00000003,
+    WGPUErrorType_Internal = 0x00000004,
+    WGPUErrorType_Unknown = 0x00000005,
 	WGPUErrorType_Force32 = 0x7FFFFFFF
 } WGPUErrorType;
+
+typedef enum WGPUFeatureLevel {
+    WGPUFeatureLevel_Compatibility = 0x00000001,
+    WGPUFeatureLevel_Core = 0x00000002,
+    WGPUFeatureLevel_Force32 = 0x7FFFFFFF
+} WGPUFeatureLevel;
 
 typedef enum WGPUFeatureName {
 	WGPUFeatureName_Undefined = 0x00000000,
