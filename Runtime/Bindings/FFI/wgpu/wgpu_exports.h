@@ -251,8 +251,8 @@ struct static_wgpu_exports_table {
 	uint32_t (*wgpu_get_version)(void);
 
 	void (*wgpu_compute_pass_encoder_set_push_constants)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const* data);
-	void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
-	void (*wgpu_render_bundle_encoder_set_push_constants)(WGPURenderBundleEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
+	void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const* data);
+	void (*wgpu_render_bundle_encoder_set_push_constants)(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const* data);
 	void (*wgpu_render_pass_encoder_multi_draw_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 	void (*wgpu_render_pass_encoder_multi_draw_indexed_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 
