@@ -641,7 +641,6 @@ typedef enum WGPUBufferUsage {
 	WGPUBufferUsage_QueryResolve = 0x00000200,
 	WGPUBufferUsage_Force32 = 0x7FFFFFFF
 } WGPUBufferUsage;
-typedef WGPUFlags WGPUBufferUsageFlags;
 
 typedef enum WGPUColorWriteMask {
 	WGPUColorWriteMask_None = 0x00000000,
@@ -875,7 +874,7 @@ typedef struct WGPUBufferBindingLayout {
 typedef struct WGPUBufferDescriptor {
 	WGPUChainedStruct const* nextInChain;
 	WGPUStringView label;
-	WGPUBufferUsageFlags usage;
+	WGPUBufferUsage usage;
 	uint64_t size;
 	WGPUBool mappedAtCreation;
 } WGPUBufferDescriptor;
@@ -905,9 +904,6 @@ typedef struct WGPUCompilationMessage {
 	uint64_t linePos;
 	uint64_t offset;
 	uint64_t length;
-	uint64_t utf16LinePos;
-	uint64_t utf16Offset;
-	uint64_t utf16Length;
 } WGPUCompilationMessage;
 
 typedef struct WGPUComputePassTimestampWrites {
@@ -928,11 +924,28 @@ typedef struct WGPUExtent3D {
 	uint32_t depthOrArrayLayers;
 } WGPUExtent3D;
 
-typedef struct WGPUInstanceDescriptor {
-	WGPUChainedStruct const* nextInChain;
-} WGPUInstanceDescriptor;
+typedef struct WGPUFuture {
+    /**
+     * Opaque id of the @ref WGPUFuture
+     */
+    uint64_t id;
+} WGPUFuture WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUInstanceCapabilities {
+    /** This struct chain is used as mutable in some places and immutable in others. */
+    WGPUChainedStructOut * nextInChain;
+    /**
+     * Enable use of ::wgpuInstanceWaitAny with `timeoutNS > 0`.
+     */
+    WGPUBool timedWaitAnyEnable;
+    /**
+     * The maximum number @ref WGPUFutureWaitInfo supported in a call to ::wgpuInstanceWaitAny with `timeoutNS > 0`.
+     */
+    size_t timedWaitAnyMaxCount;
+} WGPUInstanceCapabilities WGPU_STRUCTURE_ATTRIBUTE;
 
 typedef struct WGPULimits {
+	    WGPUChainedStructOut * nextInChain;
 	uint32_t maxTextureDimension1D;
 	uint32_t maxTextureDimension2D;
 	uint32_t maxTextureDimension3D;
@@ -955,7 +968,6 @@ typedef struct WGPULimits {
 	uint64_t maxBufferSize;
 	uint32_t maxVertexAttributes;
 	uint32_t maxVertexBufferArrayStride;
-	uint32_t maxInterStageShaderComponents;
 	uint32_t maxInterStageShaderVariables;
 	uint32_t maxColorAttachments;
 	uint32_t maxColorAttachmentBytesPerSample;
@@ -987,17 +999,13 @@ typedef struct WGPUPipelineLayoutDescriptor {
 	WGPUBindGroupLayout const* bindGroupLayouts;
 } WGPUPipelineLayoutDescriptor;
 
-typedef struct WGPUPrimitiveDepthClipControl {
-	WGPUChainedStruct chain;
-	WGPUBool unclippedDepth;
-} WGPUPrimitiveDepthClipControl;
-
 typedef struct WGPUPrimitiveState {
 	WGPUChainedStruct const* nextInChain;
 	WGPUPrimitiveTopology topology;
 	WGPUIndexFormat stripIndexFormat;
 	WGPUFrontFace frontFace;
 	WGPUCullMode cullMode;
+	    WGPUBool unclippedDepth;
 } WGPUPrimitiveState;
 
 typedef struct WGPUQuerySetDescriptor {
@@ -1040,10 +1048,10 @@ typedef struct WGPURenderPassDepthStencilAttachment {
 	WGPUBool stencilReadOnly;
 } WGPURenderPassDepthStencilAttachment;
 
-typedef struct WGPURenderPassDescriptorMaxDrawCount {
+typedef struct WGPURenderPassMaxDrawCount {
 	WGPUChainedStruct chain;
 	uint64_t maxDrawCount;
-} WGPURenderPassDescriptorMaxDrawCount;
+} WGPURenderPassMaxDrawCount;
 
 typedef struct WGPURenderPassTimestampWrites {
 	WGPUQuerySet querySet;
@@ -1445,7 +1453,7 @@ typedef void const* (*WGPUProcBufferGetConstMappedRange)(WGPUBuffer buffer, size
 typedef WGPUBufferMapState (*WGPUProcBufferGetMapState)(WGPUBuffer buffer);
 typedef void* (*WGPUProcBufferGetMappedRange)(WGPUBuffer buffer, size_t offset, size_t size);
 typedef uint64_t (*WGPUProcBufferGetSize)(WGPUBuffer buffer);
-typedef WGPUBufferUsageFlags (*WGPUProcBufferGetUsage)(WGPUBuffer buffer);
+typedef WGPUBufferUsage (*WGPUProcBufferGetUsage)(WGPUBuffer buffer);
 typedef void (*WGPUProcBufferMapAsync)(WGPUBuffer buffer, WGPUMapModeFlags mode, size_t offset, size_t size, WGPUBufferMapAsyncCallback callback, void* userdata);
 typedef void (*WGPUProcBufferSetLabel)(WGPUBuffer buffer, WGPUStringView label);
 typedef void (*WGPUProcBufferUnmap)(WGPUBuffer buffer);
