@@ -1061,10 +1061,11 @@ typedef struct WGPURenderPassTimestampWrites {
 
 typedef struct WGPURequestAdapterOptions {
 	WGPUChainedStruct const* nextInChain;
-	WGPUSurface compatibleSurface;
+	    WGPUFeatureLevel featureLevel;
 	WGPUPowerPreference powerPreference;
-	WGPUBackendType backendType;
 	WGPUBool forceFallbackAdapter;
+	    WGPUBackendType backendType;
+		    WGPU_NULLABLE WGPUSurface compatibleSurface;
 } WGPURequestAdapterOptions;
 
 typedef struct WGPUSamplerBindingLayout {
