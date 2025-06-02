@@ -220,25 +220,32 @@ typedef enum WGPUFeatureName {
 	WGPUFeatureName_Depth32FloatStencil8 = 0x00000002,
 	WGPUFeatureName_TimestampQuery = 0x00000003,
 	WGPUFeatureName_TextureCompressionBC = 0x00000004,
-	WGPUFeatureName_TextureCompressionETC2 = 0x00000005,
-	WGPUFeatureName_TextureCompressionASTC = 0x00000006,
-	WGPUFeatureName_IndirectFirstInstance = 0x00000007,
-	WGPUFeatureName_ShaderF16 = 0x00000008,
-	WGPUFeatureName_RG11B10UfloatRenderable = 0x00000009,
-	WGPUFeatureName_BGRA8UnormStorage = 0x0000000A,
-	WGPUFeatureName_Float32Filterable = 0x0000000B,
+   WGPUFeatureName_TextureCompressionBCSliced3D = 0x00000005,
+    WGPUFeatureName_TextureCompressionETC2 = 0x00000006,
+    WGPUFeatureName_TextureCompressionASTC = 0x00000007,
+    WGPUFeatureName_TextureCompressionASTCSliced3D = 0x00000008,
+    WGPUFeatureName_IndirectFirstInstance = 0x00000009,
+    WGPUFeatureName_ShaderF16 = 0x0000000A,
+    WGPUFeatureName_RG11B10UfloatRenderable = 0x0000000B,
+    WGPUFeatureName_BGRA8UnormStorage = 0x0000000C,
+    WGPUFeatureName_Float32Filterable = 0x0000000D,
+    WGPUFeatureName_Float32Blendable = 0x0000000E,
+    WGPUFeatureName_ClipDistances = 0x0000000F,
+    WGPUFeatureName_DualSourceBlending = 0x00000010,
 	WGPUFeatureName_Force32 = 0x7FFFFFFF
 } WGPUFeatureName;
 
 typedef enum WGPUFilterMode {
-	WGPUFilterMode_Nearest = 0x00000000,
-	WGPUFilterMode_Linear = 0x00000001,
+   WGPUFilterMode_Undefined = 0x00000000,
+    WGPUFilterMode_Nearest = 0x00000001,
+    WGPUFilterMode_Linear = 0x00000002,
 	WGPUFilterMode_Force32 = 0x7FFFFFFF
 } WGPUFilterMode;
 
 typedef enum WGPUFrontFace {
-	WGPUFrontFace_CCW = 0x00000000,
-	WGPUFrontFace_CW = 0x00000001,
+   WGPUFrontFace_Undefined = 0x00000000,
+    WGPUFrontFace_CCW = 0x00000001,
+    WGPUFrontFace_CW = 0x00000002,
 	WGPUFrontFace_Force32 = 0x7FFFFFFF
 } WGPUFrontFace;
 
@@ -251,16 +258,40 @@ typedef enum WGPUIndexFormat {
 
 typedef enum WGPULoadOp {
 	WGPULoadOp_Undefined = 0x00000000,
-	WGPULoadOp_Clear = 0x00000001,
-	WGPULoadOp_Load = 0x00000002,
+    WGPULoadOp_Load = 0x00000001,
+    WGPULoadOp_Clear = 0x00000002,
 	WGPULoadOp_Force32 = 0x7FFFFFFF
 } WGPULoadOp;
 
+typedef enum WGPUMapAsyncStatus {
+    WGPUMapAsyncStatus_Success = 0x00000001,
+    WGPUMapAsyncStatus_InstanceDropped = 0x00000002,
+    WGPUMapAsyncStatus_Error = 0x00000003,
+    WGPUMapAsyncStatus_Aborted = 0x00000004,
+    WGPUMapAsyncStatus_Unknown = 0x00000005,
+    WGPUMapAsyncStatus_Force32 = 0x7FFFFFFF
+} WGPUMapAsyncStatus;
+
 typedef enum WGPUMipmapFilterMode {
-	WGPUMipmapFilterMode_Nearest = 0x00000000,
-	WGPUMipmapFilterMode_Linear = 0x00000001,
+   WGPUMipmapFilterMode_Undefined = 0x00000000,
+    WGPUMipmapFilterMode_Nearest = 0x00000001,
+    WGPUMipmapFilterMode_Linear = 0x00000002,
 	WGPUMipmapFilterMode_Force32 = 0x7FFFFFFF
 } WGPUMipmapFilterMode;
+
+typedef enum WGPUOptionalBool {
+    WGPUOptionalBool_False = 0x00000000,
+    WGPUOptionalBool_True = 0x00000001,
+    WGPUOptionalBool_Undefined = 0x00000002,
+    WGPUOptionalBool_Force32 = 0x7FFFFFFF
+} WGPUOptionalBool;
+
+typedef enum WGPUPopErrorScopeStatus {
+    WGPUPopErrorScopeStatus_Success = 0x00000001,
+    WGPUPopErrorScopeStatus_InstanceDropped = 0x00000002,
+    WGPUPopErrorScopeStatus_EmptyStack = 0x00000003,
+    WGPUPopErrorScopeStatus_Force32 = 0x7FFFFFFF
+} WGPUPopErrorScopeStatus;
 
 typedef enum WGPUPowerPreference {
 	WGPUPowerPreference_Undefined = 0x00000000,
@@ -270,92 +301,102 @@ typedef enum WGPUPowerPreference {
 } WGPUPowerPreference;
 
 typedef enum WGPUPresentMode {
-	WGPUPresentMode_Fifo = 0x00000000,
-	WGPUPresentMode_FifoRelaxed = 0x00000001,
-	WGPUPresentMode_Immediate = 0x00000002,
-	WGPUPresentMode_Mailbox = 0x00000003,
+    WGPUPresentMode_Undefined = 0x00000000,
+	    WGPUPresentMode_Fifo = 0x00000001,
+		    WGPUPresentMode_FifoRelaxed = 0x00000002,
+			    WGPUPresentMode_Immediate = 0x00000003,
+				    WGPUPresentMode_Mailbox = 0x00000004,
 	WGPUPresentMode_Force32 = 0x7FFFFFFF
 } WGPUPresentMode;
 
 typedef enum WGPUPrimitiveTopology {
-	WGPUPrimitiveTopology_PointList = 0x00000000,
-	WGPUPrimitiveTopology_LineList = 0x00000001,
-	WGPUPrimitiveTopology_LineStrip = 0x00000002,
-	WGPUPrimitiveTopology_TriangleList = 0x00000003,
-	WGPUPrimitiveTopology_TriangleStrip = 0x00000004,
+   WGPUPrimitiveTopology_Undefined = 0x00000000,
+    WGPUPrimitiveTopology_PointList = 0x00000001,
+    WGPUPrimitiveTopology_LineList = 0x00000002,
+    WGPUPrimitiveTopology_LineStrip = 0x00000003,
+    WGPUPrimitiveTopology_TriangleList = 0x00000004,
+    WGPUPrimitiveTopology_TriangleStrip = 0x00000005,
 	WGPUPrimitiveTopology_Force32 = 0x7FFFFFFF
 } WGPUPrimitiveTopology;
 
 typedef enum WGPUQueryType {
-	WGPUQueryType_Occlusion = 0x00000000,
-	WGPUQueryType_Timestamp = 0x00000001,
+ WGPUQueryType_Occlusion = 0x00000001,
+    WGPUQueryType_Timestamp = 0x00000002,
 	WGPUQueryType_Force32 = 0x7FFFFFFF
 } WGPUQueryType;
 
 typedef enum WGPUQueueWorkDoneStatus {
-	WGPUQueueWorkDoneStatus_Success = 0x00000000,
-	WGPUQueueWorkDoneStatus_Error = 0x00000001,
-	WGPUQueueWorkDoneStatus_Unknown = 0x00000002,
-	WGPUQueueWorkDoneStatus_DeviceLost = 0x00000003,
+    WGPUQueueWorkDoneStatus_Success = 0x00000001,
+    WGPUQueueWorkDoneStatus_InstanceDropped = 0x00000002,
+    WGPUQueueWorkDoneStatus_Error = 0x00000003,
+    WGPUQueueWorkDoneStatus_Unknown = 0x00000004,
 	WGPUQueueWorkDoneStatus_Force32 = 0x7FFFFFFF
 } WGPUQueueWorkDoneStatus;
 
 typedef enum WGPURequestAdapterStatus {
-	WGPURequestAdapterStatus_Success = 0x00000000,
-	WGPURequestAdapterStatus_Unavailable = 0x00000001,
-	WGPURequestAdapterStatus_Error = 0x00000002,
-	WGPURequestAdapterStatus_Unknown = 0x00000003,
+  WGPURequestAdapterStatus_Success = 0x00000001,
+    WGPURequestAdapterStatus_InstanceDropped = 0x00000002,
+    WGPURequestAdapterStatus_Unavailable = 0x00000003,
+    WGPURequestAdapterStatus_Error = 0x00000004,
+    WGPURequestAdapterStatus_Unknown = 0x00000005,
 	WGPURequestAdapterStatus_Force32 = 0x7FFFFFFF
 } WGPURequestAdapterStatus;
 
 typedef enum WGPURequestDeviceStatus {
-	WGPURequestDeviceStatus_Success = 0x00000000,
-	WGPURequestDeviceStatus_Error = 0x00000001,
-	WGPURequestDeviceStatus_Unknown = 0x00000002,
+  WGPURequestDeviceStatus_Success = 0x00000001,
+    WGPURequestDeviceStatus_InstanceDropped = 0x00000002,
+    WGPURequestDeviceStatus_Error = 0x00000003,
+    WGPURequestDeviceStatus_Unknown = 0x00000004,
 	WGPURequestDeviceStatus_Force32 = 0x7FFFFFFF
 } WGPURequestDeviceStatus;
 
 typedef enum WGPUSType {
-	WGPUSType_Invalid = 0x00000000,
-	WGPUSType_SurfaceDescriptorFromMetalLayer = 0x00000001,
-	WGPUSType_SurfaceDescriptorFromWindowsHWND = 0x00000002,
-	WGPUSType_SurfaceDescriptorFromXlibWindow = 0x00000003,
-	WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector = 0x00000004,
-	WGPUSType_ShaderModuleSPIRVDescriptor = 0x00000005,
-	WGPUSType_ShaderModuleWGSLDescriptor = 0x00000006,
-	WGPUSType_PrimitiveDepthClipControl = 0x00000007,
-	WGPUSType_SurfaceDescriptorFromWaylandSurface = 0x00000008,
-	WGPUSType_SurfaceDescriptorFromAndroidNativeWindow = 0x00000009,
-	WGPUSType_SurfaceDescriptorFromXcbWindow = 0x0000000A,
-	WGPUSType_RenderPassDescriptorMaxDrawCount = 0x0000000F,
+  WGPUSType_ShaderSourceSPIRV = 0x00000001,
+    WGPUSType_ShaderSourceWGSL = 0x00000002,
+    WGPUSType_RenderPassMaxDrawCount = 0x00000003,
+    WGPUSType_SurfaceSourceMetalLayer = 0x00000004,
+    WGPUSType_SurfaceSourceWindowsHWND = 0x00000005,
+    WGPUSType_SurfaceSourceXlibWindow = 0x00000006,
+    WGPUSType_SurfaceSourceWaylandSurface = 0x00000007,
+    WGPUSType_SurfaceSourceAndroidNativeWindow = 0x00000008,
+    WGPUSType_SurfaceSourceXCBWindow = 0x00000009,
 	WGPUSType_Force32 = 0x7FFFFFFF
 } WGPUSType;
 
 typedef enum WGPUSamplerBindingType {
-	WGPUSamplerBindingType_Undefined = 0x00000000,
-	WGPUSamplerBindingType_Filtering = 0x00000001,
-	WGPUSamplerBindingType_NonFiltering = 0x00000002,
-	WGPUSamplerBindingType_Comparison = 0x00000003,
+    WGPUSamplerBindingType_BindingNotUsed = 0x00000000,
+	  WGPUSamplerBindingType_Undefined = 0x00000001,
+    WGPUSamplerBindingType_Filtering = 0x00000002,
+    WGPUSamplerBindingType_NonFiltering = 0x00000003,
+    WGPUSamplerBindingType_Comparison = 0x00000004,
 	WGPUSamplerBindingType_Force32 = 0x7FFFFFFF
 } WGPUSamplerBindingType;
 
+typedef enum WGPUStatus {
+    WGPUStatus_Success = 0x00000001,
+    WGPUStatus_Error = 0x00000002,
+    WGPUStatus_Force32 = 0x7FFFFFFF
+} WGPUStatus;
+
 typedef enum WGPUStencilOperation {
-	WGPUStencilOperation_Keep = 0x00000000,
-	WGPUStencilOperation_Zero = 0x00000001,
-	WGPUStencilOperation_Replace = 0x00000002,
-	WGPUStencilOperation_Invert = 0x00000003,
-	WGPUStencilOperation_IncrementClamp = 0x00000004,
-	WGPUStencilOperation_DecrementClamp = 0x00000005,
-	WGPUStencilOperation_IncrementWrap = 0x00000006,
-	WGPUStencilOperation_DecrementWrap = 0x00000007,
+   WGPUStencilOperation_Undefined = 0x00000000,
+    WGPUStencilOperation_Keep = 0x00000001,
+    WGPUStencilOperation_Zero = 0x00000002,
+    WGPUStencilOperation_Replace = 0x00000003,
+    WGPUStencilOperation_Invert = 0x00000004,
+    WGPUStencilOperation_IncrementClamp = 0x00000005,
+    WGPUStencilOperation_DecrementClamp = 0x00000006,
+    WGPUStencilOperation_IncrementWrap = 0x00000007,
+    WGPUStencilOperation_DecrementWrap = 0x00000008,
 	WGPUStencilOperation_Force32 = 0x7FFFFFFF
 } WGPUStencilOperation;
 
 typedef enum WGPUStorageTextureAccess {
-	WGPUStorageTextureAccess_Undefined = 0x00000000,
-	WGPUStorageTextureAccess_WriteOnly = 0x00000001,
-	WGPUStorageTextureAccess_ReadOnly = 0x00000002,
-	WGPUStorageTextureAccess_ReadWrite = 0x00000003,
+    WGPUStorageTextureAccess_BindingNotUsed = 0x00000000,
+	   WGPUStorageTextureAccess_Undefined = 0x00000001,
+    WGPUStorageTextureAccess_WriteOnly = 0x00000002,
+    WGPUStorageTextureAccess_ReadOnly = 0x00000003,
+    WGPUStorageTextureAccess_ReadWrite = 0x00000004,,
 	WGPUStorageTextureAccess_Force32 = 0x7FFFFFFF
 } WGPUStorageTextureAccess;
 
