@@ -242,7 +242,7 @@ struct static_wgpu_exports_table {
 
 	WGPUSubmissionIndex (*wgpu_queue_submit_for_index)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const* commands);
 	WGPUShaderModule (*wgpu_device_create_shader_module_spirv)(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const* descriptor);
-	WGPUBool (*wgpu_device_poll)(WGPUDevice device, WGPUBool wait, WGPUWrappedSubmissionIndex const* wrappedSubmissionIndex);
+	WGPUBool (*wgpu_device_poll)(WGPUDevice device, WGPUBool wait, WGPUSubmissionIndex const* wrappedSubmissionIndex);
 
 	void (*wgpu_set_log_callback)(WGPULogCallback callback, void* userdata);
 
