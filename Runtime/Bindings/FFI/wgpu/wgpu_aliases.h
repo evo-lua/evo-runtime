@@ -1191,10 +1191,16 @@ typedef struct WGPUSurfaceSourceXlibWindow {
 } WGPUSurfaceSourceXlibWindow;
 
 typedef struct WGPUSurfaceTexture {
+	    WGPUChainedStructOut * nextInChain;
 	WGPUTexture texture;
-	WGPUBool suboptimal;
-	WGPUSurfaceGetCurrentTextureStatus status;
+		WGPUSurfaceGetCurrentTextureStatus status;
 } WGPUSurfaceTexture;
+
+typedef struct WGPUTexelCopyBufferLayout {
+    uint64_t offset;
+    uint32_t bytesPerRow;
+    uint32_t rowsPerImage;
+} WGPUTexelCopyBufferLayout WGPU_STRUCTURE_ATTRIBUTE;
 
 typedef struct WGPUTextureBindingLayout {
 	WGPUChainedStruct const* nextInChain;
@@ -1202,13 +1208,6 @@ typedef struct WGPUTextureBindingLayout {
 	WGPUTextureViewDimension viewDimension;
 	WGPUBool multisampled;
 } WGPUTextureBindingLayout;
-
-typedef struct WGPUTextureDataLayout {
-	WGPUChainedStruct const* nextInChain;
-	uint64_t offset;
-	uint32_t bytesPerRow;
-	uint32_t rowsPerImage;
-} WGPUTextureDataLayout;
 
 typedef struct WGPUTextureViewDescriptor {
 	WGPUChainedStruct const* nextInChain;
@@ -1220,13 +1219,8 @@ typedef struct WGPUTextureViewDescriptor {
 	uint32_t baseArrayLayer;
 	uint32_t arrayLayerCount;
 	WGPUTextureAspect aspect;
+	    WGPUTextureUsage usage;
 } WGPUTextureViewDescriptor;
-
-typedef struct WGPUUncapturedErrorCallbackInfo {
-	WGPUChainedStruct const* nextInChain;
-	WGPUErrorCallback callback;
-	void* userdata;
-} WGPUUncapturedErrorCallbackInfo;
 
 typedef struct WGPUVertexAttribute {
 	WGPUVertexFormat format;
@@ -1272,7 +1266,7 @@ typedef struct WGPUComputePassDescriptor {
 typedef struct WGPUDepthStencilState {
 	WGPUChainedStruct const* nextInChain;
 	WGPUTextureFormat format;
-	WGPUBool depthWriteEnabled;
+	WGPUOptionalBool depthWriteEnabled;
 	WGPUCompareFunction depthCompare;
 	WGPUStencilFaceState stencilFront;
 	WGPUStencilFaceState stencilBack;
@@ -1282,20 +1276,6 @@ typedef struct WGPUDepthStencilState {
 	float depthBiasSlopeScale;
 	float depthBiasClamp;
 } WGPUDepthStencilState;
-
-typedef struct WGPUImageCopyBuffer {
-	WGPUChainedStruct const* nextInChain;
-	WGPUTextureDataLayout layout;
-	WGPUBuffer buffer;
-} WGPUImageCopyBuffer;
-
-typedef struct WGPUImageCopyTexture {
-	WGPUChainedStruct const* nextInChain;
-	WGPUTexture texture;
-	uint32_t mipLevel;
-	WGPUOrigin3D origin;
-	WGPUTextureAspect aspect;
-} WGPUImageCopyTexture;
 
 typedef struct WGPUProgrammableStageDescriptor {
 	WGPUChainedStruct const* nextInChain;
@@ -1315,22 +1295,17 @@ typedef struct WGPURenderPassColorAttachment {
 	WGPUColor clearValue;
 } WGPURenderPassColorAttachment;
 
-typedef struct WGPURequiredLimits {
-	WGPUChainedStruct const* nextInChain;
-	WGPULimits limits;
-} WGPURequiredLimits;
+typedef struct WGPUTexelCopyBufferInfo {
+    WGPUTexelCopyBufferLayout layout;
+    WGPUBuffer buffer;
+} WGPUTexelCopyBufferInfo WGPU_STRUCTURE_ATTRIBUTE;
 
-typedef struct WGPUShaderModuleDescriptor {
-	WGPUChainedStruct const* nextInChain;
-	WGPUStringView label;
-	size_t hintCount;
-	WGPUShaderModuleCompilationHint const* hints;
-} WGPUShaderModuleDescriptor;
-
-typedef struct WGPUSupportedLimits {
-	WGPUChainedStructOut* nextInChain;
-	WGPULimits limits;
-} WGPUSupportedLimits;
+typedef struct WGPUTexelCopyTextureInfo {
+    WGPUTexture texture;
+    uint32_t mipLevel;
+    WGPUOrigin3D origin;
+    WGPUTextureAspect aspect;
+} WGPUTexelCopyTextureInfo WGPU_STRUCTURE_ATTRIBUTE;
 
 typedef struct WGPUTextureDescriptor {
 	WGPUChainedStruct const* nextInChain;
@@ -1346,8 +1321,8 @@ typedef struct WGPUTextureDescriptor {
 } WGPUTextureDescriptor;
 
 typedef struct WGPUVertexBufferLayout {
-	uint64_t arrayStride;
 	WGPUVertexStepMode stepMode;
+	uint64_t arrayStride;
 	size_t attributeCount;
 	WGPUVertexAttribute const* attributes;
 } WGPUVertexBufferLayout;
@@ -1384,6 +1359,22 @@ typedef struct WGPUDeviceDescriptor {
 	void* deviceLostUserdata;
 	WGPUUncapturedErrorCallbackInfo uncapturedErrorCallbackInfo;
 } WGPUDeviceDescriptor;
+
+typedef struct WGPUFutureWaitInfo {
+    /**
+     * The future to wait on.
+     */
+    WGPUFuture future;
+    /**
+     * Whether or not the future completed.
+     */
+    WGPUBool completed;
+} WGPUFutureWaitInfo WGPU_STRUCTURE_ATTRIBUTE;
+
+typedef struct WGPUInstanceDescriptor {
+    WGPUChainedStruct const * nextInChain;
+    WGPUInstanceCapabilities features;
+} WGPUInstanceDescriptor WGPU_STRUCTURE_ATTRIBUTE;
 
 typedef struct WGPURenderPassDescriptor {
 	WGPUChainedStruct const* nextInChain;
