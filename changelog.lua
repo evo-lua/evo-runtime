@@ -1,4 +1,18 @@
 local changelog = {
+	["v0.0.21"] = {
+		breakingChanges = {
+			"Due to upstream changes, the required version of WebKitGTK has been upgraded",
+			"The iconv FFI bindings now act on and return structured data instead of primitives ",
+		},
+		newFeatures = {
+			"Added FFI bindings for libcurl's URL parsing APIs",
+			"The low-level conversion interface is now part of the iconv FFI bindings",
+			"Self-contained executables can now load dynamic libraries via the `vfs` API",
+		},
+		improvements = {
+			"The built-in WebServer should no longer prevent apps from walking the event loop manually",
+		},
+	},
 	["v0.0.20"] = {
 		breakingChanges = {
 			"Due to a larger rework in the RML library, its WebGPU render interface has seen significant changes",
