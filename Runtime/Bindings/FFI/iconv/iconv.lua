@@ -73,9 +73,10 @@ function iconv.convert(input, inputEncoding, outputEncoding)
 	readBuffer = readBuffer or buffer.new(256)
 	writeBuffer = writeBuffer or buffer.new(256)
 
+	readBuffer:reset()
 	readBuffer:put(input)
 	local readCursor = readBuffer:ref()
-	request.input.charset = "CP949"
+	request.input.charset = inputEncoding
 	request.input.buffer = readCursor
 	request.input.length = #input
 	request.input.remaining = #input
@@ -85,7 +86,7 @@ function iconv.convert(input, inputEncoding, outputEncoding)
 
 	writeBuffer:reset()
 	local writeCursor, writeBufferCapacity = writeBuffer:reserve(maxRequiredWriteBufferSize)
-	request.output.charset = "UTF-8"
+	request.output.charset = outputEncoding
 	request.output.buffer = writeCursor
 	request.output.length = writeBufferCapacity
 	request.output.remaining = writeBufferCapacity

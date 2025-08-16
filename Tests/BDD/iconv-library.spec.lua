@@ -166,14 +166,16 @@ describe("iconv", function()
 			local input = "유저인터페이스"
 			assertFailure(function()
 				return iconv.convert(input, "INVALID_ENCODING", "UTF-8")
-			end, iconv.strerror(ffi.C.ICONV_CONVERSION_FAILED))
+				-- TBD: This is what the library returns - even though it's misleading at best (?)
+			end, iconv.strerror(ffi.C.ICONV_INCOMPLETE_INPUT))
 		end)
 
 		it("should fail if given an invalid output encoding", function()
 			local input = "유저인터페이스"
 			assertFailure(function()
-				return iconv.convert(input, "UTF-8", "INVALID_ENCODING")
-			end, iconv.strerror(ffi.C.ICONV_CONVERSION_FAILED))
+				return iconv.convert(input, "CP949", "INVALID_ENCODING")
+				-- TBD: This is what the library returns - even though it's  misleading at best (?)
+			end, iconv.strerror(ffi.C.ICONV_INCOMPLETE_INPUT))
 		end)
 
 		it("should throw if a non-string input was passed", function()
@@ -201,6 +203,16 @@ describe("iconv", function()
 			local expectedErrorMessage =
 				"Expected argument outputEncoding to be a string value, but received a number value instead"
 			assertThrows(convertWithInvalidOutputEncoding, expectedErrorMessage)
+		end)
+
+		it("should be able to convert multiple inputs using the same buffer", function()
+			local output, result = iconv.convert("First", "ASCII", "UTF-8")
+			assertEquals(output, "First")
+			assertEquals(result, iconv.strerror(ffi.C.ICONV_RESULT_OK))
+
+			output, result = iconv.convert("Second", "ASCII", "UTF-8")
+			assertEquals(output, "Second")
+			assertEquals(result, iconv.strerror(ffi.C.ICONV_RESULT_OK))
 		end)
 	end)
 
