@@ -35,7 +35,7 @@ struct static_wgpu_exports_table {
 	WGPUBufferMapState (*wgpu_buffer_get_map_state)(WGPUBuffer buffer);
 	void* (*wgpu_buffer_get_mapped_range)(WGPUBuffer buffer, size_t offset, size_t size);
 	uint64_t (*wgpu_buffer_get_size)(WGPUBuffer buffer);
-	WGPUBufferUsageFlags (*wgpu_buffer_get_usage)(WGPUBuffer buffer);
+	WGPUBufferUsage (*wgpu_buffer_get_usage)(WGPUBuffer buffer);
 	void (*wgpu_buffer_map_async)(WGPUBuffer buffer, WGPUMapModeFlags mode, size_t offset, size_t size, WGPUBufferMapAsyncCallback callback, void* userdata);
 	void (*wgpu_buffer_set_label)(WGPUBuffer buffer, char const* label);
 	void (*wgpu_buffer_unmap)(WGPUBuffer buffer);
@@ -225,7 +225,7 @@ struct static_wgpu_exports_table {
 	uint32_t (*wgpu_texture_get_height)(WGPUTexture texture);
 	uint32_t (*wgpu_texture_get_mip_level_count)(WGPUTexture texture);
 	uint32_t (*wgpu_texture_get_sample_count)(WGPUTexture texture);
-	WGPUTextureUsageFlags (*wgpu_texture_get_usage)(WGPUTexture texture);
+	WGPUTextureUsage (*wgpu_texture_get_usage)(WGPUTexture texture);
 	uint32_t (*wgpu_texture_get_width)(WGPUTexture texture);
 	void (*wgpu_texture_set_label)(WGPUTexture texture, char const* label);
 	void (*wgpu_texture_reference)(WGPUTexture texture);
@@ -242,7 +242,7 @@ struct static_wgpu_exports_table {
 
 	WGPUSubmissionIndex (*wgpu_queue_submit_for_index)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const* commands);
 	WGPUShaderModule (*wgpu_device_create_shader_module_spirv)(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const* descriptor);
-	WGPUBool (*wgpu_device_poll)(WGPUDevice device, WGPUBool wait, WGPUWrappedSubmissionIndex const* wrappedSubmissionIndex);
+	WGPUBool (*wgpu_device_poll)(WGPUDevice device, WGPUBool wait, WGPUSubmissionIndex const* wrappedSubmissionIndex);
 
 	void (*wgpu_set_log_callback)(WGPULogCallback callback, void* userdata);
 
@@ -251,8 +251,8 @@ struct static_wgpu_exports_table {
 	uint32_t (*wgpu_get_version)(void);
 
 	void (*wgpu_compute_pass_encoder_set_push_constants)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const* data);
-	void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
-	void (*wgpu_render_bundle_encoder_set_push_constants)(WGPURenderBundleEncoder encoder, WGPUShaderStageFlags stages, uint32_t offset, uint32_t sizeBytes, void const* data);
+	void (*wgpu_render_pass_encoder_set_push_constants)(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const* data);
+	void (*wgpu_render_bundle_encoder_set_push_constants)(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const* data);
 	void (*wgpu_render_pass_encoder_multi_draw_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 	void (*wgpu_render_pass_encoder_multi_draw_indexed_indirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 

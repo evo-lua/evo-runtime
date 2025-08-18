@@ -562,7 +562,7 @@ typedef enum WGPUColorWriteMask {
 	WGPUColorWriteMask_All = 0x0000000F, // WGPUColorWriteMask_None | WGPUColorWriteMask_Red | WGPUColorWriteMask_Green | WGPUColorWriteMask_Blue | WGPUColorWriteMask_Alpha
 	WGPUColorWriteMask_Force32 = 0x7FFFFFFF
 } WGPUColorWriteMask;
-typedef WGPUFlags WGPUColorWriteMaskFlags;
+typedef WGPUFlags WGPUColorWriteMask;
 
 typedef enum WGPUMapMode {
 	WGPUMapMode_None = 0x00000000,
@@ -1127,7 +1127,7 @@ typedef struct WGPUColorTargetState {
 	WGPUChainedStruct const* nextInChain;
 	WGPUTextureFormat format;
 	WGPUBlendState const* blend;
-	WGPUColorWriteMaskFlags writeMask;
+	WGPUColorWriteMask writeMask;
 } WGPUColorTargetState;
 
 typedef struct WGPUComputePipelineDescriptor {
