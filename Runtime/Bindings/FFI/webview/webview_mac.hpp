@@ -24,17 +24,17 @@ namespace webview_ffi {
 		}
 		int step(int blocking) {
 			id until = (blocking
-					? ((id(*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantFuture"_sel)
-					: ((id(*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantPast"_sel));
-			id app = ((id(*)(id, SEL))objc_msgSend)("NSApplication"_cls,
+					? ((id (*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantFuture"_sel)
+					: ((id (*)(id, SEL))objc_msgSend)("NSDate"_cls, "distantPast"_sel));
+			id app = ((id (*)(id, SEL))objc_msgSend)("NSApplication"_cls,
 				"sharedApplication"_sel);
 
-			id event = ((id(*)(id, SEL, unsigned long long, id, id, bool))objc_msgSend)(
+			id event = ((id (*)(id, SEL, unsigned long long, id, id, bool))objc_msgSend)(
 				app, "nextEventMatchingMask:untilDate:inMode:dequeue:"_sel, ULONG_MAX,
 				until, "kCFRunLoopDefaultMode"_str, true);
 
 			if(event) {
-				((id(*)(id, SEL, id))objc_msgSend)(app, "sendEvent:"_sel, event);
+				((id (*)(id, SEL, id))objc_msgSend)(app, "sendEvent:"_sel, event);
 			}
 
 			return m_shouldExit;
@@ -47,22 +47,22 @@ namespace webview_ffi {
 		}
 
 		bool setAppIcon(const char* iconPath) {
-			id iconImagePath = ((id(*)(id, SEL, const char*))objc_msgSend)("NSString"_cls, "stringWithUTF8String:"_sel, iconPath);
-			id iconImage = ((id(*)(id, SEL))objc_msgSend)("NSImage"_cls, "alloc"_sel);
-			iconImage = ((id(*)(id, SEL, id))objc_msgSend)(iconImage, "initWithContentsOfFile:"_sel, iconImagePath);
+			id iconImagePath = ((id (*)(id, SEL, const char*))objc_msgSend)("NSString"_cls, "stringWithUTF8String:"_sel, iconPath);
+			id iconImage = ((id (*)(id, SEL))objc_msgSend)("NSImage"_cls, "alloc"_sel);
+			iconImage = ((id (*)(id, SEL, id))objc_msgSend)(iconImage, "initWithContentsOfFile:"_sel, iconImagePath);
 
 			if(!iconImage) return false;
 
 			// 10.13 and earlier: Set icon in the window's title bar (now deprecated)
 			id nsWindow = (id)unwrapResult(window());
 			if(nsWindow) {
-				id fileURL = ((id(*)(id, SEL, id))objc_msgSend)("NSURL"_cls, "fileURLWithPath:"_sel, iconImagePath);
+				id fileURL = ((id (*)(id, SEL, id))objc_msgSend)("NSURL"_cls, "fileURLWithPath:"_sel, iconImagePath);
 				((void (*)(id, SEL, id))objc_msgSend)(nsWindow, "setRepresentedURL:"_sel, fileURL);
 				return true;
 			}
 
 			// 10.14 and later: Set icon in the dock
-			id app = ((id(*)(id, SEL))objc_msgSend)("NSApplication"_cls, "sharedApplication"_sel);
+			id app = ((id (*)(id, SEL))objc_msgSend)("NSApplication"_cls, "sharedApplication"_sel);
 			if(app) {
 				((void (*)(id, SEL, id))objc_msgSend)(app, "setApplicationIconImage:"_sel, iconImage);
 				return true;
